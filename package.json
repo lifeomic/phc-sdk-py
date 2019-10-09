@@ -1,0 +1,17 @@
+{
+  "name": "phc-sdk-py",
+  "version": "0.1.0",
+  "description": "Python interface for the PHC.",
+  "url": "https://lifeomic.github.io/phc-sdk-py/",
+  "repository": "git@github.com:lifeomic/phc-sdk-py.git",
+  "author": "LifeOmic <development@lifeomic.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "make lint",
+    "pretest": "yarn lint",
+    "test": "make test",
+    "inspect": "open tests/cover/index.html",
+    "site": "pip install -r requirements-site.txt && mkdocs build",
+    "postversion": "git push --tags"
+  }
+}
