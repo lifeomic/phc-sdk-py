@@ -1,39 +1,37 @@
 """A Python module for a base PHC web client."""
 
+from urllib.parse import urljoin
+from typing import Union
+
 import sys
 import platform
 import asyncio
 import aiohttp
-from urllib.parse import urljoin
-from typing import Optional, Union
 
 from phc.web.api_response import ApiResponse
 import phc.version as ver
 
 
 class BaseClient:
+    """Base client for making API requests."""
+
     # TODO: Make this configurable
     BASE_URL = "https://api.dev.lifeomic.com"
 
-
     def __init__(
-        self,
-        token=None,
-        account=None,
-        run_async=False,
-        headers: Optional[dict] = None,
-        timeout=30,
-        loop: Optional[asyncio.AbstractEventLoop] = None,
+            self,
+            session,
+            run_async=False,
+            timeout=30,
     ):
-        self.token = token
-        self.account = account
+        self.session = session
         self.run_async = run_async
-        self.headers = headers or {}
         self.timeout = timeout
-        self._event_loop = loop
+        self._event_loop = None
 
 
-    def _get_event_loop(self):
+    @staticmethod
+    def _get_event_loop():
         """Retrieves the event loop or creates a new one."""
         try:
             return asyncio.get_event_loop()
@@ -45,9 +43,11 @@ class BaseClient:
 
     def _get_headers(self, has_json, request_specific_headers):
         """Contructs the headers need for a request.
+
         Args:
             has_json (bool): Whether or not the request has json.
             request_specific_headers (dict): Additional headers specified by the user for a specific request.
+
         Returns:
             The headers dictionary.
                 e.g. {
@@ -61,31 +61,43 @@ class BaseClient:
             "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
         }
 
-        if self.token:
-            final_headers.update({"Authorization": "Bearer {}".format(self.token)})
+        if self.session.token:
+            final_headers.update(
+                {"Authorization": "Bearer {}".format(self.session.token)})
 
-        if self.account:
-            final_headers.update({"LifeOmic-Account": self.account})
-
-        # Merge headers specified at client initialization.
-        final_headers.update(self.headers)
+        if self.session.account:
+            final_headers.update({"LifeOmic-Account": self.session.account})
 
         # Merge headers specified for a specific request. i.e. oauth.access
         final_headers.update(request_specific_headers)
 
         if has_json:
-            final_headers.update({"Content-Type": "application/json;charset=utf-8"})
+            final_headers.update(
+                {"Content-Type": "application/json;charset=utf-8"})
 
         return final_headers
 
 
     def api_call(
-        self,
-        api_path: str,
-        http_verb: str = 'POST',
-        json: dict = None,
-        headers: dict = {}
+            self,
+            api_path: str,
+            http_verb: str = 'POST',
+            json: dict = None,
+            headers: dict = {}
     ) -> Union[asyncio.Future, ApiResponse]:
+        """Sends an API request
+
+        Arguments:
+            api_path {str} -- The root API path
+
+        Keyword Arguments:
+            http_verb {str} -- The http verb (default: {'POST'})
+            json {dict} -- The JSON request body (default: {None})
+            headers {dict} -- Additional headers to provide in the request (default: {{}})
+
+        Returns:
+            Union[asyncio.Future, ApiResponse] -- A Future if run_async is True, otherwise the API response
+        """
 
         has_json = json is not None
         req_args = {
@@ -99,7 +111,8 @@ class BaseClient:
         api_url = urljoin(self.BASE_URL, "v1/{}".format(api_path))
 
         future = asyncio.ensure_future(
-            self._send(http_verb=http_verb, api_url=api_url, req_args=req_args),
+            self._send(http_verb=http_verb,
+                       api_url=api_url, req_args=req_args),
             loop=self._event_loop,
         )
 
@@ -113,6 +126,7 @@ class BaseClient:
     def _get_user_agent():
         """Construct the user-agent header with the package info,
         Python version and OS version.
+
         Returns:
             The user agent string.
             e.g. 'Python/3.6.7 phc-sdk-py/2.0.0 Darwin/17.7.0'
@@ -143,6 +157,7 @@ class BaseClient:
 
     async def _request(self, *, http_verb, api_url, req_args):
         """Submit the HTTP request with the running session or a new session.
+
         Returns:
             A dictionary of the response data.
         """

@@ -3,18 +3,19 @@
 
 import phc.errors as e
 
-class ApiResponse(object):
+class ApiResponse():
+    """Represents an API response."""
 
     def __init__(
-        self,
-        *,
-        client,
-        http_verb: str,
-        api_url: str,
-        req_args: dict,
-        data: dict,
-        headers: dict,
-        status_code: int,
+            self,
+            *,
+            client,
+            http_verb: str,
+            api_url: str,
+            req_args: dict,
+            data: dict,
+            headers: dict,
+            status_code: int,
     ):
         self.http_verb = http_verb
         self.api_url = api_url
@@ -25,6 +26,7 @@ class ApiResponse(object):
         self._initial_data = data
         self._client = client
 
+
     def __str__(self):
         """Return the Response data if object is converted to a string."""
         return f"{self.data}"
@@ -34,7 +36,7 @@ class ApiResponse(object):
         """Retreives any key from the data store.
         Note:
             This is implemented so users can reference the
-            SlackResponse object like a dictionary.
+            ApiResponse object like a dictionary.
             e.g. response["ok"]
         Returns:
             The value from data or None.
@@ -53,13 +55,14 @@ class ApiResponse(object):
         """
         return self.data.get(key, default)
 
+
     def validate(self):
-        """Check if the response from Slack was successful.
+        """Check if the response from API was successful.
         Returns:
-            (SlackResponse)
+            (ApiResponse)
                 This method returns it's own object. e.g. 'self'
         Raises:
-            SlackApiError: The request to the Slack API failed.
+            ApiError: The request to the API failed.
         """
         if self.status_code == 200:
             return self
