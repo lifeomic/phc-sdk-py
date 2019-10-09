@@ -25,7 +25,7 @@ COVER=--with-coverage \
 	--cover-branches \
 	--cover-html
 test:
-	ENV=TEST nosetests ${COVER} -w tests
+	ENV=TEST nosetests ${COVER} -w phc/tests
 
 .PHONY: package
 package:
@@ -34,3 +34,9 @@ package:
 .PHONY: deploy
 deploy:
 	python -m twine upload dist/*
+
+.PHONY: bootstrap
+bootstrap:
+	@pip install -r requirements.txt
+	@pip install -r requirements-dev.txt
+	@pip install -e
