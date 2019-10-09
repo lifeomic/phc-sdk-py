@@ -1,15 +1,12 @@
 #!/usr/bin/env python
 
 import json
+import os
 
 from setuptools import setup, find_packages
 
-_PACKAGE_FILE = "./package.json"
 _README_FILE = "./README.md"
 _REQUIREMENTS_FILE = "./requirements.txt"
-
-with open(_PACKAGE_FILE, "r") as file:
-    package = json.load(file)
 
 with open(_README_FILE, "r") as file:
     long_description = file.read()
@@ -17,16 +14,20 @@ with open(_README_FILE, "r") as file:
 with open(_REQUIREMENTS_FILE, "r") as file:
     requirements = file.read().splitlines()
 
-print(long_description)
+pjoin = os.path.join
+here = os.path.abspath(os.path.dirname(__file__))
+version_ns = {}
+with open(pjoin(here, "phc", "version.py")) as f:
+    exec(f.read(), {}, version_ns)
 
 setup(
-    name=package["name"],
-    version=package["version"],
-    description=package["description"],
+    name="phc",
+    version=version_ns["__version__"],
+    description="Python interface for the PHC.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url=package["url"],
-    license=package["license"],
+    url="https://lifeomic.github.io/phc-sdk-py",
+    license="MIT",
     author="LifeOmic Development",
     author_email="development@lifeomic.com",
     packages=find_packages(),
