@@ -3,19 +3,20 @@
 
 import phc.errors as e
 
-class ApiResponse():
+
+class ApiResponse:
     """Represents an API response."""
 
     def __init__(
-            self,
-            *,
-            client,
-            http_verb: str,
-            api_url: str,
-            req_args: dict,
-            data: dict,
-            headers: dict,
-            status_code: int,
+        self,
+        *,
+        client,
+        http_verb: str,
+        api_url: str,
+        req_args: dict,
+        data: dict,
+        headers: dict,
+        status_code: int,
     ):
         self.http_verb = http_verb
         self.api_url = api_url
@@ -26,11 +27,9 @@ class ApiResponse():
         self._initial_data = data
         self._client = client
 
-
     def __str__(self):
         """Return the Response data if object is converted to a string."""
         return f"{self.data}"
-
 
     def __getitem__(self, key):
         """Retreives any key from the data store.
@@ -43,7 +42,6 @@ class ApiResponse():
         """
         return self.data.get(key, None)
 
-
     def get(self, key, default=None):
         """Retreives any key from the response data.
         Note:
@@ -54,7 +52,6 @@ class ApiResponse():
             The value from data or the specified default.
         """
         return self.data.get(key, default)
-
 
     def validate(self):
         """Check if the response from API was successful.
