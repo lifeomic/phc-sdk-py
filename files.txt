@@ -1,2 +1,0 @@
-/usr/local/bin/chardetect
-/usr/local/lib/python3.7/dist-packages/phc-0.1.0-py3.7.egg
