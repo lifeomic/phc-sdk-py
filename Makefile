@@ -4,11 +4,15 @@
 clean:
 	rm -rf build
 	rm -rf dist
-	rm -rf termlink.egg-info
+	rm -rf phc.egg-info
+
+.PHONY: format
+format:
+	black .
 
 .PHONY: lint
 lint:
-	pylint -f parseable phc tests | tee pylint.out
+	flake8 phc tests
 
 .PHONY: test
 # uncomment the following line to enforce test coverage standards
