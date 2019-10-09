@@ -41,9 +41,16 @@ class SubjectSearchComponents(object):
 
 class SubjectSearch(object):
 
-    def __init__(self, client):
-        self.client = client
+    def __init__(self):
         self.search_components = dict()
 
-    def patient(self, search_components):
-        self.search_components['patient'] = search_components.to_dict()
+    def patient(self):
+        patient_component = SubjectSearchComponents()
+        self.search_components['patient'] = patient_component
+        return patient_component
+
+    def to_dict(self):
+        search_components_dict = dict()
+        for key, component in self.search_components.items():
+            search_components_dict[key] = component.to_dict()
+        return search_components_dict
