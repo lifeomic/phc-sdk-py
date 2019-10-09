@@ -1,5 +1,5 @@
 {
-  "name": "phc-sdk-py",
+  "name": "phc",
   "version": "0.1.0",
   "description": "Python interface for the PHC.",
   "url": "https://lifeomic.github.io/phc-sdk-py/",
