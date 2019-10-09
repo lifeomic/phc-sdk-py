@@ -18,17 +18,11 @@ class BaseClient:
     # TODO: Make this configurable
     BASE_URL = "https://api.dev.lifeomic.com"
 
-    def __init__(
-            self,
-            session,
-            run_async=False,
-            timeout=30,
-    ):
+    def __init__(self, session, run_async=False, timeout=30):
         self.session = session
         self.run_async = run_async
         self.timeout = timeout
         self._event_loop = None
-
 
     @staticmethod
     def _get_event_loop():
@@ -39,7 +33,6 @@ class BaseClient:
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
             return loop
-
 
     def _get_headers(self, has_json, request_specific_headers):
         """Contructs the headers need for a request.
@@ -63,7 +56,8 @@ class BaseClient:
 
         if self.session.token:
             final_headers.update(
-                {"Authorization": "Bearer {}".format(self.session.token)})
+                {"Authorization": "Bearer {}".format(self.session.token)}
+            )
 
         if self.session.account:
             final_headers.update({"LifeOmic-Account": self.session.account})
@@ -73,17 +67,17 @@ class BaseClient:
 
         if has_json:
             final_headers.update(
-                {"Content-Type": "application/json;charset=utf-8"})
+                {"Content-Type": "application/json;charset=utf-8"}
+            )
 
         return final_headers
 
-
     def api_call(
-            self,
-            api_path: str,
-            http_verb: str = 'POST',
-            json: dict = None,
-            headers: dict = {}
+        self,
+        api_path: str,
+        http_verb: str = "POST",
+        json: dict = None,
+        headers: dict = {},
     ) -> Union[asyncio.Future, ApiResponse]:
         """Sends an API request
 
@@ -102,7 +96,7 @@ class BaseClient:
         has_json = json is not None
         req_args = {
             "headers": self._get_headers(has_json, headers),
-            "json": json
+            "json": json,
         }
 
         if self._event_loop is None:
@@ -111,8 +105,7 @@ class BaseClient:
         api_url = urljoin(self.BASE_URL, "v1/{}".format(api_path))
 
         future = asyncio.ensure_future(
-            self._send(http_verb=http_verb,
-                       api_url=api_url, req_args=req_args),
+            self._send(http_verb=http_verb, api_url=api_url, req_args=req_args),
             loop=self._event_loop,
         )
 
@@ -120,7 +113,6 @@ class BaseClient:
             return future
 
         return self._event_loop.run_until_complete(future)
-
 
     @staticmethod
     def _get_user_agent():
@@ -140,7 +132,6 @@ class BaseClient:
         user_agent_string = " ".join([python_version, client, system_info])
         return user_agent_string
 
-
     async def _send(self, http_verb, api_url, req_args):
         res = await self._request(
             http_verb=http_verb, api_url=api_url, req_args=req_args
@@ -153,7 +144,6 @@ class BaseClient:
             "req_args": req_args,
         }
         return ApiResponse(**{**data, **res}).validate()
-
 
     async def _request(self, *, http_verb, api_url, req_args):
         """Submit the HTTP request with the running session or a new session.
