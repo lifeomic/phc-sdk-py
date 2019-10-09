@@ -43,9 +43,11 @@ class BaseClient:
 
     def _get_headers(self, has_json, request_specific_headers):
         """Contructs the headers need for a request.
+
         Args:
             has_json (bool): Whether or not the request has json.
             request_specific_headers (dict): Additional headers specified by the user for a specific request.
+
         Returns:
             The headers dictionary.
                 e.g. {
@@ -94,7 +96,7 @@ class BaseClient:
             headers {dict} -- Additional headers to provide in the request (default: {{}})
 
         Returns:
-            Union[asyncio.Future, ApiResponse] -- [description]
+            Union[asyncio.Future, ApiResponse] -- A Future if run_async is True, otherwise the API response
         """
 
         has_json = json is not None
@@ -124,6 +126,7 @@ class BaseClient:
     def _get_user_agent():
         """Construct the user-agent header with the package info,
         Python version and OS version.
+
         Returns:
             The user agent string.
             e.g. 'Python/3.6.7 phc-sdk-py/2.0.0 Darwin/17.7.0'
@@ -154,6 +157,7 @@ class BaseClient:
 
     async def _request(self, *, http_verb, api_url, req_args):
         """Submit the HTTP request with the running session or a new session.
+
         Returns:
             A dictionary of the response data.
         """
