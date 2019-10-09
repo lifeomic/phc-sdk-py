@@ -3,13 +3,13 @@
 import os
 
 
-class Session():
+class Session:
     """Represents a PHC API session"""
 
     def __init__(
-            self,
-            token: str = os.environ.get('PHC_ACCESS_TOKEN'),
-            account: str = os.environ.get('PHC_ACCOUNT')
+        self,
+        token: str = os.environ.get("PHC_ACCESS_TOKEN"),
+        account: str = os.environ.get("PHC_ACCOUNT"),
     ):
         """Initailizes a Session with token and account credentials.
 

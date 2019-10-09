@@ -9,6 +9,7 @@ class RequestError(ClientError):
     """Error raised when there's a problem with the request that's being submitted.
     """
 
+
 class ApiError(ClientError):
     """Error raised when Slack does not send the expected response.
     Attributes:
