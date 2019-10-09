@@ -1,4 +1,4 @@
 pre-commit
-black
+black>=19
 flake8
 nose
