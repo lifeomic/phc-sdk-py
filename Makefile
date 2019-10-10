@@ -1,41 +1,50 @@
- default: clean lint test package
+PYTHON_MODULES := phc
+PYTHONPATH := .
+VENV := .venv
+NOSE := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/nosetests
+FLAKE8 := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/flake8
+PYTHON := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/python
+BLACK := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/black
+PIP := $(VENV)/bin/pip
 
-.PHONY: clean
+DEFAULT_PYTHON := /usr/bin/python3
+VIRTUALENV := virtualenv
+
+REQUIREMENTS := -r requirements.txt -r requirements-dev.txt
+
+default: clean test
+
+venv:
+	test -d $(VENV) || $(VIRTUALENV) -p $(DEFAULT_PYTHON) -q $(VENV)
+
 clean:
 	rm -rf build
 	rm -rf dist
 	rm -rf phc.egg-info
 
-.PHONY: format
-format:
-	black .
+requirements:
+	@if [ -d wheelhouse ]; then \
+					$(PIP) install -q --no-index --find-links=wheelhouse $(REQUIREMENTS); \
+	else \
+					$(PIP) install -q $(REQUIREMENTS); \
+	fi
 
-.PHONY: lint
-lint:
-	flake8 phc tests
+bootstrap: venv requirements
 
-.PHONY: test
-# uncomment the following line to enforce test coverage standards
-# COVER_MIN_PERCENTAGE=100
-COVER=--with-coverage \
-	--cover-package=phc \
-	--cover-erase \
-	--cover-tests \
-	--cover-min-percentage=${COVER_MIN_PERCENTAGE} \
-	--cover-branches \
-	--cover-html
-test:
-	ENV=TEST nosetests ${COVER} -w phc/tests
+lint: bootstrap
+	$(FLAKE8) $(PYTHON_MODULES)
 
-.PHONY: package
+format: bootstrap
+	$(BLACK) $(PYTHON_MODULES)
+
+test: lint
+	$(NOSE) $(PYTHON_MODULES)/tests
+
 package:
-	python setup.py sdist bdist_wheel
+	$(PYTHON) setup.py sdist bdist_wheel
 
-.PHONY: deploy
 deploy:
-	python -m twine upload dist/*
+	$(PYTHON) -m twine upload dist/*
 
-.PHONY: bootstrap
-bootstrap:
-	@pip install -r requirements.txt
-	@pip install -r requirements-dev.txt
+
+.PHONY: default venv requirements bootstrap lint test check package deploy

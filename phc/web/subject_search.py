@@ -1,6 +1,4 @@
-
 class SubjectSearchComponent(object):
-
     def __init__(self):
         self.component_body = dict()
 
@@ -18,15 +16,14 @@ class SubjectSearchComponent(object):
 
 
 class SubjectSearchComponents(object):
-
     def __init__(self):
         self.key_components = dict()
 
     def observations(self):
         search_component = SubjectSearchComponent()
-        if 'observations' not in self.key_components:
-            self.key_components['observations'] = []
-        self.key_components['observations'].append(search_component)
+        if "observations" not in self.key_components:
+            self.key_components["observations"] = []
+        self.key_components["observations"].append(search_component)
         return search_component
 
     def to_dict(self):
@@ -40,10 +37,9 @@ class SubjectSearchComponents(object):
 
 
 class SubjectSearch(object):
-
     def __init__(self, client):
         self.client = client
         self.search_components = dict()
 
     def patient(self, search_components):
-        self.search_components['patient'] = search_components.to_dict()
+        self.search_components["patient"] = search_components.to_dict()
