@@ -3,7 +3,7 @@
 from phc.web.base_client import BaseClient
 
 
-class FhirSearch(BaseClient):
+class Fhir(BaseClient):
     """Provides methods to run search using SQL or Elasticsearch queries"""
 
     def execute_sql(self, project, statement):
