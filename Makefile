@@ -5,6 +5,7 @@ NOSE := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/nosetests
 FLAKE8 := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/flake8
 PYTHON := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/python
 BLACK := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/black
+PRECOMMIT := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/pre-commit
 PIP := $(VENV)/bin/pip3
 REQUIREMENTS := -r requirements.txt -r requirements-dev.txt
 
@@ -20,6 +21,9 @@ $(VENV)/bin/activate: requirements-dev.txt
 	test -d $(VENV) || virtualenv -p python3 $(VENV)
 	$(PIP) install -q $(REQUIREMENTS);
 	touch $(VENV)/bin/activate
+
+setup: venv
+	$(PRECOMMIT) install
 
 lint: venv
 	$(FLAKE8) $(PYTHON_MODULES)

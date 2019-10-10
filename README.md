@@ -47,6 +47,15 @@ git clone git@github.com:lifeomic/phc-sdk-py.git
 
 Python environments are managed using [virtualenv](https://virtualenv.pypa.io/en/latest/).  Be sure to have this installed first `pip install virtualenv`.  The makefile will setup the environment for the targets listed below.
 
+
+### Setup
+
+This installs some pre-commit hooks that will format and lint new changes.
+
+```bash
+make setup
+```
+
 ### Running tests
 
 ```bash
