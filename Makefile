@@ -6,44 +6,34 @@ FLAKE8 := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/flake8
 PYTHON := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/python
 BLACK := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/black
 PIP := $(VENV)/bin/pip3
-
-DEFAULT_PYTHON := /usr/bin/python3
-VIRTUALENV := virtualenv
-
-REQUIREMENTS := -r requirements-dev.txt
+REQUIREMENTS := -r requirements.txt -r requirements-dev.txt
 
 default: clean test
-
-venv:
-	test -d $(VENV) || $(VIRTUALENV) -p $(DEFAULT_PYTHON) -q $(VENV)
 
 clean:
 	rm -rf build
 	rm -rf dist
 	rm -rf phc.egg-info
 
-requirements:
-	@if [ -d wheelhouse ]; then \
-					$(PIP) install -q --no-index --find-links=wheelhouse $(REQUIREMENTS); \
-	else \
-					$(PIP) install -q $(REQUIREMENTS); \
-	fi
+venv: $(VENV)/bin/activate
+$(VENV)/bin/activate: requirements-dev.txt
+	test -d $(VENV) || virtualenv -p python3 $(VENV)
+	$(PIP) install -q $(REQUIREMENTS);
+	touch $(VENV)/bin/activate
 
-bootstrap: venv requirements
-
-lint: bootstrap
+lint: venv
 	$(FLAKE8) $(PYTHON_MODULES)
 
-format: bootstrap
+format: venv
 	$(BLACK) $(PYTHON_MODULES)
 
 test: lint
 	$(NOSE) $(PYTHON_MODULES)/tests
 
-package:
+package: venv
 	$(PYTHON) setup.py sdist bdist_wheel
 
-deploy:
+deploy: venv
 	$(PYTHON) -m twine upload dist/*
 
 
