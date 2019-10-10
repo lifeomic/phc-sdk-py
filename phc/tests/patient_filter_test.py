@@ -1,13 +1,13 @@
 import unittest
 
-from phc.web.subject_search_query_builder import SubjectSearchQueryBuilder
+from phc.web.patient_filter_query_builder import PatientFilterQueryBuilder
 
 
-class SubjectSearchTest(unittest.TestCase):
+class PatientFilterQueryBuilderTest(unittest.TestCase):
 
-    def test_subject_search(self):
-        search = SubjectSearchQueryBuilder()
-        search.patient().observations().value_codeable_concept(
+    def test_patient_filter_query_builder(self):
+        filter = PatientFilterQueryBuilder()
+        filter.patient().observations().value_codeable_concept(
             eq=['LA10316-0', 'LA10315-2'])
 
         expected = {
@@ -28,4 +28,4 @@ class SubjectSearchTest(unittest.TestCase):
                 'target': 'patient'
             }
         }
-        self.assertDictEqual(search.to_dict(), expected)
+        self.assertDictEqual(filter.to_dict(), expected)

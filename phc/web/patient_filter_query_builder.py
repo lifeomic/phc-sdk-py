@@ -10,9 +10,9 @@ class BaseQueryBuilder(object):
         raise NotImplementedError
 
 
-class SubjectSearchComponentQueryBuilder(BaseQueryBuilder):
+class PatientFilterComponentQueryBuilder(BaseQueryBuilder):
     """
-    Leaf most query builder class. E.g. SubjectSearchComponentQueryBuilder().foo(eq='bar') will result
+    Leaf most query builder class. E.g. PatientFilterComponentQueryBuilder().foo(eq='bar') will result
     on {"foo": "bar"} to be returned on to_dict()
     """
 
@@ -40,7 +40,7 @@ class SubjectSearchComponentQueryBuilder(BaseQueryBuilder):
         return self.component_body
 
 
-class SubjectSearchComponentsQueryBuilder(BaseQueryBuilder):
+class PatientFilterComponentsQueryBuilder(BaseQueryBuilder):
     """
     Property level builder class. 'observations', 'procedures' are considered as properties.
     """
@@ -49,7 +49,7 @@ class SubjectSearchComponentsQueryBuilder(BaseQueryBuilder):
         self.key_components = dict()
 
     def observations(self):
-        search_component = SubjectSearchComponentQueryBuilder()
+        search_component = PatientFilterComponentQueryBuilder()
         self.key_components['observations'] = search_component
         return search_component
 
@@ -60,7 +60,7 @@ class SubjectSearchComponentsQueryBuilder(BaseQueryBuilder):
         return key_components_dict
 
 
-class SubjectSearchQueryBuilder(BaseQueryBuilder):
+class PatientFilterQueryBuilder(BaseQueryBuilder):
     """
     Top most query for subject searches.
     """
@@ -69,7 +69,7 @@ class SubjectSearchQueryBuilder(BaseQueryBuilder):
         self.search_components = dict()
 
     def patient(self):
-        patient_component = SubjectSearchComponentsQueryBuilder()
+        patient_component = PatientFilterComponentsQueryBuilder()
         self.search_components['patient'] = patient_component
         return patient_component
 
