@@ -112,3 +112,6 @@ venv.bak/
 
 # test artifacts
 cover
+
+# Local install
+pip-wheel-metadata
