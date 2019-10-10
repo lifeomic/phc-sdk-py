@@ -1,32 +1,44 @@
- default: clean lint test package
+PYTHON_MODULES := phc
+PYTHONPATH := .
+VENV := .venv
+NOSE := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/nosetests
+FLAKE8 := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/flake8
+PYTHON := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/python
+BLACK := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/black
+PRECOMMIT := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/pre-commit
+PIP := $(VENV)/bin/pip3
+REQUIREMENTS := -r requirements.txt -r requirements-dev.txt
 
-.PHONY: clean
+default: clean test
+
 clean:
 	rm -rf build
 	rm -rf dist
-	rm -rf termlink.egg-info
+	rm -rf phc.egg-info
 
-.PHONY: lint
-lint:
-	pylint -f parseable termlink tests | tee pylint.out
+venv: $(VENV)/bin/activate
+$(VENV)/bin/activate: requirements-dev.txt
+	test -d $(VENV) || virtualenv -p python3 $(VENV)
+	$(PIP) install -q $(REQUIREMENTS);
+	touch $(VENV)/bin/activate
 
-.PHONY: test
-# uncomment the following line to enforce test coverage standards
-# COVER_MIN_PERCENTAGE=100
-COVER=--with-coverage \
-	--cover-package=termlink \
-	--cover-erase \
-	--cover-tests \
-	--cover-min-percentage=${COVER_MIN_PERCENTAGE} \
-	--cover-branches \
-	--cover-html
-test:
-	ENV=TEST nosetests ${COVER} -w tests
+setup: venv
+	$(PRECOMMIT) install
 
-.PHONY: package
-package:
-	python setup.py sdist bdist_wheel
+lint: venv
+	$(FLAKE8) $(PYTHON_MODULES)
 
-.PHONY: deploy
-deploy:
-	python -m twine upload dist/*
+format: venv
+	$(BLACK) $(PYTHON_MODULES)
+
+test: lint
+	$(NOSE) $(PYTHON_MODULES)/tests
+
+package: venv
+	$(PYTHON) setup.py sdist bdist_wheel
+
+deploy: venv
+	$(PYTHON) -m twine upload dist/*
+
+
+.PHONY: default venv requirements bootstrap lint test check package deploy
