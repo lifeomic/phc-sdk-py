@@ -1,5 +1,5 @@
 """A Python module for a base PHC web client."""
-
+import json
 from urllib.parse import urljoin
 from typing import Union
 
@@ -171,3 +171,6 @@ class BaseClient:
                     "headers": res.headers,
                     "status_code": res.status,
                 }
+
+    def jprint(self, data):
+        print(json.dumps(data, indent=2))
