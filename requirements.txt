@@ -1,1 +1,2 @@
 aiohttp>3.5.3
+nest_asyncio

@@ -1,4 +1,5 @@
 aiohttp>3.5.3
+nest_asyncio
 pre-commit
 black==19.3b0
 flake8
