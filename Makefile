@@ -5,7 +5,7 @@ NOSE := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/nosetests
 FLAKE8 := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/flake8
 PYTHON := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/python
 BLACK := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/black
-PIP := $(VENV)/bin/pip
+PIP := $(VENV)/bin/pip3
 
 DEFAULT_PYTHON := /usr/bin/python3
 VIRTUALENV := virtualenv
