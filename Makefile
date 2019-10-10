@@ -10,7 +10,7 @@ PIP := $(VENV)/bin/pip
 DEFAULT_PYTHON := /usr/bin/python3
 VIRTUALENV := virtualenv
 
-REQUIREMENTS := -r requirements.txt -r requirements-dev.txt
+REQUIREMENTS := -r requirements-dev.txt
 
 default: clean test
 
