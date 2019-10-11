@@ -61,7 +61,7 @@ class ApiResponse:
         Raises:
             ApiError: The request to the API failed.
         """
-        if self.status_code == 200:
+        if self.status_code >= 200 and self.status_code <= 300:
             return self
         msg = "The request to the API failed."
         raise e.ApiError(message=msg, response=self)

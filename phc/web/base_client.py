@@ -77,6 +77,7 @@ class BaseClient:
         api_path: str,
         http_verb: str = "POST",
         json: dict = None,
+        data: str = None,
         headers: dict = {},
     ) -> Union[asyncio.Future, ApiResponse]:
         """Sends an API request
@@ -87,6 +88,7 @@ class BaseClient:
         Keyword Arguments:
             http_verb {str} -- The http verb (default: {'POST'})
             json {dict} -- The JSON request body (default: {None})
+            data {str} -- Request body as raw string (default: None)
             headers {dict} -- Additional headers to provide in the request (default: {{}})
 
         Returns:
@@ -94,10 +96,19 @@ class BaseClient:
         """
 
         has_json = json is not None
-        req_args = {
-            "headers": self._get_headers(has_json, headers),
-            "json": json,
-        }
+        has_data = data is not None
+
+        if has_json and has_data:
+            raise Exception(
+                '"json" and "data" cannot be supplied as request body.'
+            )
+
+        req_args = {"headers": self._get_headers(has_json, headers)}
+        if has_json:
+            req_args["json"] = json
+
+        elif has_data:
+            req_args["data"] = data
 
         if self._event_loop is None:
             self._event_loop = self._get_event_loop()
