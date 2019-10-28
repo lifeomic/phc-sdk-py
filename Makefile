@@ -32,7 +32,7 @@ format: venv
 	$(BLACK) $(PYTHON_MODULES)
 
 test: lint
-	$(NOSE) $(PYTHON_MODULES)/tests
+	$(NOSE) -v tests
 
 package: venv
 	$(PYTHON) setup.py sdist bdist_wheel
