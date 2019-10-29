@@ -1,1 +1,1020 @@
-My GitHub Page
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.1" />
+<title>phc API documentation</title>
+<meta name="description" content="The phc-sdk-py is a developer kit for interfacing with the PHC API on Python 3.6 and above …" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em;font-family:"Lato",Helvetica,Roboto,Arial,"Lucida Grande",sans-serif}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:90%}ul li code a{font-size:80%}a{color:#00539a;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#f7944d}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>phc</code></h1>
+</header>
+<section id="section-intro">
+<p>The phc-sdk-py is a developer kit for interfacing with the PHC API on Python 3.6 and above.</p>
+<h1 id="project-status">Project Status</h1>
+<p><img alt="GitHub" src="https://img.shields.io/github/license/lifeomic/phc-sdk-py.svg?style=for-the-badge">
+<img alt="Travis (.org) branch" src="https://img.shields.io/travis/lifeomic/phc-sdk-py/master.svg?style=for-the-badge">
+<img alt="PyPI status" src="https://img.shields.io/pypi/status/phc.svg?style=for-the-badge">
+<img alt="GitHub release" src="https://img.shields.io/github/release/lifeomic/phc-sdk-py.svg?style=for-the-badge"></p>
+<h1 id="getting-started">Getting Started</h1>
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li><a href="https://www.python.org/download/releases/3.0/">Python 3</a> version &gt;= 3.7</li>
+</ul>
+<h2 id="getting-the-source">Getting the Source</h2>
+<p>This project is <a href="https://github.com/lifeomic/phc-sdk-py">hosted on GitHub</a>. You can clone this project directly using this command:</p>
+<pre><code class="bash">git clone git@github.com:lifeomic/phc-sdk-py.git
+</code></pre>
+<h2 id="development">Development</h2>
+<p>Python environments are managed using <a href="https://virtualenv.pypa.io/en/latest/">virtualenv</a>.
+Be sure to have this installed first <code>pip install virtualenv</code>.
+The makefile will setup the environment for the targets listed below.</p>
+<h3 id="setup">Setup</h3>
+<p>This installs some pre-commit hooks that will format and lint new changes.</p>
+<pre><code class="bash">make setup
+</code></pre>
+<h3 id="running-tests">Running tests</h3>
+<pre><code class="bash">make test
+</code></pre>
+<h3 id="linting">Linting</h3>
+<pre><code class="bash">make lint
+</code></pre>
+<h2 id="installation">Installation</h2>
+<pre><code class="bash">pip3 install phc
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>A <code>Session</code> needs to be created first that stores the token and account information needed to access the PHC API.
+One can currently using API Key tokens generated from the PHC Account, or OAuth tokens generated using the <a href="https://github.com/lifeomic/cli">CLI</a>.</p>
+<pre><code class="python">from phc import Session
+
+session = Session(token=&lt;TOKEN VALUE&gt;, account=&quot;myaccount&quot;)
+</code></pre>
+<p>Once a <code>Session</code> is created, you can then access the different parts of the platform.</p>
+<pre><code class="python">from phc import Accounts
+
+accounts = Accounts(session)
+myaccounts = accounts.get_list()
+</code></pre>
+<p>Here's and example of fetching FHIR resource using SQL:</p>
+<pre><code class="python">import pandas as pd
+from phc import Fhir
+
+fhir = Fhir(session)
+
+res = fhir.execute_sql(project='19e34782-91c4-4143-aaee-2ba81ed0b206',
+                       statement='SELECT * from patient LIMIT 0,5000')
+
+resources = list(map(lambda r: r.get(&quot;_source&quot;), res.get(&quot;hits&quot;).get(&quot;hits&quot;)))
+df = pd.DataFrame(resources)
+</code></pre>
+<p>While here's an example of fetching patients observation data from using Analytics DSL. Notice that in this case, there is a helper query builder class (PatientFilterQueryBuilder):</p>
+<pre><code class="python">from phc import Analytics, PatientFilterQueryBuilder
+
+client = Analytics(session)
+search = PatientFilterQueryBuilder()
+search.patient() \
+    .observations() \
+    .code(eq='11142-7') \
+    .system(eq='http://loinc.org') \
+    .value_quantity(lt=40)
+
+res = client.get_patients(project='5a07dedb-fa2a-4cb0-b662-95b23a050221', query_builder=search)
+
+print(f&quot;Found {len(res)} patients&quot;)
+
+</code></pre>
+<p>While here's an example of fetching data using data lake engine:</p>
+<pre><code class="python">from phc import Session, DataLakeQuery, Analytics
+
+session = Session()
+client = Analytics(session)
+
+dataset_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
+query_string = &quot;SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'&quot;
+output_file_name = 'query-test-notebook'
+query = DataLakeQuery(dataset_id=dataset_id, query=query_string, output_file_name=output_file_name)
+
+query_id = client.execute_data_lake_query(query)
+specific_query = client.get_data_lake_query(query_id)
+paginated_dataset_queries = client.list_data_lake_queries(dataset_id=dataset_id)
+print(query_id)
+</code></pre>
+<h1 id="release-process">Release Process</h1>
+<p><a href="https://github.com/lifeomic/phc-sdk-py/releases">Releases</a> are generally created with each merged PR. Packages for each release are published to <a href="https://pypi.org/project/phc/">PyPi</a>. See <a href="CHANGELOG.md">CHANGELOG.md</a> for release notes.</p>
+<h2 id="versioning">Versioning</h2>
+<p>This project uses <a href="http://semver.org/">Semantic Versioning</a>.</p>
+<h1 id="contributing">Contributing</h1>
+<p>We encourage public contributions! Please review <a href="CONTRIBUTING.md">CONTRIBUTING.md</a> and <a href="CODE_OF_CONDUCT.md">CODE_OF_CONDUCT.md</a> for details on our code of conduct and development process.</p>
+<h1 id="license">License</h1>
+<p>This project is licensed under the MIT License - see <a href="LICENSE">LICENSE</a> file for details.</p>
+<h1 id="authors">Authors</h1>
+<p>See the list of <a href="https://github.com/lifeomic/cli/contributors">contributors</a> who participate in this project.</p>
+<h1 id="acknowledgements">Acknowledgements</h1>
+<p>This project is built with the following:</p>
+<ul>
+<li><a href="https://aiohttp.readthedocs.io/en/stable/">aiohttp</a> - Asynchronous HTTP Client/Server for asyncio and Python.</li>
+</ul>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+.. include:: ../README.md
+&#34;&#34;&#34;
+from phc.web.session import Session
+from phc.web.accounts import Accounts
+from phc.web.projects import Projects
+from phc.web.fhir import Fhir
+from phc.web.analytics import Analytics
+from phc.web.patient_filter_query_builder import PatientFilterQueryBuilder
+from phc.web.data_lake_query import DataLakeQuery
+from phc.errors import ClientError, RequestError, ApiError
+
+__all__ = [
+    &#34;Session&#34;,
+    &#34;Accounts&#34;,
+    &#34;Projects&#34;,
+    &#34;Fhir&#34;,
+    &#34;Analytics&#34;,
+    &#34;PatientFilterQueryBuilder&#34;,
+    &#34;DataLakeQuery&#34;,
+    &#34;ClientError&#34;,
+    &#34;RequestError&#34;,
+    &#34;ApiError&#34;,
+]
+
+__pdoc__ = {&#34;web&#34;: False, &#34;errors&#34;: False, &#34;version&#34;: False}</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="phc.Accounts"><code class="flex name class">
+<span>class <span class="ident">Accounts</span></span>
+<span>(</span><span>session, run_async=False, timeout=30)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides acccess to PHC accounts</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Accounts(BaseClient):
+    &#34;&#34;&#34;Provides acccess to PHC accounts&#34;&#34;&#34;
+
+    def get_list(self):
+        &#34;&#34;&#34;Fetch the list of accounts that the current session belongs to.
+
+        Returns:
+            [list] -- A list of accounts
+        &#34;&#34;&#34;
+        return self._api_call(&#34;accounts&#34;, http_verb=&#34;GET&#34;).get(&#34;accounts&#34;)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.web.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.Accounts.get_list"><code class="name flex">
+<span>def <span class="ident">get_list</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetch the list of accounts that the current session belongs to.</p>
+<h2 id="returns">Returns</h2>
+<p>[list] &ndash; A list of accounts</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_list(self):
+    &#34;&#34;&#34;Fetch the list of accounts that the current session belongs to.
+
+    Returns:
+        [list] -- A list of accounts
+    &#34;&#34;&#34;
+    return self._api_call(&#34;accounts&#34;, http_verb=&#34;GET&#34;).get(&#34;accounts&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.Analytics"><code class="flex name class">
+<span>class <span class="ident">Analytics</span></span>
+<span>(</span><span>session, run_async=False, timeout=30)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides analytics subject search</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Analytics(BaseClient):
+    &#34;&#34;&#34;Provides analytics subject search&#34;&#34;&#34;
+
+    def get_patients(self, project, query_builder):
+        payload = query_builder.to_dict()
+        payload[&#34;dataset_id&#34;] = project
+        return (
+            self._api_call(&#34;analytics/dsl&#34;, http_verb=&#34;POST&#34;, json=payload)
+            .get(&#34;data&#34;)
+            .get(&#34;patients&#34;)
+        )
+
+    def execute_data_lake_query(self, query):
+        payload = query.to_request_dict()
+        return self._api_call(
+            &#34;analytics/query&#34;, http_verb=&#34;POST&#34;, json=payload
+        ).get(&#34;queryId&#34;)
+
+    def list_data_lake_queries(
+        self, dataset_id, page_size=25, next_page_token=None
+    ):
+        path = &#34;analytics/query?datasetId=%s&amp;pageSize=%d&#34; % (
+            dataset_id,
+            page_size,
+        )
+        if next_page_token:
+            path = &#34;%s&amp;nextPageToken=%s&#34; % (path, next_page_token)
+        return self._api_call(path, http_verb=&#34;GET&#34;)
+
+    def get_data_lake_query(self, query_id):
+        return self._api_call(&#34;analytics/query/%s&#34; % query_id, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.web.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.Analytics.execute_data_lake_query"><code class="name flex">
+<span>def <span class="ident">execute_data_lake_query</span></span>(<span>self, query)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute_data_lake_query(self, query):
+    payload = query.to_request_dict()
+    return self._api_call(
+        &#34;analytics/query&#34;, http_verb=&#34;POST&#34;, json=payload
+    ).get(&#34;queryId&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.Analytics.get_data_lake_query"><code class="name flex">
+<span>def <span class="ident">get_data_lake_query</span></span>(<span>self, query_id)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_data_lake_query(self, query_id):
+    return self._api_call(&#34;analytics/query/%s&#34; % query_id, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.Analytics.get_patients"><code class="name flex">
+<span>def <span class="ident">get_patients</span></span>(<span>self, project, query_builder)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_patients(self, project, query_builder):
+    payload = query_builder.to_dict()
+    payload[&#34;dataset_id&#34;] = project
+    return (
+        self._api_call(&#34;analytics/dsl&#34;, http_verb=&#34;POST&#34;, json=payload)
+        .get(&#34;data&#34;)
+        .get(&#34;patients&#34;)
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.Analytics.list_data_lake_queries"><code class="name flex">
+<span>def <span class="ident">list_data_lake_queries</span></span>(<span>self, dataset_id, page_size=25, next_page_token=None)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def list_data_lake_queries(
+    self, dataset_id, page_size=25, next_page_token=None
+):
+    path = &#34;analytics/query?datasetId=%s&amp;pageSize=%d&#34; % (
+        dataset_id,
+        page_size,
+    )
+    if next_page_token:
+        path = &#34;%s&amp;nextPageToken=%s&#34; % (path, next_page_token)
+    return self._api_call(path, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.ApiError"><code class="flex name class">
+<span>class <span class="ident">ApiError</span></span>
+<span>(</span><span>message, response)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Error raised when Slack does not send the expected response.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>response</code></strong> :&ensp;<code>ApiResponse</code></dt>
+<dd>The ApiResponse object containing all of the data sent back from the API.</dd>
+</dl>
+<h2 id="note">Note</h2>
+<p>The message (str) passed into the exception is used when
+a user converts the exception to a str.
+i.e. str(ApiError("This text will be sent as a string."))</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ApiError(ClientError):
+    &#34;&#34;&#34;Error raised when Slack does not send the expected response.
+    Attributes:
+        response (ApiResponse): The ApiResponse object containing all of the data sent back from the API.
+    Note:
+        The message (str) passed into the exception is used when
+        a user converts the exception to a str.
+        i.e. str(ApiError(&#34;This text will be sent as a string.&#34;))
+    &#34;&#34;&#34;
+
+    def __init__(self, message, response):
+        msg = f&#34;{message}\nThe server responded with: {response}&#34;
+        self.response = response
+        super(ApiError, self).__init__(msg)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.errors.ClientError</li>
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="phc.ClientError"><code class="flex name class">
+<span>class <span class="ident">ClientError</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Base class for Client errors</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ClientError(Exception):
+    &#34;&#34;&#34;Base class for Client errors&#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li>phc.errors.RequestError</li>
+<li>phc.errors.ApiError</li>
+</ul>
+</dd>
+<dt id="phc.DataLakeQuery"><code class="flex name class">
+<span>class <span class="ident">DataLakeQuery</span></span>
+<span>(</span><span>dataset_id, query, output_file_name)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DataLakeQuery(object):
+    def __init__(self, dataset_id, query, output_file_name):
+        self.__dataset_id = dataset_id
+        self.__query = query
+        self.__output_file_name = output_file_name
+
+    def to_request_dict(self):
+        return {
+            &#34;query&#34;: self.__query,
+            &#34;datasetId&#34;: self.__dataset_id,
+            &#34;outputFileName&#34;: self.__output_file_name,
+        }</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.DataLakeQuery.to_request_dict"><code class="name flex">
+<span>def <span class="ident">to_request_dict</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_request_dict(self):
+    return {
+        &#34;query&#34;: self.__query,
+        &#34;datasetId&#34;: self.__dataset_id,
+        &#34;outputFileName&#34;: self.__output_file_name,
+    }</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.Fhir"><code class="flex name class">
+<span>class <span class="ident">Fhir</span></span>
+<span>(</span><span>session, run_async=False, timeout=30)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides methods to run search using SQL or Elasticsearch queries</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Fhir(BaseClient):
+    &#34;&#34;&#34;Provides methods to run search using SQL or Elasticsearch queries&#34;&#34;&#34;
+
+    def execute_sql(self, project, statement):
+        &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
+        Returns:
+            [List] -- Dictionary with query response
+        &#34;&#34;&#34;
+        return self._api_call(
+            api_path=&#34;fhir-search/projects/{}&#34;.format(project),
+            http_verb=&#34;POST&#34;,
+            data=statement,
+            headers={&#34;Content-Type&#34;: &#34;text/plain&#34;},
+        ).data
+
+    def execute_es(self, project, query):
+        &#34;&#34;&#34;Executes an elasticsearch query against fhir-searh-service
+        Returns:
+            [Dict] -- Dictionary with query response
+        &#34;&#34;&#34;
+        return self._api_call(
+            api_path=&#34;fhir-search/projects/{}&#34;.format(project),
+            http_verb=&#34;POST&#34;,
+            json=query,
+        ).data</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.web.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.Fhir.execute_es"><code class="name flex">
+<span>def <span class="ident">execute_es</span></span>(<span>self, project, query)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Executes an elasticsearch query against fhir-searh-service</p>
+<h2 id="returns">Returns</h2>
+<p>[Dict] &ndash; Dictionary with query response</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute_es(self, project, query):
+    &#34;&#34;&#34;Executes an elasticsearch query against fhir-searh-service
+    Returns:
+        [Dict] -- Dictionary with query response
+    &#34;&#34;&#34;
+    return self._api_call(
+        api_path=&#34;fhir-search/projects/{}&#34;.format(project),
+        http_verb=&#34;POST&#34;,
+        json=query,
+    ).data</code></pre>
+</details>
+</dd>
+<dt id="phc.Fhir.execute_sql"><code class="name flex">
+<span>def <span class="ident">execute_sql</span></span>(<span>self, project, statement)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Executes an SQL query against fhir-searh-service</p>
+<h2 id="returns">Returns</h2>
+<p>[List] &ndash; Dictionary with query response</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute_sql(self, project, statement):
+    &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
+    Returns:
+        [List] -- Dictionary with query response
+    &#34;&#34;&#34;
+    return self._api_call(
+        api_path=&#34;fhir-search/projects/{}&#34;.format(project),
+        http_verb=&#34;POST&#34;,
+        data=statement,
+        headers={&#34;Content-Type&#34;: &#34;text/plain&#34;},
+    ).data</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.PatientFilterQueryBuilder"><code class="flex name class">
+<span>class <span class="ident">PatientFilterQueryBuilder</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Top most query for subject searches.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PatientFilterQueryBuilder(BaseQueryBuilder):
+    &#34;&#34;&#34;
+    Top most query for subject searches.
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        self.search_components = dict()
+
+    def patient(self):
+        patient_component = Resource()
+        self.search_components[&#39;patient&#39;] = patient_component
+        return patient_component
+
+    def to_dict(self):
+        query = {
+            &#39;query&#39;: {
+                &#39;where&#39;: {},
+                &#39;domain&#39;: &#39;filter&#39;,
+                &#39;target&#39;: &#39;patient&#39;
+            }
+        }
+
+        search_components_dict = dict()
+        for key, component in self.search_components.items():
+            search_components_dict[key] = component if component is dict else component.to_dict()
+
+        query[&#39;query&#39;][&#39;where&#39;] = search_components_dict
+        return query</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.web.patient_filter_query_builder.BaseQueryBuilder</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.PatientFilterQueryBuilder.patient"><code class="name flex">
+<span>def <span class="ident">patient</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def patient(self):
+    patient_component = Resource()
+    self.search_components[&#39;patient&#39;] = patient_component
+    return patient_component</code></pre>
+</details>
+</dd>
+<dt id="phc.PatientFilterQueryBuilder.to_dict"><code class="name flex">
+<span>def <span class="ident">to_dict</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_dict(self):
+    query = {
+        &#39;query&#39;: {
+            &#39;where&#39;: {},
+            &#39;domain&#39;: &#39;filter&#39;,
+            &#39;target&#39;: &#39;patient&#39;
+        }
+    }
+
+    search_components_dict = dict()
+    for key, component in self.search_components.items():
+        search_components_dict[key] = component if component is dict else component.to_dict()
+
+    query[&#39;query&#39;][&#39;where&#39;] = search_components_dict
+    return query</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.Projects"><code class="flex name class">
+<span>class <span class="ident">Projects</span></span>
+<span>(</span><span>session, run_async=False, timeout=30)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides acccess to PHC projects</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Projects(BaseClient):
+    &#34;&#34;&#34;Provides acccess to PHC projects&#34;&#34;&#34;
+
+    def create(self, name, description=None):
+        &#34;&#34;&#34;Creates a project.
+
+        Returns:
+            [Dict] -- created project
+        &#34;&#34;&#34;
+        json_body = {&#34;name&#34;: name}
+        if description:
+            json_body[&#34;description&#34;] = description
+        return self._api_call(&#34;projects&#34;, json=json_body, http_verb=&#34;POST&#34;).data
+
+    def get(self, project):
+        &#34;&#34;&#34;Fetch a project by id.
+
+        Returns:
+            [Dict] -- project details
+        &#34;&#34;&#34;
+        return self._api_call(
+            &#34;projects/{}&#34;.format(project), http_verb=&#34;GET&#34;
+        ).data
+
+    def update(self, project, name, description=None):
+        &#34;&#34;&#34;Fetch a project by id.
+
+        Returns:
+            [Dict] -- project details
+        &#34;&#34;&#34;
+        json_body = {&#34;name&#34;: name}
+        if description:
+            json_body[&#34;description&#34;] = description
+        return self._api_call(
+            &#34;projects/{}&#34;.format(project), json=json_body, http_verb=&#34;PATCH&#34;
+        ).data
+
+    def delete(self, project):
+        &#34;&#34;&#34;Deletes a project.
+
+        Returns:
+          [Boolean] -- True upon successful deletion
+        &#34;&#34;&#34;
+        return (
+            self._api_call(
+                &#34;projects/{}&#34;.format(project), http_verb=&#34;DELETE&#34;
+            ).status_code
+            == 204
+        )
+
+    def get_list(
+        self,
+        page_size: int = None,
+        next_page_token: str = None,
+        name: str = None,
+    ):
+        &#34;&#34;&#34;Fetch the list of projects that the current session belongs to.
+
+        Returns:
+            [Dict] -- A list of projects as pages
+        &#34;&#34;&#34;
+        query_dict = {}
+        if page_size:
+            query_dict[&#34;pageSize&#34;] = page_size
+        if next_page_token:
+            query_dict[&#34;nextPageToken&#34;] = next_page_token
+        if name:
+            query_dict[&#34;name&#34;] = name
+        api_response = self._api_call(
+            &#34;projects?{}&#34;.format(urlencode(query_dict)), http_verb=&#34;GET&#34;
+        )
+
+        retVal = {&#34;items&#34;: api_response.get(&#34;items&#34;)}
+        if &#34;next&#34; in api_response.get(&#34;links&#34;):
+            link_next = api_response.get(&#34;links&#34;)[&#34;next&#34;]
+            retVal[&#34;next_page_token&#34;] = link_next[
+                link_next.find(&#34;=&#34;) + 1 : link_next.find(&#34;&amp;&#34;)
+            ]
+
+        return retVal</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.web.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.Projects.create"><code class="name flex">
+<span>def <span class="ident">create</span></span>(<span>self, name, description=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Creates a project.</p>
+<h2 id="returns">Returns</h2>
+<p>[Dict] &ndash; created project</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create(self, name, description=None):
+    &#34;&#34;&#34;Creates a project.
+
+    Returns:
+        [Dict] -- created project
+    &#34;&#34;&#34;
+    json_body = {&#34;name&#34;: name}
+    if description:
+        json_body[&#34;description&#34;] = description
+    return self._api_call(&#34;projects&#34;, json=json_body, http_verb=&#34;POST&#34;).data</code></pre>
+</details>
+</dd>
+<dt id="phc.Projects.delete"><code class="name flex">
+<span>def <span class="ident">delete</span></span>(<span>self, project)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Deletes a project.</p>
+<h2 id="returns">Returns</h2>
+<p>[Boolean] &ndash; True upon successful deletion</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete(self, project):
+    &#34;&#34;&#34;Deletes a project.
+
+    Returns:
+      [Boolean] -- True upon successful deletion
+    &#34;&#34;&#34;
+    return (
+        self._api_call(
+            &#34;projects/{}&#34;.format(project), http_verb=&#34;DELETE&#34;
+        ).status_code
+        == 204
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.Projects.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, project)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetch a project by id.</p>
+<h2 id="returns">Returns</h2>
+<p>[Dict] &ndash; project details</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(self, project):
+    &#34;&#34;&#34;Fetch a project by id.
+
+    Returns:
+        [Dict] -- project details
+    &#34;&#34;&#34;
+    return self._api_call(
+        &#34;projects/{}&#34;.format(project), http_verb=&#34;GET&#34;
+    ).data</code></pre>
+</details>
+</dd>
+<dt id="phc.Projects.get_list"><code class="name flex">
+<span>def <span class="ident">get_list</span></span>(<span>self, page_size=None, next_page_token=None, name=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetch the list of projects that the current session belongs to.</p>
+<h2 id="returns">Returns</h2>
+<p>[Dict] &ndash; A list of projects as pages</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_list(
+    self,
+    page_size: int = None,
+    next_page_token: str = None,
+    name: str = None,
+):
+    &#34;&#34;&#34;Fetch the list of projects that the current session belongs to.
+
+    Returns:
+        [Dict] -- A list of projects as pages
+    &#34;&#34;&#34;
+    query_dict = {}
+    if page_size:
+        query_dict[&#34;pageSize&#34;] = page_size
+    if next_page_token:
+        query_dict[&#34;nextPageToken&#34;] = next_page_token
+    if name:
+        query_dict[&#34;name&#34;] = name
+    api_response = self._api_call(
+        &#34;projects?{}&#34;.format(urlencode(query_dict)), http_verb=&#34;GET&#34;
+    )
+
+    retVal = {&#34;items&#34;: api_response.get(&#34;items&#34;)}
+    if &#34;next&#34; in api_response.get(&#34;links&#34;):
+        link_next = api_response.get(&#34;links&#34;)[&#34;next&#34;]
+        retVal[&#34;next_page_token&#34;] = link_next[
+            link_next.find(&#34;=&#34;) + 1 : link_next.find(&#34;&amp;&#34;)
+        ]
+
+    return retVal</code></pre>
+</details>
+</dd>
+<dt id="phc.Projects.update"><code class="name flex">
+<span>def <span class="ident">update</span></span>(<span>self, project, name, description=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetch a project by id.</p>
+<h2 id="returns">Returns</h2>
+<p>[Dict] &ndash; project details</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update(self, project, name, description=None):
+    &#34;&#34;&#34;Fetch a project by id.
+
+    Returns:
+        [Dict] -- project details
+    &#34;&#34;&#34;
+    json_body = {&#34;name&#34;: name}
+    if description:
+        json_body[&#34;description&#34;] = description
+    return self._api_call(
+        &#34;projects/{}&#34;.format(project), json=json_body, http_verb=&#34;PATCH&#34;
+    ).data</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.RequestError"><code class="flex name class">
+<span>class <span class="ident">RequestError</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Error raised when there's a problem with the request that's being submitted.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RequestError(ClientError):
+    &#34;&#34;&#34;Error raised when there&#39;s a problem with the request that&#39;s being submitted.
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.errors.ClientError</li>
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="phc.Session"><code class="flex name class">
+<span>class <span class="ident">Session</span></span>
+<span>(</span><span>token=None, account=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Represents a PHC API session</p>
+<p>Initailizes a Session with token and account credentials.</p>
+<p>Keyword Arguments:
+token {str} &ndash; The access token (default: {PHC_ACCESS_TOKEN env var})
+account {str} &ndash; The account (default: {PHC_ACCOUNT env var})</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Session:
+    &#34;&#34;&#34;Represents a PHC API session&#34;&#34;&#34;
+
+    def __init__(
+        self,
+        token: str = os.environ.get(&#34;PHC_ACCESS_TOKEN&#34;),
+        account: str = os.environ.get(&#34;PHC_ACCOUNT&#34;),
+    ):
+        &#34;&#34;&#34;Initailizes a Session with token and account credentials.
+
+        Keyword Arguments:
+            token {str} -- The access token (default: {PHC_ACCESS_TOKEN env var})
+            account {str} -- The account (default: {PHC_ACCOUNT env var})
+        &#34;&#34;&#34;
+        self.token = token
+        self.account = account</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<header>
+<a class="homelink" rel="home" title="PHC Home" href="https://lifeomic.github.io/phc-sdk-py/">
+<img src="https://lifeomic.github.io/phc-sdk-py/phc.png" alt=""> PHC
+</a>
+</header>
+<h1>Index</h1>
+<div class="toc">
+<ul>
+<li><a href="#project-status">Project Status</a></li>
+<li><a href="#getting-started">Getting Started</a><ul>
+<li><a href="#dependencies">Dependencies</a></li>
+<li><a href="#getting-the-source">Getting the Source</a></li>
+<li><a href="#development">Development</a><ul>
+<li><a href="#setup">Setup</a></li>
+<li><a href="#running-tests">Running tests</a></li>
+<li><a href="#linting">Linting</a></li>
+</ul>
+</li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#usage">Usage</a></li>
+</ul>
+</li>
+<li><a href="#release-process">Release Process</a><ul>
+<li><a href="#versioning">Versioning</a></li>
+</ul>
+</li>
+<li><a href="#contributing">Contributing</a></li>
+<li><a href="#license">License</a></li>
+<li><a href="#authors">Authors</a></li>
+<li><a href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="phc.Accounts" href="#phc.Accounts">Accounts</a></code></h4>
+<ul class="">
+<li><code><a title="phc.Accounts.get_list" href="#phc.Accounts.get_list">get_list</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.Analytics" href="#phc.Analytics">Analytics</a></code></h4>
+<ul class="">
+<li><code><a title="phc.Analytics.execute_data_lake_query" href="#phc.Analytics.execute_data_lake_query">execute_data_lake_query</a></code></li>
+<li><code><a title="phc.Analytics.get_data_lake_query" href="#phc.Analytics.get_data_lake_query">get_data_lake_query</a></code></li>
+<li><code><a title="phc.Analytics.get_patients" href="#phc.Analytics.get_patients">get_patients</a></code></li>
+<li><code><a title="phc.Analytics.list_data_lake_queries" href="#phc.Analytics.list_data_lake_queries">list_data_lake_queries</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.ApiError" href="#phc.ApiError">ApiError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="phc.ClientError" href="#phc.ClientError">ClientError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="phc.DataLakeQuery" href="#phc.DataLakeQuery">DataLakeQuery</a></code></h4>
+<ul class="">
+<li><code><a title="phc.DataLakeQuery.to_request_dict" href="#phc.DataLakeQuery.to_request_dict">to_request_dict</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.Fhir" href="#phc.Fhir">Fhir</a></code></h4>
+<ul class="">
+<li><code><a title="phc.Fhir.execute_es" href="#phc.Fhir.execute_es">execute_es</a></code></li>
+<li><code><a title="phc.Fhir.execute_sql" href="#phc.Fhir.execute_sql">execute_sql</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.PatientFilterQueryBuilder" href="#phc.PatientFilterQueryBuilder">PatientFilterQueryBuilder</a></code></h4>
+<ul class="">
+<li><code><a title="phc.PatientFilterQueryBuilder.patient" href="#phc.PatientFilterQueryBuilder.patient">patient</a></code></li>
+<li><code><a title="phc.PatientFilterQueryBuilder.to_dict" href="#phc.PatientFilterQueryBuilder.to_dict">to_dict</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.Projects" href="#phc.Projects">Projects</a></code></h4>
+<ul class="">
+<li><code><a title="phc.Projects.create" href="#phc.Projects.create">create</a></code></li>
+<li><code><a title="phc.Projects.delete" href="#phc.Projects.delete">delete</a></code></li>
+<li><code><a title="phc.Projects.get" href="#phc.Projects.get">get</a></code></li>
+<li><code><a title="phc.Projects.get_list" href="#phc.Projects.get_list">get_list</a></code></li>
+<li><code><a title="phc.Projects.update" href="#phc.Projects.update">update</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.RequestError" href="#phc.RequestError">RequestError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="phc.Session" href="#phc.Session">Session</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
