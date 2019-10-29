@@ -9,7 +9,7 @@ script: make
 deploy:
 
   - provider: script
-    script: make package
+    script: make package doc
     on:
       tags: true
 
@@ -27,9 +27,10 @@ deploy:
     on:
       tags: true
 
-  - provider: script
-    script: make doc
-    after_success:
-      bash .github/deploy-gh-pages.sh
+  - provider: pages
+    local_dir: doc/build/phc
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    keep_history: true
     on:
       tags: true
