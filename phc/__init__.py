@@ -1,26 +1,20 @@
 """
 .. include:: ../README.md
 """
-from phc.web.session import Session
-from phc.web.accounts import Accounts
-from phc.web.projects import Projects
-from phc.web.fhir import Fhir
-from phc.web.analytics import Analytics
-from phc.web.patient_filter_query_builder import PatientFilterQueryBuilder
-from phc.web.data_lake_query import DataLakeQuery
-from phc.errors import ClientError, RequestError, ApiError
+import nest_asyncio
+from phc.session import Session
+from phc.api_response import ApiResponse
+import phc.services as services
+import phc.util as util
 
-__all__ = [
-    "Session",
-    "Accounts",
-    "Projects",
-    "Fhir",
-    "Analytics",
-    "PatientFilterQueryBuilder",
-    "DataLakeQuery",
-    "ClientError",
-    "RequestError",
-    "ApiError",
-]
+# https://markhneedham.com/blog/2019/05/10/jupyter-runtimeerror-this-event-loop-is-already-running/
+nest_asyncio.apply()
 
-__pdoc__ = {"web": False, "errors": False, "version": False}
+__all__ = ["Session", "ApiResponse"]
+
+__pdoc__ = {
+    "version": False,
+    "base_client": False,
+    "api_response": False,
+    "session": False,
+}

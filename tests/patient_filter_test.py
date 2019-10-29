@@ -1,9 +1,9 @@
 import unittest
 
-from phc.web.patient_filter_query_builder import (
+from phc.util.patient_filter_query_builder import (
     PatientFilterQueryBuilder,
-    ObservationProperty,
-    Property,
+    QueryObservationProperty,
+    QueryProperty,
 )
 
 
@@ -12,7 +12,7 @@ class PatientFilterQueryBuilderTest(unittest.TestCase):
         filter_obj = PatientFilterQueryBuilder()
         filter_obj.patient().with_observations(
             [
-                ObservationProperty().value_codeable_concept(
+                QueryObservationProperty().value_codeable_concept(
                     eq=["LA10316-0", "LA10315-2"]
                 )
             ]
@@ -40,16 +40,16 @@ class PatientFilterQueryBuilderTest(unittest.TestCase):
         filter_obj = PatientFilterQueryBuilder()
         filter_obj.patient().with_observations(
             [
-                ObservationProperty().value_codeable_concept_code(
+                QueryObservationProperty().value_codeable_concept_code(
                     eq=["LA10316-0", "LA10315-2"]
                 ),
-                ObservationProperty().with_components(
+                QueryObservationProperty().with_components(
                     [
-                        Property()
+                        QueryProperty()
                         .code(eq="allele1")
                         .system(eq="http://regenstrief.org/pgx")
                         .value_string(eq="C"),
-                        Property()
+                        QueryProperty()
                         .code(eq="allele2")
                         .system(eq="http://regenstrief.org/pgx")
                         .value_string(eq="G"),

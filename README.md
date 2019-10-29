@@ -64,7 +64,7 @@ session = Session(token=<TOKEN VALUE>, account="myaccount")
 Once a `Session` is created, you can then access the different parts of the platform.
 
 ```python
-from phc import Accounts
+from phc.services import Accounts
 
 accounts = Accounts(session)
 myaccounts = accounts.get_list()
@@ -73,7 +73,7 @@ myaccounts = accounts.get_list()
 Here's and example of fetching FHIR resource using SQL:
 ```python
 import pandas as pd
-from phc import Fhir
+from phc.services import Fhir
 
 fhir = Fhir(session)
 
@@ -87,7 +87,8 @@ df = pd.DataFrame(resources)
 While here's an example of fetching patients observation data from using Analytics DSL. Notice that in this case, there is a helper query builder class (PatientFilterQueryBuilder):
 
 ```python
-from phc import Analytics, PatientFilterQueryBuilder
+from phc.services import Analytics
+from phc.util import PatientFilterQueryBuilder
 
 client = Analytics(session)
 search = PatientFilterQueryBuilder()
@@ -106,7 +107,9 @@ print(f"Found {len(res)} patients")
 While here's an example of fetching data using data lake engine:
 
 ```python
-from phc import Session, DataLakeQuery, Analytics
+from phc import Session
+from phc.services import Analytics
+from phc.util import DataLakeQuery
 
 session = Session()
 client = Analytics(session)

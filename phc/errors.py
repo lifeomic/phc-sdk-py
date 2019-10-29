@@ -11,13 +11,19 @@ class RequestError(ClientError):
 
 
 class ApiError(ClientError):
-    """Error raised when Slack does not send the expected response.
-    Attributes:
-        response (ApiResponse): The ApiResponse object containing all of the data sent back from the API.
-    Note:
-        The message (str) passed into the exception is used when
-        a user converts the exception to a str.
-        i.e. str(ApiError("This text will be sent as a string."))
+    """Error raised when the PHC does not send the expected response.
+
+    Parameters
+    ----------
+    message : str
+        The error
+    response: phc.ApiResponse
+        The ApiResponse object containing all of the data sent back from the API.
+
+    Attributes
+    ----------
+    response: phc.ApiResponse
+        The ApiResponse object containing all of the data sent back from the API.
     """
 
     def __init__(self, message, response):
