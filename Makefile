@@ -34,6 +34,8 @@ format: venv
 
 doc: venv
 	$(PDOC) --html --output-dir doc/build ./phc --force --config show_inherited_members=True --config list_class_variables_in_index=False --template-dir doc/template
+	cp doc/phc.png doc/build/phc/phc.png
+	cp doc/favicon.ico doc/build/phc/favicon.ico
 
 test: lint
 	$(NOSE) -v tests
