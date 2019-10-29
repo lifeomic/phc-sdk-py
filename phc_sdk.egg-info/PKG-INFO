@@ -1,0 +1,35 @@
+Metadata-Version: 2.1
+Name: phc-sdk
+Version: 0.1.0
+Summary: Python interface for the PHC.
+Home-page: https://lifeomic.github.io/phc-sdk-py/
+Author: LifeOmic Development
+Author-email: development@lifeomic.com
+License: MIT
+Description: ![GitHub](https://img.shields.io/github/license/lifeomic/phc-sdk-py.svg?style=for-the-badge)
+        ![Travis (.org) branch](https://img.shields.io/travis/lifeomic/phc-sdk-py/master.svg?style=for-the-badge)
+        ![PyPI status](https://img.shields.io/pypi/status/phc-sdk-py.svg?style=for-the-badge)
+        ![GitHub release](https://img.shields.io/github/release/lifeomic/phc-sdk-py.svg?style=for-the-badge)
+        
+        # phc-sdk-py
+        
+        A Python3 SDK for the PHC.
+        
+        ## License
+        
+        This project is licensed under the MIT - see the [LICENSE](LICENSE.txt) file for details.
+        
+        ## Acknowledgments
+        
+        [TODO]
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Healthcare Industry
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Topic :: Utilities
+Description-Content-Type: text/markdown
