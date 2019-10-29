@@ -22,7 +22,8 @@ head=$(git rev-parse HEAD)
 
 git clone -b gh-pages "https://kernc:$GH_PASSWORD@github.com/$TRAVIS_REPO_SLUG.git" gh-pages
 mkdir -p gh-pages/doc
-cp -R doc/build/* gh-pages/doc/
+cp -R doc/build/phc/* gh-pages/
+cp doc/phc.png gh-pages/phc.png
 cd gh-pages
 sitemap
 git add *
