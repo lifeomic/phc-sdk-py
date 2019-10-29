@@ -1,3 +1,6 @@
+"""
+.. include:: ../README.md
+"""
 from phc.web.session import Session
 from phc.web.accounts import Accounts
 from phc.web.projects import Projects
@@ -19,3 +22,5 @@ __all__ = [
     "RequestError",
     "ApiError",
 ]
+
+__pdoc__ = {"web": False, "errors": False, "version": False}

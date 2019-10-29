@@ -16,7 +16,7 @@ class BaseClient:
     """Base client for making API requests."""
 
     # TODO: Make this configurable
-    BASE_URL = "https://api.dev.lifeomic.com"
+    _BASE_URL = "https://api.dev.lifeomic.com"
 
     def __init__(self, session, run_async=False, timeout=30):
         self.session = session
@@ -72,7 +72,7 @@ class BaseClient:
 
         return final_headers
 
-    def api_call(
+    def _api_call(
         self,
         api_path: str,
         http_verb: str = "POST",
@@ -113,7 +113,7 @@ class BaseClient:
         if self._event_loop is None:
             self._event_loop = self._get_event_loop()
 
-        api_url = urljoin(self.BASE_URL, "v1/{}".format(api_path))
+        api_url = urljoin(self._BASE_URL, "v1/{}".format(api_path))
 
         future = asyncio.ensure_future(
             self._send(http_verb=http_verb, api_url=api_url, req_args=req_args),

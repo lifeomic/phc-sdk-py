@@ -8,14 +8,14 @@ class Analytics(BaseClient):
         payload = query_builder.to_dict()
         payload["dataset_id"] = project
         return (
-            self.api_call("analytics/dsl", http_verb="POST", json=payload)
+            self._api_call("analytics/dsl", http_verb="POST", json=payload)
             .get("data")
             .get("patients")
         )
 
     def execute_data_lake_query(self, query):
         payload = query.to_request_dict()
-        return self.api_call(
+        return self._api_call(
             "analytics/query", http_verb="POST", json=payload
         ).get("queryId")
 
@@ -28,7 +28,7 @@ class Analytics(BaseClient):
         )
         if next_page_token:
             path = "%s&nextPageToken=%s" % (path, next_page_token)
-        return self.api_call(path, http_verb="GET")
+        return self._api_call(path, http_verb="GET")
 
     def get_data_lake_query(self, query_id):
-        return self.api_call("analytics/query/%s" % query_id, http_verb="GET")
+        return self._api_call("analytics/query/%s" % query_id, http_verb="GET")

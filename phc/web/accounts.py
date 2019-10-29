@@ -12,4 +12,4 @@ class Accounts(BaseClient):
         Returns:
             [list] -- A list of accounts
         """
-        return self.api_call("accounts", http_verb="GET").get("accounts")
+        return self._api_call("accounts", http_verb="GET").get("accounts")

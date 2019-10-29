@@ -16,7 +16,7 @@ class Projects(BaseClient):
         json_body = {"name": name}
         if description:
             json_body["description"] = description
-        return self.api_call("projects", json=json_body, http_verb="POST").data
+        return self._api_call("projects", json=json_body, http_verb="POST").data
 
     def get(self, project):
         """Fetch a project by id.
@@ -24,7 +24,7 @@ class Projects(BaseClient):
         Returns:
             [Dict] -- project details
         """
-        return self.api_call(
+        return self._api_call(
             "projects/{}".format(project), http_verb="GET"
         ).data
 
@@ -37,7 +37,7 @@ class Projects(BaseClient):
         json_body = {"name": name}
         if description:
             json_body["description"] = description
-        return self.api_call(
+        return self._api_call(
             "projects/{}".format(project), json=json_body, http_verb="PATCH"
         ).data
 
@@ -48,7 +48,7 @@ class Projects(BaseClient):
           [Boolean] -- True upon successful deletion
         """
         return (
-            self.api_call(
+            self._api_call(
                 "projects/{}".format(project), http_verb="DELETE"
             ).status_code
             == 204
@@ -72,7 +72,7 @@ class Projects(BaseClient):
             query_dict["nextPageToken"] = next_page_token
         if name:
             query_dict["name"] = name
-        api_response = self.api_call(
+        api_response = self._api_call(
             "projects?{}".format(urlencode(query_dict)), http_verb="GET"
         )
 

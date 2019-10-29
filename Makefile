@@ -5,6 +5,7 @@ NOSE := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/nosetests
 FLAKE8 := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/flake8
 PYTHON := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/python
 BLACK := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/black
+PDOC := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/pdoc
 PRECOMMIT := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/pre-commit
 PIP := $(VENV)/bin/pip3
 REQUIREMENTS := -r requirements.txt -r requirements-dev.txt
@@ -30,6 +31,9 @@ lint: venv
 
 format: venv
 	$(BLACK) $(PYTHON_MODULES)
+
+doc: venv
+	$(PDOC) --html --output-dir doc/build ./phc --force --config show_inherited_members=True --config list_class_variables_in_index=False --template-dir doc/template
 
 test: lint
 	$(NOSE) -v tests
