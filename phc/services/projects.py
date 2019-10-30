@@ -1,0 +1,130 @@
+"""A Python Module for Projects"""
+
+from phc.base_client import BaseClient
+from urllib.parse import urlencode
+
+
+class Projects(BaseClient):
+    """Provides acccess to PHC projects
+
+    Parameters
+    ----------
+    session : phc.Session
+        The PHC session
+    run_async: bool
+        True to return promises, False to return results (default is False)
+    timeout: int
+        Operation timeout (default is 30)
+    """
+
+    def create(self, name, description=None):
+        """Creates a project
+
+        Parameters
+        ----------
+        name : str
+            The project name.
+        description : str, optional
+            The project description, by default None
+
+        Returns
+        -------
+        phc.ApiResponse
+            The create project response
+        """
+        json_body = {"name": name}
+        if description:
+            json_body["description"] = description
+        return self._api_call("projects", json=json_body, http_verb="POST")
+
+    def get(self, project_id):
+        """Fetch a project by id
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID.
+
+        Returns
+        -------
+        phc.ApiResponse
+            The get project response
+        """
+        return self._api_call("projects/{}".format(project_id), http_verb="GET")
+
+    def update(self, project_id, name, description=None):
+        """Update a project
+
+        Parameters
+        ----------
+         project_id : str
+            The project ID.
+        name : str
+            The project name.
+        description : str, optional
+            The project description, by default None
+
+        Returns
+        -------
+        phc.ApiResponse
+            The update project response
+        """
+        json_body = {"name": name}
+        if description:
+            json_body["description"] = description
+        return self._api_call(
+            "projects/{}".format(project_id), json=json_body, http_verb="PATCH"
+        ).data
+
+    def delete(self, project_id):
+        """Delete a project
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID.
+
+        Returns
+        -------
+        bool
+            True if the delete succeeeds, otherwise False
+        """
+        return (
+            self._api_call(
+                "projects/{}".format(project_id), http_verb="DELETE"
+            ).status_code
+            == 204
+        )
+
+    def get_list(
+        self,
+        page_size: int = None,
+        next_page_token: str = None,
+        name: str = None,
+    ):
+        """Fetch a list of projects in an account
+
+        Parameters
+        ----------
+        page_size : int, optional
+            The page size, by default None
+        next_page_token : str, optional
+            The next page token, by default None
+        name : str, optional
+            A project name filter, by default None
+
+        Returns
+        -------
+        phc.ApiResponse
+            The list projects response
+        """
+        query_dict = {}
+        if page_size:
+            query_dict["pageSize"] = page_size
+        if next_page_token:
+            query_dict["nextPageToken"] = next_page_token
+        if name:
+            query_dict["name"] = name
+        return self._api_call(
+            "projects?{}".format(urlencode(query_dict)), http_verb="GET"
+        )

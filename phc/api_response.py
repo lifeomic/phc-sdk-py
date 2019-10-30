@@ -32,34 +32,38 @@ class ApiResponse:
         return f"{self.data}"
 
     def __getitem__(self, key):
-        """Retreives any key from the data store.
-        Note:
-            This is implemented so users can reference the
-            ApiResponse object like a dictionary.
-            e.g. response["ok"]
-        Returns:
-            The value from data or None.
-        """
+        """Retreives any key from the data store."""
         return self.data.get(key, None)
 
     def get(self, key, default=None):
         """Retreives any key from the response data.
-        Note:
-            This is implemented so users can reference the
-            ApiResponse object like a dictionary.
-            e.g. response.get("ok", False)
-        Returns:
-            The value from data or the specified default.
+
+        Parameters
+        ----------
+        key : str
+            The key to fetch
+        default : any, optional
+            The default value to return if the key is not present, by default None
+
+        Returns
+        -------
+        any
+            The key value or the specified default if not present
         """
         return self.data.get(key, default)
 
     def validate(self):
         """Check if the response from API was successful.
-        Returns:
-            (ApiResponse)
-                This method returns it's own object. e.g. 'self'
-        Raises:
-            ApiError: The request to the API failed.
+
+        Returns
+        -------
+        ApiResponse
+            This method returns it's own object. e.g. 'self'
+
+        Raises
+        ------
+        ApiError
+            The request to the API failed.
         """
         if self.status_code >= 200 and self.status_code <= 300:
             return self

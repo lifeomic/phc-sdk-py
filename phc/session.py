@@ -13,9 +13,12 @@ class Session:
     ):
         """Initailizes a Session with token and account credentials.
 
-        Keyword Arguments:
-            token {str} -- The access token (default: {PHC_ACCESS_TOKEN env var})
-            account {str} -- The account (default: {PHC_ACCOUNT env var})
+        Parameters
+        ----------
+        token : str, optional
+            The PHC access token or API key, by default os.environ.get("PHC_ACCESS_TOKEN")
+        account : str, optional
+            The PHC account ID, by default os.environ.get("PHC_ACCOUNT")
         """
         self.token = token
         self.account = account

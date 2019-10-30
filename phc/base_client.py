@@ -8,7 +8,7 @@ import platform
 import asyncio
 import aiohttp
 
-from phc.web.api_response import ApiResponse
+from phc.api_response import ApiResponse
 import phc.version as ver
 
 
