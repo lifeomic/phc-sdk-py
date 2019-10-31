@@ -31,7 +31,6 @@ class Session:
         self.token = token
         self.refresh_token = refresh_token
         self.account = account
-        print(self._get_decoded_token())
         env = (
             "dev"
             if "cognito-idp.us-east-1.amazonaws.com"
