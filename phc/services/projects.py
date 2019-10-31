@@ -50,7 +50,7 @@ class Projects(BaseClient):
         phc.ApiResponse
             The get project response
         """
-        return self._api_call("projects/{}".format(project_id), http_verb="GET")
+        return self._api_call(f"projects/{project_id}", http_verb="GET")
 
     def update(self, project_id, name, description=None):
         """Update a project
@@ -73,7 +73,7 @@ class Projects(BaseClient):
         if description:
             json_body["description"] = description
         return self._api_call(
-            "projects/{}".format(project_id), json=json_body, http_verb="PATCH"
+            f"projects/{project_id}", json=json_body, http_verb="PATCH"
         ).data
 
     def delete(self, project_id):
@@ -91,7 +91,7 @@ class Projects(BaseClient):
         """
         return (
             self._api_call(
-                "projects/{}".format(project_id), http_verb="DELETE"
+                f"projects/{project_id}", http_verb="DELETE"
             ).status_code
             == 204
         )
@@ -126,5 +126,5 @@ class Projects(BaseClient):
         if name:
             query_dict["name"] = name
         return self._api_call(
-            "projects?{}".format(urlencode(query_dict)), http_verb="GET"
+            f"projects?{urlencode(query_dict)}", http_verb="GET"
         )

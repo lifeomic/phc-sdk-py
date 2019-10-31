@@ -37,7 +37,7 @@ class Fhir(BaseClient):
             [List] -- Dictionary with query response
         """
         return self._api_call(
-            api_path="fhir-search/projects/{}".format(project_id),
+            api_path=f"fhir-search/projects/{project_id}",
             http_verb="POST",
             data=statement,
             headers={"Content-Type": "text/plain"},
@@ -59,7 +59,7 @@ class Fhir(BaseClient):
             The query response
         """
         return self._api_call(
-            api_path="fhir-search/projects/{}".format(project_id),
+            api_path=f"fhir-search/projects/{project_id}",
             http_verb="POST",
             json=query,
         ).data

@@ -57,7 +57,7 @@ class BaseClient:
 
         if self.session.token:
             final_headers.update(
-                {"Authorization": "Bearer {}".format(self.session.token)}
+                {"Authorization": f"Bearer {self.session.token}"}
             )
 
         if self.session.account:
@@ -154,7 +154,7 @@ class BaseClient:
         if self._event_loop is None:
             self._event_loop = self._get_event_loop()
 
-        api_url = urljoin(url, "v1/{}".format(api_path))
+        api_url = urljoin(url, f"v1/{api_path}")
 
         future = asyncio.ensure_future(
             self._send(http_verb=http_verb, api_url=api_url, req_args=req_args),
@@ -176,11 +176,9 @@ class BaseClient:
             e.g. 'Python/3.6.7 phc-sdk-py/2.0.0 Darwin/17.7.0'
         """
         # __name__ returns all classes, we only want the client
-        client = "{0}/{1}".format("phc-sdk-py", ver.__version__)
-        python_version = "Python/{v.major}.{v.minor}.{v.micro}".format(
-            v=sys.version_info
-        )
-        system_info = "{0}/{1}".format(platform.system(), platform.release())
+        client = f"phc-sdk-py/{ver.__version__}"
+        python_version = f"Python/{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+        system_info = f"{platform.system()}/{platform.release()}"
         user_agent_string = " ".join([python_version, client, system_info])
         return user_agent_string
 
