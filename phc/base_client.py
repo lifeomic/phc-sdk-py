@@ -8,6 +8,7 @@ import platform
 import asyncio
 import aiohttp
 
+from phc.errors import RequestError
 from phc.api_response import ApiResponse
 import phc.version as ver
 
@@ -15,10 +16,10 @@ import phc.version as ver
 class BaseClient:
     """Base client for making API requests."""
 
-    # TODO: Make this configurable
-    _BASE_URL = "https://api.dev.lifeomic.com"
-
     def __init__(self, session, run_async=False, timeout=30):
+        if not session:
+            raise ValueError("Must provide a value for 'session'")
+
         self.session = session
         self.run_async = run_async
         self.timeout = timeout
@@ -80,6 +81,43 @@ class BaseClient:
         data: str = None,
         headers: dict = {},
     ) -> Union[asyncio.Future, ApiResponse]:
+        return self._api_call_impl(
+            self.session.api_url, api_path, http_verb, json, data, headers
+        )
+
+    def _fhir_call(
+        self,
+        api_path: str,
+        http_verb: str = "POST",
+        json: dict = None,
+        data: str = None,
+        headers: dict = {},
+    ) -> Union[asyncio.Future, ApiResponse]:
+        return self._api_call_impl(
+            self.session.fhir_url, api_path, http_verb, json, data, headers
+        )
+
+    def _ga4gh_call(
+        self,
+        api_path: str,
+        http_verb: str = "POST",
+        json: dict = None,
+        data: str = None,
+        headers: dict = {},
+    ) -> Union[asyncio.Future, ApiResponse]:
+        return self._api_call_impl(
+            self.session.ga4gh_url, api_path, http_verb, json, data, headers
+        )
+
+    def _api_call_impl(
+        self,
+        url: str,
+        api_path: str,
+        http_verb: str = "POST",
+        json: dict = None,
+        data: str = None,
+        headers: dict = {},
+    ) -> Union[asyncio.Future, ApiResponse]:
         """Sends an API request
 
         Arguments:
@@ -94,6 +132,9 @@ class BaseClient:
         Returns:
             Union[asyncio.Future, ApiResponse] -- A Future if run_async is True, otherwise the API response
         """
+
+        if self.session.is_expired():
+            raise RequestError("The session token has expired.")
 
         has_json = json is not None
         has_data = data is not None
@@ -113,7 +154,7 @@ class BaseClient:
         if self._event_loop is None:
             self._event_loop = self._get_event_loop()
 
-        api_url = urljoin(self._BASE_URL, "v1/{}".format(api_path))
+        api_url = urljoin(url, "v1/{}".format(api_path))
 
         future = asyncio.ensure_future(
             self._send(http_verb=http_verb, api_url=api_url, req_args=req_args),
