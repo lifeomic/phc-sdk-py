@@ -11,7 +11,7 @@ class Session:
     def __init__(
         self,
         token: str = os.environ.get("PHC_ACCESS_TOKEN"),
-        refresh_tken: str = os.environ.get("PHC_REFRESH_TOKEN"),
+        refresh_token: str = os.environ.get("PHC_REFRESH_TOKEN"),
         account: str = os.environ.get("PHC_ACCOUNT"),
     ):
         """Initailizes a Session with token and account credentials.
@@ -29,7 +29,7 @@ class Session:
             raise ValueError("Must provide a value for both token and account")
 
         self.token = token
-        self.refresh_token = refresh_tken
+        self.refresh_token = refresh_token
         self.account = account
         print(self._get_decoded_token())
         env = (
