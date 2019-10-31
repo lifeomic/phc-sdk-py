@@ -1,6 +1,6 @@
 """A Python module for a base PHC web client."""
 import json
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlencode
 from typing import Union
 
 import sys
@@ -74,7 +74,7 @@ class BaseClient:
                 {"Content-Type": "application/json;charset=utf-8"}
             )
 
-        return final_headers
+        return {k: v for k, v in final_headers.items() if v is not None}
 
     def _api_call(
         self,
@@ -84,6 +84,9 @@ class BaseClient:
         data: str = None,
         headers: dict = {},
     ) -> Union[asyncio.Future, ApiResponse]:
+        if self.session.is_expired() and self.session.refresh_token:
+            self._refresh_token()
+
         return self._api_call_impl(
             self.session.api_url, api_path, http_verb, json, data, headers
         )
@@ -96,6 +99,9 @@ class BaseClient:
         data: str = None,
         headers: dict = {},
     ) -> Union[asyncio.Future, ApiResponse]:
+        if self.session.is_expired() and self.session.refresh_token:
+            self._refresh_token()
+
         return self._api_call_impl(
             self.session.fhir_url, api_path, http_verb, json, data, headers
         )
@@ -108,9 +114,29 @@ class BaseClient:
         data: str = None,
         headers: dict = {},
     ) -> Union[asyncio.Future, ApiResponse]:
+        if self.session.is_expired() and self.session.refresh_token:
+            self._refresh_token()
+
         return self._api_call_impl(
             self.session.ga4gh_url, api_path, http_verb, json, data, headers
         )
+
+    def _refresh_token(self):
+        res = self._api_call_impl(
+            url=self.session.api_url,
+            api_path="oauth/token",
+            data=urlencode(
+                {
+                    "grant_type": "refresh_token",
+                    "client_id": self.session._get_decoded_token().get(
+                        "client_id"
+                    ),
+                    "refresh_token": self.session.refresh_token,
+                }
+            ),
+            headers={"Authorization": None, "LifeOmic-Account": None},
+        )
+        self.session.token = res.data.get("access_token")
 
     def _api_call_impl(
         self,
@@ -136,7 +162,7 @@ class BaseClient:
             Union[asyncio.Future, ApiResponse] -- A Future if run_async is True, otherwise the API response
         """
 
-        if self.session.is_expired():
+        if self.session.is_expired() and not self.session.refresh_token:
             raise RequestError("The session token has expired.")
 
         has_json = json is not None
@@ -157,7 +183,7 @@ class BaseClient:
         if self._event_loop is None:
             self._event_loop = self._get_event_loop()
 
-        api_url = urljoin(url, f"v1/{api_path}")
+        api_url = urljoin(url, api_path)
 
         future = asyncio.ensure_future(
             self._send(http_verb=http_verb, api_url=api_url, req_args=req_args),

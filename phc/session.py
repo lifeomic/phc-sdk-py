@@ -38,9 +38,9 @@ class Session:
             or "api.dev.lifeomic.com" in self._get_decoded_token().get("iss")
             else "us"
         )
-        self.api_url = f"https://api.{env}.lifeomic.com"
-        self.fhir_url = f"https://fhir.{env}.lifeomic.com"
-        self.ga4gh_url = f"https://ga4gh.{env}.lifeomic.com"
+        self.api_url = f"https://api.{env}.lifeomic.com/v1/"
+        self.fhir_url = f"https://fhir.{env}.lifeomic.com/{account}/dstu3/"
+        self.ga4gh_url = f"https://ga4gh.{env}.lifeomic.com/{account}/v1/"
 
     def _get_decoded_token(self):
         if self.token:
