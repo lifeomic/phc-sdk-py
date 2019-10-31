@@ -8,6 +8,7 @@ import platform
 import asyncio
 import aiohttp
 
+from phc import Session
 from phc.errors import RequestError
 from phc.api_response import ApiResponse
 import phc.version as ver
@@ -16,7 +17,9 @@ import phc.version as ver
 class BaseClient:
     """Base client for making API requests."""
 
-    def __init__(self, session, run_async=False, timeout=30):
+    def __init__(
+        self, session: Session, run_async: bool = False, timeout: int = 30
+    ):
         if not session:
             raise ValueError("Must provide a value for 'session'")
 

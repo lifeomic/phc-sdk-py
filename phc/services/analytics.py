@@ -1,4 +1,6 @@
 from phc.base_client import BaseClient
+from phc.util import PatientFilterQueryBuilder, DataLakeQuery
+from phc import ApiResponse
 
 
 class Analytics(BaseClient):
@@ -14,7 +16,9 @@ class Analytics(BaseClient):
         Operation timeout (default is 30)
     """
 
-    def get_patients(self, project_id, query_builder):
+    def get_patients(
+        self, project_id: str, query_builder: PatientFilterQueryBuilder
+    ) -> ApiResponse:
         """Executes a query that returns patients
 
         Parameters
@@ -37,7 +41,7 @@ class Analytics(BaseClient):
             .get("patients")
         )
 
-    def execute_data_lake_query(self, query):
+    def execute_data_lake_query(self, query: DataLakeQuery) -> ApiResponse:
         """Executes a data lake query
 
         Parameters
@@ -56,8 +60,8 @@ class Analytics(BaseClient):
         ).get("queryId")
 
     def list_data_lake_queries(
-        self, project_id, page_size=25, next_page_token=None
-    ):
+        self, project_id: str, page_size: int = 25, next_page_token: str = None
+    ) -> ApiResponse:
         """Fetches a list of data lake queries
 
         Parameters
@@ -82,7 +86,7 @@ class Analytics(BaseClient):
             path = "%s&nextPageToken=%s" % (path, next_page_token)
         return self._api_call(path, http_verb="GET")
 
-    def get_data_lake_query(self, query_id):
+    def get_data_lake_query(self, query_id: str) -> ApiResponse:
         """Fetches a data lake query
 
         Parameters

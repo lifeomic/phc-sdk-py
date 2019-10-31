@@ -47,7 +47,7 @@ class Session:
             return jwt.decode(self.token, verify=False)
         return {}
 
-    def is_expired(self):
+    def is_expired(self) -> bool:
         """Determines if the current access token is expired
 
         Returns

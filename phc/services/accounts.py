@@ -1,6 +1,7 @@
 """A Python Module for Accounts"""
 
 from phc.base_client import BaseClient
+from phc import ApiResponse
 
 
 class Accounts(BaseClient):
@@ -16,7 +17,7 @@ class Accounts(BaseClient):
         Operation timeout (default is 30)
     """
 
-    def get_list(self):
+    def get_list(self) -> ApiResponse:
         """Fetches the list of accounts for the current session
 
         Returns

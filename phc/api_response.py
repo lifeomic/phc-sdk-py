@@ -35,7 +35,7 @@ class ApiResponse:
         """Retreives any key from the data store."""
         return self.data.get(key, None)
 
-    def get(self, key, default=None):
+    def get(self, key: str, default=None):
         """Retreives any key from the response data.
 
         Parameters
