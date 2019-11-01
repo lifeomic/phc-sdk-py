@@ -70,20 +70,6 @@ accounts = Accounts(session)
 myaccounts = accounts.get_list()
 ```
 
-Here's and example of fetching FHIR resource using SQL:
-```python
-import pandas as pd
-from phc.services import Fhir
-
-fhir = Fhir(session)
-
-res = fhir.execute_sql(project='19e34782-91c4-4143-aaee-2ba81ed0b206',
-                       statement='SELECT * from patient LIMIT 0,5000')
-
-resources = list(map(lambda r: r.get("_source"), res.get("hits").get("hits")))
-df = pd.DataFrame(resources)
-```
-
 While here's an example of fetching patients observation data from using Analytics DSL. Notice that in this case, there is a helper query builder class (PatientFilterQueryBuilder):
 
 ```python
