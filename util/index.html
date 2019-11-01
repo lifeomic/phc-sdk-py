@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.1" />
+<title>phc.util API documentation</title>
+<meta name="description" content="Module contains utility classes" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em;font-family:"Lato",Helvetica,Roboto,Arial,"Lucida Grande",sans-serif}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:90%}ul li code a{font-size:80%}a{color:#00539a;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#f7944d}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<link rel="shortcut icon" href="./favicon.ico">
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>phc.util</code></h1>
+</header>
+<section id="section-intro">
+<p>Module contains utility classes</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Module contains utility classes
+&#34;&#34;&#34;
+
+from phc.util.data_lake_query import DataLakeQuery
+from phc.util.patient_filter_query_builder import (
+    QueryObservationProperty,
+    QueryProperty,
+    QueryResource,
+    PatientFilterQueryBuilder,
+)
+
+__all__ = [
+    &#34;DataLakeQuery&#34;,
+    &#34;QueryObservationProperty&#34;,
+    &#34;QueryProperty&#34;,
+    &#34;QueryResource&#34;,
+    &#34;PatientFilterQueryBuilder&#34;,
+]
+
+__pdoc__ = {&#34;data_lake_query&#34;: False, &#34;patient_filter_query_builder&#34;: False}</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="phc.util.DataLakeQuery"><code class="flex name class">
+<span>class <span class="ident">DataLakeQuery</span></span>
+<span>(</span><span>project_id, query, output_file_name)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Represents a data lake query</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>query</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The query parameters</dd>
+<dt><strong><code>output_file_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The name of the file where the results should be stored.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DataLakeQuery(object):
+    &#34;&#34;&#34;Represents a data lake query
+
+    Parameters
+    ----------
+    project_id : str
+        The project ID
+    query: dict
+        The query parameters
+    output_file_name: str
+        The name of the file where the results should be stored.
+    &#34;&#34;&#34;
+
+    def __init__(self, project_id, query, output_file_name):
+        self.__dataset_id = project_id
+        self.__query = query
+        self.__output_file_name = output_file_name
+
+    def to_request_dict(self):
+        &#34;&#34;&#34;Converts the query into a query request dictionary.
+
+        Returns
+        -------
+        dict
+            A dictionary that can be sent in a query request.
+        &#34;&#34;&#34;
+        return {
+            &#34;query&#34;: self.__query,
+            &#34;datasetId&#34;: self.__dataset_id,
+            &#34;outputFileName&#34;: self.__output_file_name,
+        }</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.util.DataLakeQuery.to_request_dict"><code class="name flex">
+<span>def <span class="ident">to_request_dict</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Converts the query into a query request dictionary.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>A dictionary that can be sent in a query request.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_request_dict(self):
+    &#34;&#34;&#34;Converts the query into a query request dictionary.
+
+    Returns
+    -------
+    dict
+        A dictionary that can be sent in a query request.
+    &#34;&#34;&#34;
+    return {
+        &#34;query&#34;: self.__query,
+        &#34;datasetId&#34;: self.__dataset_id,
+        &#34;outputFileName&#34;: self.__output_file_name,
+    }</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.util.PatientFilterQueryBuilder"><code class="flex name class">
+<span>class <span class="ident">PatientFilterQueryBuilder</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Top most query for subject searches.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PatientFilterQueryBuilder(BaseQueryBuilder):
+    &#34;&#34;&#34;
+    Top most query for subject searches.
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        self.search_components = dict()
+
+    def patient(self):
+        &#34;&#34;&#34;Construct a query to search patients.
+
+        Returns
+        -------
+        phc.util.QueryResource
+            The query resource
+        &#34;&#34;&#34;
+        patient_component = QueryResource()
+        self.search_components[&#34;patient&#34;] = patient_component
+        return patient_component
+
+    def to_dict(self):
+        &#34;&#34;&#34;Converts the query into a dictionary
+
+        Returns
+        -------
+        dict
+            The query as a dictionary
+        &#34;&#34;&#34;
+        query = {
+            &#34;query&#34;: {&#34;where&#34;: {}, &#34;domain&#34;: &#34;filter&#34;, &#34;target&#34;: &#34;patient&#34;}
+        }
+
+        search_components_dict = dict()
+        for key, component in self.search_components.items():
+            search_components_dict[key] = (
+                component if component is dict else component.to_dict()
+            )
+
+        query[&#34;query&#34;][&#34;where&#34;] = search_components_dict
+        return query</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.util.patient_filter_query_builder.BaseQueryBuilder</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.util.PatientFilterQueryBuilder.patient"><code class="name flex">
+<span>def <span class="ident">patient</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Construct a query to search patients.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.util.QueryResource" href="#phc.util.QueryResource"><code>QueryResource</code></a></dt>
+<dd>The query resource</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def patient(self):
+    &#34;&#34;&#34;Construct a query to search patients.
+
+    Returns
+    -------
+    phc.util.QueryResource
+        The query resource
+    &#34;&#34;&#34;
+    patient_component = QueryResource()
+    self.search_components[&#34;patient&#34;] = patient_component
+    return patient_component</code></pre>
+</details>
+</dd>
+<dt id="phc.util.PatientFilterQueryBuilder.to_dict"><code class="name flex">
+<span>def <span class="ident">to_dict</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Converts the query into a dictionary</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>The query as a dictionary</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_dict(self):
+    &#34;&#34;&#34;Converts the query into a dictionary
+
+    Returns
+    -------
+    dict
+        The query as a dictionary
+    &#34;&#34;&#34;
+    query = {
+        &#34;query&#34;: {&#34;where&#34;: {}, &#34;domain&#34;: &#34;filter&#34;, &#34;target&#34;: &#34;patient&#34;}
+    }
+
+    search_components_dict = dict()
+    for key, component in self.search_components.items():
+        search_components_dict[key] = (
+            component if component is dict else component.to_dict()
+        )
+
+    query[&#34;query&#34;][&#34;where&#34;] = search_components_dict
+    return query</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.util.QueryObservationProperty"><code class="flex name class">
+<span>class <span class="ident">QueryObservationProperty</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Leaf most query builder class. E.g. <code>PatientFilterComponentQueryBuilder().foo(eq='bar')</code> will result
+on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class QueryObservationProperty(QueryProperty):
+    def __init__(self):
+        QueryProperty.__init__(self)
+
+    def with_components(self, components_properties):
+        &#34;&#34;&#34;Includes component query properties
+
+        Parameters
+        ----------
+        components_properties : list
+            List of component query properties
+
+        Returns
+        -------
+        phc.util.QueryObservationProperty
+            This query property
+
+        Raises
+        ------
+        TypeError
+            Invalid input provided
+        &#34;&#34;&#34;
+        if type(components_properties) is not list:
+            raise TypeError(
+                &#34;Observation property with_components parameter must be in an array!&#34;
+            )
+
+        self.component_body[&#34;components&#34;] = components_properties
+        return self
+
+    def to_dict(self):
+        &#34;&#34;&#34;Converts the query into a dictionary
+
+        Returns
+        -------
+        dict
+            The query as a dictionary
+        &#34;&#34;&#34;
+        component_body_dict = dict()
+        for key, value_or_values in self.component_body.items():
+            if key == &#34;components&#34;:
+                if type(value_or_values) is list:
+                    component_values = []
+                    for value in value_or_values:
+                        component_values.append(value.to_dict())
+                    component_body_dict[&#34;components&#34;] = component_values
+                else:
+                    component_body_dict[
+                        &#34;components&#34;
+                    ] = value_or_values.to_dict()
+            else:
+                component_body_dict[key] = value_or_values
+        return component_body_dict</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.util.patient_filter_query_builder.QueryProperty</li>
+<li>phc.util.patient_filter_query_builder.BaseQueryBuilder</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.util.QueryObservationProperty.to_dict"><code class="name flex">
+<span>def <span class="ident">to_dict</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.util.patient_filter_query_builder.QueryProperty" href="patient_filter_query_builder.html#phc.util.patient_filter_query_builder.QueryProperty">QueryProperty</a></code>.<code><a title="phc.util.patient_filter_query_builder.QueryProperty.to_dict" href="patient_filter_query_builder.html#phc.util.patient_filter_query_builder.QueryProperty.to_dict">to_dict</a></code>
+</p>
+<section class="desc inherited"><p>Converts the query into a dictionary …</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_dict(self):
+    &#34;&#34;&#34;Converts the query into a dictionary
+
+    Returns
+    -------
+    dict
+        The query as a dictionary
+    &#34;&#34;&#34;
+    component_body_dict = dict()
+    for key, value_or_values in self.component_body.items():
+        if key == &#34;components&#34;:
+            if type(value_or_values) is list:
+                component_values = []
+                for value in value_or_values:
+                    component_values.append(value.to_dict())
+                component_body_dict[&#34;components&#34;] = component_values
+            else:
+                component_body_dict[
+                    &#34;components&#34;
+                ] = value_or_values.to_dict()
+        else:
+            component_body_dict[key] = value_or_values
+    return component_body_dict</code></pre>
+</details>
+</dd>
+<dt id="phc.util.QueryObservationProperty.with_components"><code class="name flex">
+<span>def <span class="ident">with_components</span></span>(<span>self, components_properties)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Includes component query properties</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>components_properties</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of component query properties</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.util.QueryObservationProperty" href="#phc.util.QueryObservationProperty"><code>QueryObservationProperty</code></a></dt>
+<dd>This query property</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>TypeError</code></dt>
+<dd>Invalid input provided</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def with_components(self, components_properties):
+    &#34;&#34;&#34;Includes component query properties
+
+    Parameters
+    ----------
+    components_properties : list
+        List of component query properties
+
+    Returns
+    -------
+    phc.util.QueryObservationProperty
+        This query property
+
+    Raises
+    ------
+    TypeError
+        Invalid input provided
+    &#34;&#34;&#34;
+    if type(components_properties) is not list:
+        raise TypeError(
+            &#34;Observation property with_components parameter must be in an array!&#34;
+        )
+
+    self.component_body[&#34;components&#34;] = components_properties
+    return self</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.util.QueryProperty"><code class="flex name class">
+<span>class <span class="ident">QueryProperty</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Leaf most query builder class. E.g. <code>PatientFilterComponentQueryBuilder().foo(eq='bar')</code> will result
+on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class QueryProperty(BaseQueryBuilder):
+    &#34;&#34;&#34;Leaf most query builder class. E.g. `PatientFilterComponentQueryBuilder().foo(eq=&#39;bar&#39;)` will result
+    on `{&#34;foo&#34;: &#34;bar&#34;}` to be returned on `to_dict()`
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        self.component_body = dict()
+
+    def __getattr__(self, attr):
+        handler = self.__global_handler
+        handler.__func__.func_name = attr
+        return handler
+
+    def __global_handler(self, *args, **kwargs):
+        if args and len(args) &gt; 0:
+            raise NotImplementedError(
+                &#34;Property only support key value arguments!&#34;
+            )
+
+        components = []
+        for operator, value_or_values in kwargs.items():
+            values = (
+                value_or_values
+                if type(value_or_values) is list
+                else [value_or_values]
+            )
+            for value in values:
+                components.append({&#34;operator&#34;: operator, &#34;value&#34;: value})
+
+        self.component_body[
+            self.__global_handler.__func__.func_name
+        ] = components
+        return self
+
+    def to_dict(self):
+        &#34;&#34;&#34;Converts the query into a dictionary
+
+        Returns
+        -------
+        dict
+            The query as a dictionary
+        &#34;&#34;&#34;
+        return self.component_body</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.util.patient_filter_query_builder.BaseQueryBuilder</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li>phc.util.patient_filter_query_builder.QueryObservationProperty</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.util.QueryProperty.to_dict"><code class="name flex">
+<span>def <span class="ident">to_dict</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Converts the query into a dictionary</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>The query as a dictionary</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_dict(self):
+    &#34;&#34;&#34;Converts the query into a dictionary
+
+    Returns
+    -------
+    dict
+        The query as a dictionary
+    &#34;&#34;&#34;
+    return self.component_body</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.util.QueryResource"><code class="flex name class">
+<span>class <span class="ident">QueryResource</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Resource level builder class. 'observations', 'procedures' are considered as resources.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class QueryResource(BaseQueryBuilder):
+    &#34;&#34;&#34;
+    Resource level builder class. &#39;observations&#39;, &#39;procedures&#39; are considered as resources.
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        self.key_components = dict()
+
+    def with_observations(self, observation_properties):
+        &#34;&#34;&#34;Adds obervation properties
+
+        Parameters
+        ----------
+        observation_properties : list
+            A list of observation properties
+
+        Returns
+        -------
+        phc.util.QueryResource
+            This query resource
+
+        Raises
+        ------
+        TypeError
+            Invalid input provided
+        &#34;&#34;&#34;
+        if type(observation_properties) is not list:
+            raise TypeError(
+                &#34;Resource with_observations parameter must be in an array!&#34;
+            )
+
+        self.key_components[&#34;observations&#34;] = observation_properties
+        return self
+
+    def to_dict(self):
+        &#34;&#34;&#34;Converts the query into a dictionary
+
+        Returns
+        -------
+        dict
+            The query as a dictionary
+        &#34;&#34;&#34;
+        key_components_dict = dict()
+        for key, components in self.key_components.items():
+            components_dict = dict()
+            for component in components:
+                components_dict = {**components_dict, **component.to_dict()}
+            key_components_dict[key] = components_dict
+        return key_components_dict</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.util.patient_filter_query_builder.BaseQueryBuilder</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.util.QueryResource.to_dict"><code class="name flex">
+<span>def <span class="ident">to_dict</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Converts the query into a dictionary</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>The query as a dictionary</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_dict(self):
+    &#34;&#34;&#34;Converts the query into a dictionary
+
+    Returns
+    -------
+    dict
+        The query as a dictionary
+    &#34;&#34;&#34;
+    key_components_dict = dict()
+    for key, components in self.key_components.items():
+        components_dict = dict()
+        for component in components:
+            components_dict = {**components_dict, **component.to_dict()}
+        key_components_dict[key] = components_dict
+    return key_components_dict</code></pre>
+</details>
+</dd>
+<dt id="phc.util.QueryResource.with_observations"><code class="name flex">
+<span>def <span class="ident">with_observations</span></span>(<span>self, observation_properties)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Adds obervation properties</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>observation_properties</code></strong> :&ensp;<code>list</code></dt>
+<dd>A list of observation properties</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.util.QueryResource" href="#phc.util.QueryResource"><code>QueryResource</code></a></dt>
+<dd>This query resource</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>TypeError</code></dt>
+<dd>Invalid input provided</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def with_observations(self, observation_properties):
+    &#34;&#34;&#34;Adds obervation properties
+
+    Parameters
+    ----------
+    observation_properties : list
+        A list of observation properties
+
+    Returns
+    -------
+    phc.util.QueryResource
+        This query resource
+
+    Raises
+    ------
+    TypeError
+        Invalid input provided
+    &#34;&#34;&#34;
+    if type(observation_properties) is not list:
+        raise TypeError(
+            &#34;Resource with_observations parameter must be in an array!&#34;
+        )
+
+    self.key_components[&#34;observations&#34;] = observation_properties
+    return self</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<header>
+<a class="homelink" rel="home" title="PHC Home" href="https://lifeomic.github.io/phc-sdk-py/">
+<img src="./phc.png" alt="">
+</a>
+</header>
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="phc" href="../index.html">phc</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="phc.util.DataLakeQuery" href="#phc.util.DataLakeQuery">DataLakeQuery</a></code></h4>
+<ul class="">
+<li><code><a title="phc.util.DataLakeQuery.to_request_dict" href="#phc.util.DataLakeQuery.to_request_dict">to_request_dict</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.util.PatientFilterQueryBuilder" href="#phc.util.PatientFilterQueryBuilder">PatientFilterQueryBuilder</a></code></h4>
+<ul class="">
+<li><code><a title="phc.util.PatientFilterQueryBuilder.patient" href="#phc.util.PatientFilterQueryBuilder.patient">patient</a></code></li>
+<li><code><a title="phc.util.PatientFilterQueryBuilder.to_dict" href="#phc.util.PatientFilterQueryBuilder.to_dict">to_dict</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.util.QueryObservationProperty" href="#phc.util.QueryObservationProperty">QueryObservationProperty</a></code></h4>
+<ul class="">
+<li><code><a title="phc.util.QueryObservationProperty.to_dict" href="#phc.util.QueryObservationProperty.to_dict">to_dict</a></code></li>
+<li><code><a title="phc.util.QueryObservationProperty.with_components" href="#phc.util.QueryObservationProperty.with_components">with_components</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.util.QueryProperty" href="#phc.util.QueryProperty">QueryProperty</a></code></h4>
+<ul class="">
+<li><code><a title="phc.util.QueryProperty.to_dict" href="#phc.util.QueryProperty.to_dict">to_dict</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.util.QueryResource" href="#phc.util.QueryResource">QueryResource</a></code></h4>
+<ul class="">
+<li><code><a title="phc.util.QueryResource.to_dict" href="#phc.util.QueryResource.to_dict">to_dict</a></code></li>
+<li><code><a title="phc.util.QueryResource.with_observations" href="#phc.util.QueryResource.with_observations">with_observations</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

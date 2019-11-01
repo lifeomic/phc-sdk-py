@@ -1,0 +1,1051 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.1" />
+<title>phc.services API documentation</title>
+<meta name="description" content="Contains services for accessing different parts of the PHC platform." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em;font-family:"Lato",Helvetica,Roboto,Arial,"Lucida Grande",sans-serif}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:90%}ul li code a{font-size:80%}a{color:#00539a;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#f7944d}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<link rel="shortcut icon" href="./favicon.ico">
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>phc.services</code></h1>
+</header>
+<section id="section-intro">
+<p>Contains services for accessing different parts of the PHC platform.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Contains services for accessing different parts of the PHC platform.
+&#34;&#34;&#34;
+
+from phc.services.accounts import Accounts
+from phc.services.analytics import Analytics
+from phc.services.fhir import Fhir
+from phc.services.projects import Projects
+
+
+__all__ = [&#34;Accounts&#34;, &#34;Analytics&#34;, &#34;Fhir&#34;, &#34;Projects&#34;]
+
+__pdoc__ = {
+    &#34;accounts&#34;: False,
+    &#34;analytics&#34;: False,
+    &#34;fhir&#34;: False,
+    &#34;projects&#34;: False,
+}</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="phc.services.Accounts"><code class="flex name class">
+<span>class <span class="ident">Accounts</span></span>
+<span>(</span><span>session, run_async=False, timeout=30)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides acccess to PHC accounts</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
+<dd>The PHC session</dd>
+<dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True to return promises, False to return results (default is False)</dd>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
+<dd>Operation timeout (default is 30)</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Accounts(BaseClient):
+    &#34;&#34;&#34;Provides acccess to PHC accounts
+
+    Parameters
+    ----------
+    session : phc.Session
+        The PHC session
+    run_async: bool
+        True to return promises, False to return results (default is False)
+    timeout: int
+        Operation timeout (default is 30)
+    &#34;&#34;&#34;
+
+    def get_list(self) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetches the list of accounts for the current session
+
+        Returns
+        -------
+        phc.ApiResponse
+            The list accounts response
+        &#34;&#34;&#34;
+        return self._api_call(&#34;accounts&#34;, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.services.Accounts.get_list"><code class="name flex">
+<span>def <span class="ident">get_list</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetches the list of accounts for the current session</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The list accounts response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_list(self) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetches the list of accounts for the current session
+
+    Returns
+    -------
+    phc.ApiResponse
+        The list accounts response
+    &#34;&#34;&#34;
+    return self._api_call(&#34;accounts&#34;, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.services.Analytics"><code class="flex name class">
+<span>class <span class="ident">Analytics</span></span>
+<span>(</span><span>session, run_async=False, timeout=30)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides acccess to PHC accounts</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
+<dd>The PHC session</dd>
+<dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True to return promises, False to return results (default is False)</dd>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
+<dd>Operation timeout (default is 30)</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Analytics(BaseClient):
+    &#34;&#34;&#34;Provides acccess to PHC accounts
+
+    Parameters
+    ----------
+    session : phc.Session
+        The PHC session
+    run_async: bool
+        True to return promises, False to return results (default is False)
+    timeout: int
+        Operation timeout (default is 30)
+    &#34;&#34;&#34;
+
+    def get_patients(
+        self, project_id: str, query_builder: PatientFilterQueryBuilder
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Executes a query that returns patients
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID
+        query_builder : util.PatientFilterQueryBuilder
+            The query builder
+
+        Returns
+        -------
+        list
+            The list of patients
+        &#34;&#34;&#34;
+        payload = query_builder.to_dict()
+        payload[&#34;dataset_id&#34;] = project_id
+        return (
+            self._api_call(&#34;analytics/dsl&#34;, http_verb=&#34;POST&#34;, json=payload)
+            .get(&#34;data&#34;)
+            .get(&#34;patients&#34;)
+        )
+
+    def execute_data_lake_query(self, query: DataLakeQuery) -&gt; ApiResponse:
+        &#34;&#34;&#34;Executes a data lake query
+
+        Parameters
+        ----------
+        query : util.DataLakeQuery
+            The query builder
+
+        Returns
+        -------
+        phc.ApiResponse
+            The data lake query
+        &#34;&#34;&#34;
+        payload = query.to_request_dict()
+        return self._api_call(
+            &#34;analytics/query&#34;, http_verb=&#34;POST&#34;, json=payload
+        ).get(&#34;queryId&#34;)
+
+    def list_data_lake_queries(
+        self, project_id: str, page_size: int = 25, next_page_token: str = None
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetches a list of data lake queries
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID
+        page_size : int, optional
+            The page size, by default 25
+        next_page_token : str, optional
+            The next page token, by default None
+
+        Returns
+        -------
+        phc.ApiResponse
+            The data lake list query response
+        &#34;&#34;&#34;
+        path = &#34;analytics/query?datasetId=%s&amp;pageSize=%d&#34; % (
+            project_id,
+            page_size,
+        )
+        if next_page_token:
+            path = &#34;%s&amp;nextPageToken=%s&#34; % (path, next_page_token)
+        return self._api_call(path, http_verb=&#34;GET&#34;)
+
+    def get_data_lake_query(self, query_id: str) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetches a data lake query
+
+        Parameters
+        ----------
+        query_id : string
+            The query ID
+
+        Returns
+        -------
+        phc.ApiResponse
+            The data lake query get response
+        &#34;&#34;&#34;
+        return self._api_call(&#34;analytics/query/%s&#34; % query_id, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.services.Analytics.execute_data_lake_query"><code class="name flex">
+<span>def <span class="ident">execute_data_lake_query</span></span>(<span>self, query)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Executes a data lake query</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>query</code></strong> :&ensp;<code>util.DataLakeQuery</code></dt>
+<dd>The query builder</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The data lake query</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute_data_lake_query(self, query: DataLakeQuery) -&gt; ApiResponse:
+    &#34;&#34;&#34;Executes a data lake query
+
+    Parameters
+    ----------
+    query : util.DataLakeQuery
+        The query builder
+
+    Returns
+    -------
+    phc.ApiResponse
+        The data lake query
+    &#34;&#34;&#34;
+    payload = query.to_request_dict()
+    return self._api_call(
+        &#34;analytics/query&#34;, http_verb=&#34;POST&#34;, json=payload
+    ).get(&#34;queryId&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Analytics.get_data_lake_query"><code class="name flex">
+<span>def <span class="ident">get_data_lake_query</span></span>(<span>self, query_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetches a data lake query</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>query_id</code></strong> :&ensp;<code>string</code></dt>
+<dd>The query ID</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The data lake query get response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_data_lake_query(self, query_id: str) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetches a data lake query
+
+    Parameters
+    ----------
+    query_id : string
+        The query ID
+
+    Returns
+    -------
+    phc.ApiResponse
+        The data lake query get response
+    &#34;&#34;&#34;
+    return self._api_call(&#34;analytics/query/%s&#34; % query_id, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Analytics.get_patients"><code class="name flex">
+<span>def <span class="ident">get_patients</span></span>(<span>self, project_id, query_builder)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Executes a query that returns patients</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>query_builder</code></strong> :&ensp;<code>util.PatientFilterQueryBuilder</code></dt>
+<dd>The query builder</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>The list of patients</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_patients(
+    self, project_id: str, query_builder: PatientFilterQueryBuilder
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Executes a query that returns patients
+
+    Parameters
+    ----------
+    project_id : str
+        The project ID
+    query_builder : util.PatientFilterQueryBuilder
+        The query builder
+
+    Returns
+    -------
+    list
+        The list of patients
+    &#34;&#34;&#34;
+    payload = query_builder.to_dict()
+    payload[&#34;dataset_id&#34;] = project_id
+    return (
+        self._api_call(&#34;analytics/dsl&#34;, http_verb=&#34;POST&#34;, json=payload)
+        .get(&#34;data&#34;)
+        .get(&#34;patients&#34;)
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Analytics.list_data_lake_queries"><code class="name flex">
+<span>def <span class="ident">list_data_lake_queries</span></span>(<span>self, project_id, page_size=25, next_page_token=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetches a list of data lake queries</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>page_size</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The page size, by default 25</dd>
+<dt><strong><code>next_page_token</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The next page token, by default None</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The data lake list query response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def list_data_lake_queries(
+    self, project_id: str, page_size: int = 25, next_page_token: str = None
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetches a list of data lake queries
+
+    Parameters
+    ----------
+    project_id : str
+        The project ID
+    page_size : int, optional
+        The page size, by default 25
+    next_page_token : str, optional
+        The next page token, by default None
+
+    Returns
+    -------
+    phc.ApiResponse
+        The data lake list query response
+    &#34;&#34;&#34;
+    path = &#34;analytics/query?datasetId=%s&amp;pageSize=%d&#34; % (
+        project_id,
+        page_size,
+    )
+    if next_page_token:
+        path = &#34;%s&amp;nextPageToken=%s&#34; % (path, next_page_token)
+    return self._api_call(path, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.services.Fhir"><code class="flex name class">
+<span>class <span class="ident">Fhir</span></span>
+<span>(</span><span>session, run_async=False, timeout=30)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides methods to run search using SQL or Elasticsearch queries</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
+<dd>The PHC session</dd>
+<dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True to return promises, False to return results (default is False)</dd>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
+<dd>Operation timeout (default is 30)</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Fhir(BaseClient):
+    &#34;&#34;&#34;Provides methods to run search using SQL or Elasticsearch queries
+
+    Parameters
+    ----------
+    session : phc.Session
+        The PHC session
+    run_async: bool
+        True to return promises, False to return results (default is False)
+    timeout: int
+        Operation timeout (default is 30)
+    &#34;&#34;&#34;
+
+    def execute_sql(self, project_id: str, statement: str) -&gt; ApiResponse:
+        &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID.
+        statement : str
+            The SQL statement.
+
+        Returns
+        -------
+        phc.ApiResponse
+            The query response.
+        &#34;&#34;&#34;
+
+        &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
+        Returns:
+            [List] -- Dictionary with query response
+        &#34;&#34;&#34;
+        return self._api_call(
+            api_path=f&#34;fhir-search/projects/{project_id}&#34;,
+            http_verb=&#34;POST&#34;,
+            data=statement,
+            headers={&#34;Content-Type&#34;: &#34;text/plain&#34;},
+        )
+
+    def execute_es(self, project_id: str, query: dict) -&gt; ApiResponse:
+        &#34;&#34;&#34;Executes an elasticsearch query against fhir-searh-service
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID
+        query : dict
+            The ES query dictionary
+
+        Returns
+        -------
+        phc.ApiResponse
+            The query response
+        &#34;&#34;&#34;
+        return self._api_call(
+            api_path=f&#34;fhir-search/projects/{project_id}&#34;,
+            http_verb=&#34;POST&#34;,
+            json=query,
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.services.Fhir.execute_es"><code class="name flex">
+<span>def <span class="ident">execute_es</span></span>(<span>self, project_id, query)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Executes an elasticsearch query against fhir-searh-service</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>query</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The ES query dictionary</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The query response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute_es(self, project_id: str, query: dict) -&gt; ApiResponse:
+    &#34;&#34;&#34;Executes an elasticsearch query against fhir-searh-service
+
+    Parameters
+    ----------
+    project_id : str
+        The project ID
+    query : dict
+        The ES query dictionary
+
+    Returns
+    -------
+    phc.ApiResponse
+        The query response
+    &#34;&#34;&#34;
+    return self._api_call(
+        api_path=f&#34;fhir-search/projects/{project_id}&#34;,
+        http_verb=&#34;POST&#34;,
+        json=query,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Fhir.execute_sql"><code class="name flex">
+<span>def <span class="ident">execute_sql</span></span>(<span>self, project_id, statement)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Executes an SQL query against fhir-searh-service</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID.</dd>
+<dt><strong><code>statement</code></strong> :&ensp;<code>str</code></dt>
+<dd>The SQL statement.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The query response.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute_sql(self, project_id: str, statement: str) -&gt; ApiResponse:
+    &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
+
+    Parameters
+    ----------
+    project_id : str
+        The project ID.
+    statement : str
+        The SQL statement.
+
+    Returns
+    -------
+    phc.ApiResponse
+        The query response.
+    &#34;&#34;&#34;
+
+    &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
+    Returns:
+        [List] -- Dictionary with query response
+    &#34;&#34;&#34;
+    return self._api_call(
+        api_path=f&#34;fhir-search/projects/{project_id}&#34;,
+        http_verb=&#34;POST&#34;,
+        data=statement,
+        headers={&#34;Content-Type&#34;: &#34;text/plain&#34;},
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.services.Projects"><code class="flex name class">
+<span>class <span class="ident">Projects</span></span>
+<span>(</span><span>session, run_async=False, timeout=30)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides acccess to PHC projects</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
+<dd>The PHC session</dd>
+<dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True to return promises, False to return results (default is False)</dd>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
+<dd>Operation timeout (default is 30)</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Projects(BaseClient):
+    &#34;&#34;&#34;Provides acccess to PHC projects
+
+    Parameters
+    ----------
+    session : phc.Session
+        The PHC session
+    run_async: bool
+        True to return promises, False to return results (default is False)
+    timeout: int
+        Operation timeout (default is 30)
+    &#34;&#34;&#34;
+
+    def create(self, name: str, description: str = None) -&gt; ApiResponse:
+        &#34;&#34;&#34;Creates a project
+
+        Parameters
+        ----------
+        name : str
+            The project name.
+        description : str, optional
+            The project description, by default None
+
+        Returns
+        -------
+        phc.ApiResponse
+            The create project response
+        &#34;&#34;&#34;
+        json_body = {&#34;name&#34;: name}
+        if description:
+            json_body[&#34;description&#34;] = description
+        return self._api_call(&#34;projects&#34;, json=json_body, http_verb=&#34;POST&#34;)
+
+    def get(self, project_id):
+        &#34;&#34;&#34;Fetch a project by id
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID.
+
+        Returns
+        -------
+        phc.ApiResponse
+            The get project response
+        &#34;&#34;&#34;
+        return self._api_call(f&#34;projects/{project_id}&#34;, http_verb=&#34;GET&#34;)
+
+    def update(
+        self, project_id: str, name: str, description: str = None
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Update a project
+
+        Parameters
+        ----------
+         project_id : str
+            The project ID.
+        name : str
+            The project name.
+        description : str, optional
+            The project description, by default None
+
+        Returns
+        -------
+        phc.ApiResponse
+            The update project response
+        &#34;&#34;&#34;
+        json_body = {&#34;name&#34;: name}
+        if description:
+            json_body[&#34;description&#34;] = description
+        return self._api_call(
+            f&#34;projects/{project_id}&#34;, json=json_body, http_verb=&#34;PATCH&#34;
+        ).data
+
+    def delete(self, project_id: str) -&gt; bool:
+        &#34;&#34;&#34;Delete a project
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID.
+
+        Returns
+        -------
+        bool
+            True if the delete succeeeds, otherwise False
+        &#34;&#34;&#34;
+        return (
+            self._api_call(
+                f&#34;projects/{project_id}&#34;, http_verb=&#34;DELETE&#34;
+            ).status_code
+            == 204
+        )
+
+    def get_list(
+        self,
+        page_size: int = None,
+        next_page_token: str = None,
+        name: str = None,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetch a list of projects in an account
+
+        Parameters
+        ----------
+        page_size : int, optional
+            The page size, by default None
+        next_page_token : str, optional
+            The next page token, by default None
+        name : str, optional
+            A project name filter, by default None
+
+        Returns
+        -------
+        phc.ApiResponse
+            The list projects response
+        &#34;&#34;&#34;
+        query_dict = {}
+        if page_size:
+            query_dict[&#34;pageSize&#34;] = page_size
+        if next_page_token:
+            query_dict[&#34;nextPageToken&#34;] = next_page_token
+        if name:
+            query_dict[&#34;name&#34;] = name
+        return self._api_call(
+            f&#34;projects?{urlencode(query_dict)}&#34;, http_verb=&#34;GET&#34;
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.services.Projects.create"><code class="name flex">
+<span>def <span class="ident">create</span></span>(<span>self, name, description=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Creates a project</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project name.</dd>
+<dt><strong><code>description</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The project description, by default None</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The create project response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create(self, name: str, description: str = None) -&gt; ApiResponse:
+    &#34;&#34;&#34;Creates a project
+
+    Parameters
+    ----------
+    name : str
+        The project name.
+    description : str, optional
+        The project description, by default None
+
+    Returns
+    -------
+    phc.ApiResponse
+        The create project response
+    &#34;&#34;&#34;
+    json_body = {&#34;name&#34;: name}
+    if description:
+        json_body[&#34;description&#34;] = description
+    return self._api_call(&#34;projects&#34;, json=json_body, http_verb=&#34;POST&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Projects.delete"><code class="name flex">
+<span>def <span class="ident">delete</span></span>(<span>self, project_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Delete a project</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the delete succeeeds, otherwise False</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete(self, project_id: str) -&gt; bool:
+    &#34;&#34;&#34;Delete a project
+
+    Parameters
+    ----------
+    project_id : str
+        The project ID.
+
+    Returns
+    -------
+    bool
+        True if the delete succeeeds, otherwise False
+    &#34;&#34;&#34;
+    return (
+        self._api_call(
+            f&#34;projects/{project_id}&#34;, http_verb=&#34;DELETE&#34;
+        ).status_code
+        == 204
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Projects.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, project_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetch a project by id</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The get project response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(self, project_id):
+    &#34;&#34;&#34;Fetch a project by id
+
+    Parameters
+    ----------
+    project_id : str
+        The project ID.
+
+    Returns
+    -------
+    phc.ApiResponse
+        The get project response
+    &#34;&#34;&#34;
+    return self._api_call(f&#34;projects/{project_id}&#34;, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Projects.get_list"><code class="name flex">
+<span>def <span class="ident">get_list</span></span>(<span>self, page_size=None, next_page_token=None, name=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetch a list of projects in an account</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>page_size</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The page size, by default None</dd>
+<dt><strong><code>next_page_token</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The next page token, by default None</dd>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>A project name filter, by default None</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The list projects response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_list(
+    self,
+    page_size: int = None,
+    next_page_token: str = None,
+    name: str = None,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetch a list of projects in an account
+
+    Parameters
+    ----------
+    page_size : int, optional
+        The page size, by default None
+    next_page_token : str, optional
+        The next page token, by default None
+    name : str, optional
+        A project name filter, by default None
+
+    Returns
+    -------
+    phc.ApiResponse
+        The list projects response
+    &#34;&#34;&#34;
+    query_dict = {}
+    if page_size:
+        query_dict[&#34;pageSize&#34;] = page_size
+    if next_page_token:
+        query_dict[&#34;nextPageToken&#34;] = next_page_token
+    if name:
+        query_dict[&#34;name&#34;] = name
+    return self._api_call(
+        f&#34;projects?{urlencode(query_dict)}&#34;, http_verb=&#34;GET&#34;
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Projects.update"><code class="name flex">
+<span>def <span class="ident">update</span></span>(<span>self, project_id, name, description=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Update a project</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt>project_id : str</dt>
+<dt>The project ID.</dt>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project name.</dd>
+<dt><strong><code>description</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The project description, by default None</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The update project response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update(
+    self, project_id: str, name: str, description: str = None
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Update a project
+
+    Parameters
+    ----------
+     project_id : str
+        The project ID.
+    name : str
+        The project name.
+    description : str, optional
+        The project description, by default None
+
+    Returns
+    -------
+    phc.ApiResponse
+        The update project response
+    &#34;&#34;&#34;
+    json_body = {&#34;name&#34;: name}
+    if description:
+        json_body[&#34;description&#34;] = description
+    return self._api_call(
+        f&#34;projects/{project_id}&#34;, json=json_body, http_verb=&#34;PATCH&#34;
+    ).data</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<header>
+<a class="homelink" rel="home" title="PHC Home" href="https://lifeomic.github.io/phc-sdk-py/">
+<img src="./phc.png" alt="">
+</a>
+</header>
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="phc" href="../index.html">phc</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="phc.services.Accounts" href="#phc.services.Accounts">Accounts</a></code></h4>
+<ul class="">
+<li><code><a title="phc.services.Accounts.get_list" href="#phc.services.Accounts.get_list">get_list</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.services.Analytics" href="#phc.services.Analytics">Analytics</a></code></h4>
+<ul class="">
+<li><code><a title="phc.services.Analytics.execute_data_lake_query" href="#phc.services.Analytics.execute_data_lake_query">execute_data_lake_query</a></code></li>
+<li><code><a title="phc.services.Analytics.get_data_lake_query" href="#phc.services.Analytics.get_data_lake_query">get_data_lake_query</a></code></li>
+<li><code><a title="phc.services.Analytics.get_patients" href="#phc.services.Analytics.get_patients">get_patients</a></code></li>
+<li><code><a title="phc.services.Analytics.list_data_lake_queries" href="#phc.services.Analytics.list_data_lake_queries">list_data_lake_queries</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.services.Fhir" href="#phc.services.Fhir">Fhir</a></code></h4>
+<ul class="">
+<li><code><a title="phc.services.Fhir.execute_es" href="#phc.services.Fhir.execute_es">execute_es</a></code></li>
+<li><code><a title="phc.services.Fhir.execute_sql" href="#phc.services.Fhir.execute_sql">execute_sql</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.services.Projects" href="#phc.services.Projects">Projects</a></code></h4>
+<ul class="">
+<li><code><a title="phc.services.Projects.create" href="#phc.services.Projects.create">create</a></code></li>
+<li><code><a title="phc.services.Projects.delete" href="#phc.services.Projects.delete">delete</a></code></li>
+<li><code><a title="phc.services.Projects.get" href="#phc.services.Projects.get">get</a></code></li>
+<li><code><a title="phc.services.Projects.get_list" href="#phc.services.Projects.get_list">get_list</a></code></li>
+<li><code><a title="phc.services.Projects.update" href="#phc.services.Projects.update">update</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
