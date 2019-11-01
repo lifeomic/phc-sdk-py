@@ -1,6 +1,7 @@
 """A Python Module for FHIR Search"""
 
 from phc.base_client import BaseClient
+from phc import ApiResponse
 
 
 class Fhir(BaseClient):
@@ -16,7 +17,7 @@ class Fhir(BaseClient):
         Operation timeout (default is 30)
     """
 
-    def execute_sql(self, project_id, statement):
+    def execute_sql(self, project_id: str, statement: str) -> ApiResponse:
         """Executes an SQL query against fhir-searh-service
 
         Parameters
@@ -37,13 +38,13 @@ class Fhir(BaseClient):
             [List] -- Dictionary with query response
         """
         return self._api_call(
-            api_path="fhir-search/projects/{}".format(project_id),
+            api_path=f"fhir-search/projects/{project_id}",
             http_verb="POST",
             data=statement,
             headers={"Content-Type": "text/plain"},
         )
 
-    def execute_es(self, project_id, query):
+    def execute_es(self, project_id: str, query: dict) -> ApiResponse:
         """Executes an elasticsearch query against fhir-searh-service
 
         Parameters
@@ -59,7 +60,7 @@ class Fhir(BaseClient):
             The query response
         """
         return self._api_call(
-            api_path="fhir-search/projects/{}".format(project_id),
+            api_path=f"fhir-search/projects/{project_id}",
             http_verb="POST",
             json=query,
-        ).data
+        )

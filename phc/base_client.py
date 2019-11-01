@@ -1,6 +1,6 @@
 """A Python module for a base PHC web client."""
 import json
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlencode
 from typing import Union
 
 import sys
@@ -8,6 +8,8 @@ import platform
 import asyncio
 import aiohttp
 
+from phc import Session
+from phc.errors import RequestError
 from phc.api_response import ApiResponse
 import phc.version as ver
 
@@ -15,10 +17,12 @@ import phc.version as ver
 class BaseClient:
     """Base client for making API requests."""
 
-    # TODO: Make this configurable
-    _BASE_URL = "https://api.dev.lifeomic.com"
+    def __init__(
+        self, session: Session, run_async: bool = False, timeout: int = 30
+    ):
+        if not session:
+            raise ValueError("Must provide a value for 'session'")
 
-    def __init__(self, session, run_async=False, timeout=30):
         self.session = session
         self.run_async = run_async
         self.timeout = timeout
@@ -56,7 +60,7 @@ class BaseClient:
 
         if self.session.token:
             final_headers.update(
-                {"Authorization": "Bearer {}".format(self.session.token)}
+                {"Authorization": f"Bearer {self.session.token}"}
             )
 
         if self.session.account:
@@ -70,10 +74,73 @@ class BaseClient:
                 {"Content-Type": "application/json;charset=utf-8"}
             )
 
-        return final_headers
+        return {k: v for k, v in final_headers.items() if v is not None}
 
     def _api_call(
         self,
+        api_path: str,
+        http_verb: str = "POST",
+        json: dict = None,
+        data: str = None,
+        headers: dict = {},
+    ) -> Union[asyncio.Future, ApiResponse]:
+        if self.session.is_expired() and self.session.refresh_token:
+            self._refresh_token()
+
+        return self._api_call_impl(
+            self.session.api_url, api_path, http_verb, json, data, headers
+        )
+
+    def _fhir_call(
+        self,
+        api_path: str,
+        http_verb: str = "POST",
+        json: dict = None,
+        data: str = None,
+        headers: dict = {},
+    ) -> Union[asyncio.Future, ApiResponse]:
+        if self.session.is_expired() and self.session.refresh_token:
+            self._refresh_token()
+
+        return self._api_call_impl(
+            self.session.fhir_url, api_path, http_verb, json, data, headers
+        )
+
+    def _ga4gh_call(
+        self,
+        api_path: str,
+        http_verb: str = "POST",
+        json: dict = None,
+        data: str = None,
+        headers: dict = {},
+    ) -> Union[asyncio.Future, ApiResponse]:
+        if self.session.is_expired() and self.session.refresh_token:
+            self._refresh_token()
+
+        return self._api_call_impl(
+            self.session.ga4gh_url, api_path, http_verb, json, data, headers
+        )
+
+    def _refresh_token(self):
+        res = self._api_call_impl(
+            url=self.session.api_url,
+            api_path="oauth/token",
+            data=urlencode(
+                {
+                    "grant_type": "refresh_token",
+                    "client_id": self.session._get_decoded_token().get(
+                        "client_id"
+                    ),
+                    "refresh_token": self.session.refresh_token,
+                }
+            ),
+            headers={"Authorization": None, "LifeOmic-Account": None},
+        )
+        self.session.token = res.data.get("access_token")
+
+    def _api_call_impl(
+        self,
+        url: str,
         api_path: str,
         http_verb: str = "POST",
         json: dict = None,
@@ -95,6 +162,9 @@ class BaseClient:
             Union[asyncio.Future, ApiResponse] -- A Future if run_async is True, otherwise the API response
         """
 
+        if self.session.is_expired() and not self.session.refresh_token:
+            raise RequestError("The session token has expired.")
+
         has_json = json is not None
         has_data = data is not None
 
@@ -113,7 +183,7 @@ class BaseClient:
         if self._event_loop is None:
             self._event_loop = self._get_event_loop()
 
-        api_url = urljoin(self._BASE_URL, "v1/{}".format(api_path))
+        api_url = urljoin(url, api_path)
 
         future = asyncio.ensure_future(
             self._send(http_verb=http_verb, api_url=api_url, req_args=req_args),
@@ -135,11 +205,9 @@ class BaseClient:
             e.g. 'Python/3.6.7 phc-sdk-py/2.0.0 Darwin/17.7.0'
         """
         # __name__ returns all classes, we only want the client
-        client = "{0}/{1}".format("phc-sdk-py", ver.__version__)
-        python_version = "Python/{v.major}.{v.minor}.{v.micro}".format(
-            v=sys.version_info
-        )
-        system_info = "{0}/{1}".format(platform.system(), platform.release())
+        client = f"phc-sdk-py/{ver.__version__}"
+        python_version = f"Python/{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+        system_info = f"{platform.system()}/{platform.release()}"
         user_agent_string = " ".join([python_version, client, system_info])
         return user_agent_string
 

@@ -1,6 +1,7 @@
 """A Python Module for Projects"""
 
 from phc.base_client import BaseClient
+from phc import ApiResponse
 from urllib.parse import urlencode
 
 
@@ -17,7 +18,7 @@ class Projects(BaseClient):
         Operation timeout (default is 30)
     """
 
-    def create(self, name, description=None):
+    def create(self, name: str, description: str = None) -> ApiResponse:
         """Creates a project
 
         Parameters
@@ -50,9 +51,11 @@ class Projects(BaseClient):
         phc.ApiResponse
             The get project response
         """
-        return self._api_call("projects/{}".format(project_id), http_verb="GET")
+        return self._api_call(f"projects/{project_id}", http_verb="GET")
 
-    def update(self, project_id, name, description=None):
+    def update(
+        self, project_id: str, name: str, description: str = None
+    ) -> ApiResponse:
         """Update a project
 
         Parameters
@@ -73,10 +76,10 @@ class Projects(BaseClient):
         if description:
             json_body["description"] = description
         return self._api_call(
-            "projects/{}".format(project_id), json=json_body, http_verb="PATCH"
+            f"projects/{project_id}", json=json_body, http_verb="PATCH"
         ).data
 
-    def delete(self, project_id):
+    def delete(self, project_id: str) -> bool:
         """Delete a project
 
         Parameters
@@ -91,7 +94,7 @@ class Projects(BaseClient):
         """
         return (
             self._api_call(
-                "projects/{}".format(project_id), http_verb="DELETE"
+                f"projects/{project_id}", http_verb="DELETE"
             ).status_code
             == 204
         )
@@ -101,7 +104,7 @@ class Projects(BaseClient):
         page_size: int = None,
         next_page_token: str = None,
         name: str = None,
-    ):
+    ) -> ApiResponse:
         """Fetch a list of projects in an account
 
         Parameters
@@ -126,5 +129,5 @@ class Projects(BaseClient):
         if name:
             query_dict["name"] = name
         return self._api_call(
-            "projects?{}".format(urlencode(query_dict)), http_verb="GET"
+            f"projects?{urlencode(query_dict)}", http_verb="GET"
         )
