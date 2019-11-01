@@ -39,7 +39,7 @@ class ApiResponse:
         self.status_code = status_code
         self._initial_data = data
         self._client = client
-        if data.get("links", {}).get("next"):
+        if isinstance(data, dict) and data.get("links", {}).get("next"):
             parsed = parse_qs(urlparse(data.get("links").get("next")).query)
             self.nextPageToken = parsed.get("nextPageToken")[0]
 
