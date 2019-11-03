@@ -7,9 +7,10 @@ from phc.services.analytics import Analytics
 from phc.services.fhir import Fhir
 from phc.services.projects import Projects
 from phc.services.files import Files
+from phc.services.cohorts import Cohorts
 
 
-__all__ = ["Accounts", "Analytics", "Fhir", "Projects", "Files"]
+__all__ = ["Accounts", "Analytics", "Fhir", "Projects", "Files", "Cohorts"]
 
 __pdoc__ = {
     "accounts": False,
@@ -17,4 +18,5 @@ __pdoc__ = {
     "fhir": False,
     "projects": False,
     "files": False,
+    "cohorts": False,
 }

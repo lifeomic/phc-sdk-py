@@ -10,3 +10,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the `phc.services.Files` submodule that provides actions for files in PHC projects.
+- Added the `phc.services.Cohorts` submodule that provides actions for files in PHC cohorts.
