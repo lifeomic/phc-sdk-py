@@ -1,11 +1,24 @@
 """A Python module for a base PHC web response."""
 
-
+import json
+from urllib.parse import urlparse, parse_qs
 import phc.errors as e
 
 
 class ApiResponse:
-    """Represents an API response."""
+    """Represents an API response.
+
+    Attributes
+    ----------
+    nextPageToken : str
+        The nextPageToken for a paged response
+
+    Examples
+    --------
+    >>> res = files.get_list(project_id="1234")
+    >>> print(str(res))
+    >>> print(res.nextPageToken)
+    """
 
     def __init__(
         self,
@@ -14,7 +27,7 @@ class ApiResponse:
         http_verb: str,
         api_url: str,
         req_args: dict,
-        data: dict,
+        data: [dict, str],
         headers: dict,
         status_code: int,
     ):
@@ -26,13 +39,23 @@ class ApiResponse:
         self.status_code = status_code
         self._initial_data = data
         self._client = client
+        if isinstance(data, dict) and data.get("links", {}).get("next"):
+            parsed = parse_qs(urlparse(data.get("links").get("next")).query)
+            self.nextPageToken = parsed.get("nextPageToken")[0]
 
     def __str__(self):
         """Return the Response data if object is converted to a string."""
-        return f"{self.data}"
+        return (
+            json.dumps(self.data, indent=2)
+            if isinstance(self.data, dict)
+            else self.data
+        )
 
     def __getitem__(self, key):
         """Retreives any key from the data store."""
+        if isinstance(self.data, str):
+            raise TypeError("Api response is text")
+
         return self.data.get(key, None)
 
     def get(self, key: str, default=None):
@@ -49,7 +72,15 @@ class ApiResponse:
         -------
         any
             The key value or the specified default if not present
+
+        Raises
+        ------
+        TypeError
+            If the api response is text
         """
+        if isinstance(self.data, str):
+            raise TypeError("Api response is text")
+
         return self.data.get(key, default)
 
     def validate(self):

@@ -38,7 +38,7 @@ class Projects(BaseClient):
             json_body["description"] = description
         return self._api_call("projects", json=json_body, http_verb="POST")
 
-    def get(self, project_id):
+    def get(self, project_id) -> ApiResponse:
         """Fetch a project by id
 
         Parameters

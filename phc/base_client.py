@@ -1,5 +1,4 @@
 """A Python module for a base PHC web client."""
-import json
 from urllib.parse import urljoin, urlencode
 from typing import Union
 
@@ -80,6 +79,7 @@ class BaseClient:
         self,
         api_path: str,
         http_verb: str = "POST",
+        upload_file: [str, bytes] = None,
         json: dict = None,
         data: str = None,
         headers: dict = {},
@@ -88,13 +88,20 @@ class BaseClient:
             self._refresh_token()
 
         return self._api_call_impl(
-            self.session.api_url, api_path, http_verb, json, data, headers
+            self.session.api_url,
+            api_path,
+            http_verb,
+            upload_file,
+            json,
+            data,
+            headers,
         )
 
     def _fhir_call(
         self,
         api_path: str,
         http_verb: str = "POST",
+        upload_file: [str, bytes] = None,
         json: dict = None,
         data: str = None,
         headers: dict = {},
@@ -103,13 +110,20 @@ class BaseClient:
             self._refresh_token()
 
         return self._api_call_impl(
-            self.session.fhir_url, api_path, http_verb, json, data, headers
+            self.session.fhir_url,
+            api_path,
+            http_verb,
+            upload_file,
+            json,
+            data,
+            headers,
         )
 
     def _ga4gh_call(
         self,
         api_path: str,
         http_verb: str = "POST",
+        upload_file: [str, bytes] = None,
         json: dict = None,
         data: str = None,
         headers: dict = {},
@@ -118,7 +132,13 @@ class BaseClient:
             self._refresh_token()
 
         return self._api_call_impl(
-            self.session.ga4gh_url, api_path, http_verb, json, data, headers
+            self.session.ga4gh_url,
+            api_path,
+            http_verb,
+            upload_file,
+            json,
+            data,
+            headers,
         )
 
     def _refresh_token(self):
@@ -143,6 +163,7 @@ class BaseClient:
         url: str,
         api_path: str,
         http_verb: str = "POST",
+        upload_file: [str, bytes] = None,
         json: dict = None,
         data: str = None,
         headers: dict = {},
@@ -154,6 +175,7 @@ class BaseClient:
 
         Keyword Arguments:
             http_verb {str} -- The http verb (default: {'POST'})
+            upload_file {str|bytes} -- Path to a local file (default: {None})
             json {dict} -- The JSON request body (default: {None})
             data {str} -- Request body as raw string (default: None)
             headers {dict} -- Additional headers to provide in the request (default: {{}})
@@ -167,6 +189,7 @@ class BaseClient:
 
         has_json = json is not None
         has_data = data is not None
+        has_file = upload_file is not None
 
         if has_json and has_data:
             raise Exception(
@@ -179,6 +202,9 @@ class BaseClient:
 
         elif has_data:
             req_args["data"] = data
+
+        elif has_file:
+            req_args["file"] = upload_file
 
         if self._event_loop is None:
             self._event_loop = self._get_event_loop()
@@ -212,9 +238,22 @@ class BaseClient:
         return user_agent_string
 
     async def _send(self, http_verb, api_url, req_args):
+        open_files = []
+        upload_file = req_args.pop("file", None)
+        if upload_file is not None:
+            if isinstance(upload_file, str):
+                f = open(upload_file, "rb")
+                open_files.append(f)
+                req_args["data"] = f
+            else:
+                req_args["data"] = upload_file
+
         res = await self._request(
             http_verb=http_verb, api_url=api_url, req_args=req_args
         )
+
+        for f in open_files:
+            f.close()
 
         data = {
             "client": self,
@@ -235,10 +274,11 @@ class BaseClient:
         ) as session:
             async with session.request(http_verb, api_url, **req_args) as res:
                 return {
-                    "data": await res.json(),
+                    "data": await (
+                        res.json()
+                        if res.content_type == "application/json"
+                        else res.text()
+                    ),
                     "headers": res.headers,
                     "status_code": res.status,
                 }
-
-    def jprint(self, data):
-        print(json.dumps(data, indent=2))

@@ -5,7 +5,10 @@ The phc-sdk-py is a developer kit for interfacing with the PHC API on Python 3.6
 ![GitHub](https://img.shields.io/github/license/lifeomic/phc-sdk-py.svg?style=for-the-badge)
 ![Travis (.org) branch](https://img.shields.io/travis/lifeomic/phc-sdk-py/master.svg?style=for-the-badge)
 ![PyPI status](https://img.shields.io/pypi/status/phc.svg?style=for-the-badge)
+![Downloads](https://img.shields.io/pypi/dw/phc?style=for-the-badge)
 ![GitHub release](https://img.shields.io/github/release/lifeomic/phc-sdk-py.svg?style=for-the-badge)
+[![Docs](https://img.shields.io/badge/DOCS-PASSING-green?style=for-the-badge)](https://lifeomic.github.io/phc-sdk-py/)
+
 
 # Getting Started
 
@@ -68,61 +71,6 @@ from phc.services import Accounts
 
 accounts = Accounts(session)
 myaccounts = accounts.get_list()
-```
-
-Here's and example of fetching FHIR resource using SQL:
-```python
-import pandas as pd
-from phc.services import Fhir
-
-fhir = Fhir(session)
-
-res = fhir.execute_sql(project='19e34782-91c4-4143-aaee-2ba81ed0b206',
-                       statement='SELECT * from patient LIMIT 0,5000')
-
-resources = list(map(lambda r: r.get("_source"), res.get("hits").get("hits")))
-df = pd.DataFrame(resources)
-```
-
-While here's an example of fetching patients observation data from using Analytics DSL. Notice that in this case, there is a helper query builder class (PatientFilterQueryBuilder):
-
-```python
-from phc.services import Analytics
-from phc.util import PatientFilterQueryBuilder
-
-client = Analytics(session)
-search = PatientFilterQueryBuilder()
-search.patient() \
-    .observations() \
-    .code(eq='11142-7') \
-    .system(eq='http://loinc.org') \
-    .value_quantity(lt=40)
-
-res = client.get_patients(project='5a07dedb-fa2a-4cb0-b662-95b23a050221', query_builder=search)
-
-print(f"Found {len(res)} patients")
-
-```
-
-While here's an example of fetching data using data lake engine:
-
-```python
-from phc import Session
-from phc.services import Analytics
-from phc.util import DataLakeQuery
-
-session = Session()
-client = Analytics(session)
-
-dataset_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
-query_string = "SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'"
-output_file_name = 'query-test-notebook'
-query = DataLakeQuery(dataset_id=dataset_id, query=query_string, output_file_name=output_file_name)
-
-query_id = client.execute_data_lake_query(query)
-specific_query = client.get_data_lake_query(query_id)
-paginated_dataset_queries = client.list_data_lake_queries(dataset_id=dataset_id)
-print(query_id)
 ```
 
 # Release Process

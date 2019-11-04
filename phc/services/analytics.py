@@ -32,6 +32,20 @@ class Analytics(BaseClient):
         -------
         list
             The list of patients
+
+        Examples
+        --------
+        >>> from phc.services import Analytics
+        >>> from phc.util import PatientFilterQueryBuilder
+        >>> client = Analytics(session)
+        >>> search = PatientFilterQueryBuilder()
+        >>> search.patient() \
+                .observations() \
+                .code(eq='11142-7') \
+                .system(eq='http://loinc.org') \
+                .value_quantity(lt=40)
+        >>> res = client.get_patients(project='5a07dedb-fa2a-4cb0-b662-95b23a050221', query_builder=search)
+        >>> print(f"Found {len(res)} patients")
         """
         payload = query_builder.to_dict()
         payload["dataset_id"] = project_id
@@ -53,6 +67,25 @@ class Analytics(BaseClient):
         -------
         phc.ApiResponse
             The data lake query
+
+        Examples
+        --------
+        >>> from phc import Session
+        >>> from phc.services import Analytics
+        >>> from phc.util import DataLakeQuery
+
+        >>> session = Session()
+        >>> client = Analytics(session)
+
+        >>> dataset_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
+        >>> query_string = "SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'"
+        >>> output_file_name = 'query-test-notebook'
+        >>> query = DataLakeQuery(dataset_id=dataset_id, query=query_string, output_file_name=output_file_name)
+
+        >>> query_id = client.execute_data_lake_query(query)
+        >>> specific_query = client.get_data_lake_query(query_id)
+        >>> paginated_dataset_queries = client.list_data_lake_queries(dataset_id=dataset_id)
+        >>> print(query_id)
         """
         payload = query.to_request_dict()
         return self._api_call(
