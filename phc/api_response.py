@@ -27,7 +27,7 @@ class ApiResponse:
         http_verb: str,
         api_url: str,
         req_args: dict,
-        data: dict,
+        data: [dict, str],
         headers: dict,
         status_code: int,
     ):
@@ -45,7 +45,11 @@ class ApiResponse:
 
     def __str__(self):
         """Return the Response data if object is converted to a string."""
-        return json.dumps(self.data, indent=2)
+        return (
+            json.dumps(self.data, indent=2)
+            if isinstance(self.data, dict)
+            else self.data
+        )
 
     def __getitem__(self, key):
         """Retreives any key from the data store."""
