@@ -1,4 +1,4 @@
-"""A Python Module for Chorts"""
+"""A Python Module for Cohorts"""
 
 from phc.base_client import BaseClient
 from phc import ApiResponse
