@@ -54,7 +54,7 @@ class ApiResponse:
     def __getitem__(self, key):
         """Retreives any key from the data store."""
         if isinstance(self.data, str):
-            raise ValueError("Api response is text")
+            raise TypeError("Api response is text")
 
         return self.data.get(key, None)
 
@@ -75,11 +75,11 @@ class ApiResponse:
 
         Raises
         ------
-        ValueError
+        TypeError
             If the api response is text
         """
         if isinstance(self.data, str):
-            raise ValueError("Api response is text")
+            raise TypeError("Api response is text")
 
         return self.data.get(key, default)
 
