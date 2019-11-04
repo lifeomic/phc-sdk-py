@@ -34,15 +34,19 @@ from phc.services.accounts import Accounts
 from phc.services.analytics import Analytics
 from phc.services.fhir import Fhir
 from phc.services.projects import Projects
+from phc.services.files import Files
+from phc.services.cohorts import Cohorts
 
 
-__all__ = [&#34;Accounts&#34;, &#34;Analytics&#34;, &#34;Fhir&#34;, &#34;Projects&#34;]
+__all__ = [&#34;Accounts&#34;, &#34;Analytics&#34;, &#34;Fhir&#34;, &#34;Projects&#34;, &#34;Files&#34;, &#34;Cohorts&#34;]
 
 __pdoc__ = {
     &#34;accounts&#34;: False,
     &#34;analytics&#34;: False,
     &#34;fhir&#34;: False,
     &#34;projects&#34;: False,
+    &#34;files&#34;: False,
+    &#34;cohorts&#34;: False,
 }</code></pre>
 </details>
 </section>
@@ -178,6 +182,20 @@ __pdoc__ = {
         -------
         list
             The list of patients
+
+        Examples
+        --------
+        &gt;&gt;&gt; from phc.services import Analytics
+        &gt;&gt;&gt; from phc.util import PatientFilterQueryBuilder
+        &gt;&gt;&gt; client = Analytics(session)
+        &gt;&gt;&gt; search = PatientFilterQueryBuilder()
+        &gt;&gt;&gt; search.patient() \
+                .observations() \
+                .code(eq=&#39;11142-7&#39;) \
+                .system(eq=&#39;http://loinc.org&#39;) \
+                .value_quantity(lt=40)
+        &gt;&gt;&gt; res = client.get_patients(project=&#39;5a07dedb-fa2a-4cb0-b662-95b23a050221&#39;, query_builder=search)
+        &gt;&gt;&gt; print(f&#34;Found {len(res)} patients&#34;)
         &#34;&#34;&#34;
         payload = query_builder.to_dict()
         payload[&#34;dataset_id&#34;] = project_id
@@ -199,6 +217,25 @@ __pdoc__ = {
         -------
         phc.ApiResponse
             The data lake query
+
+        Examples
+        --------
+        &gt;&gt;&gt; from phc import Session
+        &gt;&gt;&gt; from phc.services import Analytics
+        &gt;&gt;&gt; from phc.util import DataLakeQuery
+
+        &gt;&gt;&gt; session = Session()
+        &gt;&gt;&gt; client = Analytics(session)
+
+        &gt;&gt;&gt; dataset_id = &#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;
+        &gt;&gt;&gt; query_string = &#34;SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site=&#39;breast&#39;&#34;
+        &gt;&gt;&gt; output_file_name = &#39;query-test-notebook&#39;
+        &gt;&gt;&gt; query = DataLakeQuery(dataset_id=dataset_id, query=query_string, output_file_name=output_file_name)
+
+        &gt;&gt;&gt; query_id = client.execute_data_lake_query(query)
+        &gt;&gt;&gt; specific_query = client.get_data_lake_query(query_id)
+        &gt;&gt;&gt; paginated_dataset_queries = client.list_data_lake_queries(dataset_id=dataset_id)
+        &gt;&gt;&gt; print(query_id)
         &#34;&#34;&#34;
         payload = query.to_request_dict()
         return self._api_call(
@@ -267,7 +304,25 @@ __pdoc__ = {
 <dl>
 <dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
 <dd>The data lake query</dd>
-</dl></section>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from phc import Session
+&gt;&gt;&gt; from phc.services import Analytics
+&gt;&gt;&gt; from phc.util import DataLakeQuery
+
+&gt;&gt;&gt; session = Session()
+&gt;&gt;&gt; client = Analytics(session)
+
+&gt;&gt;&gt; dataset_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
+&gt;&gt;&gt; query_string = "SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'"
+&gt;&gt;&gt; output_file_name = 'query-test-notebook'
+&gt;&gt;&gt; query = DataLakeQuery(dataset_id=dataset_id, query=query_string, output_file_name=output_file_name)
+
+&gt;&gt;&gt; query_id = client.execute_data_lake_query(query)
+&gt;&gt;&gt; specific_query = client.get_data_lake_query(query_id)
+&gt;&gt;&gt; paginated_dataset_queries = client.list_data_lake_queries(dataset_id=dataset_id)
+&gt;&gt;&gt; print(query_id)
+</code></pre></section>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -284,6 +339,25 @@ __pdoc__ = {
     -------
     phc.ApiResponse
         The data lake query
+
+    Examples
+    --------
+    &gt;&gt;&gt; from phc import Session
+    &gt;&gt;&gt; from phc.services import Analytics
+    &gt;&gt;&gt; from phc.util import DataLakeQuery
+
+    &gt;&gt;&gt; session = Session()
+    &gt;&gt;&gt; client = Analytics(session)
+
+    &gt;&gt;&gt; dataset_id = &#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;
+    &gt;&gt;&gt; query_string = &#34;SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site=&#39;breast&#39;&#34;
+    &gt;&gt;&gt; output_file_name = &#39;query-test-notebook&#39;
+    &gt;&gt;&gt; query = DataLakeQuery(dataset_id=dataset_id, query=query_string, output_file_name=output_file_name)
+
+    &gt;&gt;&gt; query_id = client.execute_data_lake_query(query)
+    &gt;&gt;&gt; specific_query = client.get_data_lake_query(query_id)
+    &gt;&gt;&gt; paginated_dataset_queries = client.list_data_lake_queries(dataset_id=dataset_id)
+    &gt;&gt;&gt; print(query_id)
     &#34;&#34;&#34;
     payload = query.to_request_dict()
     return self._api_call(
@@ -342,7 +416,16 @@ __pdoc__ = {
 <dl>
 <dt><code>list</code></dt>
 <dd>The list of patients</dd>
-</dl></section>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from phc.services import Analytics
+&gt;&gt;&gt; from phc.util import PatientFilterQueryBuilder
+&gt;&gt;&gt; client = Analytics(session)
+&gt;&gt;&gt; search = PatientFilterQueryBuilder()
+&gt;&gt;&gt; search.patient()                 .observations()                 .code(eq='11142-7')                 .system(eq='http://loinc.org')                 .value_quantity(lt=40)
+&gt;&gt;&gt; res = client.get_patients(project='5a07dedb-fa2a-4cb0-b662-95b23a050221', query_builder=search)
+&gt;&gt;&gt; print(f"Found {len(res)} patients")
+</code></pre></section>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -363,6 +446,20 @@ __pdoc__ = {
     -------
     list
         The list of patients
+
+    Examples
+    --------
+    &gt;&gt;&gt; from phc.services import Analytics
+    &gt;&gt;&gt; from phc.util import PatientFilterQueryBuilder
+    &gt;&gt;&gt; client = Analytics(session)
+    &gt;&gt;&gt; search = PatientFilterQueryBuilder()
+    &gt;&gt;&gt; search.patient() \
+            .observations() \
+            .code(eq=&#39;11142-7&#39;) \
+            .system(eq=&#39;http://loinc.org&#39;) \
+            .value_quantity(lt=40)
+    &gt;&gt;&gt; res = client.get_patients(project=&#39;5a07dedb-fa2a-4cb0-b662-95b23a050221&#39;, query_builder=search)
+    &gt;&gt;&gt; print(f&#34;Found {len(res)} patients&#34;)
     &#34;&#34;&#34;
     payload = query_builder.to_dict()
     payload[&#34;dataset_id&#34;] = project_id
@@ -426,6 +523,340 @@ __pdoc__ = {
 </dd>
 </dl>
 </dd>
+<dt id="phc.services.Cohorts"><code class="flex name class">
+<span>class <span class="ident">Cohorts</span></span>
+<span>(</span><span>session, run_async=False, timeout=30)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides acccess to PHC cohorts</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
+<dd>The PHC session</dd>
+<dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True to return promises, False to return results (default is False)</dd>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
+<dd>Operation timeout (default is 30)</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Cohorts(BaseClient):
+    &#34;&#34;&#34;Provides acccess to PHC cohorts
+
+    Parameters
+    ----------
+    session : phc.Session
+        The PHC session
+    run_async: bool
+        True to return promises, False to return results (default is False)
+    timeout: int
+        Operation timeout (default is 30)
+    &#34;&#34;&#34;
+
+    def create(
+        self, project_id: str, name: str, queries: list, description: str = None
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Creates a cohort
+
+        Parameters
+        ----------
+        project_id: str
+            The project that owns the cohort
+        name : str
+            The cohort name.
+        queries: list
+            The list of queries that define the cohort
+        description : str, optional
+            The cohort description, by default None
+
+        Returns
+        -------
+        phc.ApiResponse
+            The create cohort response
+        &#34;&#34;&#34;
+        json_body = {
+            &#34;name&#34;: name,
+            &#34;ownerProject&#34;: project_id,
+            &#34;queries&#34;: queries,
+        }
+        if description:
+            json_body[&#34;description&#34;] = description
+        return self._api_call(&#34;cohorts&#34;, json=json_body, http_verb=&#34;POST&#34;)
+
+    def get(self, cohort_id) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetch a cohort by id
+
+        Parameters
+        ----------
+        cohort_id : str
+            The cohort ID.
+
+        Returns
+        -------
+        phc.ApiResponse
+            The get cohort response
+        &#34;&#34;&#34;
+        return self._api_call(f&#34;cohorts/{cohort_id}&#34;, http_verb=&#34;GET&#34;)
+
+    def delete(self, cohort_id: str) -&gt; bool:
+        &#34;&#34;&#34;Delete a cohort
+
+        Parameters
+        ----------
+        cohort_id : str
+            The cohort ID.
+
+        Returns
+        -------
+        bool
+            True if the delete succeeeds, otherwise False
+        &#34;&#34;&#34;
+        return (
+            self._api_call(
+                f&#34;cohorts/{cohort_id}&#34;, http_verb=&#34;DELETE&#34;
+            ).status_code
+            == 204
+        )
+
+    def get_list(
+        self,
+        project_id: str,
+        page_size: int = None,
+        next_page_token: str = None,
+        name: str = None,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetch a list of cohorts in a project
+
+        Parameters
+        ----------
+        project_id: str
+            The project ID to search within
+        page_size : int, optional
+            The page size, by default None
+        next_page_token : str, optional
+            The next page token, by default None
+        name : str, optional
+            A cohort name filter, by default None
+
+        Returns
+        -------
+        phc.ApiResponse
+            The list cohorts response
+        &#34;&#34;&#34;
+        query_dict = {&#34;projectId&#34;: project_id}
+        if page_size:
+            query_dict[&#34;pageSize&#34;] = page_size
+        if next_page_token:
+            query_dict[&#34;nextPageToken&#34;] = next_page_token
+        if name:
+            query_dict[&#34;name&#34;] = name
+        return self._api_call(
+            f&#34;cohorts?{urlencode(query_dict)}&#34;, http_verb=&#34;GET&#34;
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.services.Cohorts.create"><code class="name flex">
+<span>def <span class="ident">create</span></span>(<span>self, project_id, name, queries, description=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Creates a cohort</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project that owns the cohort</dd>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The cohort name.</dd>
+<dt><strong><code>queries</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of queries that define the cohort</dd>
+<dt><strong><code>description</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The cohort description, by default None</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The create cohort response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create(
+    self, project_id: str, name: str, queries: list, description: str = None
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Creates a cohort
+
+    Parameters
+    ----------
+    project_id: str
+        The project that owns the cohort
+    name : str
+        The cohort name.
+    queries: list
+        The list of queries that define the cohort
+    description : str, optional
+        The cohort description, by default None
+
+    Returns
+    -------
+    phc.ApiResponse
+        The create cohort response
+    &#34;&#34;&#34;
+    json_body = {
+        &#34;name&#34;: name,
+        &#34;ownerProject&#34;: project_id,
+        &#34;queries&#34;: queries,
+    }
+    if description:
+        json_body[&#34;description&#34;] = description
+    return self._api_call(&#34;cohorts&#34;, json=json_body, http_verb=&#34;POST&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Cohorts.delete"><code class="name flex">
+<span>def <span class="ident">delete</span></span>(<span>self, cohort_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Delete a cohort</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>cohort_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The cohort ID.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the delete succeeeds, otherwise False</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete(self, cohort_id: str) -&gt; bool:
+    &#34;&#34;&#34;Delete a cohort
+
+    Parameters
+    ----------
+    cohort_id : str
+        The cohort ID.
+
+    Returns
+    -------
+    bool
+        True if the delete succeeeds, otherwise False
+    &#34;&#34;&#34;
+    return (
+        self._api_call(
+            f&#34;cohorts/{cohort_id}&#34;, http_verb=&#34;DELETE&#34;
+        ).status_code
+        == 204
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Cohorts.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, cohort_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetch a cohort by id</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>cohort_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The cohort ID.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The get cohort response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(self, cohort_id) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetch a cohort by id
+
+    Parameters
+    ----------
+    cohort_id : str
+        The cohort ID.
+
+    Returns
+    -------
+    phc.ApiResponse
+        The get cohort response
+    &#34;&#34;&#34;
+    return self._api_call(f&#34;cohorts/{cohort_id}&#34;, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Cohorts.get_list"><code class="name flex">
+<span>def <span class="ident">get_list</span></span>(<span>self, project_id, page_size=None, next_page_token=None, name=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetch a list of cohorts in a project</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID to search within</dd>
+<dt><strong><code>page_size</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The page size, by default None</dd>
+<dt><strong><code>next_page_token</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The next page token, by default None</dd>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>A cohort name filter, by default None</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The list cohorts response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_list(
+    self,
+    project_id: str,
+    page_size: int = None,
+    next_page_token: str = None,
+    name: str = None,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetch a list of cohorts in a project
+
+    Parameters
+    ----------
+    project_id: str
+        The project ID to search within
+    page_size : int, optional
+        The page size, by default None
+    next_page_token : str, optional
+        The next page token, by default None
+    name : str, optional
+        A cohort name filter, by default None
+
+    Returns
+    -------
+    phc.ApiResponse
+        The list cohorts response
+    &#34;&#34;&#34;
+    query_dict = {&#34;projectId&#34;: project_id}
+    if page_size:
+        query_dict[&#34;pageSize&#34;] = page_size
+    if next_page_token:
+        query_dict[&#34;nextPageToken&#34;] = next_page_token
+    if name:
+        query_dict[&#34;name&#34;] = name
+    return self._api_call(
+        f&#34;cohorts?{urlencode(query_dict)}&#34;, http_verb=&#34;GET&#34;
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 <dt id="phc.services.Fhir"><code class="flex name class">
 <span>class <span class="ident">Fhir</span></span>
 <span>(</span><span>session, run_async=False, timeout=30)</span>
@@ -472,6 +903,17 @@ __pdoc__ = {
         -------
         phc.ApiResponse
             The query response.
+
+        Examples
+        --------
+        &gt;&gt;&gt; import pandas as pd
+        &gt;&gt;&gt; from phc.services import Fhir
+        &gt;&gt;&gt; fhir = Fhir(session)
+        &gt;&gt;&gt; res = fhir.execute_sql(project=&#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;,
+                       statement=&#39;SELECT * from patient LIMIT 0,5000&#39;)
+
+        &gt;&gt;&gt; resources = list(map(lambda r: r.get(&#34;_source&#34;), res.get(&#34;hits&#34;).get(&#34;hits&#34;)))
+        &gt;&gt;&gt; df = pd.DataFrame(resources)
         &#34;&#34;&#34;
 
         &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
@@ -571,7 +1013,17 @@ __pdoc__ = {
 <dl>
 <dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
 <dd>The query response.</dd>
-</dl></section>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; import pandas as pd
+&gt;&gt;&gt; from phc.services import Fhir
+&gt;&gt;&gt; fhir = Fhir(session)
+&gt;&gt;&gt; res = fhir.execute_sql(project='19e34782-91c4-4143-aaee-2ba81ed0b206',
+               statement='SELECT * from patient LIMIT 0,5000')
+
+&gt;&gt;&gt; resources = list(map(lambda r: r.get("_source"), res.get("hits").get("hits")))
+&gt;&gt;&gt; df = pd.DataFrame(resources)
+</code></pre></section>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -590,6 +1042,17 @@ __pdoc__ = {
     -------
     phc.ApiResponse
         The query response.
+
+    Examples
+    --------
+    &gt;&gt;&gt; import pandas as pd
+    &gt;&gt;&gt; from phc.services import Fhir
+    &gt;&gt;&gt; fhir = Fhir(session)
+    &gt;&gt;&gt; res = fhir.execute_sql(project=&#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;,
+                   statement=&#39;SELECT * from patient LIMIT 0,5000&#39;)
+
+    &gt;&gt;&gt; resources = list(map(lambda r: r.get(&#34;_source&#34;), res.get(&#34;hits&#34;).get(&#34;hits&#34;)))
+    &gt;&gt;&gt; df = pd.DataFrame(resources)
     &#34;&#34;&#34;
 
     &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
@@ -602,6 +1065,649 @@ __pdoc__ = {
         data=statement,
         headers={&#34;Content-Type&#34;: &#34;text/plain&#34;},
     )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.services.Files"><code class="flex name class">
+<span>class <span class="ident">Files</span></span>
+<span>(</span><span>session, run_async=False, timeout=30)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides acccess to PHC files</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
+<dd>The PHC session</dd>
+<dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True to return promises, False to return results (default is False)</dd>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
+<dd>Operation timeout (default is 30)</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Files(BaseClient):
+    &#34;&#34;&#34;Provides acccess to PHC files
+
+    Parameters
+    ----------
+    session : phc.Session
+        The PHC session
+    run_async: bool
+        True to return promises, False to return results (default is False)
+    timeout: int
+        Operation timeout (default is 30)
+    &#34;&#34;&#34;
+
+    _MULTIPART_MIN_SIZE = 5 * 1024 * 1024
+    _MAX_PARTS = 10000
+
+    def upload(
+        self,
+        project_id: str,
+        source: str,
+        file_name: str = None,
+        overwrite: bool = False,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Upload a file.
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID
+        source : str
+            The path of the file to upload
+        file_name : str, optional
+            The name of the file, If None will default to the actual base file name.
+        overwrite : bool, optional
+            True to overwrite an existing file of the same name, by default False
+
+        Returns
+        -------
+        ApiResponse
+            The upload file response
+
+        Examples
+        --------
+        &gt;&gt;&gt; from phc.services import Files
+        &gt;&gt;&gt; files = files(session)
+        &gt;&gt;&gt; files.upload(project_id=&#34;db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3&#34;, source=&#34;./myfile.txt&#34;, overwrite=True)
+        &#34;&#34;&#34;
+        file_size = os.path.getsize(source)
+        if file_size &gt; self._MULTIPART_MIN_SIZE:
+            res = self._api_call(
+                &#34;uploads&#34;,
+                json={
+                    &#34;name&#34;: file_name
+                    if file_name is not None
+                    else os.path.basename(source),
+                    &#34;datasetId&#34;: project_id,
+                    &#34;overwrite&#34;: overwrite,
+                },
+            )
+            upload_id = res.get(&#34;uploadId&#34;)
+            part_size = max(
+                math.ceil(file_size / self._MAX_PARTS), self._MULTIPART_MIN_SIZE
+            )
+            total_parts = math.ceil(file_size / part_size)
+            part = 1
+            while part &lt;= total_parts:
+                start = (part - 1) * part_size
+                end = file_size if part == total_parts else start + part_size
+                f = open(source, &#34;rb&#34;)
+                f.seek(start)
+                data = f.read(end - start)
+                f.close()
+                part_res = self._api_call(
+                    f&#34;uploads/{upload_id}/parts/{part}&#34;, http_verb=&#34;GET&#34;
+                )
+                self._api_call_impl(
+                    http_verb=&#34;PUT&#34;,
+                    url=part_res.get(&#34;uploadUrl&#34;),
+                    api_path=None,
+                    upload_file=data,
+                    headers={
+                        &#34;Content-Length&#34;: str(end - start),
+                        &#34;Authorization&#34;: None,
+                        &#34;LifeOmic-Account&#34;: None,
+                        &#34;Content-Type&#34;: None,
+                    },
+                )
+                print(f&#34;Upload {part}&#34;)
+                part += 1
+            self._api_call(f&#34;uploads/{upload_id}&#34;, http_verb=&#34;DELETE&#34;)
+            return res
+        else:
+            res = self._api_call(
+                &#34;files&#34;,
+                json={
+                    &#34;name&#34;: file_name
+                    if file_name is not None
+                    else os.path.basename(source),
+                    &#34;datasetId&#34;: project_id,
+                    &#34;overwrite&#34;: overwrite,
+                },
+            )
+            self._api_call_impl(
+                http_verb=&#34;PUT&#34;,
+                url=res.get(&#34;uploadUrl&#34;),
+                api_path=None,
+                upload_file=source,
+                headers={
+                    &#34;Content-Length&#34;: str(file_size),
+                    &#34;Authorization&#34;: None,
+                    &#34;LifeOmic-Account&#34;: None,
+                    &#34;Content-Type&#34;: None,
+                },
+            )
+            return res
+
+    def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
+        &#34;&#34;&#34;Download a file
+
+        Parameters
+        ----------
+        file_id : str
+            The file ID
+        dest_dir : str, optional
+            The local directory to save the file.  Defaults to the current working directory
+
+        Examples
+        --------
+        &gt;&gt;&gt; from phc.services import Files
+        &gt;&gt;&gt; files = files(session)
+        &gt;&gt;&gt; files.download(file_id=&#34;db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3&#34;, dest_dir=&#34;./mydata&#34;)
+        &#34;&#34;&#34;
+        res = self._api_call(
+            f&#34;files/{file_id}?include=downloadUrl&#34;, http_verb=&#34;GET&#34;
+        )
+        urlretrieve(
+            res.get(&#34;downloadUrl&#34;), os.path.join(dest_dir, res.get(&#34;name&#34;))
+        )
+
+    def get(self, file_id: str) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetch a file by id
+
+        Parameters
+        ----------
+        file_id : str
+            The file ID.
+
+        Returns
+        -------
+        phc.ApiResponse
+            The get file response
+        &#34;&#34;&#34;
+        return self._api_call(f&#34;files/{file_id}&#34;, http_verb=&#34;GET&#34;)
+
+    def update(
+        self, file_id: str, project_id: str = None, name: str = None
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Update a files by moving it to a new project or by renaming it.
+
+        Parameters
+        ----------
+        file_id : str
+            The file ID to update.
+        project_id : str
+            The new project ID for the file.
+        name : str
+            The new file name
+
+        Returns
+        -------
+        phc.ApiResponse
+            The update file response
+        &#34;&#34;&#34;
+        if not project_id and not name:
+            raise ValueError(
+                &#34;Must provide a value for either &#39;project_id&#39; or &#39;name&#39;&#34;
+            )
+
+        json_body = {}
+        if name:
+            json_body[&#34;name&#34;] = name
+        if project_id:
+            json_body[&#34;datasetId&#34;] = project_id
+
+        return self._api_call(
+            f&#34;files/{file_id}&#34;, json=json_body, http_verb=&#34;PATCH&#34;
+        )
+
+    def delete(self, file_id: str) -&gt; bool:
+        &#34;&#34;&#34;Delete a file
+
+        Parameters
+        ----------
+        file_id : str
+            The file ID.
+
+        Returns
+        -------
+        bool
+            True if the delete succeeeds, otherwise False
+        &#34;&#34;&#34;
+        return (
+            self._api_call(f&#34;files/{file_id}&#34;, http_verb=&#34;DELETE&#34;).status_code
+            == 204
+        )
+
+    def get_list(
+        self,
+        project_id: str,
+        folder: str = None,
+        page_size: int = None,
+        next_page_token: str = None,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetch a list of files in a project
+
+        Parameters
+        ----------
+        project_id: str
+            The project ID
+        folder: str, optional
+            The folder prefix to look for files, by default None
+        page_size : int, optional
+            The page size, by default None
+        next_page_token : str, optional
+            The next page token, by default None
+
+        Returns
+        -------
+        phc.ApiResponse
+            The list files response
+        &#34;&#34;&#34;
+        query_dict = {}
+        if page_size:
+            query_dict[&#34;pageSize&#34;] = page_size
+        if next_page_token:
+            query_dict[&#34;nextPageToken&#34;] = next_page_token
+        if folder:
+            query_dict[&#34;prefix&#34;] = folder
+
+        return self._api_call(
+            f&#34;projects/{project_id}/files?{urlencode(query_dict)}&#34;,
+            http_verb=&#34;GET&#34;,
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.services.Files.delete"><code class="name flex">
+<span>def <span class="ident">delete</span></span>(<span>self, file_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Delete a file</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>file_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The file ID.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the delete succeeeds, otherwise False</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete(self, file_id: str) -&gt; bool:
+    &#34;&#34;&#34;Delete a file
+
+    Parameters
+    ----------
+    file_id : str
+        The file ID.
+
+    Returns
+    -------
+    bool
+        True if the delete succeeeds, otherwise False
+    &#34;&#34;&#34;
+    return (
+        self._api_call(f&#34;files/{file_id}&#34;, http_verb=&#34;DELETE&#34;).status_code
+        == 204
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Files.download"><code class="name flex">
+<span>def <span class="ident">download</span></span>(<span>self, file_id, dest_dir='/home/travis/build/lifeomic/phc-sdk-py')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Download a file</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>file_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The file ID</dd>
+<dt><strong><code>dest_dir</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The local directory to save the file.
+Defaults to the current working directory</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from phc.services import Files
+&gt;&gt;&gt; files = files(session)
+&gt;&gt;&gt; files.download(file_id="db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3", dest_dir="./mydata")
+</code></pre></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
+    &#34;&#34;&#34;Download a file
+
+    Parameters
+    ----------
+    file_id : str
+        The file ID
+    dest_dir : str, optional
+        The local directory to save the file.  Defaults to the current working directory
+
+    Examples
+    --------
+    &gt;&gt;&gt; from phc.services import Files
+    &gt;&gt;&gt; files = files(session)
+    &gt;&gt;&gt; files.download(file_id=&#34;db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3&#34;, dest_dir=&#34;./mydata&#34;)
+    &#34;&#34;&#34;
+    res = self._api_call(
+        f&#34;files/{file_id}?include=downloadUrl&#34;, http_verb=&#34;GET&#34;
+    )
+    urlretrieve(
+        res.get(&#34;downloadUrl&#34;), os.path.join(dest_dir, res.get(&#34;name&#34;))
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Files.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, file_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetch a file by id</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>file_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The file ID.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The get file response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(self, file_id: str) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetch a file by id
+
+    Parameters
+    ----------
+    file_id : str
+        The file ID.
+
+    Returns
+    -------
+    phc.ApiResponse
+        The get file response
+    &#34;&#34;&#34;
+    return self._api_call(f&#34;files/{file_id}&#34;, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Files.get_list"><code class="name flex">
+<span>def <span class="ident">get_list</span></span>(<span>self, project_id, folder=None, page_size=None, next_page_token=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetch a list of files in a project</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>folder</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The folder prefix to look for files, by default None</dd>
+<dt><strong><code>page_size</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The page size, by default None</dd>
+<dt><strong><code>next_page_token</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The next page token, by default None</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The list files response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_list(
+    self,
+    project_id: str,
+    folder: str = None,
+    page_size: int = None,
+    next_page_token: str = None,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetch a list of files in a project
+
+    Parameters
+    ----------
+    project_id: str
+        The project ID
+    folder: str, optional
+        The folder prefix to look for files, by default None
+    page_size : int, optional
+        The page size, by default None
+    next_page_token : str, optional
+        The next page token, by default None
+
+    Returns
+    -------
+    phc.ApiResponse
+        The list files response
+    &#34;&#34;&#34;
+    query_dict = {}
+    if page_size:
+        query_dict[&#34;pageSize&#34;] = page_size
+    if next_page_token:
+        query_dict[&#34;nextPageToken&#34;] = next_page_token
+    if folder:
+        query_dict[&#34;prefix&#34;] = folder
+
+    return self._api_call(
+        f&#34;projects/{project_id}/files?{urlencode(query_dict)}&#34;,
+        http_verb=&#34;GET&#34;,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Files.update"><code class="name flex">
+<span>def <span class="ident">update</span></span>(<span>self, file_id, project_id=None, name=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Update a files by moving it to a new project or by renaming it.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>file_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The file ID to update.</dd>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The new project ID for the file.</dd>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The new file name</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The update file response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update(
+    self, file_id: str, project_id: str = None, name: str = None
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Update a files by moving it to a new project or by renaming it.
+
+    Parameters
+    ----------
+    file_id : str
+        The file ID to update.
+    project_id : str
+        The new project ID for the file.
+    name : str
+        The new file name
+
+    Returns
+    -------
+    phc.ApiResponse
+        The update file response
+    &#34;&#34;&#34;
+    if not project_id and not name:
+        raise ValueError(
+            &#34;Must provide a value for either &#39;project_id&#39; or &#39;name&#39;&#34;
+        )
+
+    json_body = {}
+    if name:
+        json_body[&#34;name&#34;] = name
+    if project_id:
+        json_body[&#34;datasetId&#34;] = project_id
+
+    return self._api_call(
+        f&#34;files/{file_id}&#34;, json=json_body, http_verb=&#34;PATCH&#34;
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Files.upload"><code class="name flex">
+<span>def <span class="ident">upload</span></span>(<span>self, project_id, source, file_name=None, overwrite=False)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Upload a file.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>source</code></strong> :&ensp;<code>str</code></dt>
+<dd>The path of the file to upload</dd>
+<dt><strong><code>file_name</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The name of the file, If None will default to the actual base file name.</dd>
+<dt><strong><code>overwrite</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>True to overwrite an existing file of the same name, by default False</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ApiResponse</code></dt>
+<dd>The upload file response</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from phc.services import Files
+&gt;&gt;&gt; files = files(session)
+&gt;&gt;&gt; files.upload(project_id="db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3", source="./myfile.txt", overwrite=True)
+</code></pre></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def upload(
+    self,
+    project_id: str,
+    source: str,
+    file_name: str = None,
+    overwrite: bool = False,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Upload a file.
+
+    Parameters
+    ----------
+    project_id : str
+        The project ID
+    source : str
+        The path of the file to upload
+    file_name : str, optional
+        The name of the file, If None will default to the actual base file name.
+    overwrite : bool, optional
+        True to overwrite an existing file of the same name, by default False
+
+    Returns
+    -------
+    ApiResponse
+        The upload file response
+
+    Examples
+    --------
+    &gt;&gt;&gt; from phc.services import Files
+    &gt;&gt;&gt; files = files(session)
+    &gt;&gt;&gt; files.upload(project_id=&#34;db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3&#34;, source=&#34;./myfile.txt&#34;, overwrite=True)
+    &#34;&#34;&#34;
+    file_size = os.path.getsize(source)
+    if file_size &gt; self._MULTIPART_MIN_SIZE:
+        res = self._api_call(
+            &#34;uploads&#34;,
+            json={
+                &#34;name&#34;: file_name
+                if file_name is not None
+                else os.path.basename(source),
+                &#34;datasetId&#34;: project_id,
+                &#34;overwrite&#34;: overwrite,
+            },
+        )
+        upload_id = res.get(&#34;uploadId&#34;)
+        part_size = max(
+            math.ceil(file_size / self._MAX_PARTS), self._MULTIPART_MIN_SIZE
+        )
+        total_parts = math.ceil(file_size / part_size)
+        part = 1
+        while part &lt;= total_parts:
+            start = (part - 1) * part_size
+            end = file_size if part == total_parts else start + part_size
+            f = open(source, &#34;rb&#34;)
+            f.seek(start)
+            data = f.read(end - start)
+            f.close()
+            part_res = self._api_call(
+                f&#34;uploads/{upload_id}/parts/{part}&#34;, http_verb=&#34;GET&#34;
+            )
+            self._api_call_impl(
+                http_verb=&#34;PUT&#34;,
+                url=part_res.get(&#34;uploadUrl&#34;),
+                api_path=None,
+                upload_file=data,
+                headers={
+                    &#34;Content-Length&#34;: str(end - start),
+                    &#34;Authorization&#34;: None,
+                    &#34;LifeOmic-Account&#34;: None,
+                    &#34;Content-Type&#34;: None,
+                },
+            )
+            print(f&#34;Upload {part}&#34;)
+            part += 1
+        self._api_call(f&#34;uploads/{upload_id}&#34;, http_verb=&#34;DELETE&#34;)
+        return res
+    else:
+        res = self._api_call(
+            &#34;files&#34;,
+            json={
+                &#34;name&#34;: file_name
+                if file_name is not None
+                else os.path.basename(source),
+                &#34;datasetId&#34;: project_id,
+                &#34;overwrite&#34;: overwrite,
+            },
+        )
+        self._api_call_impl(
+            http_verb=&#34;PUT&#34;,
+            url=res.get(&#34;uploadUrl&#34;),
+            api_path=None,
+            upload_file=source,
+            headers={
+                &#34;Content-Length&#34;: str(file_size),
+                &#34;Authorization&#34;: None,
+                &#34;LifeOmic-Account&#34;: None,
+                &#34;Content-Type&#34;: None,
+            },
+        )
+        return res</code></pre>
 </details>
 </dd>
 </dl>
@@ -658,7 +1764,7 @@ __pdoc__ = {
             json_body[&#34;description&#34;] = description
         return self._api_call(&#34;projects&#34;, json=json_body, http_verb=&#34;POST&#34;)
 
-    def get(self, project_id):
+    def get(self, project_id) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetch a project by id
 
         Parameters
@@ -859,7 +1965,7 @@ __pdoc__ = {
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get(self, project_id):
+<pre><code class="python">def get(self, project_id) -&gt; ApiResponse:
     &#34;&#34;&#34;Fetch a project by id
 
     Parameters
@@ -1021,10 +2127,30 @@ __pdoc__ = {
 </ul>
 </li>
 <li>
+<h4><code><a title="phc.services.Cohorts" href="#phc.services.Cohorts">Cohorts</a></code></h4>
+<ul class="">
+<li><code><a title="phc.services.Cohorts.create" href="#phc.services.Cohorts.create">create</a></code></li>
+<li><code><a title="phc.services.Cohorts.delete" href="#phc.services.Cohorts.delete">delete</a></code></li>
+<li><code><a title="phc.services.Cohorts.get" href="#phc.services.Cohorts.get">get</a></code></li>
+<li><code><a title="phc.services.Cohorts.get_list" href="#phc.services.Cohorts.get_list">get_list</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="phc.services.Fhir" href="#phc.services.Fhir">Fhir</a></code></h4>
 <ul class="">
 <li><code><a title="phc.services.Fhir.execute_es" href="#phc.services.Fhir.execute_es">execute_es</a></code></li>
 <li><code><a title="phc.services.Fhir.execute_sql" href="#phc.services.Fhir.execute_sql">execute_sql</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.services.Files" href="#phc.services.Files">Files</a></code></h4>
+<ul class="two-column">
+<li><code><a title="phc.services.Files.delete" href="#phc.services.Files.delete">delete</a></code></li>
+<li><code><a title="phc.services.Files.download" href="#phc.services.Files.download">download</a></code></li>
+<li><code><a title="phc.services.Files.get" href="#phc.services.Files.get">get</a></code></li>
+<li><code><a title="phc.services.Files.get_list" href="#phc.services.Files.get_list">get_list</a></code></li>
+<li><code><a title="phc.services.Files.update" href="#phc.services.Files.update">update</a></code></li>
+<li><code><a title="phc.services.Files.upload" href="#phc.services.Files.upload">upload</a></code></li>
 </ul>
 </li>
 <li>

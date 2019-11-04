@@ -26,7 +26,9 @@
 <p><img alt="GitHub" src="https://img.shields.io/github/license/lifeomic/phc-sdk-py.svg?style=for-the-badge">
 <img alt="Travis (.org) branch" src="https://img.shields.io/travis/lifeomic/phc-sdk-py/master.svg?style=for-the-badge">
 <img alt="PyPI status" src="https://img.shields.io/pypi/status/phc.svg?style=for-the-badge">
-<img alt="GitHub release" src="https://img.shields.io/github/release/lifeomic/phc-sdk-py.svg?style=for-the-badge"></p>
+<img alt="Downloads" src="https://img.shields.io/pypi/dw/phc?style=for-the-badge">
+<img alt="GitHub release" src="https://img.shields.io/github/release/lifeomic/phc-sdk-py.svg?style=for-the-badge">
+<a href="https://lifeomic.github.io/phc-sdk-py/"><img alt="Docs" src="https://img.shields.io/badge/DOCS-PASSING-green?style=for-the-badge"></a></p>
 <h1 id="getting-started">Getting Started</h1>
 <h2 id="dependencies">Dependencies</h2>
 <ul>
@@ -65,53 +67,6 @@ session = Session(token=&lt;TOKEN VALUE&gt;, account=&quot;myaccount&quot;)
 
 accounts = Accounts(session)
 myaccounts = accounts.get_list()
-</code></pre>
-<p>Here's and example of fetching FHIR resource using SQL:</p>
-<pre><code class="python">import pandas as pd
-from phc.services import Fhir
-
-fhir = Fhir(session)
-
-res = fhir.execute_sql(project='19e34782-91c4-4143-aaee-2ba81ed0b206',
-                       statement='SELECT * from patient LIMIT 0,5000')
-
-resources = list(map(lambda r: r.get(&quot;_source&quot;), res.get(&quot;hits&quot;).get(&quot;hits&quot;)))
-df = pd.DataFrame(resources)
-</code></pre>
-<p>While here's an example of fetching patients observation data from using Analytics DSL. Notice that in this case, there is a helper query builder class (PatientFilterQueryBuilder):</p>
-<pre><code class="python">from phc.services import Analytics
-from phc.util import PatientFilterQueryBuilder
-
-client = Analytics(session)
-search = PatientFilterQueryBuilder()
-search.patient() \
-    .observations() \
-    .code(eq='11142-7') \
-    .system(eq='http://loinc.org') \
-    .value_quantity(lt=40)
-
-res = client.get_patients(project='5a07dedb-fa2a-4cb0-b662-95b23a050221', query_builder=search)
-
-print(f&quot;Found {len(res)} patients&quot;)
-
-</code></pre>
-<p>While here's an example of fetching data using data lake engine:</p>
-<pre><code class="python">from phc import Session
-from phc.services import Analytics
-from phc.util import DataLakeQuery
-
-session = Session()
-client = Analytics(session)
-
-dataset_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
-query_string = &quot;SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'&quot;
-output_file_name = 'query-test-notebook'
-query = DataLakeQuery(dataset_id=dataset_id, query=query_string, output_file_name=output_file_name)
-
-query_id = client.execute_data_lake_query(query)
-specific_query = client.get_data_lake_query(query_id)
-paginated_dataset_queries = client.list_data_lake_queries(dataset_id=dataset_id)
-print(query_id)
 </code></pre>
 <h1 id="release-process">Release Process</h1>
 <p><a href="https://github.com/lifeomic/phc-sdk-py/releases">Releases</a> are generally created with each merged PR. Packages for each release are published to <a href="https://pypi.org/project/phc/">PyPi</a>. See <a href="CHANGELOG.md">CHANGELOG.md</a> for release notes.</p>
@@ -183,13 +138,35 @@ __pdoc__ = {
 <span>(</span><span>*, client, http_verb, api_url, req_args, data, headers, status_code)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Represents an API response.</p></section>
+<section class="desc"><p>Represents an API response.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>nextPageToken</code></strong> :&ensp;<code>str</code></dt>
+<dd>The nextPageToken for a paged response</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; res = files.get_list(project_id="1234")
+&gt;&gt;&gt; print(str(res))
+&gt;&gt;&gt; print(res.nextPageToken)
+</code></pre></section>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class ApiResponse:
-    &#34;&#34;&#34;Represents an API response.&#34;&#34;&#34;
+    &#34;&#34;&#34;Represents an API response.
+
+    Attributes
+    ----------
+    nextPageToken : str
+        The nextPageToken for a paged response
+
+    Examples
+    --------
+    &gt;&gt;&gt; res = files.get_list(project_id=&#34;1234&#34;)
+    &gt;&gt;&gt; print(str(res))
+    &gt;&gt;&gt; print(res.nextPageToken)
+    &#34;&#34;&#34;
 
     def __init__(
         self,
@@ -198,7 +175,7 @@ __pdoc__ = {
         http_verb: str,
         api_url: str,
         req_args: dict,
-        data: dict,
+        data: [dict, str],
         headers: dict,
         status_code: int,
     ):
@@ -210,13 +187,23 @@ __pdoc__ = {
         self.status_code = status_code
         self._initial_data = data
         self._client = client
+        if isinstance(data, dict) and data.get(&#34;links&#34;, {}).get(&#34;next&#34;):
+            parsed = parse_qs(urlparse(data.get(&#34;links&#34;).get(&#34;next&#34;)).query)
+            self.nextPageToken = parsed.get(&#34;nextPageToken&#34;)[0]
 
     def __str__(self):
         &#34;&#34;&#34;Return the Response data if object is converted to a string.&#34;&#34;&#34;
-        return f&#34;{self.data}&#34;
+        return (
+            json.dumps(self.data, indent=2)
+            if isinstance(self.data, dict)
+            else self.data
+        )
 
     def __getitem__(self, key):
         &#34;&#34;&#34;Retreives any key from the data store.&#34;&#34;&#34;
+        if isinstance(self.data, str):
+            raise TypeError(&#34;Api response is text&#34;)
+
         return self.data.get(key, None)
 
     def get(self, key: str, default=None):
@@ -233,7 +220,15 @@ __pdoc__ = {
         -------
         any
             The key value or the specified default if not present
+
+        Raises
+        ------
+        TypeError
+            If the api response is text
         &#34;&#34;&#34;
+        if isinstance(self.data, str):
+            raise TypeError(&#34;Api response is text&#34;)
+
         return self.data.get(key, default)
 
     def validate(self):
@@ -272,6 +267,11 @@ __pdoc__ = {
 <dl>
 <dt><code>any</code></dt>
 <dd>The key value or the specified default if not present</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>TypeError</code></dt>
+<dd>If the api response is text</dd>
 </dl></section>
 <details class="source">
 <summary>
@@ -291,7 +291,15 @@ __pdoc__ = {
     -------
     any
         The key value or the specified default if not present
+
+    Raises
+    ------
+    TypeError
+        If the api response is text
     &#34;&#34;&#34;
+    if isinstance(self.data, str):
+        raise TypeError(&#34;Api response is text&#34;)
+
     return self.data.get(key, default)</code></pre>
 </details>
 </dd>
