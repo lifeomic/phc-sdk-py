@@ -1,8 +1,16 @@
 """A Python module for a base PHC web response."""
 
 import json
+from typing import Callable, Any
 from urllib.parse import urlparse, parse_qs
 import phc.errors as e
+
+try:
+    import pandas as _pd
+except ImportError:
+    _has_pandas = False
+else:
+    _has_pandas = True
 
 
 class ApiResponse:
@@ -82,6 +90,35 @@ class ApiResponse:
             raise TypeError("Api response is text")
 
         return self.data.get(key, default)
+
+    def get_dataFrame(self, key: str, mapFunc: Callable[[Any], Any] = None):
+        """Retrieves any key as a Panda DataFrame
+
+        Parameters
+        ----------
+        key : str
+            The key to fetch
+        mapFunc : Callable[[Any], Any], optional
+            A transform function to apply to each item before inserting into the DataFrame, by default None
+
+        Returns
+        -------
+        DataFrame
+            A Panda DataFrame
+
+        Raises
+        ------
+        ImportError
+            If pandas is not installed
+        """
+        if not _has_pandas:
+            raise ImportError("pandas is required")
+
+        if mapFunc is not None:
+            mapped = list(map(mapFunc, self.data.get(key)))
+            return _pd.DataFrame(mapped)
+
+        return _pd.DataFrame(self.data.get(key))
 
     def validate(self):
         """Check if the response from API was successful.
