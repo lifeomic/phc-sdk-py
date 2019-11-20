@@ -133,3 +133,41 @@ class Analytics(BaseClient):
             The data lake query get response
         """
         return self._api_call("analytics/query/%s" % query_id, http_verb="GET")
+
+    def list_data_lake_schemas(self, dataset_id: str) -> ApiResponse:
+        """Fetches the data lake table schemas
+
+        Parameters
+        ----------
+        dataset_id : string
+            The dataset to fetch the table schemas of
+
+        Returns
+        -------
+        phc.ApiResponse
+            The schema for each data lake table
+        """
+        path = "analytics/data-lake/schema?datasetId=%s" % (dataset_id)
+        return self._api_call(path, http_verb="GET")
+
+    def get_data_lake_schema(self, dataset_id, table) -> ApiResponse:
+        """Fetches the schema for a specific data lake table
+
+        Parameters
+        ----------
+        dataset_id : string
+            The dataset to fetch the table schema of
+
+        table : string
+            Name of the table
+
+        Returns
+        -------
+        phc.ApiResponse
+            Schema of the specified table
+        """
+        path = "analytics/data-lake/schema/%s?datasetId=%s" % (
+            table,
+            dataset_id,
+        )
+        return self._api_call(path, http_verb="GET")
