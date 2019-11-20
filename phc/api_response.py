@@ -91,7 +91,7 @@ class ApiResponse:
 
         return self.data.get(key, default)
 
-    def get_as_dataFrame(self, key: str, mapFunc: Callable[[Any], Any] = None):
+    def get_as_dataframe(self, key: str, mapFunc: Callable[[Any], Any] = None):
         """Retrieves any key as a Panda DataFrame
 
         Parameters
