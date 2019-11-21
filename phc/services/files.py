@@ -143,9 +143,13 @@ class Files(BaseClient):
         res = self._api_call(
             f"files/{file_id}?include=downloadUrl", http_verb="GET"
         )
-        urlretrieve(
-            res.get("downloadUrl"), os.path.join(dest_dir, res.get("name"))
-        )
+
+        file_path = os.path.join(dest_dir, res.get("name"))
+        target_dir = os.path.dirname(file_path)
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir)
+
+        urlretrieve(res.get("downloadUrl"), file_path)
 
     def get(self, file_id: str) -> ApiResponse:
         """Fetch a file by id
