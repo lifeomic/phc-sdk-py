@@ -1223,9 +1223,13 @@ __pdoc__ = {
         res = self._api_call(
             f&#34;files/{file_id}?include=downloadUrl&#34;, http_verb=&#34;GET&#34;
         )
-        urlretrieve(
-            res.get(&#34;downloadUrl&#34;), os.path.join(dest_dir, res.get(&#34;name&#34;))
-        )
+
+        file_path = os.path.join(dest_dir, res.get(&#34;name&#34;))
+        target_dir = os.path.dirname(file_path)
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir)
+
+        urlretrieve(res.get(&#34;downloadUrl&#34;), file_path)
 
     def get(self, file_id: str) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetch a file by id
@@ -1417,9 +1421,13 @@ Defaults to the current working directory</dd>
     res = self._api_call(
         f&#34;files/{file_id}?include=downloadUrl&#34;, http_verb=&#34;GET&#34;
     )
-    urlretrieve(
-        res.get(&#34;downloadUrl&#34;), os.path.join(dest_dir, res.get(&#34;name&#34;))
-    )</code></pre>
+
+    file_path = os.path.join(dest_dir, res.get(&#34;name&#34;))
+    target_dir = os.path.dirname(file_path)
+    if not os.path.exists(target_dir):
+        os.makedirs(target_dir)
+
+    urlretrieve(res.get(&#34;downloadUrl&#34;), file_path)</code></pre>
 </details>
 </dd>
 <dt id="phc.services.Files.get"><code class="name flex">
