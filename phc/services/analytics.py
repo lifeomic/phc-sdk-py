@@ -235,7 +235,7 @@ class Analytics(BaseClient):
             else self._event_loop.run_until_complete(future)
         )
 
-    def load_data_lake_query_to_dataframe(
+    def load_data_lake_result_to_dataframe(
         self, query_id: str, dest_dir: str = os.getcwd()
     ):
         """Downloads the result file of a query and converts to a Pandas dataframe.
@@ -261,7 +261,7 @@ class Analytics(BaseClient):
             raise ImportError("pandas is required")
 
         future = asyncio.ensure_future(
-            self.__load_data_lake_query_to_dataframe_impl(query_id, dest_dir),
+            self.__load_data_lake_result_to_dataframe_impl(query_id, dest_dir),
             loop=self._event_loop,
         )
         return (
@@ -304,11 +304,11 @@ class Analytics(BaseClient):
                 f"Timed out waiting for query {query_id} to complete"
             )
 
-        return await self.__load_data_lake_query_to_dataframe_impl(
+        return await self.__load_data_lake_result_to_dataframe_impl(
             query_id, dest_dir
         )
 
-    async def __load_data_lake_query_to_dataframe_impl(
+    async def __load_data_lake_result_to_dataframe_impl(
         self, query_id: str, dest_dir: str
     ):
         """Internal method for loading an existing data lake query result to a Pandas dataframe.
