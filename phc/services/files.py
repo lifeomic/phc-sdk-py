@@ -6,6 +6,7 @@ from phc.base_client import BaseClient
 from phc import ApiResponse
 from urllib.parse import urlencode
 from urllib.request import urlretrieve
+from phc.errors import ApiError
 
 
 class Files(BaseClient):
@@ -143,9 +144,11 @@ class Files(BaseClient):
         res = self._api_call(
             f"files/{file_id}?include=downloadUrl", http_verb="GET"
         )
-        urlretrieve(
-            res.get("downloadUrl"), os.path.join(dest_dir, res.get("name"))
-        )
+
+        dest_path = os.path.join(dest_dir, res.get("name"))
+        urlretrieve(res.get("downloadUrl"), dest_path)
+
+        return dest_path
 
     def get(self, file_id: str) -> ApiResponse:
         """Fetch a file by id
@@ -251,3 +254,24 @@ class Files(BaseClient):
             f"projects/{project_id}/files?{urlencode(query_dict)}",
             http_verb="GET",
         )
+
+    def exists(self, file_id: str) -> ApiResponse:
+        """Check if a file exists by id
+
+        Parameters
+        ----------
+        file_id : str
+            The file ID.
+
+        Returns
+        -------
+        bool
+            True if the file exists, false otherwise
+        """
+        try:
+            self._api_call(f"files/{file_id}", http_verb="GET")
+            return True
+        except ApiError as e:
+            if e.response.status_code == 404:
+                return False
+            raise e

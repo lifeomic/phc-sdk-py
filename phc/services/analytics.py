@@ -1,6 +1,17 @@
+import os
+import time
+import asyncio
+from phc.services import files
 from phc.base_client import BaseClient
 from phc.util import PatientFilterQueryBuilder, DataLakeQuery
 from phc import ApiResponse
+
+try:
+    import pandas as _pd
+except ImportError:
+    _has_pandas = False
+else:
+    _has_pandas = True
 
 
 class Analytics(BaseClient):
@@ -77,10 +88,10 @@ class Analytics(BaseClient):
         >>> session = Session()
         >>> client = Analytics(session)
 
-        >>> dataset_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
+        >>> project_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
         >>> query_string = "SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'"
         >>> output_file_name = 'query-test-notebook'
-        >>> query = DataLakeQuery(dataset_id=dataset_id, query=query_string, output_file_name=output_file_name)
+        >>> query = DataLakeQuery(project_id=project_id, query=query_string, output_file_name=output_file_name)
 
         >>> query_id = client.execute_data_lake_query(query)
         >>> specific_query = client.get_data_lake_query(query_id)
@@ -171,3 +182,223 @@ class Analytics(BaseClient):
             dataset_id,
         )
         return self._api_call(path, http_verb="GET")
+
+    def execute_data_lake_query_to_dataframe(
+        self, query: DataLakeQuery, dest_dir: str = os.getcwd()
+    ):
+        """Executes a data lake query, downloads the result file and converts to a Pandas dataframe.
+
+        To use this method, the 'pandas' module is required.
+        Otherwise, an exception will be thrown.
+
+        Parameters
+        ----------
+        query : util.DataLakeQuery
+            The query builder
+
+        dest_dir : string
+            Directory the result file will be downloaded to.
+            Defaults to the current working directory.
+
+        Returns
+        -------
+        asyncio.Future || pandas.DataFrame
+            A Future if run_async is True, the data lake query result contained in a Pandas dataframe otherwise.
+
+        Examples
+        --------
+        >>> from phc import Session
+        >>> from phc.services import Analytics
+        >>> from phc.util import DataLakeQuery
+
+        >>> session = Session()
+        >>> client = Analytics(session)
+
+        >>> project_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
+        >>> query_string = "SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'"
+        >>> output_file_name = 'query-dataframe-test'
+        >>> query = DataLakeQuery(project_id=project_id, query=query_string, output_file_name=output_file_name)
+
+        >>> dataframe = client.execute_data_lake_query_to_dataframe(query)
+        >>> dataframe.head()
+        """
+        if not _has_pandas:
+            raise ImportError("pandas is required")
+
+        future = asyncio.ensure_future(
+            self.__execute_data_lake_query_to_dataframe_impl(query, dest_dir),
+            loop=self._event_loop,
+        )
+        return (
+            future
+            if self.run_async
+            else self._event_loop.run_until_complete(future)
+        )
+
+    def load_data_lake_query_to_dataframe(
+        self, query_id: str, dest_dir: str = os.getcwd()
+    ):
+        """Downloads the result file of a query and converts to a Pandas dataframe.
+
+        To use this method, the 'pandas' module is required.
+        Otherwise, an exception will be thrown.
+
+        Parameters
+        ----------
+        query_id : string
+            Id of the query to load results from
+
+        dest_dir : string
+            Directory the result file will be downloaded to.
+            Defaults to the current working directory.
+
+        Returns
+        -------
+        asyncio.Future || pandas.DataFrame
+            A Future if run_async is True, the data lake query result contained in a Pandas dataframe otherwise.
+        """
+        if not _has_pandas:
+            raise ImportError("pandas is required")
+
+        future = asyncio.ensure_future(
+            self.__load_data_lake_query_to_dataframe_impl(query_id, dest_dir),
+            loop=self._event_loop,
+        )
+        return (
+            future
+            if self.run_async
+            else self._event_loop.run_until_complete(future)
+        )
+
+    async def __execute_data_lake_query_to_dataframe_impl(
+        self, query: DataLakeQuery, dest_dir: str
+    ):
+        """Internal method for execting a data lake query, downloads the result file and converts to a Pandas dataframe.
+
+        This method exists to support either async or synchronous execution.
+
+        Parameters
+        ----------
+        query : util.DataLakeQuery
+            The query builder
+
+        dest_dir : string
+            Directory the result file will be downloaded to
+
+        Returns
+        -------
+        pandas.DataFrame
+            The data lake query result contained in a Pandas dataframe.
+        """
+        analytics_client = (
+            Analytics(self.session, run_async=False, timeout=self.timeout)
+            if self.run_async
+            else self
+        )
+        query_id = analytics_client.execute_data_lake_query(query)
+
+        if not self.__poll_predicate(
+            self.__data_lake_query_predicate, 3600, analytics_client, query_id
+        ):
+            raise RuntimeError(
+                f"Timed out waiting for query {query_id} to complete"
+            )
+
+        return await self.__load_data_lake_query_to_dataframe_impl(
+            query_id, dest_dir
+        )
+
+    async def __load_data_lake_query_to_dataframe_impl(
+        self, query_id: str, dest_dir: str
+    ):
+        """Internal method for loading an existing data lake query result to a Pandas dataframe.
+
+        This method exists to support either async or synchronous execution.
+
+        Parameters
+        ----------
+        query_id : string
+            Id of the query to load results from
+
+        dest_dir : string
+            Directory the result file will be downloaded to
+
+        Returns
+        -------
+        pandas.DataFrame
+            The data lake query result contained in a Pandas dataframe.
+        """
+        analytics_client = (
+            Analytics(self.session, run_async=False, timeout=self.timeout)
+            if self.run_async
+            else self
+        )
+        analytics_client.get_data_lake_query(
+            query_id
+        )  # verify the query exists, an exception will be thrown if it does not
+
+        files_client = files.Files(
+            self.session, run_async=False, timeout=self.timeout
+        )
+        if not self.__poll_predicate(files_client.exists, 10, query_id):
+            raise RuntimeError(
+                f"Timed out waiting for result file {query_id} to become available"
+            )
+
+        download_path = files_client.download(query_id)
+        return _pd.read_csv(download_path)
+
+    def __data_lake_query_predicate(self, analytics_client, query_id):
+        """Checks if a query has completed successfully.
+
+        If the query was cancelled or failed an exception will be thrown.
+
+        Parameters
+        ----------
+        analytics_client : phc.services.Analytics
+            Instance of the Analytics client
+
+        query_id : string
+            Id of the query to check for completion
+
+        Returns
+        -------
+        bool
+            True if the query is in the 'succeeded' state, False if 'running'.
+        """
+        response = analytics_client.get_data_lake_query(query_id)
+        state = response.get("state")
+
+        if state == "failed" or state == "cancelled":
+            raise RuntimeError(f"Query {query_id} is {state}")
+        return state == "succeeded"
+
+    def __poll_predicate(self, predicate, timeout_sec, *args, **kwargs):
+        """Executes a function until it returns a truthy value or the timeout is reached.
+
+        This method will wait 2 seconds between predicate function executions.
+
+        Parameters
+        ----------
+        predicate : function
+            Function to invoke until it returns a truthy value
+
+        timeout_sec : int
+            The number of seconds to wait until timing out
+
+        args : list
+            The positional args to invoke the predicate function with
+
+        kwargs : dict
+            The keyword args to invoke the predicate function with
+        Returns
+        -------
+        bool
+            True if the function evaluated to True, False otherwise.
+        """
+        timeout_time = time.time() + timeout_sec
+        while timeout_time > time.time():
+            if predicate(*args, **kwargs):
+                return True
+            time.sleep(2)
+        return False
