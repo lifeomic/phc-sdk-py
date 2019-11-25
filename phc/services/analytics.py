@@ -95,7 +95,7 @@ class Analytics(BaseClient):
 
         >>> query_id = client.execute_data_lake_query(query)
         >>> specific_query = client.get_data_lake_query(query_id)
-        >>> paginated_dataset_queries = client.list_data_lake_queries(dataset_id=dataset_id)
+        >>> paginated_dataset_queries = client.list_data_lake_queries(project_id)
         >>> print(query_id)
         """
         payload = query.to_request_dict()
@@ -145,12 +145,12 @@ class Analytics(BaseClient):
         """
         return self._api_call("analytics/query/%s" % query_id, http_verb="GET")
 
-    def list_data_lake_schemas(self, dataset_id: str) -> ApiResponse:
+    def list_data_lake_schemas(self, project_id: str) -> ApiResponse:
         """Fetches the data lake table schemas
 
         Parameters
         ----------
-        dataset_id : string
+        project_id : string
             The dataset to fetch the table schemas of
 
         Returns
@@ -158,15 +158,15 @@ class Analytics(BaseClient):
         phc.ApiResponse
             The schema for each data lake table
         """
-        path = "analytics/data-lake/schema?datasetId=%s" % (dataset_id)
+        path = "analytics/data-lake/schema?datasetId=%s" % (project_id)
         return self._api_call(path, http_verb="GET")
 
-    def get_data_lake_schema(self, dataset_id, table) -> ApiResponse:
+    def get_data_lake_schema(self, project_id, table) -> ApiResponse:
         """Fetches the schema for a specific data lake table
 
         Parameters
         ----------
-        dataset_id : string
+        project_id : string
             The dataset to fetch the table schema of
 
         table : string
@@ -179,7 +179,7 @@ class Analytics(BaseClient):
         """
         path = "analytics/data-lake/schema/%s?datasetId=%s" % (
             table,
-            dataset_id,
+            project_id,
         )
         return self._api_call(path, http_verb="GET")
 
