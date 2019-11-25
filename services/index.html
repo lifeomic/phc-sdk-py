@@ -227,10 +227,10 @@ __pdoc__ = {
         &gt;&gt;&gt; session = Session()
         &gt;&gt;&gt; client = Analytics(session)
 
-        &gt;&gt;&gt; dataset_id = &#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;
+        &gt;&gt;&gt; project_id = &#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;
         &gt;&gt;&gt; query_string = &#34;SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site=&#39;breast&#39;&#34;
         &gt;&gt;&gt; output_file_name = &#39;query-test-notebook&#39;
-        &gt;&gt;&gt; query = DataLakeQuery(dataset_id=dataset_id, query=query_string, output_file_name=output_file_name)
+        &gt;&gt;&gt; query = DataLakeQuery(project_id=project_id, query=query_string, output_file_name=output_file_name)
 
         &gt;&gt;&gt; query_id = client.execute_data_lake_query(query)
         &gt;&gt;&gt; specific_query = client.get_data_lake_query(query_id)
@@ -282,7 +282,265 @@ __pdoc__ = {
         phc.ApiResponse
             The data lake query get response
         &#34;&#34;&#34;
-        return self._api_call(&#34;analytics/query/%s&#34; % query_id, http_verb=&#34;GET&#34;)</code></pre>
+        return self._api_call(&#34;analytics/query/%s&#34; % query_id, http_verb=&#34;GET&#34;)
+
+    def list_data_lake_schemas(self, dataset_id: str) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetches the data lake table schemas
+
+        Parameters
+        ----------
+        dataset_id : string
+            The dataset to fetch the table schemas of
+
+        Returns
+        -------
+        phc.ApiResponse
+            The schema for each data lake table
+        &#34;&#34;&#34;
+        path = &#34;analytics/data-lake/schema?datasetId=%s&#34; % (dataset_id)
+        return self._api_call(path, http_verb=&#34;GET&#34;)
+
+    def get_data_lake_schema(self, dataset_id, table) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetches the schema for a specific data lake table
+
+        Parameters
+        ----------
+        dataset_id : string
+            The dataset to fetch the table schema of
+
+        table : string
+            Name of the table
+
+        Returns
+        -------
+        phc.ApiResponse
+            Schema of the specified table
+        &#34;&#34;&#34;
+        path = &#34;analytics/data-lake/schema/%s?datasetId=%s&#34; % (
+            table,
+            dataset_id,
+        )
+        return self._api_call(path, http_verb=&#34;GET&#34;)
+
+    def execute_data_lake_query_to_dataframe(
+        self, query: DataLakeQuery, dest_dir: str = os.getcwd()
+    ):
+        &#34;&#34;&#34;Executes a data lake query, downloads the result file and converts to a Pandas dataframe.
+
+        To use this method, the &#39;pandas&#39; module is required.
+        Otherwise, an exception will be thrown.
+
+        Parameters
+        ----------
+        query : util.DataLakeQuery
+            The query builder
+
+        dest_dir : string
+            Directory the result file will be downloaded to.
+            Defaults to the current working directory.
+
+        Returns
+        -------
+        asyncio.Future || pandas.DataFrame
+            A Future if run_async is True, the data lake query result contained in a Pandas dataframe otherwise.
+
+        Examples
+        --------
+        &gt;&gt;&gt; from phc import Session
+        &gt;&gt;&gt; from phc.services import Analytics
+        &gt;&gt;&gt; from phc.util import DataLakeQuery
+
+        &gt;&gt;&gt; session = Session()
+        &gt;&gt;&gt; client = Analytics(session)
+
+        &gt;&gt;&gt; project_id = &#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;
+        &gt;&gt;&gt; query_string = &#34;SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site=&#39;breast&#39;&#34;
+        &gt;&gt;&gt; output_file_name = &#39;query-dataframe-test&#39;
+        &gt;&gt;&gt; query = DataLakeQuery(project_id=project_id, query=query_string, output_file_name=output_file_name)
+
+        &gt;&gt;&gt; dataframe = client.execute_data_lake_query_to_dataframe(query)
+        &gt;&gt;&gt; dataframe.head()
+        &#34;&#34;&#34;
+        if not _has_pandas:
+            raise ImportError(&#34;pandas is required&#34;)
+
+        future = asyncio.ensure_future(
+            self.__execute_data_lake_query_to_dataframe_impl(query, dest_dir),
+            loop=self._event_loop,
+        )
+        return (
+            future
+            if self.run_async
+            else self._event_loop.run_until_complete(future)
+        )
+
+    def load_data_lake_result_to_dataframe(
+        self, query_id: str, dest_dir: str = os.getcwd()
+    ):
+        &#34;&#34;&#34;Downloads the result file of a query and converts to a Pandas dataframe.
+
+        To use this method, the &#39;pandas&#39; module is required.
+        Otherwise, an exception will be thrown.
+
+        Parameters
+        ----------
+        query_id : string
+            Id of the query to load results from
+
+        dest_dir : string
+            Directory the result file will be downloaded to.
+            Defaults to the current working directory.
+
+        Returns
+        -------
+        asyncio.Future || pandas.DataFrame
+            A Future if run_async is True, the data lake query result contained in a Pandas dataframe otherwise.
+        &#34;&#34;&#34;
+        if not _has_pandas:
+            raise ImportError(&#34;pandas is required&#34;)
+
+        future = asyncio.ensure_future(
+            self.__load_data_lake_result_to_dataframe_impl(query_id, dest_dir),
+            loop=self._event_loop,
+        )
+        return (
+            future
+            if self.run_async
+            else self._event_loop.run_until_complete(future)
+        )
+
+    async def __execute_data_lake_query_to_dataframe_impl(
+        self, query: DataLakeQuery, dest_dir: str
+    ):
+        &#34;&#34;&#34;Internal method for execting a data lake query, downloads the result file and converts to a Pandas dataframe.
+
+        This method exists to support either async or synchronous execution.
+
+        Parameters
+        ----------
+        query : util.DataLakeQuery
+            The query builder
+
+        dest_dir : string
+            Directory the result file will be downloaded to
+
+        Returns
+        -------
+        pandas.DataFrame
+            The data lake query result contained in a Pandas dataframe.
+        &#34;&#34;&#34;
+        analytics_client = (
+            Analytics(self.session, run_async=False, timeout=self.timeout)
+            if self.run_async
+            else self
+        )
+        query_id = analytics_client.execute_data_lake_query(query)
+
+        if not self.__poll_predicate(
+            self.__data_lake_query_predicate, 3600, analytics_client, query_id
+        ):
+            raise RuntimeError(
+                f&#34;Timed out waiting for query {query_id} to complete&#34;
+            )
+
+        return await self.__load_data_lake_result_to_dataframe_impl(
+            query_id, dest_dir
+        )
+
+    async def __load_data_lake_result_to_dataframe_impl(
+        self, query_id: str, dest_dir: str
+    ):
+        &#34;&#34;&#34;Internal method for loading an existing data lake query result to a Pandas dataframe.
+
+        This method exists to support either async or synchronous execution.
+
+        Parameters
+        ----------
+        query_id : string
+            Id of the query to load results from
+
+        dest_dir : string
+            Directory the result file will be downloaded to
+
+        Returns
+        -------
+        pandas.DataFrame
+            The data lake query result contained in a Pandas dataframe.
+        &#34;&#34;&#34;
+        analytics_client = (
+            Analytics(self.session, run_async=False, timeout=self.timeout)
+            if self.run_async
+            else self
+        )
+        analytics_client.get_data_lake_query(
+            query_id
+        )  # verify the query exists, an exception will be thrown if it does not
+
+        files_client = files.Files(
+            self.session, run_async=False, timeout=self.timeout
+        )
+        if not self.__poll_predicate(files_client.exists, 10, query_id):
+            raise RuntimeError(
+                f&#34;Timed out waiting for result file {query_id} to become available&#34;
+            )
+
+        download_path = files_client.download(query_id)
+        return _pd.read_csv(download_path)
+
+    def __data_lake_query_predicate(self, analytics_client, query_id):
+        &#34;&#34;&#34;Checks if a query has completed successfully.
+
+        If the query was cancelled or failed an exception will be thrown.
+
+        Parameters
+        ----------
+        analytics_client : phc.services.Analytics
+            Instance of the Analytics client
+
+        query_id : string
+            Id of the query to check for completion
+
+        Returns
+        -------
+        bool
+            True if the query is in the &#39;succeeded&#39; state, False if &#39;running&#39;.
+        &#34;&#34;&#34;
+        response = analytics_client.get_data_lake_query(query_id)
+        state = response.get(&#34;state&#34;)
+
+        if state == &#34;failed&#34; or state == &#34;cancelled&#34;:
+            raise RuntimeError(f&#34;Query {query_id} is {state}&#34;)
+        return state == &#34;succeeded&#34;
+
+    def __poll_predicate(self, predicate, timeout_sec, *args, **kwargs):
+        &#34;&#34;&#34;Executes a function until it returns a truthy value or the timeout is reached.
+
+        This method will wait 2 seconds between predicate function executions.
+
+        Parameters
+        ----------
+        predicate : function
+            Function to invoke until it returns a truthy value
+
+        timeout_sec : int
+            The number of seconds to wait until timing out
+
+        args : list
+            The positional args to invoke the predicate function with
+
+        kwargs : dict
+            The keyword args to invoke the predicate function with
+        Returns
+        -------
+        bool
+            True if the function evaluated to True, False otherwise.
+        &#34;&#34;&#34;
+        timeout_time = time.time() + timeout_sec
+        while timeout_time &gt; time.time():
+            if predicate(*args, **kwargs):
+                return True
+            time.sleep(2)
+        return False</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -313,10 +571,10 @@ __pdoc__ = {
 &gt;&gt;&gt; session = Session()
 &gt;&gt;&gt; client = Analytics(session)
 
-&gt;&gt;&gt; dataset_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
+&gt;&gt;&gt; project_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
 &gt;&gt;&gt; query_string = "SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'"
 &gt;&gt;&gt; output_file_name = 'query-test-notebook'
-&gt;&gt;&gt; query = DataLakeQuery(dataset_id=dataset_id, query=query_string, output_file_name=output_file_name)
+&gt;&gt;&gt; query = DataLakeQuery(project_id=project_id, query=query_string, output_file_name=output_file_name)
 
 &gt;&gt;&gt; query_id = client.execute_data_lake_query(query)
 &gt;&gt;&gt; specific_query = client.get_data_lake_query(query_id)
@@ -349,10 +607,10 @@ __pdoc__ = {
     &gt;&gt;&gt; session = Session()
     &gt;&gt;&gt; client = Analytics(session)
 
-    &gt;&gt;&gt; dataset_id = &#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;
+    &gt;&gt;&gt; project_id = &#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;
     &gt;&gt;&gt; query_string = &#34;SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site=&#39;breast&#39;&#34;
     &gt;&gt;&gt; output_file_name = &#39;query-test-notebook&#39;
-    &gt;&gt;&gt; query = DataLakeQuery(dataset_id=dataset_id, query=query_string, output_file_name=output_file_name)
+    &gt;&gt;&gt; query = DataLakeQuery(project_id=project_id, query=query_string, output_file_name=output_file_name)
 
     &gt;&gt;&gt; query_id = client.execute_data_lake_query(query)
     &gt;&gt;&gt; specific_query = client.get_data_lake_query(query_id)
@@ -363,6 +621,99 @@ __pdoc__ = {
     return self._api_call(
         &#34;analytics/query&#34;, http_verb=&#34;POST&#34;, json=payload
     ).get(&#34;queryId&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Analytics.execute_data_lake_query_to_dataframe"><code class="name flex">
+<span>def <span class="ident">execute_data_lake_query_to_dataframe</span></span>(<span>self, query, dest_dir='/home/travis/build/lifeomic/phc-sdk-py')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Executes a data lake query, downloads the result file and converts to a Pandas dataframe.</p>
+<p>To use this method, the 'pandas' module is required.
+Otherwise, an exception will be thrown.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>query</code></strong> :&ensp;<code>util.DataLakeQuery</code></dt>
+<dd>The query builder</dd>
+<dt><strong><code>dest_dir</code></strong> :&ensp;<code>string</code></dt>
+<dd>Directory the result file will be downloaded to.
+Defaults to the current working directory.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>asyncio.Future</code> || <code>pandas.DataFrame</code></dt>
+<dd>A Future if run_async is True, the data lake query result contained in a Pandas dataframe otherwise.</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from phc import Session
+&gt;&gt;&gt; from phc.services import Analytics
+&gt;&gt;&gt; from phc.util import DataLakeQuery
+
+&gt;&gt;&gt; session = Session()
+&gt;&gt;&gt; client = Analytics(session)
+
+&gt;&gt;&gt; project_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
+&gt;&gt;&gt; query_string = "SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'"
+&gt;&gt;&gt; output_file_name = 'query-dataframe-test'
+&gt;&gt;&gt; query = DataLakeQuery(project_id=project_id, query=query_string, output_file_name=output_file_name)
+
+&gt;&gt;&gt; dataframe = client.execute_data_lake_query_to_dataframe(query)
+&gt;&gt;&gt; dataframe.head()
+</code></pre></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute_data_lake_query_to_dataframe(
+    self, query: DataLakeQuery, dest_dir: str = os.getcwd()
+):
+    &#34;&#34;&#34;Executes a data lake query, downloads the result file and converts to a Pandas dataframe.
+
+    To use this method, the &#39;pandas&#39; module is required.
+    Otherwise, an exception will be thrown.
+
+    Parameters
+    ----------
+    query : util.DataLakeQuery
+        The query builder
+
+    dest_dir : string
+        Directory the result file will be downloaded to.
+        Defaults to the current working directory.
+
+    Returns
+    -------
+    asyncio.Future || pandas.DataFrame
+        A Future if run_async is True, the data lake query result contained in a Pandas dataframe otherwise.
+
+    Examples
+    --------
+    &gt;&gt;&gt; from phc import Session
+    &gt;&gt;&gt; from phc.services import Analytics
+    &gt;&gt;&gt; from phc.util import DataLakeQuery
+
+    &gt;&gt;&gt; session = Session()
+    &gt;&gt;&gt; client = Analytics(session)
+
+    &gt;&gt;&gt; project_id = &#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;
+    &gt;&gt;&gt; query_string = &#34;SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site=&#39;breast&#39;&#34;
+    &gt;&gt;&gt; output_file_name = &#39;query-dataframe-test&#39;
+    &gt;&gt;&gt; query = DataLakeQuery(project_id=project_id, query=query_string, output_file_name=output_file_name)
+
+    &gt;&gt;&gt; dataframe = client.execute_data_lake_query_to_dataframe(query)
+    &gt;&gt;&gt; dataframe.head()
+    &#34;&#34;&#34;
+    if not _has_pandas:
+        raise ImportError(&#34;pandas is required&#34;)
+
+    future = asyncio.ensure_future(
+        self.__execute_data_lake_query_to_dataframe_impl(query, dest_dir),
+        loop=self._event_loop,
+    )
+    return (
+        future
+        if self.run_async
+        else self._event_loop.run_until_complete(future)
+    )</code></pre>
 </details>
 </dd>
 <dt id="phc.services.Analytics.get_data_lake_query"><code class="name flex">
@@ -398,6 +749,50 @@ __pdoc__ = {
         The data lake query get response
     &#34;&#34;&#34;
     return self._api_call(&#34;analytics/query/%s&#34; % query_id, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Analytics.get_data_lake_schema"><code class="name flex">
+<span>def <span class="ident">get_data_lake_schema</span></span>(<span>self, dataset_id, table)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetches the schema for a specific data lake table</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>dataset_id</code></strong> :&ensp;<code>string</code></dt>
+<dd>The dataset to fetch the table schema of</dd>
+<dt><strong><code>table</code></strong> :&ensp;<code>string</code></dt>
+<dd>Name of the table</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>Schema of the specified table</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_data_lake_schema(self, dataset_id, table) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetches the schema for a specific data lake table
+
+    Parameters
+    ----------
+    dataset_id : string
+        The dataset to fetch the table schema of
+
+    table : string
+        Name of the table
+
+    Returns
+    -------
+    phc.ApiResponse
+        Schema of the specified table
+    &#34;&#34;&#34;
+    path = &#34;analytics/data-lake/schema/%s?datasetId=%s&#34; % (
+        table,
+        dataset_id,
+    )
+    return self._api_call(path, http_verb=&#34;GET&#34;)</code></pre>
 </details>
 </dd>
 <dt id="phc.services.Analytics.get_patients"><code class="name flex">
@@ -519,6 +914,102 @@ __pdoc__ = {
     if next_page_token:
         path = &#34;%s&amp;nextPageToken=%s&#34; % (path, next_page_token)
     return self._api_call(path, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Analytics.list_data_lake_schemas"><code class="name flex">
+<span>def <span class="ident">list_data_lake_schemas</span></span>(<span>self, dataset_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetches the data lake table schemas</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>dataset_id</code></strong> :&ensp;<code>string</code></dt>
+<dd>The dataset to fetch the table schemas of</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The schema for each data lake table</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def list_data_lake_schemas(self, dataset_id: str) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetches the data lake table schemas
+
+    Parameters
+    ----------
+    dataset_id : string
+        The dataset to fetch the table schemas of
+
+    Returns
+    -------
+    phc.ApiResponse
+        The schema for each data lake table
+    &#34;&#34;&#34;
+    path = &#34;analytics/data-lake/schema?datasetId=%s&#34; % (dataset_id)
+    return self._api_call(path, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Analytics.load_data_lake_result_to_dataframe"><code class="name flex">
+<span>def <span class="ident">load_data_lake_result_to_dataframe</span></span>(<span>self, query_id, dest_dir='/home/travis/build/lifeomic/phc-sdk-py')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Downloads the result file of a query and converts to a Pandas dataframe.</p>
+<p>To use this method, the 'pandas' module is required.
+Otherwise, an exception will be thrown.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>query_id</code></strong> :&ensp;<code>string</code></dt>
+<dd>Id of the query to load results from</dd>
+<dt><strong><code>dest_dir</code></strong> :&ensp;<code>string</code></dt>
+<dd>Directory the result file will be downloaded to.
+Defaults to the current working directory.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>asyncio.Future</code> || <code>pandas.DataFrame</code></dt>
+<dd>A Future if run_async is True, the data lake query result contained in a Pandas dataframe otherwise.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_data_lake_result_to_dataframe(
+    self, query_id: str, dest_dir: str = os.getcwd()
+):
+    &#34;&#34;&#34;Downloads the result file of a query and converts to a Pandas dataframe.
+
+    To use this method, the &#39;pandas&#39; module is required.
+    Otherwise, an exception will be thrown.
+
+    Parameters
+    ----------
+    query_id : string
+        Id of the query to load results from
+
+    dest_dir : string
+        Directory the result file will be downloaded to.
+        Defaults to the current working directory.
+
+    Returns
+    -------
+    asyncio.Future || pandas.DataFrame
+        A Future if run_async is True, the data lake query result contained in a Pandas dataframe otherwise.
+    &#34;&#34;&#34;
+    if not _has_pandas:
+        raise ImportError(&#34;pandas is required&#34;)
+
+    future = asyncio.ensure_future(
+        self.__load_data_lake_result_to_dataframe_impl(query_id, dest_dir),
+        loop=self._event_loop,
+    )
+    return (
+        future
+        if self.run_async
+        else self._event_loop.run_until_complete(future)
+    )</code></pre>
 </details>
 </dd>
 </dl>
@@ -1224,12 +1715,10 @@ __pdoc__ = {
             f&#34;files/{file_id}?include=downloadUrl&#34;, http_verb=&#34;GET&#34;
         )
 
-        file_path = os.path.join(dest_dir, res.get(&#34;name&#34;))
-        target_dir = os.path.dirname(file_path)
-        if not os.path.exists(target_dir):
-            os.makedirs(target_dir)
+        dest_path = os.path.join(dest_dir, res.get(&#34;name&#34;))
+        urlretrieve(res.get(&#34;downloadUrl&#34;), dest_path)
 
-        urlretrieve(res.get(&#34;downloadUrl&#34;), file_path)
+        return dest_path
 
     def get(self, file_id: str) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetch a file by id
@@ -1334,7 +1823,28 @@ __pdoc__ = {
         return self._api_call(
             f&#34;projects/{project_id}/files?{urlencode(query_dict)}&#34;,
             http_verb=&#34;GET&#34;,
-        )</code></pre>
+        )
+
+    def exists(self, file_id: str) -&gt; ApiResponse:
+        &#34;&#34;&#34;Check if a file exists by id
+
+        Parameters
+        ----------
+        file_id : str
+            The file ID.
+
+        Returns
+        -------
+        bool
+            True if the file exists, false otherwise
+        &#34;&#34;&#34;
+        try:
+            self._api_call(f&#34;files/{file_id}&#34;, http_verb=&#34;GET&#34;)
+            return True
+        except ApiError as e:
+            if e.response.status_code == 404:
+                return False
+            raise e</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1422,12 +1932,51 @@ Defaults to the current working directory</dd>
         f&#34;files/{file_id}?include=downloadUrl&#34;, http_verb=&#34;GET&#34;
     )
 
-    file_path = os.path.join(dest_dir, res.get(&#34;name&#34;))
-    target_dir = os.path.dirname(file_path)
-    if not os.path.exists(target_dir):
-        os.makedirs(target_dir)
+    dest_path = os.path.join(dest_dir, res.get(&#34;name&#34;))
+    urlretrieve(res.get(&#34;downloadUrl&#34;), dest_path)
 
-    urlretrieve(res.get(&#34;downloadUrl&#34;), file_path)</code></pre>
+    return dest_path</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Files.exists"><code class="name flex">
+<span>def <span class="ident">exists</span></span>(<span>self, file_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Check if a file exists by id</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>file_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The file ID.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the file exists, false otherwise</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def exists(self, file_id: str) -&gt; ApiResponse:
+    &#34;&#34;&#34;Check if a file exists by id
+
+    Parameters
+    ----------
+    file_id : str
+        The file ID.
+
+    Returns
+    -------
+    bool
+        True if the file exists, false otherwise
+    &#34;&#34;&#34;
+    try:
+        self._api_call(f&#34;files/{file_id}&#34;, http_verb=&#34;GET&#34;)
+        return True
+    except ApiError as e:
+        if e.response.status_code == 404:
+            return False
+        raise e</code></pre>
 </details>
 </dd>
 <dt id="phc.services.Files.get"><code class="name flex">
@@ -2129,9 +2678,13 @@ Defaults to the current working directory</dd>
 <h4><code><a title="phc.services.Analytics" href="#phc.services.Analytics">Analytics</a></code></h4>
 <ul class="">
 <li><code><a title="phc.services.Analytics.execute_data_lake_query" href="#phc.services.Analytics.execute_data_lake_query">execute_data_lake_query</a></code></li>
+<li><code><a title="phc.services.Analytics.execute_data_lake_query_to_dataframe" href="#phc.services.Analytics.execute_data_lake_query_to_dataframe">execute_data_lake_query_to_dataframe</a></code></li>
 <li><code><a title="phc.services.Analytics.get_data_lake_query" href="#phc.services.Analytics.get_data_lake_query">get_data_lake_query</a></code></li>
+<li><code><a title="phc.services.Analytics.get_data_lake_schema" href="#phc.services.Analytics.get_data_lake_schema">get_data_lake_schema</a></code></li>
 <li><code><a title="phc.services.Analytics.get_patients" href="#phc.services.Analytics.get_patients">get_patients</a></code></li>
 <li><code><a title="phc.services.Analytics.list_data_lake_queries" href="#phc.services.Analytics.list_data_lake_queries">list_data_lake_queries</a></code></li>
+<li><code><a title="phc.services.Analytics.list_data_lake_schemas" href="#phc.services.Analytics.list_data_lake_schemas">list_data_lake_schemas</a></code></li>
+<li><code><a title="phc.services.Analytics.load_data_lake_result_to_dataframe" href="#phc.services.Analytics.load_data_lake_result_to_dataframe">load_data_lake_result_to_dataframe</a></code></li>
 </ul>
 </li>
 <li>
@@ -2155,6 +2708,7 @@ Defaults to the current working directory</dd>
 <ul class="two-column">
 <li><code><a title="phc.services.Files.delete" href="#phc.services.Files.delete">delete</a></code></li>
 <li><code><a title="phc.services.Files.download" href="#phc.services.Files.download">download</a></code></li>
+<li><code><a title="phc.services.Files.exists" href="#phc.services.Files.exists">exists</a></code></li>
 <li><code><a title="phc.services.Files.get" href="#phc.services.Files.get">get</a></code></li>
 <li><code><a title="phc.services.Files.get_list" href="#phc.services.Files.get_list">get_list</a></code></li>
 <li><code><a title="phc.services.Files.update" href="#phc.services.Files.update">update</a></code></li>
