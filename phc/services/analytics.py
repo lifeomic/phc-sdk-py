@@ -161,7 +161,7 @@ class Analytics(BaseClient):
         path = "analytics/data-lake/schema?datasetId=%s" % (project_id)
         return self._api_call(path, http_verb="GET")
 
-    def get_data_lake_schema(self, project_id, table) -> ApiResponse:
+    def get_data_lake_schema(self, project_id: str, table: str) -> ApiResponse:
         """Fetches the schema for a specific data lake table
 
         Parameters
