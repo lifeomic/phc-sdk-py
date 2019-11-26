@@ -25,17 +25,18 @@ class BaseClient:
         self.session = session
         self.run_async = run_async
         self.timeout = timeout
-        self._event_loop = None
+        self._event_loop_ptr = None
 
-    @staticmethod
-    def _get_event_loop():
-        """Retrieves the event loop or creates a new one."""
-        try:
-            return asyncio.get_event_loop()
-        except RuntimeError:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            return loop
+    @property
+    def _event_loop(self):
+        if self._event_loop_ptr is None:
+            try:
+                self._event_loop_ptr = asyncio.get_event_loop()
+            except RuntimeError:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                self._event_loop_ptr = loop
+        return self._event_loop_ptr
 
     def _get_headers(self, has_json, request_specific_headers):
         """Contructs the headers need for a request.
@@ -205,9 +206,6 @@ class BaseClient:
 
         elif has_file:
             req_args["file"] = upload_file
-
-        if self._event_loop is None:
-            self._event_loop = self._get_event_loop()
 
         api_url = urljoin(url, api_path)
 
