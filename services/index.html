@@ -234,7 +234,7 @@ __pdoc__ = {
 
         &gt;&gt;&gt; query_id = client.execute_data_lake_query(query)
         &gt;&gt;&gt; specific_query = client.get_data_lake_query(query_id)
-        &gt;&gt;&gt; paginated_dataset_queries = client.list_data_lake_queries(dataset_id=dataset_id)
+        &gt;&gt;&gt; paginated_dataset_queries = client.list_data_lake_queries(project_id)
         &gt;&gt;&gt; print(query_id)
         &#34;&#34;&#34;
         payload = query.to_request_dict()
@@ -284,12 +284,12 @@ __pdoc__ = {
         &#34;&#34;&#34;
         return self._api_call(&#34;analytics/query/%s&#34; % query_id, http_verb=&#34;GET&#34;)
 
-    def list_data_lake_schemas(self, dataset_id: str) -&gt; ApiResponse:
+    def list_data_lake_schemas(self, project_id: str) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetches the data lake table schemas
 
         Parameters
         ----------
-        dataset_id : string
+        project_id : string
             The dataset to fetch the table schemas of
 
         Returns
@@ -297,15 +297,15 @@ __pdoc__ = {
         phc.ApiResponse
             The schema for each data lake table
         &#34;&#34;&#34;
-        path = &#34;analytics/data-lake/schema?datasetId=%s&#34; % (dataset_id)
+        path = &#34;analytics/data-lake/schema?datasetId=%s&#34; % (project_id)
         return self._api_call(path, http_verb=&#34;GET&#34;)
 
-    def get_data_lake_schema(self, dataset_id, table) -&gt; ApiResponse:
+    def get_data_lake_schema(self, project_id: str, table: str) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetches the schema for a specific data lake table
 
         Parameters
         ----------
-        dataset_id : string
+        project_id : string
             The dataset to fetch the table schema of
 
         table : string
@@ -318,7 +318,7 @@ __pdoc__ = {
         &#34;&#34;&#34;
         path = &#34;analytics/data-lake/schema/%s?datasetId=%s&#34; % (
             table,
-            dataset_id,
+            project_id,
         )
         return self._api_call(path, http_verb=&#34;GET&#34;)
 
@@ -479,7 +479,7 @@ __pdoc__ = {
         files_client = files.Files(
             self.session, run_async=False, timeout=self.timeout
         )
-        if not self.__poll_predicate(files_client.exists, 10, query_id):
+        if not self.__poll_predicate(files_client.exists, 30, query_id):
             raise RuntimeError(
                 f&#34;Timed out waiting for result file {query_id} to become available&#34;
             )
@@ -578,7 +578,7 @@ __pdoc__ = {
 
 &gt;&gt;&gt; query_id = client.execute_data_lake_query(query)
 &gt;&gt;&gt; specific_query = client.get_data_lake_query(query_id)
-&gt;&gt;&gt; paginated_dataset_queries = client.list_data_lake_queries(dataset_id=dataset_id)
+&gt;&gt;&gt; paginated_dataset_queries = client.list_data_lake_queries(project_id)
 &gt;&gt;&gt; print(query_id)
 </code></pre></section>
 <details class="source">
@@ -614,7 +614,7 @@ __pdoc__ = {
 
     &gt;&gt;&gt; query_id = client.execute_data_lake_query(query)
     &gt;&gt;&gt; specific_query = client.get_data_lake_query(query_id)
-    &gt;&gt;&gt; paginated_dataset_queries = client.list_data_lake_queries(dataset_id=dataset_id)
+    &gt;&gt;&gt; paginated_dataset_queries = client.list_data_lake_queries(project_id)
     &gt;&gt;&gt; print(query_id)
     &#34;&#34;&#34;
     payload = query.to_request_dict()
@@ -752,13 +752,13 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.get_data_lake_schema"><code class="name flex">
-<span>def <span class="ident">get_data_lake_schema</span></span>(<span>self, dataset_id, table)</span>
+<span>def <span class="ident">get_data_lake_schema</span></span>(<span>self, project_id, table)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Fetches the schema for a specific data lake table</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>dataset_id</code></strong> :&ensp;<code>string</code></dt>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>string</code></dt>
 <dd>The dataset to fetch the table schema of</dd>
 <dt><strong><code>table</code></strong> :&ensp;<code>string</code></dt>
 <dd>Name of the table</dd>
@@ -772,12 +772,12 @@ Defaults to the current working directory.</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_data_lake_schema(self, dataset_id, table) -&gt; ApiResponse:
+<pre><code class="python">def get_data_lake_schema(self, project_id: str, table: str) -&gt; ApiResponse:
     &#34;&#34;&#34;Fetches the schema for a specific data lake table
 
     Parameters
     ----------
-    dataset_id : string
+    project_id : string
         The dataset to fetch the table schema of
 
     table : string
@@ -790,7 +790,7 @@ Defaults to the current working directory.</dd>
     &#34;&#34;&#34;
     path = &#34;analytics/data-lake/schema/%s?datasetId=%s&#34; % (
         table,
-        dataset_id,
+        project_id,
     )
     return self._api_call(path, http_verb=&#34;GET&#34;)</code></pre>
 </details>
@@ -917,13 +917,13 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.list_data_lake_schemas"><code class="name flex">
-<span>def <span class="ident">list_data_lake_schemas</span></span>(<span>self, dataset_id)</span>
+<span>def <span class="ident">list_data_lake_schemas</span></span>(<span>self, project_id)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Fetches the data lake table schemas</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>dataset_id</code></strong> :&ensp;<code>string</code></dt>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>string</code></dt>
 <dd>The dataset to fetch the table schemas of</dd>
 </dl>
 <h2 id="returns">Returns</h2>
@@ -935,12 +935,12 @@ Defaults to the current working directory.</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def list_data_lake_schemas(self, dataset_id: str) -&gt; ApiResponse:
+<pre><code class="python">def list_data_lake_schemas(self, project_id: str) -&gt; ApiResponse:
     &#34;&#34;&#34;Fetches the data lake table schemas
 
     Parameters
     ----------
-    dataset_id : string
+    project_id : string
         The dataset to fetch the table schemas of
 
     Returns
@@ -948,7 +948,7 @@ Defaults to the current working directory.</dd>
     phc.ApiResponse
         The schema for each data lake table
     &#34;&#34;&#34;
-    path = &#34;analytics/data-lake/schema?datasetId=%s&#34; % (dataset_id)
+    path = &#34;analytics/data-lake/schema?datasetId=%s&#34; % (project_id)
     return self._api_call(path, http_verb=&#34;GET&#34;)</code></pre>
 </details>
 </dd>
@@ -1715,10 +1715,13 @@ Defaults to the current working directory.</dd>
             f&#34;files/{file_id}?include=downloadUrl&#34;, http_verb=&#34;GET&#34;
         )
 
-        dest_path = os.path.join(dest_dir, res.get(&#34;name&#34;))
-        urlretrieve(res.get(&#34;downloadUrl&#34;), dest_path)
+        file_path = os.path.join(dest_dir, res.get(&#34;name&#34;))
+        target_dir = os.path.dirname(file_path)
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir)
 
-        return dest_path
+        urlretrieve(res.get(&#34;downloadUrl&#34;), file_path)
+        return file_path
 
     def get(self, file_id: str) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetch a file by id
@@ -1932,10 +1935,13 @@ Defaults to the current working directory</dd>
         f&#34;files/{file_id}?include=downloadUrl&#34;, http_verb=&#34;GET&#34;
     )
 
-    dest_path = os.path.join(dest_dir, res.get(&#34;name&#34;))
-    urlretrieve(res.get(&#34;downloadUrl&#34;), dest_path)
+    file_path = os.path.join(dest_dir, res.get(&#34;name&#34;))
+    target_dir = os.path.dirname(file_path)
+    if not os.path.exists(target_dir):
+        os.makedirs(target_dir)
 
-    return dest_path</code></pre>
+    urlretrieve(res.get(&#34;downloadUrl&#34;), file_path)
+    return file_path</code></pre>
 </details>
 </dd>
 <dt id="phc.services.Files.exists"><code class="name flex">

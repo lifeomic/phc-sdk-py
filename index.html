@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.7.2" />
 <title>phc API documentation</title>
-<meta name="description" content="The phc-sdk-py is a developer kit for interfacing with the PHC API on Python 3.6 and above …" />
+<meta name="description" content="PHC SDK for Python …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -21,41 +21,42 @@
 <h1 class="title">Module <code>phc</code></h1>
 </header>
 <section id="section-intro">
-<p>The phc-sdk-py is a developer kit for interfacing with the PHC API on Python 3.6 and above.</p>
-<h1 id="project-status">Project Status</h1>
+<h1 id="phc-sdk-for-python">PHC SDK for Python</h1>
+<p>The phc-sdk-py is a developer kit for interfacing with the <a href="https://docs.us.lifeomic.com/development/">PHC API</a> on Python 3.7 and above.</p>
+<h2 id="project-status">Project Status</h2>
 <p><img alt="GitHub" src="https://img.shields.io/github/license/lifeomic/phc-sdk-py.svg?style=for-the-badge">
 <img alt="Travis (.org) branch" src="https://img.shields.io/travis/lifeomic/phc-sdk-py/master.svg?style=for-the-badge">
 <img alt="PyPI status" src="https://img.shields.io/pypi/status/phc.svg?style=for-the-badge">
 <img alt="Downloads" src="https://img.shields.io/pypi/dw/phc?style=for-the-badge">
 <img alt="GitHub release" src="https://img.shields.io/github/release/lifeomic/phc-sdk-py.svg?style=for-the-badge">
 <a href="https://lifeomic.github.io/phc-sdk-py/"><img alt="Docs" src="https://img.shields.io/badge/DOCS-PASSING-green?style=for-the-badge"></a></p>
-<h1 id="getting-started">Getting Started</h1>
-<h2 id="dependencies">Dependencies</h2>
+<h2 id="getting-started">Getting Started</h2>
+<h3 id="dependencies">Dependencies</h3>
 <ul>
 <li><a href="https://www.python.org/download/releases/3.0/">Python 3</a> version &gt;= 3.7</li>
 </ul>
-<h2 id="getting-the-source">Getting the Source</h2>
+<h3 id="getting-the-source">Getting the Source</h3>
 <p>This project is <a href="https://github.com/lifeomic/phc-sdk-py">hosted on GitHub</a>. You can clone this project directly using this command:</p>
 <pre><code class="bash">git clone git@github.com:lifeomic/phc-sdk-py.git
 </code></pre>
-<h2 id="development">Development</h2>
+<h3 id="development">Development</h3>
 <p>Python environments are managed using <a href="https://virtualenv.pypa.io/en/latest/">virtualenv</a>.
 Be sure to have this installed first <code>pip install virtualenv</code>.
 The makefile will setup the environment for the targets listed below.</p>
-<h3 id="setup">Setup</h3>
+<h4 id="setup">Setup</h4>
 <p>This installs some pre-commit hooks that will format and lint new changes.</p>
 <pre><code class="bash">make setup
 </code></pre>
-<h3 id="running-tests">Running tests</h3>
+<h4 id="running-tests">Running tests</h4>
 <pre><code class="bash">make test
 </code></pre>
-<h3 id="linting">Linting</h3>
+<h4 id="linting">Linting</h4>
 <pre><code class="bash">make lint
 </code></pre>
-<h2 id="installation">Installation</h2>
+<h3 id="installation">Installation</h3>
 <pre><code class="bash">pip3 install phc
 </code></pre>
-<h2 id="usage">Usage</h2>
+<h3 id="usage">Usage</h3>
 <p>A <code>Session</code> needs to be created first that stores the token and account information needed to access the PHC API.
 One can currently using API Key tokens generated from the PHC Account, or OAuth tokens generated using the <a href="https://github.com/lifeomic/cli">CLI</a>.</p>
 <pre><code class="python">from phc import Session
@@ -68,17 +69,17 @@ session = Session(token=&lt;TOKEN VALUE&gt;, account=&quot;myaccount&quot;)
 accounts = Accounts(session)
 myaccounts = accounts.get_list()
 </code></pre>
-<h1 id="release-process">Release Process</h1>
+<h2 id="release-process">Release Process</h2>
 <p><a href="https://github.com/lifeomic/phc-sdk-py/releases">Releases</a> are generally created with each merged PR. Packages for each release are published to <a href="https://pypi.org/project/phc/">PyPi</a>. See <a href="CHANGELOG.md">CHANGELOG.md</a> for release notes.</p>
-<h2 id="versioning">Versioning</h2>
+<h3 id="versioning">Versioning</h3>
 <p>This project uses <a href="http://semver.org/">Semantic Versioning</a>.</p>
-<h1 id="contributing">Contributing</h1>
+<h2 id="contributing">Contributing</h2>
 <p>We encourage public contributions! Please review <a href="CONTRIBUTING.md">CONTRIBUTING.md</a> and <a href="CODE_OF_CONDUCT.md">CODE_OF_CONDUCT.md</a> for details on our code of conduct and development process.</p>
-<h1 id="license">License</h1>
+<h2 id="license">License</h2>
 <p>This project is licensed under the MIT License - see <a href="LICENSE">LICENSE</a> file for details.</p>
-<h1 id="authors">Authors</h1>
+<h2 id="authors">Authors</h2>
 <p>See the list of <a href="https://github.com/lifeomic/cli/contributors">contributors</a> who participate in this project.</p>
-<h1 id="acknowledgements">Acknowledgements</h1>
+<h2 id="acknowledgements">Acknowledgements</h2>
 <p>This project is built with the following:</p>
 <ul>
 <li><a href="https://aiohttp.readthedocs.io/en/stable/">aiohttp</a> - Asynchronous HTTP Client/Server for asyncio and Python.</li>
@@ -541,6 +542,7 @@ __pdoc__ = {
 <h1>Index</h1>
 <div class="toc">
 <ul>
+<li><a href="#phc-sdk-for-python">PHC SDK for Python</a><ul>
 <li><a href="#project-status">Project Status</a></li>
 <li><a href="#getting-started">Getting Started</a><ul>
 <li><a href="#dependencies">Dependencies</a></li>
@@ -563,6 +565,8 @@ __pdoc__ = {
 <li><a href="#license">License</a></li>
 <li><a href="#authors">Authors</a></li>
 <li><a href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <ul id="index">
