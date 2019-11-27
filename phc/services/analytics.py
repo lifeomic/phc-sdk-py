@@ -340,7 +340,7 @@ class Analytics(BaseClient):
         files_client = files.Files(
             self.session, run_async=False, timeout=self.timeout
         )
-        if not self.__poll_predicate(files_client.exists, 10, query_id):
+        if not self.__poll_predicate(files_client.exists, 30, query_id):
             raise RuntimeError(
                 f"Timed out waiting for result file {query_id} to become available"
             )
