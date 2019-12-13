@@ -40,9 +40,9 @@ class Genomics(BaseClient):
         RNA = "rna"
 
     class Status(Enum):
-        ACTIVE: "ACTIVE"
-        INDEXING: "INDEXING"
-        FAILED: "FAILED"
+        ACTIVE: "ACTIVE"  # noqa: F821
+        INDEXING: "INDEXING"  # noqa: F821
+        FAILED: "FAILED"  # noqa: F821
 
     def create_set(
         self,
@@ -255,7 +255,7 @@ class Genomics(BaseClient):
         """
         return (
             self._ga4gh_call(
-                f"genomics/projects/{patient_id}/tests/{test_id}",
+                f"genomics/projects/{project_id}/tests/{test_id}",
                 http_verb="DELETE",
             ).status_code
             == 204
