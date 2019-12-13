@@ -159,14 +159,6 @@ class BaseClient:
         )
         self.session.token = res.data.get("access_token")
 
-    def _del_none(json):
-        for key, value in list(d.items()):
-            if value is None:
-                del d[key]
-            elif isinstance(value, dict):
-                del_none(value)
-        return d  # For convenience
-
     def _api_call_impl(
         self,
         url: str,
