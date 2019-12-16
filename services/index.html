@@ -36,9 +36,18 @@ from phc.services.fhir import Fhir
 from phc.services.projects import Projects
 from phc.services.files import Files
 from phc.services.cohorts import Cohorts
+from phc.services.genomics import Genomics
 
 
-__all__ = [&#34;Accounts&#34;, &#34;Analytics&#34;, &#34;Fhir&#34;, &#34;Projects&#34;, &#34;Files&#34;, &#34;Cohorts&#34;]
+__all__ = [
+    &#34;Accounts&#34;,
+    &#34;Analytics&#34;,
+    &#34;Fhir&#34;,
+    &#34;Projects&#34;,
+    &#34;Files&#34;,
+    &#34;Cohorts&#34;,
+    &#34;Genomics&#34;,
+]
 
 __pdoc__ = {
     &#34;accounts&#34;: False,
@@ -47,6 +56,7 @@ __pdoc__ = {
     &#34;projects&#34;: False,
     &#34;files&#34;: False,
     &#34;cohorts&#34;: False,
+    &#34;genomics&#34;: False,
 }</code></pre>
 </details>
 </section>
@@ -2275,6 +2285,729 @@ Defaults to the current working directory</dd>
 </dd>
 </dl>
 </dd>
+<dt id="phc.services.Genomics"><code class="flex name class">
+<span>class <span class="ident">Genomics</span></span>
+<span>(</span><span>session, run_async=False, timeout=30)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides acccess to PHC genomic resources</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
+<dd>The PHC session</dd>
+<dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True to return promises, False to return results (default is False)</dd>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
+<dd>Operation timeout (default is 30)</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Genomics(BaseClient):
+    &#34;&#34;&#34;Provides acccess to PHC genomic resources
+
+    Parameters
+    ----------
+    session : phc.Session
+        The PHC session
+    run_async: bool
+        True to return promises, False to return results (default is False)
+    timeout: int
+        Operation timeout (default is 30)
+    &#34;&#34;&#34;
+
+    class SetType(Enum):
+        VARIANT = &#34;variantsets&#34;
+        STRUCTURAL_VARIANT = &#34;fusionsets&#34;
+        RNA = &#34;rnaquantificationsets&#34;
+        READ = &#34;readgroupset&#34;
+        COPY_NUMBER = &#34;copynumbersets&#34;
+
+    class Reference(Enum):
+        GRCh37 = &#34;GRCh37&#34;
+        GRCh38 = &#34;GRCh38&#34;
+
+    class SequenceType(Enum):
+        GERMLINE = &#34;germline&#34;
+        SOMATIC = &#34;somatic&#34;
+        METASTATIC = &#34;metastatic&#34;
+        CTDNA = &#34;ctDNA&#34;
+        RNA = &#34;rna&#34;
+
+    class Status(Enum):
+        ACTIVE: &#34;ACTIVE&#34;  # noqa: F821
+        INDEXING: &#34;INDEXING&#34;  # noqa: F821
+        FAILED: &#34;FAILED&#34;  # noqa: F821
+
+    def create_set(
+        self,
+        set_type: SetType,
+        project_id: str,
+        name: str,
+        file_id: str,
+        patient_id: str,
+        reference: Reference,
+        sequence_type: SequenceType,
+        test_type: str,
+        sequence_id: str = str(uuid.uuid4()),
+        indexed_date: datetime = None,
+        performer_id: str = None,
+        test_id: str = None,
+        update_sample: bool = False,
+        pass_filter: bool = False,
+        output_vcf_name: str = None,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Creates a genomic set
+
+        Parameters
+        ----------
+        set_type : SetType
+            The genomic set type
+        project_id : str
+            The project ID
+        name : str
+            The set name
+        file_id : str
+            The genomic file ID
+        patient_id : str
+            The patient ID
+        reference : Reference
+            The genomic reference
+        sequence_type : SequenceType
+            The sequence type
+        test_type : str
+            The test type
+        sequence_id : str, optional
+            The FHIR Sequence ID, by default str(uuid.uuid4())
+        indexed_date : datetime, optional
+            The indexed date, by default None
+        performer_id : str, optional
+            The performer ID, by default None
+        test_id : str, optional
+            The test ID, by default None
+        update_sample : bool, optional
+            For variants only, True to update the sample ID, by default False
+        pass_filter : bool, optional
+            For variants only, True to update all filters to pass, by default False
+        output_vcf_name : str, optional
+            For variants only, the name of the output VCF, by default None
+
+        Returns
+        -------
+        ApiResponse
+            The create set response
+        &#34;&#34;&#34;
+        json_body = {
+            &#34;datasetId&#34;: project_id,
+            &#34;name&#34;: name,
+            &#34;patientId&#34;: patient_id,
+            &#34;referenceSetId&#34;: reference.value,
+            &#34;sequenceType&#34;: sequence_type.value,
+            &#34;testType&#34;: test_type,
+            &#34;indexedDate&#34;: indexed_date.isoformat() if indexed_date else None,
+            &#34;performerId&#34;: performer_id,
+            &#34;testId&#34;: test_id,
+            &#34;sequenceId&#34;: sequence_id,
+        }
+
+        if set_type == Genomics.SetType.VARIANT:
+            json_body[&#34;variantsFileIds&#34;] = [file_id]
+            json_body[&#34;updateSample&#34;] = (update_sample,)
+            json_body[&#34;passFile&#34;] = pass_filter
+            json_body[&#34;outputVcfName&#34;] = output_vcf_name
+
+            return self._ga4gh_call(
+                &#34;genomicsets&#34;, json=json_body, http_verb=&#34;POST&#34;
+            )
+        else:
+            json_body[&#34;fileId&#34;] = file_id
+
+            return self._ga4gh_call(
+                set_type.value, json=json_body, http_verb=&#34;POST&#34;
+            )
+
+    def get_set(self, set_type: SetType, set_id: str) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetch a genomic set
+
+        Parameters
+        ----------
+        set_type : SetType
+            The set type
+        set_id : str
+            The set ID
+
+        Returns
+        -------
+        ApiResponse
+            The fetch response
+        &#34;&#34;&#34;
+        return self._ga4gh_call(f&#34;{set_type.value}/{set_id}&#34;, http_verb=&#34;GET&#34;)
+
+    def delete_set(self, set_type: SetType, set_id: str) -&gt; bool:
+        &#34;&#34;&#34;Delete a genomic set
+
+        Parameters
+        ----------
+        set_type : SetType
+            The set type
+        set_id : str
+            The set ID
+
+        Returns
+        -------
+        bool
+            True if the delete succeeeds, otherwise False
+        &#34;&#34;&#34;
+        return (
+            self._ga4gh_call(
+                f&#34;{set_type.value}/{set_id}&#34;, http_verb=&#34;DELETE&#34;
+            ).status_code
+            == 204
+        )
+
+    def list_sets(
+        self,
+        set_type: SetType,
+        project_id: str,
+        sequence_id: str = None,
+        patient_id: str = None,
+        status: Status = None,
+        next_page_token: str = None,
+        page_size: int = 50,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;List genomic sets
+
+        Parameters
+        ----------
+        set_type : SetType
+            The set type
+        project_id : str
+            The project ID
+        sequence_id : str, optional
+            List sets by sequence ID, by default None
+        patient_id : str, optional
+            List sets by patient ID, by default None
+        status : Status, optional
+            Filter sets by status, by default None
+        next_page_token : str, optional
+            The next page token, by default None
+        page_size : int, optional
+            The page size, by default 50
+
+        Returns
+        -------
+        ApiResponse
+            The list sets response
+        &#34;&#34;&#34;
+
+        json_body = {
+            &#34;datasetIds&#34;: [project_id],
+            &#34;status&#34;: status,
+            &#34;patientId&#34;: patient_id,
+            &#34;sequenceId&#34;: sequence_id,
+            &#34;pageSize&#34;: page_size,
+            &#34;pageToken&#34;: next_page_token,
+        }
+
+        return self._ga4gh_call(
+            f&#34;{set_type.value}/search&#34;, json=json_body, http_verb=&#34;POST&#34;
+        )
+
+    def list_tests(self, project_id: str, patient_id: str) -&gt; ApiResponse:
+        &#34;&#34;&#34;List tests for a patient
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID
+        patient_id : str
+            The patient ID
+
+        Returns
+        -------
+        ApiResponse
+            The list tests response
+        &#34;&#34;&#34;
+        return self._api_call(
+            f&#34;genomics/projects/{project_id}/subjects/{patient_id}/tests&#34;,
+            http_verb=&#34;GET&#34;,
+        )
+
+    def delete_test(self, project_id: str, test_id: str) -&gt; bool:
+        &#34;&#34;&#34;Delete a genomic test
+
+        Parameters
+        ----------
+        project_id : SetType
+            The project ID
+        test_id : str
+            The test ID
+
+        Returns
+        -------
+        bool
+            True if the delete succeeeds, otherwise False
+        &#34;&#34;&#34;
+        return (
+            self._ga4gh_call(
+                f&#34;genomics/projects/{project_id}/tests/{test_id}&#34;,
+                http_verb=&#34;DELETE&#34;,
+            ).status_code
+            == 204
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.base_client.BaseClient</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="phc.services.Genomics.Reference"><code class="name">var <span class="ident">Reference</span></code></dt>
+<dd>
+<section class="desc"><p>An enumeration.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Reference(Enum):
+    GRCh37 = &#34;GRCh37&#34;
+    GRCh38 = &#34;GRCh38&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Genomics.SequenceType"><code class="name">var <span class="ident">SequenceType</span></code></dt>
+<dd>
+<section class="desc"><p>An enumeration.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SequenceType(Enum):
+    GERMLINE = &#34;germline&#34;
+    SOMATIC = &#34;somatic&#34;
+    METASTATIC = &#34;metastatic&#34;
+    CTDNA = &#34;ctDNA&#34;
+    RNA = &#34;rna&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Genomics.SetType"><code class="name">var <span class="ident">SetType</span></code></dt>
+<dd>
+<section class="desc"><p>An enumeration.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SetType(Enum):
+    VARIANT = &#34;variantsets&#34;
+    STRUCTURAL_VARIANT = &#34;fusionsets&#34;
+    RNA = &#34;rnaquantificationsets&#34;
+    READ = &#34;readgroupset&#34;
+    COPY_NUMBER = &#34;copynumbersets&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Genomics.Status"><code class="name">var <span class="ident">Status</span></code></dt>
+<dd>
+<section class="desc"><p>An enumeration.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Status(Enum):
+    ACTIVE: &#34;ACTIVE&#34;  # noqa: F821
+    INDEXING: &#34;INDEXING&#34;  # noqa: F821
+    FAILED: &#34;FAILED&#34;  # noqa: F821</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.services.Genomics.create_set"><code class="name flex">
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='1ac75844-c616-4bfa-8ff7-6fefd155f159', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Creates a genomic set</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>set_type</code></strong> :&ensp;<code>SetType</code></dt>
+<dd>The genomic set type</dd>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The set name</dd>
+<dt><strong><code>file_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The genomic file ID</dd>
+<dt><strong><code>patient_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The patient ID</dd>
+<dt><strong><code>reference</code></strong> :&ensp;<code>Reference</code></dt>
+<dd>The genomic reference</dd>
+<dt><strong><code>sequence_type</code></strong> :&ensp;<code>SequenceType</code></dt>
+<dd>The sequence type</dd>
+<dt><strong><code>test_type</code></strong> :&ensp;<code>str</code></dt>
+<dd>The test type</dd>
+<dt><strong><code>sequence_id</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The FHIR Sequence ID, by default str(uuid.uuid4())</dd>
+<dt><strong><code>indexed_date</code></strong> :&ensp;<code>datetime</code>, optional</dt>
+<dd>The indexed date, by default None</dd>
+<dt><strong><code>performer_id</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The performer ID, by default None</dd>
+<dt><strong><code>test_id</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The test ID, by default None</dd>
+<dt><strong><code>update_sample</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>For variants only, True to update the sample ID, by default False</dd>
+<dt><strong><code>pass_filter</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>For variants only, True to update all filters to pass, by default False</dd>
+<dt><strong><code>output_vcf_name</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>For variants only, the name of the output VCF, by default None</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ApiResponse</code></dt>
+<dd>The create set response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_set(
+    self,
+    set_type: SetType,
+    project_id: str,
+    name: str,
+    file_id: str,
+    patient_id: str,
+    reference: Reference,
+    sequence_type: SequenceType,
+    test_type: str,
+    sequence_id: str = str(uuid.uuid4()),
+    indexed_date: datetime = None,
+    performer_id: str = None,
+    test_id: str = None,
+    update_sample: bool = False,
+    pass_filter: bool = False,
+    output_vcf_name: str = None,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Creates a genomic set
+
+    Parameters
+    ----------
+    set_type : SetType
+        The genomic set type
+    project_id : str
+        The project ID
+    name : str
+        The set name
+    file_id : str
+        The genomic file ID
+    patient_id : str
+        The patient ID
+    reference : Reference
+        The genomic reference
+    sequence_type : SequenceType
+        The sequence type
+    test_type : str
+        The test type
+    sequence_id : str, optional
+        The FHIR Sequence ID, by default str(uuid.uuid4())
+    indexed_date : datetime, optional
+        The indexed date, by default None
+    performer_id : str, optional
+        The performer ID, by default None
+    test_id : str, optional
+        The test ID, by default None
+    update_sample : bool, optional
+        For variants only, True to update the sample ID, by default False
+    pass_filter : bool, optional
+        For variants only, True to update all filters to pass, by default False
+    output_vcf_name : str, optional
+        For variants only, the name of the output VCF, by default None
+
+    Returns
+    -------
+    ApiResponse
+        The create set response
+    &#34;&#34;&#34;
+    json_body = {
+        &#34;datasetId&#34;: project_id,
+        &#34;name&#34;: name,
+        &#34;patientId&#34;: patient_id,
+        &#34;referenceSetId&#34;: reference.value,
+        &#34;sequenceType&#34;: sequence_type.value,
+        &#34;testType&#34;: test_type,
+        &#34;indexedDate&#34;: indexed_date.isoformat() if indexed_date else None,
+        &#34;performerId&#34;: performer_id,
+        &#34;testId&#34;: test_id,
+        &#34;sequenceId&#34;: sequence_id,
+    }
+
+    if set_type == Genomics.SetType.VARIANT:
+        json_body[&#34;variantsFileIds&#34;] = [file_id]
+        json_body[&#34;updateSample&#34;] = (update_sample,)
+        json_body[&#34;passFile&#34;] = pass_filter
+        json_body[&#34;outputVcfName&#34;] = output_vcf_name
+
+        return self._ga4gh_call(
+            &#34;genomicsets&#34;, json=json_body, http_verb=&#34;POST&#34;
+        )
+    else:
+        json_body[&#34;fileId&#34;] = file_id
+
+        return self._ga4gh_call(
+            set_type.value, json=json_body, http_verb=&#34;POST&#34;
+        )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Genomics.delete_set"><code class="name flex">
+<span>def <span class="ident">delete_set</span></span>(<span>self, set_type, set_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Delete a genomic set</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>set_type</code></strong> :&ensp;<code>SetType</code></dt>
+<dd>The set type</dd>
+<dt><strong><code>set_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The set ID</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the delete succeeeds, otherwise False</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete_set(self, set_type: SetType, set_id: str) -&gt; bool:
+    &#34;&#34;&#34;Delete a genomic set
+
+    Parameters
+    ----------
+    set_type : SetType
+        The set type
+    set_id : str
+        The set ID
+
+    Returns
+    -------
+    bool
+        True if the delete succeeeds, otherwise False
+    &#34;&#34;&#34;
+    return (
+        self._ga4gh_call(
+            f&#34;{set_type.value}/{set_id}&#34;, http_verb=&#34;DELETE&#34;
+        ).status_code
+        == 204
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Genomics.delete_test"><code class="name flex">
+<span>def <span class="ident">delete_test</span></span>(<span>self, project_id, test_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Delete a genomic test</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>SetType</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>test_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The test ID</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the delete succeeeds, otherwise False</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete_test(self, project_id: str, test_id: str) -&gt; bool:
+    &#34;&#34;&#34;Delete a genomic test
+
+    Parameters
+    ----------
+    project_id : SetType
+        The project ID
+    test_id : str
+        The test ID
+
+    Returns
+    -------
+    bool
+        True if the delete succeeeds, otherwise False
+    &#34;&#34;&#34;
+    return (
+        self._ga4gh_call(
+            f&#34;genomics/projects/{project_id}/tests/{test_id}&#34;,
+            http_verb=&#34;DELETE&#34;,
+        ).status_code
+        == 204
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Genomics.get_set"><code class="name flex">
+<span>def <span class="ident">get_set</span></span>(<span>self, set_type, set_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetch a genomic set</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>set_type</code></strong> :&ensp;<code>SetType</code></dt>
+<dd>The set type</dd>
+<dt><strong><code>set_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The set ID</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ApiResponse</code></dt>
+<dd>The fetch response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_set(self, set_type: SetType, set_id: str) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetch a genomic set
+
+    Parameters
+    ----------
+    set_type : SetType
+        The set type
+    set_id : str
+        The set ID
+
+    Returns
+    -------
+    ApiResponse
+        The fetch response
+    &#34;&#34;&#34;
+    return self._ga4gh_call(f&#34;{set_type.value}/{set_id}&#34;, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Genomics.list_sets"><code class="name flex">
+<span>def <span class="ident">list_sets</span></span>(<span>self, set_type, project_id, sequence_id=None, patient_id=None, status=None, next_page_token=None, page_size=50)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>List genomic sets</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>set_type</code></strong> :&ensp;<code>SetType</code></dt>
+<dd>The set type</dd>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>sequence_id</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>List sets by sequence ID, by default None</dd>
+<dt><strong><code>patient_id</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>List sets by patient ID, by default None</dd>
+<dt><strong><code>status</code></strong> :&ensp;<code>Status</code>, optional</dt>
+<dd>Filter sets by status, by default None</dd>
+<dt><strong><code>next_page_token</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The next page token, by default None</dd>
+<dt><strong><code>page_size</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The page size, by default 50</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ApiResponse</code></dt>
+<dd>The list sets response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def list_sets(
+    self,
+    set_type: SetType,
+    project_id: str,
+    sequence_id: str = None,
+    patient_id: str = None,
+    status: Status = None,
+    next_page_token: str = None,
+    page_size: int = 50,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;List genomic sets
+
+    Parameters
+    ----------
+    set_type : SetType
+        The set type
+    project_id : str
+        The project ID
+    sequence_id : str, optional
+        List sets by sequence ID, by default None
+    patient_id : str, optional
+        List sets by patient ID, by default None
+    status : Status, optional
+        Filter sets by status, by default None
+    next_page_token : str, optional
+        The next page token, by default None
+    page_size : int, optional
+        The page size, by default 50
+
+    Returns
+    -------
+    ApiResponse
+        The list sets response
+    &#34;&#34;&#34;
+
+    json_body = {
+        &#34;datasetIds&#34;: [project_id],
+        &#34;status&#34;: status,
+        &#34;patientId&#34;: patient_id,
+        &#34;sequenceId&#34;: sequence_id,
+        &#34;pageSize&#34;: page_size,
+        &#34;pageToken&#34;: next_page_token,
+    }
+
+    return self._ga4gh_call(
+        f&#34;{set_type.value}/search&#34;, json=json_body, http_verb=&#34;POST&#34;
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Genomics.list_tests"><code class="name flex">
+<span>def <span class="ident">list_tests</span></span>(<span>self, project_id, patient_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>List tests for a patient</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>patient_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The patient ID</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ApiResponse</code></dt>
+<dd>The list tests response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def list_tests(self, project_id: str, patient_id: str) -&gt; ApiResponse:
+    &#34;&#34;&#34;List tests for a patient
+
+    Parameters
+    ----------
+    project_id : str
+        The project ID
+    patient_id : str
+        The patient ID
+
+    Returns
+    -------
+    ApiResponse
+        The list tests response
+    &#34;&#34;&#34;
+    return self._api_call(
+        f&#34;genomics/projects/{project_id}/subjects/{patient_id}/tests&#34;,
+        http_verb=&#34;GET&#34;,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 <dt id="phc.services.Projects"><code class="flex name class">
 <span>class <span class="ident">Projects</span></span>
 <span>(</span><span>session, run_async=False, timeout=30)</span>
@@ -2719,6 +3452,17 @@ Defaults to the current working directory</dd>
 <li><code><a title="phc.services.Files.get_list" href="#phc.services.Files.get_list">get_list</a></code></li>
 <li><code><a title="phc.services.Files.update" href="#phc.services.Files.update">update</a></code></li>
 <li><code><a title="phc.services.Files.upload" href="#phc.services.Files.upload">upload</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.services.Genomics" href="#phc.services.Genomics">Genomics</a></code></h4>
+<ul class="two-column">
+<li><code><a title="phc.services.Genomics.create_set" href="#phc.services.Genomics.create_set">create_set</a></code></li>
+<li><code><a title="phc.services.Genomics.delete_set" href="#phc.services.Genomics.delete_set">delete_set</a></code></li>
+<li><code><a title="phc.services.Genomics.delete_test" href="#phc.services.Genomics.delete_test">delete_test</a></code></li>
+<li><code><a title="phc.services.Genomics.get_set" href="#phc.services.Genomics.get_set">get_set</a></code></li>
+<li><code><a title="phc.services.Genomics.list_sets" href="#phc.services.Genomics.list_sets">list_sets</a></code></li>
+<li><code><a title="phc.services.Genomics.list_tests" href="#phc.services.Genomics.list_tests">list_tests</a></code></li>
 </ul>
 </li>
 <li>
