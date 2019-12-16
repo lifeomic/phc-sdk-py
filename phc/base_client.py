@@ -199,7 +199,7 @@ class BaseClient:
 
         req_args = {"headers": self._get_headers(has_json, headers)}
         if has_json:
-            req_args["json"] = json
+            req_args["json"] = {k: v for k, v in json.items() if v is not None}
 
         elif has_data:
             req_args["data"] = data
