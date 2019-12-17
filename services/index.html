@@ -2336,9 +2336,9 @@ Defaults to the current working directory</dd>
         RNA = &#34;rna&#34;
 
     class Status(Enum):
-        ACTIVE: &#34;ACTIVE&#34;  # noqa: F821
-        INDEXING: &#34;INDEXING&#34;  # noqa: F821
-        FAILED: &#34;FAILED&#34;  # noqa: F821
+        ACTIVE = &#34;ACTIVE&#34;
+        INDEXING = &#34;INDEXING&#34;
+        FAILED = &#34;FAILED&#34;
 
     def create_set(
         self,
@@ -2613,16 +2613,16 @@ Defaults to the current working directory</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Status(Enum):
-    ACTIVE: &#34;ACTIVE&#34;  # noqa: F821
-    INDEXING: &#34;INDEXING&#34;  # noqa: F821
-    FAILED: &#34;FAILED&#34;  # noqa: F821</code></pre>
+    ACTIVE = &#34;ACTIVE&#34;
+    INDEXING = &#34;INDEXING&#34;
+    FAILED = &#34;FAILED&#34;</code></pre>
 </details>
 </dd>
 </dl>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='1ac75844-c616-4bfa-8ff7-6fefd155f159', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='784bacc3-ec7e-4316-8602-eb2ff9bf690b', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Creates a genomic set</p>
