@@ -40,9 +40,9 @@ class Genomics(BaseClient):
         RNA = "rna"
 
     class Status(Enum):
-        ACTIVE: "ACTIVE"  # noqa: F821
-        INDEXING: "INDEXING"  # noqa: F821
-        FAILED: "FAILED"  # noqa: F821
+        ACTIVE = "ACTIVE"
+        INDEXING = "INDEXING"
+        FAILED = "FAILED"
 
     def create_set(
         self,
