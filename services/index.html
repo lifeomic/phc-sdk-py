@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.2" />
+<meta name="generator" content="pdoc 0.7.4" />
 <title>phc.services API documentation</title>
 <meta name="description" content="Contains services for accessing different parts of the PHC platform." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
@@ -1390,7 +1390,9 @@ Defaults to the current working directory.</dd>
         Operation timeout (default is 30)
     &#34;&#34;&#34;
 
-    def execute_sql(self, project_id: str, statement: str) -&gt; ApiResponse:
+    def execute_sql(
+        self, project_id: str, statement: str, scroll=&#34;&#34;
+    ) -&gt; ApiResponse:
         &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
 
         Parameters
@@ -1426,9 +1428,12 @@ Defaults to the current working directory.</dd>
             http_verb=&#34;POST&#34;,
             data=statement,
             headers={&#34;Content-Type&#34;: &#34;text/plain&#34;},
+            params={&#34;scroll&#34;: scroll},
         )
 
-    def execute_es(self, project_id: str, query: dict) -&gt; ApiResponse:
+    def execute_es(
+        self, project_id: str, query: dict, scroll=&#34;&#34;
+    ) -&gt; ApiResponse:
         &#34;&#34;&#34;Executes an elasticsearch query against fhir-searh-service
 
         Parameters
@@ -1447,6 +1452,7 @@ Defaults to the current working directory.</dd>
             api_path=f&#34;fhir-search/projects/{project_id}&#34;,
             http_verb=&#34;POST&#34;,
             json=query,
+            params={&#34;scroll&#34;: scroll},
         )</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -1456,7 +1462,7 @@ Defaults to the current working directory.</dd>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Fhir.execute_es"><code class="name flex">
-<span>def <span class="ident">execute_es</span></span>(<span>self, project_id, query)</span>
+<span>def <span class="ident">execute_es</span></span>(<span>self, project_id, query, scroll='')</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Executes an elasticsearch query against fhir-searh-service</p>
@@ -1476,7 +1482,9 @@ Defaults to the current working directory.</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def execute_es(self, project_id: str, query: dict) -&gt; ApiResponse:
+<pre><code class="python">def execute_es(
+    self, project_id: str, query: dict, scroll=&#34;&#34;
+) -&gt; ApiResponse:
     &#34;&#34;&#34;Executes an elasticsearch query against fhir-searh-service
 
     Parameters
@@ -1495,11 +1503,12 @@ Defaults to the current working directory.</dd>
         api_path=f&#34;fhir-search/projects/{project_id}&#34;,
         http_verb=&#34;POST&#34;,
         json=query,
+        params={&#34;scroll&#34;: scroll},
     )</code></pre>
 </details>
 </dd>
 <dt id="phc.services.Fhir.execute_sql"><code class="name flex">
-<span>def <span class="ident">execute_sql</span></span>(<span>self, project_id, statement)</span>
+<span>def <span class="ident">execute_sql</span></span>(<span>self, project_id, statement, scroll='')</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Executes an SQL query against fhir-searh-service</p>
@@ -1529,7 +1538,9 @@ Defaults to the current working directory.</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def execute_sql(self, project_id: str, statement: str) -&gt; ApiResponse:
+<pre><code class="python">def execute_sql(
+    self, project_id: str, statement: str, scroll=&#34;&#34;
+) -&gt; ApiResponse:
     &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
 
     Parameters
@@ -1565,6 +1576,7 @@ Defaults to the current working directory.</dd>
         http_verb=&#34;POST&#34;,
         data=statement,
         headers={&#34;Content-Type&#34;: &#34;text/plain&#34;},
+        params={&#34;scroll&#34;: scroll},
     )</code></pre>
 </details>
 </dd>
@@ -2622,7 +2634,7 @@ Defaults to the current working directory</dd>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='784bacc3-ec7e-4316-8602-eb2ff9bf690b', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='78d90862-baa9-4208-993d-e2595a762c64', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Creates a genomic set</p>
@@ -3481,7 +3493,7 @@ Defaults to the current working directory</dd>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.4</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>
