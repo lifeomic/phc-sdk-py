@@ -84,7 +84,7 @@ class BaseClient:
         json: dict = None,
         data: str = None,
         headers: dict = {},
-        params: dict = {}
+        params: dict = {},
     ) -> Union[asyncio.Future, ApiResponse]:
         if self.session.is_expired() and self.session.refresh_token:
             self._refresh_token()
@@ -97,7 +97,7 @@ class BaseClient:
             json,
             data,
             headers,
-            params
+            params,
         )
 
     def _fhir_call(
@@ -170,7 +170,7 @@ class BaseClient:
         json: dict = None,
         data: str = None,
         headers: dict = {},
-        params: dict = {}
+        params: dict = {},
     ) -> Union[asyncio.Future, ApiResponse]:
         """Sends an API request
 
@@ -213,7 +213,6 @@ class BaseClient:
 
         if has_params:
             req_args["params"] = params
-
 
         api_url = urljoin(url, api_path)
 
