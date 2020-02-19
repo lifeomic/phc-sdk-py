@@ -17,7 +17,9 @@ class Fhir(BaseClient):
         Operation timeout (default is 30)
     """
 
-    def execute_sql(self, project_id: str, statement: str) -> ApiResponse:
+    def execute_sql(
+        self, project_id: str, statement: str, scroll=""
+    ) -> ApiResponse:
         """Executes an SQL query against fhir-searh-service
 
         Parameters
@@ -53,9 +55,12 @@ class Fhir(BaseClient):
             http_verb="POST",
             data=statement,
             headers={"Content-Type": "text/plain"},
+            params={"scroll": scroll},
         )
 
-    def execute_es(self, project_id: str, query: dict) -> ApiResponse:
+    def execute_es(
+        self, project_id: str, query: dict, scroll=""
+    ) -> ApiResponse:
         """Executes an elasticsearch query against fhir-searh-service
 
         Parameters
@@ -74,4 +79,5 @@ class Fhir(BaseClient):
             api_path=f"fhir-search/projects/{project_id}",
             http_verb="POST",
             json=query,
+            params={"scroll": scroll},
         )
