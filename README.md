@@ -92,7 +92,7 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 
 ## Authors
 
-See the list of [contributors](https://github.com/lifeomic/cli/contributors) who participate in this project.
+See the list of [contributors](https://github.com/lifeomic/phc-sdk-py/contributors) who participate in this project.
 
 ## Acknowledgements
 
