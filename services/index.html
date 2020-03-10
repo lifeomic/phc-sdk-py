@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.4" />
+<meta name="generator" content="pdoc 0.7.5" />
 <title>phc.services API documentation</title>
 <meta name="description" content="Contains services for accessing different parts of the PHC platform." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
@@ -149,7 +149,7 @@ __pdoc__ = {
 <span>(</span><span>session, run_async=False, timeout=30)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Provides acccess to PHC accounts</p>
+<section class="desc"><p>Provides acccess to PHC Analytics and Data Lake</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
@@ -164,7 +164,7 @@ __pdoc__ = {
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Analytics(BaseClient):
-    &#34;&#34;&#34;Provides acccess to PHC accounts
+    &#34;&#34;&#34;Provides acccess to PHC Analytics and Data Lake
 
     Parameters
     ----------
@@ -175,6 +175,51 @@ __pdoc__ = {
     timeout: int
         Operation timeout (default is 30)
     &#34;&#34;&#34;
+
+    def execute_sql(
+        self, statement: str, project_id: str = None, cohort_id: str = None
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Executes a SQL query against Analytics
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID
+        cohort_id : str
+            The cohort ID
+        statement : str
+            The SQL statement
+
+        Returns
+        -------
+        ApiResponse
+            The API Response
+
+        Raises
+        ------
+        ValueError
+            If no project or cohort ID is provided
+
+        Examples
+        --------
+        &gt;&gt;&gt; from phc.services import Analytics
+        &gt;&gt;&gt; client = Analytics(session)
+        &gt;&gt;&gt; res = client.execute_sql(cohort_id=&#39;5a07dedb-fa2a-4cb0-b662-95b23a050221&#39;, statement=&#39;SELECT patients from patient&#39;)
+        &gt;&gt;&gt; print(f&#34;Found {len(res.get(&#39;data&#39;).get(&#39;patients&#39;))} patients&#34;)
+        &#34;&#34;&#34;
+        if not project_id and not cohort_id:
+            raise ValueError(
+                &#34;Must provide a value for the project or cohort ID&#34;
+            )
+
+        payload = {&#34;string_query&#34;: statement}
+
+        if project_id:
+            payload[&#34;dataset_id&#34;] = project_id
+        if cohort_id:
+            payload[&#34;cohort_id&#34;] = cohort_id
+
+        return self._api_call(&#34;analytics/dsl&#34;, http_verb=&#34;POST&#34;, json=payload)
 
     def get_patients(
         self, project_id: str, query_builder: PatientFilterQueryBuilder
@@ -724,6 +769,86 @@ Defaults to the current working directory.</dd>
         if self.run_async
         else self._event_loop.run_until_complete(future)
     )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Analytics.execute_sql"><code class="name flex">
+<span>def <span class="ident">execute_sql</span></span>(<span>self, statement, project_id=None, cohort_id=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Executes a SQL query against Analytics</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>cohort_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The cohort ID</dd>
+<dt><strong><code>statement</code></strong> :&ensp;<code>str</code></dt>
+<dd>The SQL statement</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ApiResponse</code></dt>
+<dd>The API Response</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If no project or cohort ID is provided</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from phc.services import Analytics
+&gt;&gt;&gt; client = Analytics(session)
+&gt;&gt;&gt; res = client.execute_sql(cohort_id='5a07dedb-fa2a-4cb0-b662-95b23a050221', statement='SELECT patients from patient')
+&gt;&gt;&gt; print(f"Found {len(res.get('data').get('patients'))} patients")
+</code></pre></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute_sql(
+    self, statement: str, project_id: str = None, cohort_id: str = None
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Executes a SQL query against Analytics
+
+    Parameters
+    ----------
+    project_id : str
+        The project ID
+    cohort_id : str
+        The cohort ID
+    statement : str
+        The SQL statement
+
+    Returns
+    -------
+    ApiResponse
+        The API Response
+
+    Raises
+    ------
+    ValueError
+        If no project or cohort ID is provided
+
+    Examples
+    --------
+    &gt;&gt;&gt; from phc.services import Analytics
+    &gt;&gt;&gt; client = Analytics(session)
+    &gt;&gt;&gt; res = client.execute_sql(cohort_id=&#39;5a07dedb-fa2a-4cb0-b662-95b23a050221&#39;, statement=&#39;SELECT patients from patient&#39;)
+    &gt;&gt;&gt; print(f&#34;Found {len(res.get(&#39;data&#39;).get(&#39;patients&#39;))} patients&#34;)
+    &#34;&#34;&#34;
+    if not project_id and not cohort_id:
+        raise ValueError(
+            &#34;Must provide a value for the project or cohort ID&#34;
+        )
+
+    payload = {&#34;string_query&#34;: statement}
+
+    if project_id:
+        payload[&#34;dataset_id&#34;] = project_id
+    if cohort_id:
+        payload[&#34;cohort_id&#34;] = cohort_id
+
+    return self._api_call(&#34;analytics/dsl&#34;, http_verb=&#34;POST&#34;, json=payload)</code></pre>
 </details>
 </dd>
 <dt id="phc.services.Analytics.get_data_lake_query"><code class="name flex">
@@ -2578,63 +2703,24 @@ Defaults to the current working directory</dd>
 <dt id="phc.services.Genomics.Reference"><code class="name">var <span class="ident">Reference</span></code></dt>
 <dd>
 <section class="desc"><p>An enumeration.</p></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class Reference(Enum):
-    GRCh37 = &#34;GRCh37&#34;
-    GRCh38 = &#34;GRCh38&#34;</code></pre>
-</details>
 </dd>
 <dt id="phc.services.Genomics.SequenceType"><code class="name">var <span class="ident">SequenceType</span></code></dt>
 <dd>
 <section class="desc"><p>An enumeration.</p></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class SequenceType(Enum):
-    GERMLINE = &#34;germline&#34;
-    SOMATIC = &#34;somatic&#34;
-    METASTATIC = &#34;metastatic&#34;
-    CTDNA = &#34;ctDNA&#34;
-    RNA = &#34;rna&#34;</code></pre>
-</details>
 </dd>
 <dt id="phc.services.Genomics.SetType"><code class="name">var <span class="ident">SetType</span></code></dt>
 <dd>
 <section class="desc"><p>An enumeration.</p></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class SetType(Enum):
-    VARIANT = &#34;variantsets&#34;
-    STRUCTURAL_VARIANT = &#34;fusionsets&#34;
-    RNA = &#34;rnaquantificationsets&#34;
-    READ = &#34;readgroupset&#34;
-    COPY_NUMBER = &#34;copynumbersets&#34;</code></pre>
-</details>
 </dd>
 <dt id="phc.services.Genomics.Status"><code class="name">var <span class="ident">Status</span></code></dt>
 <dd>
 <section class="desc"><p>An enumeration.</p></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class Status(Enum):
-    ACTIVE = &#34;ACTIVE&#34;
-    INDEXING = &#34;INDEXING&#34;
-    FAILED = &#34;FAILED&#34;</code></pre>
-</details>
 </dd>
 </dl>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='78d90862-baa9-4208-993d-e2595a762c64', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='e2bedb2e-d6e3-466d-b883-804beb2d3c41', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Creates a genomic set</p>
@@ -3430,6 +3516,7 @@ Defaults to the current working directory</dd>
 <ul class="">
 <li><code><a title="phc.services.Analytics.execute_data_lake_query" href="#phc.services.Analytics.execute_data_lake_query">execute_data_lake_query</a></code></li>
 <li><code><a title="phc.services.Analytics.execute_data_lake_query_to_dataframe" href="#phc.services.Analytics.execute_data_lake_query_to_dataframe">execute_data_lake_query_to_dataframe</a></code></li>
+<li><code><a title="phc.services.Analytics.execute_sql" href="#phc.services.Analytics.execute_sql">execute_sql</a></code></li>
 <li><code><a title="phc.services.Analytics.get_data_lake_query" href="#phc.services.Analytics.get_data_lake_query">get_data_lake_query</a></code></li>
 <li><code><a title="phc.services.Analytics.get_data_lake_schema" href="#phc.services.Analytics.get_data_lake_schema">get_data_lake_schema</a></code></li>
 <li><code><a title="phc.services.Analytics.get_patients" href="#phc.services.Analytics.get_patients">get_patients</a></code></li>
@@ -3493,7 +3580,7 @@ Defaults to the current working directory</dd>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.4</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>
