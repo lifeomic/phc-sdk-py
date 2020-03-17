@@ -16,6 +16,8 @@ class Projects(BaseClient):
         True to return promises, False to return results (default is False)
     timeout: int
         Operation timeout (default is 30)
+    trust_env: bool
+        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
     """
 
     def create(self, name: str, description: str = None) -> ApiResponse:

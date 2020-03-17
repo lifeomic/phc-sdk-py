@@ -17,7 +17,11 @@ class BaseClient:
     """Base client for making API requests."""
 
     def __init__(
-        self, session: Session, run_async: bool = False, timeout: int = 30
+        self,
+        session: Session,
+        run_async: bool = False,
+        timeout: int = 30,
+        trust_env: bool = False,
     ):
         if not session:
             raise ValueError("Must provide a value for 'session'")
@@ -25,6 +29,7 @@ class BaseClient:
         self.session = session
         self.run_async = run_async
         self.timeout = timeout
+        self.trust_env = trust_env
         self._event_loop_ptr = None
 
     @property
@@ -275,7 +280,8 @@ class BaseClient:
             A dictionary of the response data.
         """
         async with aiohttp.ClientSession(
-            timeout=aiohttp.ClientTimeout(total=self.timeout)
+            timeout=aiohttp.ClientTimeout(total=self.timeout),
+            trust_env=self.trust_env,
         ) as session:
             async with session.request(http_verb, api_url, **req_args) as res:
                 return {
