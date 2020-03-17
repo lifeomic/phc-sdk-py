@@ -71,7 +71,7 @@ __pdoc__ = {
 <dl>
 <dt id="phc.services.Accounts"><code class="flex name class">
 <span>class <span class="ident">Accounts</span></span>
-<span>(</span><span>session, run_async=False, timeout=30)</span>
+<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Provides acccess to PHC accounts</p>
@@ -83,6 +83,8 @@ __pdoc__ = {
 <dd>True to return promises, False to return results (default is False)</dd>
 <dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
 <dd>Operation timeout (default is 30)</dd>
+<dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
 </dl></section>
 <details class="source">
 <summary>
@@ -99,6 +101,8 @@ __pdoc__ = {
         True to return promises, False to return results (default is False)
     timeout: int
         Operation timeout (default is 30)
+    trust_env: bool
+        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
     &#34;&#34;&#34;
 
     def get_list(self) -&gt; ApiResponse:
@@ -146,7 +150,7 @@ __pdoc__ = {
 </dd>
 <dt id="phc.services.Analytics"><code class="flex name class">
 <span>class <span class="ident">Analytics</span></span>
-<span>(</span><span>session, run_async=False, timeout=30)</span>
+<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Provides acccess to PHC Analytics and Data Lake</p>
@@ -158,6 +162,8 @@ __pdoc__ = {
 <dd>True to return promises, False to return results (default is False)</dd>
 <dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
 <dd>Operation timeout (default is 30)</dd>
+<dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
 </dl></section>
 <details class="source">
 <summary>
@@ -174,6 +180,8 @@ __pdoc__ = {
         True to return promises, False to return results (default is False)
     timeout: int
         Operation timeout (default is 30)
+    trust_env: bool
+        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
     &#34;&#34;&#34;
 
     def execute_sql(
@@ -1151,7 +1159,7 @@ Defaults to the current working directory.</dd>
 </dd>
 <dt id="phc.services.Cohorts"><code class="flex name class">
 <span>class <span class="ident">Cohorts</span></span>
-<span>(</span><span>session, run_async=False, timeout=30)</span>
+<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Provides acccess to PHC cohorts</p>
@@ -1163,6 +1171,8 @@ Defaults to the current working directory.</dd>
 <dd>True to return promises, False to return results (default is False)</dd>
 <dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
 <dd>Operation timeout (default is 30)</dd>
+<dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
 </dl></section>
 <details class="source">
 <summary>
@@ -1179,6 +1189,8 @@ Defaults to the current working directory.</dd>
         True to return promises, False to return results (default is False)
     timeout: int
         Operation timeout (default is 30)
+    trust_env: bool
+        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
     &#34;&#34;&#34;
 
     def create(
@@ -1485,7 +1497,7 @@ Defaults to the current working directory.</dd>
 </dd>
 <dt id="phc.services.Fhir"><code class="flex name class">
 <span>class <span class="ident">Fhir</span></span>
-<span>(</span><span>session, run_async=False, timeout=30)</span>
+<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Provides methods to run search using SQL or Elasticsearch queries</p>
@@ -1497,6 +1509,8 @@ Defaults to the current working directory.</dd>
 <dd>True to return promises, False to return results (default is False)</dd>
 <dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
 <dd>Operation timeout (default is 30)</dd>
+<dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
 </dl></section>
 <details class="source">
 <summary>
@@ -1513,6 +1527,8 @@ Defaults to the current working directory.</dd>
         True to return promises, False to return results (default is False)
     timeout: int
         Operation timeout (default is 30)
+    trust_env: bool
+        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
     &#34;&#34;&#34;
 
     def execute_sql(
@@ -1709,7 +1725,7 @@ Defaults to the current working directory.</dd>
 </dd>
 <dt id="phc.services.Files"><code class="flex name class">
 <span>class <span class="ident">Files</span></span>
-<span>(</span><span>session, run_async=False, timeout=30)</span>
+<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Provides acccess to PHC files</p>
@@ -1721,6 +1737,8 @@ Defaults to the current working directory.</dd>
 <dd>True to return promises, False to return results (default is False)</dd>
 <dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
 <dd>Operation timeout (default is 30)</dd>
+<dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
 </dl></section>
 <details class="source">
 <summary>
@@ -1737,6 +1755,8 @@ Defaults to the current working directory.</dd>
         True to return promises, False to return results (default is False)
     timeout: int
         Operation timeout (default is 30)
+    trust_env: bool
+        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
     &#34;&#34;&#34;
 
     _MULTIPART_MIN_SIZE = 5 * 1024 * 1024
@@ -2424,7 +2444,7 @@ Defaults to the current working directory</dd>
 </dd>
 <dt id="phc.services.Genomics"><code class="flex name class">
 <span>class <span class="ident">Genomics</span></span>
-<span>(</span><span>session, run_async=False, timeout=30)</span>
+<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Provides acccess to PHC genomic resources</p>
@@ -2436,6 +2456,8 @@ Defaults to the current working directory</dd>
 <dd>True to return promises, False to return results (default is False)</dd>
 <dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
 <dd>Operation timeout (default is 30)</dd>
+<dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
 </dl></section>
 <details class="source">
 <summary>
@@ -2452,6 +2474,8 @@ Defaults to the current working directory</dd>
         True to return promises, False to return results (default is False)
     timeout: int
         Operation timeout (default is 30)
+    trust_env: bool
+        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
     &#34;&#34;&#34;
 
     class SetType(Enum):
@@ -2720,7 +2744,7 @@ Defaults to the current working directory</dd>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='e2bedb2e-d6e3-466d-b883-804beb2d3c41', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='2fd6fc88-fc4b-43ad-8804-67c100d75370', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Creates a genomic set</p>
@@ -3108,7 +3132,7 @@ Defaults to the current working directory</dd>
 </dd>
 <dt id="phc.services.Projects"><code class="flex name class">
 <span>class <span class="ident">Projects</span></span>
-<span>(</span><span>session, run_async=False, timeout=30)</span>
+<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Provides acccess to PHC projects</p>
@@ -3120,6 +3144,8 @@ Defaults to the current working directory</dd>
 <dd>True to return promises, False to return results (default is False)</dd>
 <dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
 <dd>Operation timeout (default is 30)</dd>
+<dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
 </dl></section>
 <details class="source">
 <summary>
@@ -3136,6 +3162,8 @@ Defaults to the current working directory</dd>
         True to return promises, False to return results (default is False)
     timeout: int
         Operation timeout (default is 30)
+    trust_env: bool
+        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
     &#34;&#34;&#34;
 
     def create(self, name: str, description: str = None) -&gt; ApiResponse:
