@@ -41,7 +41,7 @@ class Fhir(BaseClient):
         >>> import pandas as pd
         >>> from phc.services import Fhir
         >>> fhir = Fhir(session)
-        >>> res = fhir.execute_sql(project='19e34782-91c4-4143-aaee-2ba81ed0b206',
+        >>> res = fhir.execute_sql(project_id='19e34782-91c4-4143-aaee-2ba81ed0b206',
                        statement='SELECT * from patient LIMIT 0,5000')
 
         >>> resources = list(map(lambda r: r.get("_source"), res.get("hits").get("hits")))
