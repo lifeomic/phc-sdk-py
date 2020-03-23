@@ -1553,7 +1553,7 @@ Defaults to the current working directory.</dd>
         &gt;&gt;&gt; import pandas as pd
         &gt;&gt;&gt; from phc.services import Fhir
         &gt;&gt;&gt; fhir = Fhir(session)
-        &gt;&gt;&gt; res = fhir.execute_sql(project=&#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;,
+        &gt;&gt;&gt; res = fhir.execute_sql(project_id=&#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;,
                        statement=&#39;SELECT * from patient LIMIT 0,5000&#39;)
 
         &gt;&gt;&gt; resources = list(map(lambda r: r.get(&#34;_source&#34;), res.get(&#34;hits&#34;).get(&#34;hits&#34;)))
@@ -1669,7 +1669,7 @@ Defaults to the current working directory.</dd>
 <pre><code>&gt;&gt;&gt; import pandas as pd
 &gt;&gt;&gt; from phc.services import Fhir
 &gt;&gt;&gt; fhir = Fhir(session)
-&gt;&gt;&gt; res = fhir.execute_sql(project='19e34782-91c4-4143-aaee-2ba81ed0b206',
+&gt;&gt;&gt; res = fhir.execute_sql(project_id='19e34782-91c4-4143-aaee-2ba81ed0b206',
                statement='SELECT * from patient LIMIT 0,5000')
 
 &gt;&gt;&gt; resources = list(map(lambda r: r.get("_source"), res.get("hits").get("hits")))
@@ -1701,7 +1701,7 @@ Defaults to the current working directory.</dd>
     &gt;&gt;&gt; import pandas as pd
     &gt;&gt;&gt; from phc.services import Fhir
     &gt;&gt;&gt; fhir = Fhir(session)
-    &gt;&gt;&gt; res = fhir.execute_sql(project=&#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;,
+    &gt;&gt;&gt; res = fhir.execute_sql(project_id=&#39;19e34782-91c4-4143-aaee-2ba81ed0b206&#39;,
                    statement=&#39;SELECT * from patient LIMIT 0,5000&#39;)
 
     &gt;&gt;&gt; resources = list(map(lambda r: r.get(&#34;_source&#34;), res.get(&#34;hits&#34;).get(&#34;hits&#34;)))
@@ -2744,7 +2744,7 @@ Defaults to the current working directory</dd>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='2fd6fc88-fc4b-43ad-8804-67c100d75370', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='80731b0c-1f59-4745-9dd5-e50468cd5900', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Creates a genomic set</p>
