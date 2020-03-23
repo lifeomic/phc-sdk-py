@@ -1,5 +1,6 @@
 aiohttp>3.5.3
 nest_asyncio
+backoff==1.10.0
 pyjwt
 pre-commit
 black==19.3b0
