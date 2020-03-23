@@ -6,9 +6,10 @@ import sys
 import platform
 import asyncio
 import aiohttp
+import backoff
 
 from phc import Session
-from phc.errors import RequestError
+from phc.errors import RequestError, ApiError
 from phc.api_response import ApiResponse
 import phc.version as ver
 
@@ -247,6 +248,9 @@ class BaseClient:
         user_agent_string = " ".join([python_version, client, system_info])
         return user_agent_string
 
+    @backoff.on_exception(
+        backoff.expo, ApiError, max_tries=3, jitter=backoff.full_jitter
+    )
     async def _send(self, http_verb, api_url, req_args):
         open_files = []
         upload_file = req_args.pop("file", None)
