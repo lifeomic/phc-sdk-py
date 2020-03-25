@@ -249,7 +249,10 @@ class BaseClient:
         return user_agent_string
 
     @backoff.on_exception(
-        backoff.expo, ApiError, max_tries=3, jitter=backoff.full_jitter
+        backoff.expo,
+        (ApiError, OSError),
+        max_tries=3,
+        jitter=backoff.full_jitter,
     )
     async def _send(self, http_verb, api_url, req_args):
         open_files = []
