@@ -2,6 +2,7 @@
 
 import os
 import math
+import backoff
 from phc.base_client import BaseClient
 from phc import ApiResponse
 from urllib.parse import urlencode
@@ -127,6 +128,9 @@ class Files(BaseClient):
             )
             return res
 
+    @backoff.on_exception(
+        backoff.expo, OSError, max_tries=6, jitter=backoff.full_jitter
+    )
     def download(self, file_id: str, dest_dir: str = os.getcwd()) -> None:
         """Download a file
 
