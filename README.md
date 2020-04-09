@@ -52,7 +52,7 @@ make lint
 ### Installation
 
 ```bash
-pip3 install phc
+pip install phc
 ```
 
 ### Usage
