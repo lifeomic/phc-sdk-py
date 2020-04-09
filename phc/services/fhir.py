@@ -1,23 +1,72 @@
 """A Python Module for FHIR Search"""
 
+import warnings
+
 from phc.base_client import BaseClient
 from phc import ApiResponse
 
 
 class Fhir(BaseClient):
-    """Provides methods to run search using SQL or Elasticsearch queries
+    """Provides bindings to the LifeOmic FHIR Service APIs"""
 
-    Parameters
-    ----------
-    session : phc.Session
-        The PHC session
-    run_async: bool
-        True to return promises, False to return results (default is False)
-    timeout: int
-        Operation timeout (default is 30)
-    trust_env: bool
-        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
-    """
+    def dsl(self, project: str, data: dict, scroll=""):
+        """Executes a LifeOmic FHIR Service DSL request
+
+        Parameters
+        ----------
+        project : str
+            The target LifeOmic project identifier
+        data : dict
+            The DSL request object
+        scroll
+            The scroll request parameter
+
+        Returns
+        -------
+        phc.ApiResponse
+            The API response
+        """
+        path = f"fhir-search/projects/{project}"
+        scroll = scroll if scroll is not True else 'true'
+        params = {"scroll": scroll if scroll is not True else 'true'}
+        return self._api_call(
+            http_verb="POST",
+            api_path=path,
+            params=params,
+            json=data
+        )
+
+    def sql(self,
+            project: str,
+            statement: str,
+            scroll="") -> ApiResponse:
+        """Executes a LifeOmic FHIR Service SQL request
+
+        Parameters
+        ----------
+        project : str
+            The target LifeOmic project identifier
+        statement : str
+            The SQL request statement
+        scroll
+            The scroll request parameter
+
+        Returns
+        -------
+        phc.ApiResponse
+            The API response
+        """
+        path = f"fhir-search/projects/{project}"
+        headers = {"Content-Type": "text/plain"}
+        params = {"scroll": scroll if scroll is not True else 'true'}
+        print(params)
+        return self._api_call(
+            http_verb="POST",
+            api_path=path,
+            headers=headers,
+            params=params,
+            data=statement
+        )
 
     def execute_sql(
         self, project_id: str, statement: str, scroll=""
@@ -52,6 +101,7 @@ class Fhir(BaseClient):
         Returns:
             [List] -- Dictionary with query response
         """
+        warnings.warn('Use the sql method instead', DeprecationWarning)
         return self._api_call(
             api_path=f"fhir-search/projects/{project_id}",
             http_verb="POST",
@@ -77,6 +127,7 @@ class Fhir(BaseClient):
         phc.ApiResponse
             The query response
         """
+        warnings.warn('Use the dsl method instead', DeprecationWarning)
         return self._api_call(
             api_path=f"fhir-search/projects/{project_id}",
             http_verb="POST",
