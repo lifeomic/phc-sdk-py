@@ -59,7 +59,6 @@ class Fhir(BaseClient):
         path = f"fhir-search/projects/{project}"
         headers = {"Content-Type": "text/plain"}
         params = {"scroll": scroll if scroll is not True else 'true'}
-        print(params)
         return self._api_call(
             http_verb="POST",
             api_path=path,
