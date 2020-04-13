@@ -1500,36 +1500,71 @@ Defaults to the current working directory.</dd>
 <span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Provides methods to run search using SQL or Elasticsearch queries</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
-<dd>The PHC session</dd>
-<dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
-<dd>True to return promises, False to return results (default is False)</dd>
-<dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
-<dd>Operation timeout (default is 30)</dd>
-<dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
-<dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
-</dl></section>
+<section class="desc"><p>Provides bindings to the LifeOmic FHIR Service APIs</p></section>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Fhir(BaseClient):
-    &#34;&#34;&#34;Provides methods to run search using SQL or Elasticsearch queries
+    &#34;&#34;&#34;Provides bindings to the LifeOmic FHIR Service APIs&#34;&#34;&#34;
 
-    Parameters
-    ----------
-    session : phc.Session
-        The PHC session
-    run_async: bool
-        True to return promises, False to return results (default is False)
-    timeout: int
-        Operation timeout (default is 30)
-    trust_env: bool
-        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
-    &#34;&#34;&#34;
+    def dsl(self, project: str, data: dict, scroll=&#34;&#34;):
+        &#34;&#34;&#34;Executes a LifeOmic FHIR Service DSL request
+
+        Parameters
+        ----------
+        project : str
+            The target LifeOmic project identifier
+        data : dict
+            The DSL request object
+        scroll
+            The scroll request parameter
+
+        Returns
+        -------
+        phc.ApiResponse
+            The API response
+        &#34;&#34;&#34;
+        path = f&#34;fhir-search/projects/{project}&#34;
+        scroll = scroll if scroll is not True else &#39;true&#39;
+        params = {&#34;scroll&#34;: scroll if scroll is not True else &#39;true&#39;}
+        return self._api_call(
+            http_verb=&#34;POST&#34;,
+            api_path=path,
+            params=params,
+            json=data
+        )
+
+    def sql(self,
+            project: str,
+            statement: str,
+            scroll=&#34;&#34;) -&gt; ApiResponse:
+        &#34;&#34;&#34;Executes a LifeOmic FHIR Service SQL request
+
+        Parameters
+        ----------
+        project : str
+            The target LifeOmic project identifier
+        statement : str
+            The SQL request statement
+        scroll
+            The scroll request parameter
+
+        Returns
+        -------
+        phc.ApiResponse
+            The API response
+        &#34;&#34;&#34;
+        path = f&#34;fhir-search/projects/{project}&#34;
+        headers = {&#34;Content-Type&#34;: &#34;text/plain&#34;}
+        params = {&#34;scroll&#34;: scroll if scroll is not True else &#39;true&#39;}
+        return self._api_call(
+            http_verb=&#34;POST&#34;,
+            api_path=path,
+            headers=headers,
+            params=params,
+            data=statement
+        )
 
     def execute_sql(
         self, project_id: str, statement: str, scroll=&#34;&#34;
@@ -1564,6 +1599,7 @@ Defaults to the current working directory.</dd>
         Returns:
             [List] -- Dictionary with query response
         &#34;&#34;&#34;
+        warnings.warn(&#39;Use the sql method instead&#39;, DeprecationWarning)
         return self._api_call(
             api_path=f&#34;fhir-search/projects/{project_id}&#34;,
             http_verb=&#34;POST&#34;,
@@ -1589,6 +1625,7 @@ Defaults to the current working directory.</dd>
         phc.ApiResponse
             The query response
         &#34;&#34;&#34;
+        warnings.warn(&#39;Use the dsl method instead&#39;, DeprecationWarning)
         return self._api_call(
             api_path=f&#34;fhir-search/projects/{project_id}&#34;,
             http_verb=&#34;POST&#34;,
@@ -1602,6 +1639,57 @@ Defaults to the current working directory.</dd>
 </ul>
 <h3>Methods</h3>
 <dl>
+<dt id="phc.services.Fhir.dsl"><code class="name flex">
+<span>def <span class="ident">dsl</span></span>(<span>self, project, data, scroll='')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Executes a LifeOmic FHIR Service DSL request</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project</code></strong> :&ensp;<code>str</code></dt>
+<dd>The target LifeOmic project identifier</dd>
+<dt><strong><code>data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The DSL request object</dd>
+<dt><strong><code>scroll</code></strong></dt>
+<dd>The scroll request parameter</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The API response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dsl(self, project: str, data: dict, scroll=&#34;&#34;):
+    &#34;&#34;&#34;Executes a LifeOmic FHIR Service DSL request
+
+    Parameters
+    ----------
+    project : str
+        The target LifeOmic project identifier
+    data : dict
+        The DSL request object
+    scroll
+        The scroll request parameter
+
+    Returns
+    -------
+    phc.ApiResponse
+        The API response
+    &#34;&#34;&#34;
+    path = f&#34;fhir-search/projects/{project}&#34;
+    scroll = scroll if scroll is not True else &#39;true&#39;
+    params = {&#34;scroll&#34;: scroll if scroll is not True else &#39;true&#39;}
+    return self._api_call(
+        http_verb=&#34;POST&#34;,
+        api_path=path,
+        params=params,
+        json=data
+    )</code></pre>
+</details>
+</dd>
 <dt id="phc.services.Fhir.execute_es"><code class="name flex">
 <span>def <span class="ident">execute_es</span></span>(<span>self, project_id, query, scroll='')</span>
 </code></dt>
@@ -1640,6 +1728,7 @@ Defaults to the current working directory.</dd>
     phc.ApiResponse
         The query response
     &#34;&#34;&#34;
+    warnings.warn(&#39;Use the dsl method instead&#39;, DeprecationWarning)
     return self._api_call(
         api_path=f&#34;fhir-search/projects/{project_id}&#34;,
         http_verb=&#34;POST&#34;,
@@ -1712,12 +1801,68 @@ Defaults to the current working directory.</dd>
     Returns:
         [List] -- Dictionary with query response
     &#34;&#34;&#34;
+    warnings.warn(&#39;Use the sql method instead&#39;, DeprecationWarning)
     return self._api_call(
         api_path=f&#34;fhir-search/projects/{project_id}&#34;,
         http_verb=&#34;POST&#34;,
         data=statement,
         headers={&#34;Content-Type&#34;: &#34;text/plain&#34;},
         params={&#34;scroll&#34;: scroll},
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Fhir.sql"><code class="name flex">
+<span>def <span class="ident">sql</span></span>(<span>self, project, statement, scroll='')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Executes a LifeOmic FHIR Service SQL request</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project</code></strong> :&ensp;<code>str</code></dt>
+<dd>The target LifeOmic project identifier</dd>
+<dt><strong><code>statement</code></strong> :&ensp;<code>str</code></dt>
+<dd>The SQL request statement</dd>
+<dt><strong><code>scroll</code></strong></dt>
+<dd>The scroll request parameter</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dd>The API response</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sql(self,
+        project: str,
+        statement: str,
+        scroll=&#34;&#34;) -&gt; ApiResponse:
+    &#34;&#34;&#34;Executes a LifeOmic FHIR Service SQL request
+
+    Parameters
+    ----------
+    project : str
+        The target LifeOmic project identifier
+    statement : str
+        The SQL request statement
+    scroll
+        The scroll request parameter
+
+    Returns
+    -------
+    phc.ApiResponse
+        The API response
+    &#34;&#34;&#34;
+    path = f&#34;fhir-search/projects/{project}&#34;
+    headers = {&#34;Content-Type&#34;: &#34;text/plain&#34;}
+    params = {&#34;scroll&#34;: scroll if scroll is not True else &#39;true&#39;}
+    return self._api_call(
+        http_verb=&#34;POST&#34;,
+        api_path=path,
+        headers=headers,
+        params=params,
+        data=statement
     )</code></pre>
 </details>
 </dd>
@@ -2750,7 +2895,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='8e220277-dabf-46ac-a9dc-2e9dd3f72d07', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='98da1811-ebfd-45cd-a015-f9d55437e06a', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Creates a genomic set</p>
@@ -3571,8 +3716,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <li>
 <h4><code><a title="phc.services.Fhir" href="#phc.services.Fhir">Fhir</a></code></h4>
 <ul class="">
+<li><code><a title="phc.services.Fhir.dsl" href="#phc.services.Fhir.dsl">dsl</a></code></li>
 <li><code><a title="phc.services.Fhir.execute_es" href="#phc.services.Fhir.execute_es">execute_es</a></code></li>
 <li><code><a title="phc.services.Fhir.execute_sql" href="#phc.services.Fhir.execute_sql">execute_sql</a></code></li>
+<li><code><a title="phc.services.Fhir.sql" href="#phc.services.Fhir.sql">sql</a></code></li>
 </ul>
 </li>
 <li>
