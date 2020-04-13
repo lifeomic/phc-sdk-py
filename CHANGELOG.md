@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Deprecates `execute_sql` and `execute_dsl` methods in `phc.services.Fhir`
+- Deprecates `execute_sql` and `execute_es` methods in `phc.services.Fhir`
 
 ## [0.12.2]  - 2020-03-25
 
