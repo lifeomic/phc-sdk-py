@@ -1,4 +1,4 @@
-name: PR Branch Build and Test
+name: Release SDK
 
 on:
   push:
