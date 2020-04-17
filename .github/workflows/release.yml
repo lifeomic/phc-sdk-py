@@ -16,10 +16,14 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: 3.7
-    - name: Build
+    - name: Publish to PyPi
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        pip install virtualenv twine
-        make test package doc
+        python -m pip install --upgrade pip
+        pip install virtualenv setuptools wheel twine
+        make test package doc deploy
     - name: Create Release
       uses: actions/create-release@latest
       env:
@@ -29,12 +33,6 @@ jobs:
         release_name: ${{ github.ref }}
         draft: false
         prerelease: false
-    - name: Publish to PyPi
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: |
-        make deploy
     - name: Deploy Docs
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
