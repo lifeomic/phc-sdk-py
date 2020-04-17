@@ -2,8 +2,6 @@ name: Release SDK
 
 on:
   push:
-    branches:
-      - master
     tags:
       - 'v*'
 
@@ -12,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Exit if not on master branch
+      if: endsWith(github.ref, 'master') == false
+      run: exit -1
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
       with:
