@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.5" />
+<meta name="generator" content="pdoc 0.8.1" />
 <title>phc.util API documentation</title>
 <meta name="description" content="Module contains utility classes" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
@@ -63,7 +63,7 @@ __pdoc__ = {&#34;data_lake_query&#34;: False, &#34;patient_filter_query_builder&
 <span>(</span><span>project_id, query, output_file_name)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Represents a data lake query</p>
+<div class="desc"><p>Represents a data lake query</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -72,7 +72,7 @@ __pdoc__ = {&#34;data_lake_query&#34;: False, &#34;patient_filter_query_builder&
 <dd>The query parameters</dd>
 <dt><strong><code>output_file_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the file where the results should be stored.</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -115,12 +115,12 @@ __pdoc__ = {&#34;data_lake_query&#34;: False, &#34;patient_filter_query_builder&
 <span>def <span class="ident">to_request_dict</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Converts the query into a query request dictionary.</p>
+<div class="desc"><p>Converts the query into a query request dictionary.</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>dict</code></dt>
 <dd>A dictionary that can be sent in a query request.</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -146,7 +146,7 @@ __pdoc__ = {&#34;data_lake_query&#34;: False, &#34;patient_filter_query_builder&
 <span>class <span class="ident">PatientFilterQueryBuilder</span></span>
 </code></dt>
 <dd>
-<section class="desc"><p>Top most query for subject searches.</p></section>
+<div class="desc"><p>Top most query for subject searches.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -202,12 +202,12 @@ __pdoc__ = {&#34;data_lake_query&#34;: False, &#34;patient_filter_query_builder&
 <span>def <span class="ident">patient</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Construct a query to search patients.</p>
+<div class="desc"><p>Construct a query to search patients.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.util.QueryResource" href="#phc.util.QueryResource"><code>QueryResource</code></a></dt>
+<dt><code><a title="phc.util.QueryResource" href="#phc.util.QueryResource">QueryResource</a></code></dt>
 <dd>The query resource</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -229,12 +229,12 @@ __pdoc__ = {&#34;data_lake_query&#34;: False, &#34;patient_filter_query_builder&
 <span>def <span class="ident">to_dict</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Converts the query into a dictionary</p>
+<div class="desc"><p>Converts the query into a dictionary</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>dict</code></dt>
 <dd>The query as a dictionary</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -267,8 +267,8 @@ __pdoc__ = {&#34;data_lake_query&#34;: False, &#34;patient_filter_query_builder&
 <span>class <span class="ident">QueryObservationProperty</span></span>
 </code></dt>
 <dd>
-<section class="desc"><p>Leaf most query builder class. E.g. <code>PatientFilterComponentQueryBuilder().foo(eq='bar')</code> will result
-on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></section>
+<div class="desc"><p>Leaf most query builder class. E.g. <code>PatientFilterComponentQueryBuilder().foo(eq='bar')</code> will result
+on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -338,11 +338,12 @@ on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></sec
 <span>def <span class="ident">to_dict</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<p class="inheritance">
-<em>Inherited from:</em>
-<code><a title="phc.util.patient_filter_query_builder.QueryProperty" href="patient_filter_query_builder.html#phc.util.patient_filter_query_builder.QueryProperty">QueryProperty</a></code>.<code><a title="phc.util.patient_filter_query_builder.QueryProperty.to_dict" href="patient_filter_query_builder.html#phc.util.patient_filter_query_builder.QueryProperty.to_dict">to_dict</a></code>
-</p>
-<section class="desc inherited"><p>Converts the query into a dictionary …</p></section>
+<div class="desc"><p>Converts the query into a dictionary</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>The query as a dictionary</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -376,7 +377,7 @@ on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></sec
 <span>def <span class="ident">with_components</span></span>(<span>self, components_properties)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Includes component query properties</p>
+<div class="desc"><p>Includes component query properties</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>components_properties</code></strong> :&ensp;<code>list</code></dt>
@@ -384,14 +385,14 @@ on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></sec
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.util.QueryObservationProperty" href="#phc.util.QueryObservationProperty"><code>QueryObservationProperty</code></a></dt>
+<dt><code><a title="phc.util.QueryObservationProperty" href="#phc.util.QueryObservationProperty">QueryObservationProperty</a></code></dt>
 <dd>This query property</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>TypeError</code></dt>
 <dd>Invalid input provided</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -429,8 +430,8 @@ on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></sec
 <span>class <span class="ident">QueryProperty</span></span>
 </code></dt>
 <dd>
-<section class="desc"><p>Leaf most query builder class. E.g. <code>PatientFilterComponentQueryBuilder().foo(eq='bar')</code> will result
-on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></section>
+<div class="desc"><p>Leaf most query builder class. E.g. <code>PatientFilterComponentQueryBuilder().foo(eq='bar')</code> will result
+on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -493,12 +494,12 @@ on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></sec
 <span>def <span class="ident">to_dict</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Converts the query into a dictionary</p>
+<div class="desc"><p>Converts the query into a dictionary</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>dict</code></dt>
 <dd>The query as a dictionary</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -520,7 +521,7 @@ on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></sec
 <span>class <span class="ident">QueryResource</span></span>
 </code></dt>
 <dd>
-<section class="desc"><p>Resource level builder class. 'observations', 'procedures' are considered as resources.</p></section>
+<div class="desc"><p>Resource level builder class. 'observations', 'procedures' are considered as resources.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -585,12 +586,12 @@ on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></sec
 <span>def <span class="ident">to_dict</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Converts the query into a dictionary</p>
+<div class="desc"><p>Converts the query into a dictionary</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>dict</code></dt>
 <dd>The query as a dictionary</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -616,7 +617,7 @@ on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></sec
 <span>def <span class="ident">with_observations</span></span>(<span>self, observation_properties)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Adds obervation properties</p>
+<div class="desc"><p>Adds obervation properties</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>observation_properties</code></strong> :&ensp;<code>list</code></dt>
@@ -624,14 +625,14 @@ on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></sec
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.util.QueryResource" href="#phc.util.QueryResource"><code>QueryResource</code></a></dt>
+<dt><code><a title="phc.util.QueryResource" href="#phc.util.QueryResource">QueryResource</a></code></dt>
 <dd>This query resource</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>TypeError</code></dt>
 <dd>Invalid input provided</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -725,7 +726,7 @@ on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></sec
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

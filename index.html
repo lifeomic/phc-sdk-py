@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.5" />
+<meta name="generator" content="pdoc 0.8.1" />
 <title>phc API documentation</title>
 <meta name="description" content="PHC SDK for Python …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
@@ -18,7 +18,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>phc</code></h1>
+<h1 class="title">Package <code>phc</code></h1>
 </header>
 <section id="section-intro">
 <h1 id="phc-sdk-for-python">PHC SDK for Python</h1>
@@ -57,13 +57,13 @@ The makefile will setup the environment for the targets listed below.</p>
 <pre><code class="bash">pip install phc
 </code></pre>
 <h3 id="usage">Usage</h3>
-<p>A <a title="phc.Session" href="#phc.Session"><code>Session</code></a> needs to be created first that stores the token and account information needed to access the PHC API.
+<p>A <code><a title="phc.Session" href="#phc.Session">Session</a></code> needs to be created first that stores the token and account information needed to access the PHC API.
 One can currently using API Key tokens generated from the PHC Account, or OAuth tokens generated using the <a href="https://github.com/lifeomic/cli">CLI</a>.</p>
 <pre><code class="python">from phc import Session
 
 session = Session(token=&lt;TOKEN VALUE&gt;, account=&quot;myaccount&quot;)
 </code></pre>
-<p>Once a <a title="phc.Session" href="#phc.Session"><code>Session</code></a> is created, you can then access the different parts of the platform.</p>
+<p>Once a <code><a title="phc.Session" href="#phc.Session">Session</a></code> is created, you can then access the different parts of the platform.</p>
 <pre><code class="python">from phc.services import Accounts
 
 accounts = Accounts(session)
@@ -115,15 +115,15 @@ __pdoc__ = {
 <dl>
 <dt><code class="name"><a title="phc.errors" href="errors.html">phc.errors</a></code></dt>
 <dd>
-<section class="desc"><p>A Python module for managing any client errors.</p></section>
+<div class="desc"><p>A Python module for managing any client errors.</p></div>
 </dd>
 <dt><code class="name"><a title="phc.services" href="services/index.html">phc.services</a></code></dt>
 <dd>
-<section class="desc"><p>Contains services for accessing different parts of the PHC platform.</p></section>
+<div class="desc"><p>Contains services for accessing different parts of the PHC platform.</p></div>
 </dd>
 <dt><code class="name"><a title="phc.util" href="util/index.html">phc.util</a></code></dt>
 <dd>
-<section class="desc"><p>Module contains utility classes</p></section>
+<div class="desc"><p>Module contains utility classes</p></div>
 </dd>
 </dl>
 </section>
@@ -136,20 +136,20 @@ __pdoc__ = {
 <dl>
 <dt id="phc.ApiResponse"><code class="flex name class">
 <span>class <span class="ident">ApiResponse</span></span>
-<span>(</span><span>*, client, http_verb, api_url, req_args, data, headers, status_code)</span>
+<span>(</span><span>*, client, http_verb: str, api_url: str, req_args: dict, data: [<class 'dict'>, <class 'str'>], headers: dict, status_code: int)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Represents an API response.</p>
+<div class="desc"><p>Represents an API response.</p>
 <h2 id="attributes">Attributes</h2>
 <dl>
 <dt><strong><code>nextPageToken</code></strong> :&ensp;<code>str</code></dt>
 <dd>The nextPageToken for a paged response</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code>&gt;&gt;&gt; res = files.get_list(project_id="1234")
+<pre><code class="python">&gt;&gt;&gt; res = files.get_list(project_id=&quot;1234&quot;)
 &gt;&gt;&gt; print(str(res))
 &gt;&gt;&gt; print(res.nextPageToken)
-</code></pre></section>
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -282,10 +282,10 @@ __pdoc__ = {
 <h3>Methods</h3>
 <dl>
 <dt id="phc.ApiResponse.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, key, default=None)</span>
+<span>def <span class="ident">get</span></span>(<span>self, key: str, default=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Retreives any key from the response data.</p>
+<div class="desc"><p>Retreives any key from the response data.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>key</code></strong> :&ensp;<code>str</code></dt>
@@ -302,7 +302,7 @@ __pdoc__ = {
 <dl>
 <dt><code>TypeError</code></dt>
 <dd>If the api response is text</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -334,15 +334,15 @@ __pdoc__ = {
 </details>
 </dd>
 <dt id="phc.ApiResponse.get_as_dataframe"><code class="name flex">
-<span>def <span class="ident">get_as_dataframe</span></span>(<span>self, key, mapFunc=None)</span>
+<span>def <span class="ident">get_as_dataframe</span></span>(<span>self, key: str, mapFunc: Callable[[Any], Any] = None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Retrieves any key as a Panda DataFrame</p>
+<div class="desc"><p>Retrieves any key as a Panda DataFrame</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>key</code></strong> :&ensp;<code>str</code></dt>
 <dd>The key to fetch</dd>
-<dt><strong><code>mapFunc</code></strong> :&ensp;<code>Callable</code>[[<code>Any</code>], <code>Any</code>], optional</dt>
+<dt><strong><code>mapFunc</code></strong> :&ensp;<code>Callable[[Any], Any]</code>, optional</dt>
 <dd>A transform function to apply to each item before inserting into the DataFrame, by default None</dd>
 </dl>
 <h2 id="returns">Returns</h2>
@@ -354,7 +354,7 @@ __pdoc__ = {
 <dl>
 <dt><code>ImportError</code></dt>
 <dd>If pandas is not installed</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -393,17 +393,17 @@ __pdoc__ = {
 <span>def <span class="ident">validate</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Check if the response from API was successful.</p>
+<div class="desc"><p>Check if the response from API was successful.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>This method returns it's own object. e.g. 'self'</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>ApiError</code></dt>
 <dd>The request to the API failed.</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -431,20 +431,20 @@ __pdoc__ = {
 </dd>
 <dt id="phc.Session"><code class="flex name class">
 <span>class <span class="ident">Session</span></span>
-<span>(</span><span>token=None, refresh_token=None, account=None)</span>
+<span>(</span><span>token: str = None, refresh_token: str = None, account: str = None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Represents a PHC API session</p>
+<div class="desc"><p>Represents a PHC API session</p>
 <p>Initailizes a Session with token and account credentials.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>token</code></strong> :&ensp;<code>str</code>, <code>required</code></dt>
+<dt><strong><code>token</code></strong> :&ensp;<code>str, required</code></dt>
 <dd>The PHC access token or API key, by default os.environ.get("PHC_ACCESS_TOKEN")</dd>
 <dt><strong><code>refrsh_token</code></strong> :&ensp;<code>str</code>, optional</dt>
 <dd>The PHC refresh token, by default os.environ.get("PHC_REFRESH_TOKEN")</dd>
-<dt><strong><code>account</code></strong> :&ensp;<code>str</code>, <code>required</code></dt>
+<dt><strong><code>account</code></strong> :&ensp;<code>str, required</code></dt>
 <dd>The PHC account ID, by default os.environ.get("PHC_ACCOUNT")</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -504,15 +504,15 @@ __pdoc__ = {
 <h3>Methods</h3>
 <dl>
 <dt id="phc.Session.is_expired"><code class="name flex">
-<span>def <span class="ident">is_expired</span></span>(<span>self)</span>
+<span>def <span class="ident">is_expired</span></span>(<span>self) -> bool</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Determines if the current access token is expired</p>
+<div class="desc"><p>Determines if the current access token is expired</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>bool</code></dt>
 <dd>True if there is no token or the token is expired, otherwise False</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -599,7 +599,7 @@ __pdoc__ = {
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

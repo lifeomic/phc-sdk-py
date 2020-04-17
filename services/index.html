@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.5" />
+<meta name="generator" content="pdoc 0.8.1" />
 <title>phc.services API documentation</title>
 <meta name="description" content="Contains services for accessing different parts of the PHC platform." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
@@ -71,13 +71,13 @@ __pdoc__ = {
 <dl>
 <dt id="phc.services.Accounts"><code class="flex name class">
 <span>class <span class="ident">Accounts</span></span>
-<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
+<span>(</span><span>session: phc.session.Session, run_async: bool = False, timeout: int = 30, trust_env: bool = False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Provides acccess to PHC accounts</p>
+<div class="desc"><p>Provides acccess to PHC accounts</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
+<dt><strong><code>session</code></strong> :&ensp;<code><a title="phc.Session" href="../index.html#phc.Session">Session</a></code></dt>
 <dd>The PHC session</dd>
 <dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
 <dd>True to return promises, False to return results (default is False)</dd>
@@ -85,7 +85,7 @@ __pdoc__ = {
 <dd>Operation timeout (default is 30)</dd>
 <dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -122,15 +122,15 @@ __pdoc__ = {
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Accounts.get_list"><code class="name flex">
-<span>def <span class="ident">get_list</span></span>(<span>self)</span>
+<span>def <span class="ident">get_list</span></span>(<span>self) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Fetches the list of accounts for the current session</p>
+<div class="desc"><p>Fetches the list of accounts for the current session</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The list accounts response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -150,13 +150,13 @@ __pdoc__ = {
 </dd>
 <dt id="phc.services.Analytics"><code class="flex name class">
 <span>class <span class="ident">Analytics</span></span>
-<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
+<span>(</span><span>session: phc.session.Session, run_async: bool = False, timeout: int = 30, trust_env: bool = False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Provides acccess to PHC Analytics and Data Lake</p>
+<div class="desc"><p>Provides acccess to PHC Analytics and Data Lake</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
+<dt><strong><code>session</code></strong> :&ensp;<code><a title="phc.Session" href="../index.html#phc.Session">Session</a></code></dt>
 <dd>The PHC session</dd>
 <dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
 <dd>True to return promises, False to return results (default is False)</dd>
@@ -164,7 +164,7 @@ __pdoc__ = {
 <dd>Operation timeout (default is 30)</dd>
 <dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -612,10 +612,10 @@ __pdoc__ = {
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Analytics.execute_data_lake_query"><code class="name flex">
-<span>def <span class="ident">execute_data_lake_query</span></span>(<span>self, query)</span>
+<span>def <span class="ident">execute_data_lake_query</span></span>(<span>self, query: phc.util.data_lake_query.DataLakeQuery) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Executes a data lake query</p>
+<div class="desc"><p>Executes a data lake query</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>query</code></strong> :&ensp;<code>util.DataLakeQuery</code></dt>
@@ -623,27 +623,27 @@ __pdoc__ = {
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The data lake query</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code>&gt;&gt;&gt; from phc import Session
+<pre><code class="python">&gt;&gt;&gt; from phc import Session
 &gt;&gt;&gt; from phc.services import Analytics
 &gt;&gt;&gt; from phc.util import DataLakeQuery
-
-&gt;&gt;&gt; session = Session()
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; session = Session()
 &gt;&gt;&gt; client = Analytics(session)
-
-&gt;&gt;&gt; project_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
-&gt;&gt;&gt; query_string = "SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'"
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; project_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
+&gt;&gt;&gt; query_string = &quot;SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'&quot;
 &gt;&gt;&gt; output_file_name = 'query-test-notebook'
 &gt;&gt;&gt; query = DataLakeQuery(project_id=project_id, query=query_string, output_file_name=output_file_name)
-
-&gt;&gt;&gt; query_id = client.execute_data_lake_query(query)
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; query_id = client.execute_data_lake_query(query)
 &gt;&gt;&gt; specific_query = client.get_data_lake_query(query_id)
 &gt;&gt;&gt; paginated_dataset_queries = client.list_data_lake_queries(project_id)
 &gt;&gt;&gt; print(query_id)
-</code></pre></section>
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -687,10 +687,10 @@ __pdoc__ = {
 </details>
 </dd>
 <dt id="phc.services.Analytics.execute_data_lake_query_to_dataframe"><code class="name flex">
-<span>def <span class="ident">execute_data_lake_query_to_dataframe</span></span>(<span>self, query, dest_dir='/home/travis/build/lifeomic/phc-sdk-py')</span>
+<span>def <span class="ident">execute_data_lake_query_to_dataframe</span></span>(<span>self, query: phc.util.data_lake_query.DataLakeQuery, dest_dir: str = '/home/runner/work/phc-sdk-py/phc-sdk-py')</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Executes a data lake query, downloads the result file and converts to a Pandas dataframe.</p>
+<div class="desc"><p>Executes a data lake query, downloads the result file and converts to a Pandas dataframe.</p>
 <p>To use this method, the 'pandas' module is required.
 Otherwise, an exception will be thrown.</p>
 <h2 id="parameters">Parameters</h2>
@@ -703,25 +703,25 @@ Defaults to the current working directory.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>asyncio.Future</code> || <code>pandas.DataFrame</code></dt>
+<dt><code>asyncio.Future || pandas.DataFrame</code></dt>
 <dd>A Future if run_async is True, the data lake query result contained in a Pandas dataframe otherwise.</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code>&gt;&gt;&gt; from phc import Session
+<pre><code class="python">&gt;&gt;&gt; from phc import Session
 &gt;&gt;&gt; from phc.services import Analytics
 &gt;&gt;&gt; from phc.util import DataLakeQuery
-
-&gt;&gt;&gt; session = Session()
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; session = Session()
 &gt;&gt;&gt; client = Analytics(session)
-
-&gt;&gt;&gt; project_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
-&gt;&gt;&gt; query_string = "SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'"
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; project_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
+&gt;&gt;&gt; query_string = &quot;SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'&quot;
 &gt;&gt;&gt; output_file_name = 'query-dataframe-test'
 &gt;&gt;&gt; query = DataLakeQuery(project_id=project_id, query=query_string, output_file_name=output_file_name)
-
-&gt;&gt;&gt; dataframe = client.execute_data_lake_query_to_dataframe(query)
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; dataframe = client.execute_data_lake_query_to_dataframe(query)
 &gt;&gt;&gt; dataframe.head()
-</code></pre></section>
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -780,10 +780,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.execute_sql"><code class="name flex">
-<span>def <span class="ident">execute_sql</span></span>(<span>self, statement, project_id=None, cohort_id=None)</span>
+<span>def <span class="ident">execute_sql</span></span>(<span>self, statement: str, project_id: str = None, cohort_id: str = None) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Executes a SQL query against Analytics</p>
+<div class="desc"><p>Executes a SQL query against Analytics</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -804,11 +804,11 @@ Defaults to the current working directory.</dd>
 <dd>If no project or cohort ID is provided</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code>&gt;&gt;&gt; from phc.services import Analytics
+<pre><code class="python">&gt;&gt;&gt; from phc.services import Analytics
 &gt;&gt;&gt; client = Analytics(session)
 &gt;&gt;&gt; res = client.execute_sql(cohort_id='5a07dedb-fa2a-4cb0-b662-95b23a050221', statement='SELECT patients from patient')
-&gt;&gt;&gt; print(f"Found {len(res.get('data').get('patients'))} patients")
-</code></pre></section>
+&gt;&gt;&gt; print(f&quot;Found {len(res.get('data').get('patients'))} patients&quot;)
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -860,10 +860,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.get_data_lake_query"><code class="name flex">
-<span>def <span class="ident">get_data_lake_query</span></span>(<span>self, query_id)</span>
+<span>def <span class="ident">get_data_lake_query</span></span>(<span>self, query_id: str) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Fetches a data lake query</p>
+<div class="desc"><p>Fetches a data lake query</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>query_id</code></strong> :&ensp;<code>string</code></dt>
@@ -871,9 +871,9 @@ Defaults to the current working directory.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The data lake query get response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -895,10 +895,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.get_data_lake_schema"><code class="name flex">
-<span>def <span class="ident">get_data_lake_schema</span></span>(<span>self, project_id, table)</span>
+<span>def <span class="ident">get_data_lake_schema</span></span>(<span>self, project_id: str, table: str) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Fetches the schema for a specific data lake table</p>
+<div class="desc"><p>Fetches the schema for a specific data lake table</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>string</code></dt>
@@ -908,9 +908,9 @@ Defaults to the current working directory.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>Schema of the specified table</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -939,10 +939,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.get_patients"><code class="name flex">
-<span>def <span class="ident">get_patients</span></span>(<span>self, project_id, query_builder)</span>
+<span>def <span class="ident">get_patients</span></span>(<span>self, project_id: str, query_builder: phc.util.patient_filter_query_builder.PatientFilterQueryBuilder) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Executes a query that returns patients</p>
+<div class="desc"><p>Executes a query that returns patients</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -956,14 +956,14 @@ Defaults to the current working directory.</dd>
 <dd>The list of patients</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code>&gt;&gt;&gt; from phc.services import Analytics
+<pre><code class="python">&gt;&gt;&gt; from phc.services import Analytics
 &gt;&gt;&gt; from phc.util import PatientFilterQueryBuilder
 &gt;&gt;&gt; client = Analytics(session)
 &gt;&gt;&gt; search = PatientFilterQueryBuilder()
 &gt;&gt;&gt; search.patient()                 .observations()                 .code(eq='11142-7')                 .system(eq='http://loinc.org')                 .value_quantity(lt=40)
 &gt;&gt;&gt; res = client.get_patients(project='5a07dedb-fa2a-4cb0-b662-95b23a050221', query_builder=search)
-&gt;&gt;&gt; print(f"Found {len(res)} patients")
-</code></pre></section>
+&gt;&gt;&gt; print(f&quot;Found {len(res)} patients&quot;)
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1009,10 +1009,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.list_data_lake_queries"><code class="name flex">
-<span>def <span class="ident">list_data_lake_queries</span></span>(<span>self, project_id, page_size=25, next_page_token=None)</span>
+<span>def <span class="ident">list_data_lake_queries</span></span>(<span>self, project_id: str, page_size: int = 25, next_page_token: str = None) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Fetches a list of data lake queries</p>
+<div class="desc"><p>Fetches a list of data lake queries</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -1024,9 +1024,9 @@ Defaults to the current working directory.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The data lake list query response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1060,10 +1060,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.list_data_lake_schemas"><code class="name flex">
-<span>def <span class="ident">list_data_lake_schemas</span></span>(<span>self, project_id)</span>
+<span>def <span class="ident">list_data_lake_schemas</span></span>(<span>self, project_id: str) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Fetches the data lake table schemas</p>
+<div class="desc"><p>Fetches the data lake table schemas</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>string</code></dt>
@@ -1071,9 +1071,9 @@ Defaults to the current working directory.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The schema for each data lake table</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1096,10 +1096,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.load_data_lake_result_to_dataframe"><code class="name flex">
-<span>def <span class="ident">load_data_lake_result_to_dataframe</span></span>(<span>self, query_id, dest_dir='/home/travis/build/lifeomic/phc-sdk-py')</span>
+<span>def <span class="ident">load_data_lake_result_to_dataframe</span></span>(<span>self, query_id: str, dest_dir: str = '/home/runner/work/phc-sdk-py/phc-sdk-py')</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Downloads the result file of a query and converts to a Pandas dataframe.</p>
+<div class="desc"><p>Downloads the result file of a query and converts to a Pandas dataframe.</p>
 <p>To use this method, the 'pandas' module is required.
 Otherwise, an exception will be thrown.</p>
 <h2 id="parameters">Parameters</h2>
@@ -1112,9 +1112,9 @@ Defaults to the current working directory.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>asyncio.Future</code> || <code>pandas.DataFrame</code></dt>
+<dt><code>asyncio.Future || pandas.DataFrame</code></dt>
 <dd>A Future if run_async is True, the data lake query result contained in a Pandas dataframe otherwise.</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1159,13 +1159,13 @@ Defaults to the current working directory.</dd>
 </dd>
 <dt id="phc.services.Cohorts"><code class="flex name class">
 <span>class <span class="ident">Cohorts</span></span>
-<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
+<span>(</span><span>session: phc.session.Session, run_async: bool = False, timeout: int = 30, trust_env: bool = False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Provides acccess to PHC cohorts</p>
+<div class="desc"><p>Provides acccess to PHC cohorts</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
+<dt><strong><code>session</code></strong> :&ensp;<code><a title="phc.Session" href="../index.html#phc.Session">Session</a></code></dt>
 <dd>The PHC session</dd>
 <dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
 <dd>True to return promises, False to return results (default is False)</dd>
@@ -1173,7 +1173,7 @@ Defaults to the current working directory.</dd>
 <dd>Operation timeout (default is 30)</dd>
 <dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1301,10 +1301,10 @@ Defaults to the current working directory.</dd>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Cohorts.create"><code class="name flex">
-<span>def <span class="ident">create</span></span>(<span>self, project_id, name, queries, description=None)</span>
+<span>def <span class="ident">create</span></span>(<span>self, project_id: str, name: str, queries: list, description: str = None) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Creates a cohort</p>
+<div class="desc"><p>Creates a cohort</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -1318,9 +1318,9 @@ Defaults to the current working directory.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The create cohort response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1357,10 +1357,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Cohorts.delete"><code class="name flex">
-<span>def <span class="ident">delete</span></span>(<span>self, cohort_id)</span>
+<span>def <span class="ident">delete</span></span>(<span>self, cohort_id: str) -> bool</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Delete a cohort</p>
+<div class="desc"><p>Delete a cohort</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>cohort_id</code></strong> :&ensp;<code>str</code></dt>
@@ -1370,7 +1370,7 @@ Defaults to the current working directory.</dd>
 <dl>
 <dt><code>bool</code></dt>
 <dd>True if the delete succeeeds, otherwise False</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1397,10 +1397,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Cohorts.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, cohort_id)</span>
+<span>def <span class="ident">get</span></span>(<span>self, cohort_id) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Fetch a cohort by id</p>
+<div class="desc"><p>Fetch a cohort by id</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>cohort_id</code></strong> :&ensp;<code>str</code></dt>
@@ -1408,9 +1408,9 @@ Defaults to the current working directory.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The get cohort response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1432,10 +1432,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Cohorts.get_list"><code class="name flex">
-<span>def <span class="ident">get_list</span></span>(<span>self, project_id, page_size=None, next_page_token=None, name=None)</span>
+<span>def <span class="ident">get_list</span></span>(<span>self, project_id: str, page_size: int = None, next_page_token: str = None, name: str = None) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Fetch a list of cohorts in a project</p>
+<div class="desc"><p>Fetch a list of cohorts in a project</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -1449,9 +1449,9 @@ Defaults to the current working directory.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The list cohorts response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1497,10 +1497,10 @@ Defaults to the current working directory.</dd>
 </dd>
 <dt id="phc.services.Fhir"><code class="flex name class">
 <span>class <span class="ident">Fhir</span></span>
-<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
+<span>(</span><span>session: phc.session.Session, run_async: bool = False, timeout: int = 30, trust_env: bool = False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Provides bindings to the LifeOmic FHIR Service APIs</p></section>
+<div class="desc"><p>Provides bindings to the LifeOmic FHIR Service APIs</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1640,10 +1640,10 @@ Defaults to the current working directory.</dd>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Fhir.dsl"><code class="name flex">
-<span>def <span class="ident">dsl</span></span>(<span>self, project, data, scroll='')</span>
+<span>def <span class="ident">dsl</span></span>(<span>self, project: str, data: dict, scroll='')</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Executes a LifeOmic FHIR Service DSL request</p>
+<div class="desc"><p>Executes a LifeOmic FHIR Service DSL request</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project</code></strong> :&ensp;<code>str</code></dt>
@@ -1655,9 +1655,9 @@ Defaults to the current working directory.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The API response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1691,10 +1691,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Fhir.execute_es"><code class="name flex">
-<span>def <span class="ident">execute_es</span></span>(<span>self, project_id, query, scroll='')</span>
+<span>def <span class="ident">execute_es</span></span>(<span>self, project_id: str, query: dict, scroll='') -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Executes an elasticsearch query against fhir-searh-service</p>
+<div class="desc"><p>Executes an elasticsearch query against fhir-searh-service</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -1704,9 +1704,9 @@ Defaults to the current working directory.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The query response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1738,10 +1738,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Fhir.execute_sql"><code class="name flex">
-<span>def <span class="ident">execute_sql</span></span>(<span>self, project_id, statement, scroll='')</span>
+<span>def <span class="ident">execute_sql</span></span>(<span>self, project_id: str, statement: str, scroll='') -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Executes an SQL query against fhir-searh-service</p>
+<div class="desc"><p>Executes an SQL query against fhir-searh-service</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -1751,19 +1751,19 @@ Defaults to the current working directory.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The query response.</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code>&gt;&gt;&gt; import pandas as pd
+<pre><code class="python">&gt;&gt;&gt; import pandas as pd
 &gt;&gt;&gt; from phc.services import Fhir
 &gt;&gt;&gt; fhir = Fhir(session)
 &gt;&gt;&gt; res = fhir.execute_sql(project_id='19e34782-91c4-4143-aaee-2ba81ed0b206',
                statement='SELECT * from patient LIMIT 0,5000')
-
-&gt;&gt;&gt; resources = list(map(lambda r: r.get("_source"), res.get("hits").get("hits")))
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; resources = list(map(lambda r: r.get(&quot;_source&quot;), res.get(&quot;hits&quot;).get(&quot;hits&quot;)))
 &gt;&gt;&gt; df = pd.DataFrame(resources)
-</code></pre></section>
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1812,10 +1812,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Fhir.sql"><code class="name flex">
-<span>def <span class="ident">sql</span></span>(<span>self, project, statement, scroll='')</span>
+<span>def <span class="ident">sql</span></span>(<span>self, project: str, statement: str, scroll='') -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Executes a LifeOmic FHIR Service SQL request</p>
+<div class="desc"><p>Executes a LifeOmic FHIR Service SQL request</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project</code></strong> :&ensp;<code>str</code></dt>
@@ -1827,9 +1827,9 @@ Defaults to the current working directory.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The API response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1870,13 +1870,13 @@ Defaults to the current working directory.</dd>
 </dd>
 <dt id="phc.services.Files"><code class="flex name class">
 <span>class <span class="ident">Files</span></span>
-<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
+<span>(</span><span>session: phc.session.Session, run_async: bool = False, timeout: int = 30, trust_env: bool = False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Provides acccess to PHC files</p>
+<div class="desc"><p>Provides acccess to PHC files</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
+<dt><strong><code>session</code></strong> :&ensp;<code><a title="phc.Session" href="../index.html#phc.Session">Session</a></code></dt>
 <dd>The PHC session</dd>
 <dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
 <dd>True to return promises, False to return results (default is False)</dd>
@@ -1884,7 +1884,7 @@ Defaults to the current working directory.</dd>
 <dd>Operation timeout (default is 30)</dd>
 <dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2171,10 +2171,10 @@ Defaults to the current working directory.</dd>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Files.delete"><code class="name flex">
-<span>def <span class="ident">delete</span></span>(<span>self, file_id)</span>
+<span>def <span class="ident">delete</span></span>(<span>self, file_id: str) -> bool</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Delete a file</p>
+<div class="desc"><p>Delete a file</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>file_id</code></strong> :&ensp;<code>str</code></dt>
@@ -2184,7 +2184,7 @@ Defaults to the current working directory.</dd>
 <dl>
 <dt><code>bool</code></dt>
 <dd>True if the delete succeeeds, otherwise False</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2209,10 +2209,10 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Files.download"><code class="name flex">
-<span>def <span class="ident">download</span></span>(<span>self, file_id, dest_dir='/home/travis/build/lifeomic/phc-sdk-py')</span>
+<span>def <span class="ident">download</span></span>(<span>self, file_id: str, dest_dir: str = '/home/runner/work/phc-sdk-py/phc-sdk-py') -> NoneType</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Download a file</p>
+<div class="desc"><p>Download a file</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>file_id</code></strong> :&ensp;<code>str</code></dt>
@@ -2222,10 +2222,10 @@ Defaults to the current working directory.</dd>
 Defaults to the current working directory</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code>&gt;&gt;&gt; from phc.services import Files
+<pre><code class="python">&gt;&gt;&gt; from phc.services import Files
 &gt;&gt;&gt; files = files(session)
-&gt;&gt;&gt; files.download(file_id="db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3", dest_dir="./mydata")
-</code></pre></section>
+&gt;&gt;&gt; files.download(file_id=&quot;db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3&quot;, dest_dir=&quot;./mydata&quot;)
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2263,10 +2263,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Files.exists"><code class="name flex">
-<span>def <span class="ident">exists</span></span>(<span>self, file_id)</span>
+<span>def <span class="ident">exists</span></span>(<span>self, file_id: str) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Check if a file exists by id</p>
+<div class="desc"><p>Check if a file exists by id</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>file_id</code></strong> :&ensp;<code>str</code></dt>
@@ -2276,7 +2276,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dl>
 <dt><code>bool</code></dt>
 <dd>True if the file exists, false otherwise</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2304,10 +2304,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Files.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, file_id)</span>
+<span>def <span class="ident">get</span></span>(<span>self, file_id: str) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Fetch a file by id</p>
+<div class="desc"><p>Fetch a file by id</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>file_id</code></strong> :&ensp;<code>str</code></dt>
@@ -2315,9 +2315,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The get file response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2339,10 +2339,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Files.get_list"><code class="name flex">
-<span>def <span class="ident">get_list</span></span>(<span>self, project_id, folder=None, page_size=None, next_page_token=None)</span>
+<span>def <span class="ident">get_list</span></span>(<span>self, project_id: str, folder: str = None, page_size: int = None, next_page_token: str = None) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Fetch a list of files in a project</p>
+<div class="desc"><p>Fetch a list of files in a project</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -2356,9 +2356,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The list files response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2403,10 +2403,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Files.update"><code class="name flex">
-<span>def <span class="ident">update</span></span>(<span>self, file_id, project_id=None, name=None)</span>
+<span>def <span class="ident">update</span></span>(<span>self, file_id: str, project_id: str = None, name: str = None) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Update a files by moving it to a new project or by renaming it.</p>
+<div class="desc"><p>Update a files by moving it to a new project or by renaming it.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>file_id</code></strong> :&ensp;<code>str</code></dt>
@@ -2418,9 +2418,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The update file response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2461,10 +2461,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Files.upload"><code class="name flex">
-<span>def <span class="ident">upload</span></span>(<span>self, project_id, source, file_name=None, overwrite=False)</span>
+<span>def <span class="ident">upload</span></span>(<span>self, project_id: str, source: str, file_name: str = None, overwrite: bool = False) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Upload a file.</p>
+<div class="desc"><p>Upload a file.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -2482,10 +2482,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dd>The upload file response</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code>&gt;&gt;&gt; from phc.services import Files
+<pre><code class="python">&gt;&gt;&gt; from phc.services import Files
 &gt;&gt;&gt; files = files(session)
-&gt;&gt;&gt; files.upload(project_id="db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3", source="./myfile.txt", overwrite=True)
-</code></pre></section>
+&gt;&gt;&gt; files.upload(project_id=&quot;db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3&quot;, source=&quot;./myfile.txt&quot;, overwrite=True)
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2595,13 +2595,13 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </dd>
 <dt id="phc.services.Genomics"><code class="flex name class">
 <span>class <span class="ident">Genomics</span></span>
-<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
+<span>(</span><span>session: phc.session.Session, run_async: bool = False, timeout: int = 30, trust_env: bool = False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Provides acccess to PHC genomic resources</p>
+<div class="desc"><p>Provides acccess to PHC genomic resources</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
+<dt><strong><code>session</code></strong> :&ensp;<code><a title="phc.Session" href="../index.html#phc.Session">Session</a></code></dt>
 <dd>The PHC session</dd>
 <dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
 <dd>True to return promises, False to return results (default is False)</dd>
@@ -2609,7 +2609,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dd>Operation timeout (default is 30)</dd>
 <dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2877,28 +2877,28 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dl>
 <dt id="phc.services.Genomics.Reference"><code class="name">var <span class="ident">Reference</span></code></dt>
 <dd>
-<section class="desc"><p>An enumeration.</p></section>
+<div class="desc"><p>An enumeration.</p></div>
 </dd>
 <dt id="phc.services.Genomics.SequenceType"><code class="name">var <span class="ident">SequenceType</span></code></dt>
 <dd>
-<section class="desc"><p>An enumeration.</p></section>
+<div class="desc"><p>An enumeration.</p></div>
 </dd>
 <dt id="phc.services.Genomics.SetType"><code class="name">var <span class="ident">SetType</span></code></dt>
 <dd>
-<section class="desc"><p>An enumeration.</p></section>
+<div class="desc"><p>An enumeration.</p></div>
 </dd>
 <dt id="phc.services.Genomics.Status"><code class="name">var <span class="ident">Status</span></code></dt>
 <dd>
-<section class="desc"><p>An enumeration.</p></section>
+<div class="desc"><p>An enumeration.</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type, project_id, name, file_id, patient_id, reference, sequence_type, test_type, sequence_id='98da1811-ebfd-45cd-a015-f9d55437e06a', indexed_date=None, performer_id=None, test_id=None, update_sample=False, pass_filter=False, output_vcf_name=None)</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = 'c59b6f5b-abe9-4fc9-a8b8-a75d98fa1744', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Creates a genomic set</p>
+<div class="desc"><p>Creates a genomic set</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>set_type</code></strong> :&ensp;<code>SetType</code></dt>
@@ -2936,7 +2936,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dl>
 <dt><code>ApiResponse</code></dt>
 <dd>The create set response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3030,10 +3030,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Genomics.delete_set"><code class="name flex">
-<span>def <span class="ident">delete_set</span></span>(<span>self, set_type, set_id)</span>
+<span>def <span class="ident">delete_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, set_id: str) -> bool</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Delete a genomic set</p>
+<div class="desc"><p>Delete a genomic set</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>set_type</code></strong> :&ensp;<code>SetType</code></dt>
@@ -3045,7 +3045,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dl>
 <dt><code>bool</code></dt>
 <dd>True if the delete succeeeds, otherwise False</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3074,10 +3074,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Genomics.delete_test"><code class="name flex">
-<span>def <span class="ident">delete_test</span></span>(<span>self, project_id, test_id)</span>
+<span>def <span class="ident">delete_test</span></span>(<span>self, project_id: str, test_id: str) -> bool</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Delete a genomic test</p>
+<div class="desc"><p>Delete a genomic test</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>SetType</code></dt>
@@ -3089,7 +3089,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dl>
 <dt><code>bool</code></dt>
 <dd>True if the delete succeeeds, otherwise False</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3119,10 +3119,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Genomics.get_set"><code class="name flex">
-<span>def <span class="ident">get_set</span></span>(<span>self, set_type, set_id)</span>
+<span>def <span class="ident">get_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, set_id: str) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Fetch a genomic set</p>
+<div class="desc"><p>Fetch a genomic set</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>set_type</code></strong> :&ensp;<code>SetType</code></dt>
@@ -3134,7 +3134,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dl>
 <dt><code>ApiResponse</code></dt>
 <dd>The fetch response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3158,10 +3158,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Genomics.list_sets"><code class="name flex">
-<span>def <span class="ident">list_sets</span></span>(<span>self, set_type, project_id, sequence_id=None, patient_id=None, status=None, next_page_token=None, page_size=50)</span>
+<span>def <span class="ident">list_sets</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, sequence_id: str = None, patient_id: str = None, status: phc.services.genomics.Genomics.Status = None, next_page_token: str = None, page_size: int = 50) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>List genomic sets</p>
+<div class="desc"><p>List genomic sets</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>set_type</code></strong> :&ensp;<code>SetType</code></dt>
@@ -3183,7 +3183,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dl>
 <dt><code>ApiResponse</code></dt>
 <dd>The list sets response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3238,10 +3238,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Genomics.list_tests"><code class="name flex">
-<span>def <span class="ident">list_tests</span></span>(<span>self, project_id, patient_id)</span>
+<span>def <span class="ident">list_tests</span></span>(<span>self, project_id: str, patient_id: str) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>List tests for a patient</p>
+<div class="desc"><p>List tests for a patient</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -3253,7 +3253,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dl>
 <dt><code>ApiResponse</code></dt>
 <dd>The list tests response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3283,13 +3283,13 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </dd>
 <dt id="phc.services.Projects"><code class="flex name class">
 <span>class <span class="ident">Projects</span></span>
-<span>(</span><span>session, run_async=False, timeout=30, trust_env=False)</span>
+<span>(</span><span>session: phc.session.Session, run_async: bool = False, timeout: int = 30, trust_env: bool = False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Provides acccess to PHC projects</p>
+<div class="desc"><p>Provides acccess to PHC projects</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>session</code></strong> :&ensp;<a title="phc.Session" href="../index.html#phc.Session"><code>Session</code></a></dt>
+<dt><strong><code>session</code></strong> :&ensp;<code><a title="phc.Session" href="../index.html#phc.Session">Session</a></code></dt>
 <dd>The PHC session</dd>
 <dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
 <dd>True to return promises, False to return results (default is False)</dd>
@@ -3297,7 +3297,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dd>Operation timeout (default is 30)</dd>
 <dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3438,10 +3438,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Projects.create"><code class="name flex">
-<span>def <span class="ident">create</span></span>(<span>self, name, description=None)</span>
+<span>def <span class="ident">create</span></span>(<span>self, name: str, description: str = None) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Creates a project</p>
+<div class="desc"><p>Creates a project</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
@@ -3451,9 +3451,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The create project response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3480,10 +3480,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Projects.delete"><code class="name flex">
-<span>def <span class="ident">delete</span></span>(<span>self, project_id)</span>
+<span>def <span class="ident">delete</span></span>(<span>self, project_id: str) -> bool</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Delete a project</p>
+<div class="desc"><p>Delete a project</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -3493,7 +3493,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dl>
 <dt><code>bool</code></dt>
 <dd>True if the delete succeeeds, otherwise False</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3520,10 +3520,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Projects.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, project_id)</span>
+<span>def <span class="ident">get</span></span>(<span>self, project_id) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Fetch a project by id</p>
+<div class="desc"><p>Fetch a project by id</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -3531,9 +3531,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The get project response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3555,10 +3555,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Projects.get_list"><code class="name flex">
-<span>def <span class="ident">get_list</span></span>(<span>self, page_size=None, next_page_token=None, name=None)</span>
+<span>def <span class="ident">get_list</span></span>(<span>self, page_size: int = None, next_page_token: str = None, name: str = None) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Fetch a list of projects in an account</p>
+<div class="desc"><p>Fetch a list of projects in an account</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>page_size</code></strong> :&ensp;<code>int</code>, optional</dt>
@@ -3570,9 +3570,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The list projects response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3612,10 +3612,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Projects.update"><code class="name flex">
-<span>def <span class="ident">update</span></span>(<span>self, project_id, name, description=None)</span>
+<span>def <span class="ident">update</span></span>(<span>self, project_id: str, name: str, description: str = None) -> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Update a project</p>
+<div class="desc"><p>Update a project</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt>project_id : str</dt>
@@ -3627,9 +3627,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse"><code>ApiResponse</code></a></dt>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
 <dd>The update project response</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3761,7 +3761,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>
