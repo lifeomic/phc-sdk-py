@@ -16,4 +16,5 @@ jobs:
         python-version: 3.7
     - name: Install dependencies
       run: |
+        pip install virtualenv
         make test package
