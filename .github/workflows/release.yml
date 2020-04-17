@@ -18,7 +18,7 @@ jobs:
         python-version: 3.7
     - name: Build
       run: |
-        pip install virtualenv
+        pip install virtualenv twine
         make test package doc
     - name: Create Release
       uses: actions/create-release@latest
