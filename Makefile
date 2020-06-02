@@ -1,7 +1,7 @@
 PYTHON_MODULES := phc
 PYTHONPATH := .
 VENV := .venv
-NOSE := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/nosetests
+PYTEST := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/pytest
 FLAKE8 := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/flake8
 PYTHON := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/python
 BLACK := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/black
@@ -38,7 +38,7 @@ doc: venv
 	cp doc/favicon.ico doc/build/phc/favicon.ico
 
 test: lint
-	$(NOSE) -v tests
+	$(PYTEST)
 
 package: venv
 	$(PYTHON) setup.py sdist bdist_wheel
