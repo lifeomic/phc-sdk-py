@@ -1,5 +1,5 @@
 import pandas as pd
-from phc.easy.patients.codeable import expand_extension, concat_dicts
+from phc.easy.codeable import expand_extension, concat_dicts
 
 
 def expand_address_attr(key, attr_value):

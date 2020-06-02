@@ -93,29 +93,6 @@ def generic_codeable_to_dict(codeable_dict, index):
     return {}
 
 
-def expand_codeable_column(codeable_col):
-    "Convert a pandas dictionary column with codeable data to a data frame"
-
-    def codeable_values(codeables):
-        if type(codeables) is list:
-            return codeables
-        elif type(codeables) is dict and type(codeables.get('tag')) is list:
-            return codeables.get('tag')
-        elif type(codeables) is dict:
-            return [codeables]
-        else:
-            return []
-
-    values = [
-        concat_dicts([
-            generic_codeable_to_dict(codeable, index)
-            for index, codeable in enumerate(codeable_values(codeables))
-        ]) for codeables in codeable_col.values
-    ]
-
-    return pd.DataFrame(values)
-
-
 def join_underscore(values):
     return '_'.join([value for value in values if len(value) > 0])
 
@@ -136,10 +113,7 @@ def expand_url_dict(codeable_dict, prefix=''):
 
     Example output:
 
-        {
-          'hl7_org_fhir_StructureDefinition_geolocation_latitude_valueDecimal': -71.058706,
-          'hl7_org_fhir_StructureDefinition_geolocation_longitude_valueDecimal': 42.42938
-        }
+
 
     """
     if 'url' not in codeable_dict.keys():
@@ -166,3 +140,26 @@ def expand_extension(codeable_dict, prefix=''):
             expand_url_dict(nested_codeable_dict, prefix)
         ]) for nested_codeable_dict in extensions
     ])
+
+
+def expand_codeable_column(codeable_col):
+    "Convert a pandas dictionary column with codeable data to a data frame"
+
+    def codeable_values(codeables):
+        if type(codeables) is list:
+            return codeables
+        elif type(codeables) is dict and type(codeables.get('tag')) is list:
+            return codeables.get('tag')
+        elif type(codeables) is dict:
+            return [codeables]
+        else:
+            return []
+
+    values = [
+        concat_dicts([
+            generic_codeable_to_dict(codeable, index)
+            for index, codeable in enumerate(codeable_values(codeables))
+        ]) for codeables in codeable_col.values
+    ]
+
+    return pd.DataFrame(values)
