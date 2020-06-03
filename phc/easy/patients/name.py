@@ -5,6 +5,8 @@ def expand_name_value(value):
     if type(value) is not list:
         return {}
 
+    assert len(value) == 1
+
     return {**{f'given_name_{index}': given
                for index, given
                in enumerate(value[0]['given'])},

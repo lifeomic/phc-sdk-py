@@ -1,9 +1,10 @@
 import os
 import re
 import pandas as pd
-from functools import reduce
 from phc import Session
 from phc.services import Fhir
+from phc.easy.util import (join_underscore, without_keys, concat_dicts,
+                           prefix_dict_keys)
 
 
 def system_to_column(system):
@@ -33,11 +34,6 @@ def coding_to_str(value):
     ])
 
 
-def concat_dicts(dicts):
-    "Concatenate list of dictionaries"
-    return reduce(lambda acc, dictionary: {**acc, **dictionary}, dicts, {})
-
-
 def type_and_value_to_dict(codeable):
     "Convert dictionary of type and value to flat dictionary"
     return {coding_to_str(codeable['type']): codeable['value']}
@@ -62,60 +58,53 @@ def value_with_extras_to_dict(codeable):
     return {**attrs, system: codeable['value']}
 
 
-def generic_codeable_to_dict(codeable_dict, index):
+def tag_codeable_to_dict(codeable_dict):
+    codeable_dicts = codeable_dict['tag']
+
+    return {
+        **prefix_dict_keys(without_keys(codeable_dict, ['tag']), 'tag'),
+        **concat_dicts(map(generic_codeable_to_dict, codeable_dicts),
+                       prefix='tag')
+    }
+
+
+def generic_codeable_to_dict(codeable_dict, prefix=''):
     "Convert any type of dictionary that contains code data to a flat dictionary"
+
+    def prefixer(dictionary):
+        return prefix_dict_keys(dictionary, prefix)
+
     if 'type' in codeable_dict and 'value' in codeable_dict:
-        return type_and_value_to_dict(codeable_dict)
+        return prefixer(type_and_value_to_dict(codeable_dict))
 
     if 'valueCodeableConcept' in codeable_dict:
-        return value_concept_to_dict(codeable_dict)
+        return prefixer(value_concept_to_dict(codeable_dict))
 
     if 'valueString' in codeable_dict:
-        return value_string_to_dict(codeable_dict)
+        return prefixer(value_string_to_dict(codeable_dict))
 
     if 'system' in codeable_dict and 'code' in codeable_dict:
-        return {
-            system_to_column(codeable_dict['system']): codeable_dict['code']
-        }
+        return prefixer(
+            {system_to_column(codeable_dict['system']): codeable_dict['code']})
 
     if 'system' in codeable_dict and 'value' in codeable_dict:
-        return value_with_extras_to_dict(codeable_dict)
+        return prefixer(value_with_extras_to_dict(codeable_dict))
+
+    if 'tag' in codeable_dict:
+        return prefixer(tag_codeable_to_dict(codeable_dict))
 
     keys = codeable_dict.keys()
 
-    # TODO: Include column name to make this unique
     if len(keys) == 1 and 'url' in codeable_dict:
-        return {f'url_{index}': system_to_column(codeable_dict['url'])}
+        return prefixer(
+            {'url': system_to_column(codeable_dict['url'])})
 
-    print('Unknown')
-    print(codeable_dict)
+    print('Unknown codeable type', codeable_dict)
 
     return {}
 
 
-def join_underscore(values):
-    return '_'.join([value for value in values if len(value) > 0])
-
-
-def without_keys(dictionary, keys):
-    return {k: v for k, v in dictionary.items() if k not in keys}
-
-
 def expand_url_dict(codeable_dict, prefix=''):
-    """
-
-    Example input:
-
-        {
-          'url': 'http://hl7.org/fhir/StructureDefinition/geolocation',
-          'extension': [{'url': 'latitude', 'valueDecimal': -71.058706}, {'url': 'longitude', 'valueDecimal': 42.42938}]
-        }
-
-    Example output:
-
-
-
-    """
     if 'url' not in codeable_dict.keys():
         return {}
 

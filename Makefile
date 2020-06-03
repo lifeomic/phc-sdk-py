@@ -2,6 +2,7 @@ PYTHON_MODULES := phc
 PYTHONPATH := .
 VENV := .venv
 PYTEST := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/pytest
+PTW := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/ptw
 FLAKE8 := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/flake8
 PYTHON := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/python
 BLACK := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/black
@@ -39,6 +40,9 @@ doc: venv
 
 test: lint
 	$(PYTEST)
+
+test-watch: lint
+	$(PTW)
 
 package: venv
 	$(PYTHON) setup.py sdist bdist_wheel
