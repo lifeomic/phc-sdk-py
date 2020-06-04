@@ -13,6 +13,7 @@ class Patient:
     def get_data_frame(account: str,
                        project_id: str,
                        limit: int,
+                       raw: bool = False,
                        token=os.environ.get('PHC_ACCESS_TOKEN')):
 
         fhir = Fhir(Session(token=token, account=account))
@@ -23,8 +24,12 @@ class Patient:
         if actual_count > limit:
             print(f'Retrieved {limit}/{actual_count} patients')
 
-        df = pd.DataFrame(
-            [hit['_source'] for hit in response.data.get('hits').get('hits')])
+        df = pd.DataFrame([
+            hit['_source'] for hit in response.data.get('hits').get('hits')
+        ])
+
+        if raw:
+            return df
 
         return expand_data_frame(df,
                                  custom_columns=[('address',
