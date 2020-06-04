@@ -1,11 +1,11 @@
 import pandas as pd
-from phc.easy.codeable import expand_extension
+from phc.easy.codeable import generic_codeable_to_dict
 from phc.easy.util import concat_dicts
 
 
 def expand_address_attr(key, attr_value):
     if type(attr_value) is dict:
-        return expand_extension(attr_value, key)
+        return generic_codeable_to_dict(attr_value, key)
 
     if type(attr_value) is list:
         return concat_dicts([

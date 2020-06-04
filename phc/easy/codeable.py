@@ -1,6 +1,7 @@
 import os
 import re
 import pandas as pd
+from functools import reduce
 from phc import Session
 from phc.services import Fhir
 from phc.easy.util import (join_underscore, without_keys, concat_dicts,
@@ -13,142 +14,112 @@ def system_to_column(system):
     return new_string.replace('.', '_').replace('/', '_')
 
 
-def tags_to_dict(tags):
-    "Convert list of system codes to flat dictionary"
-    return {system_to_column(tag['system']): tag['code'] for tag in tags}
-
-
-def coding_to_dict(value):
-    "Convert dictionary of system and code to flat dictionary"
-    return {
-        system_to_column(code_dict['system']): code_dict['code']
-        for code_dict in value['coding']
-    }
-
-
-def coding_to_str(value):
-    "Convert dictionary of system and code to a period-delimited string"
-    return '|'.join([
-        f"{system_to_column(code_dict['system'])}.{code_dict['code']}"
-        for code_dict in value['coding']
-    ])
-
-
-def type_and_value_to_dict(codeable):
-    "Convert dictionary of type and value to flat dictionary"
-    return {coding_to_str(codeable['type']): codeable['value']}
-
-
-def value_concept_to_dict(codeable):
-    "Convert dictionary of a codeable concept to flat dictionary"
-    return coding_to_dict(codeable['valueCodeableConcept'])
-
-
 def value_string_to_dict(codeable):
     "Convert dictionary of url and valueString to flat dictionary"
     return {system_to_column(codeable['url']): codeable['valueString']}
 
 
-def value_with_extras_to_dict(codeable):
-    system = system_to_column(codeable['system'])
-    attrs = {
-        f"{system}_{key}": value
-        for key, value in codeable.items() if key not in ['system', 'value']
-    }
-    return {**attrs, system: codeable['value']}
+def get_value_codeable_concept_items(concept):
+    "Extracts dictionaries in a valueCodeableConcept"
+    base_concept = without_keys(concept, ['coding'])
+
+    return [{
+        **base_concept,
+        **coding_value
+    } for coding_value in concept['coding']]
 
 
-def tag_codeable_to_dict(codeable_dict):
-    codeable_dicts = codeable_dict['tag']
+def flatten_nested_dicts(codeable_dict):
+    NESTED_TYPES = [('valueCodeableConcept', get_value_codeable_concept_items),
+                    ('extension', lambda x: x)]
 
-    return {
-        **prefix_dict_keys(without_keys(codeable_dict, ['tag']), 'tag'),
-        **concat_dicts(map(generic_codeable_to_dict, codeable_dicts),
-                       prefix='tag')
-    }
+    base_dict = without_keys(codeable_dict, [key for key, _ in NESTED_TYPES])
+
+    def reduce_nested(acc, nested_type):
+        key, func = nested_type
+        if key in codeable_dict:
+            return [
+                *acc, *[{
+                    **base_dict,
+                    **result
+                } for result in func(codeable_dict[key])]
+            ]
+
+        return acc
+
+    flattened = reduce(reduce_nested, NESTED_TYPES, [])
+
+    if len(flattened) == 0:
+        # At least include the top-level dictionary attributes
+        return [base_dict]
+
+    return flattened
 
 
-def generic_codeable_to_dict(codeable_dict, prefix=''):
-    "Convert any type of dictionary that contains code data to a flat dictionary"
+def flatten_and_find_prefix(codeable_dict, prefix):
+    """
+    Convert a codeable_dict type to a flattened dictionary or list of
+    dictionaries for simple prefixing
+    """
+    if 'tag' in codeable_dict:
+        return ([without_keys(codeable_dict, ['tag']),
+                 *codeable_dict['tag']], join_underscore([prefix, 'tag']))
+
+    if 'url' in codeable_dict:
+        return (flatten_nested_dicts(without_keys(codeable_dict, ['url'])),
+                join_underscore(
+                    [prefix,
+                     system_to_column(codeable_dict['url']) + '_']))
+
+    if 'system' in codeable_dict:
+        return (without_keys(codeable_dict, ['system']),
+                join_underscore(
+                    [prefix,
+                     system_to_column(codeable_dict['system']) + '_']))
+
+    if 'type' in codeable_dict and 'value' in codeable_dict:
+        types = codeable_dict['type']['coding']
+        return ([{
+            **t,
+            **without_keys(codeable_dict, ['type'])
+        } for t in types], prefix)
+
+    return (codeable_dict, prefix)
+
+
+def generic_codeable_to_dict(codeable, prefix=''):
+    "Convert dict/list/str contains code data to a flat dictionary"
+
+    if type(codeable) == list:
+        return concat_dicts(
+            [generic_codeable_to_dict(d, prefix) for d in codeable])
+
+    if type(codeable) != dict:
+        return {prefix: codeable}
+
+    codeable, prefix = flatten_and_find_prefix(codeable, prefix)
+
+    # Recurse pre-processed value is not a dictionary (but a list for example)
+    if type(codeable) != dict:
+        return generic_codeable_to_dict(codeable, prefix)
 
     def prefixer(dictionary):
         return prefix_dict_keys(dictionary, prefix)
 
-    if 'type' in codeable_dict and 'value' in codeable_dict:
-        return prefixer(type_and_value_to_dict(codeable_dict))
+    # TODO: Add test case for valueString
+    # if 'valueString' in codeable:
+    #     return prefixer(value_string_to_dict(codeable))
 
-    if 'valueCodeableConcept' in codeable_dict:
-        return prefixer(value_concept_to_dict(codeable_dict))
+    # TODO: Add test case for single value that is a url
+    # keys = codeable.keys()
+    # if len(keys) == 1 and 'url' in codeable:
+    #     return prefixer({key: system_to_column(codeable[key]) + '+'})
 
-    if 'valueString' in codeable_dict:
-        return prefixer(value_string_to_dict(codeable_dict))
-
-    if 'system' in codeable_dict and 'code' in codeable_dict:
-        return prefixer(
-            {system_to_column(codeable_dict['system']): codeable_dict['code']})
-
-    if 'system' in codeable_dict and 'value' in codeable_dict:
-        return prefixer(value_with_extras_to_dict(codeable_dict))
-
-    if 'tag' in codeable_dict:
-        return prefixer(tag_codeable_to_dict(codeable_dict))
-
-    keys = codeable_dict.keys()
-
-    if len(keys) == 1 and 'url' in codeable_dict:
-        return prefixer(
-            {'url': system_to_column(codeable_dict['url'])})
-
-    print('Unknown codeable type', codeable_dict)
-
-    return {}
-
-
-def expand_url_dict(codeable_dict, prefix=''):
-    if 'url' not in codeable_dict.keys():
-        return {}
-
-    prefix = join_underscore([prefix, system_to_column(codeable_dict['url'])])
-
-    return concat_dicts([
-        expand_extension(codeable_dict, prefix),
-        {
-            join_underscore([prefix, k]): v
-            for k, v in without_keys(codeable_dict,
-                                     ['url', 'extension']).items()
-        }
-    ])
-
-
-def expand_extension(codeable_dict, prefix=''):
-    extensions = codeable_dict.get('extension', [])
-
-    return concat_dicts([
-        concat_dicts([
-            expand_extension(nested_codeable_dict, prefix),
-            expand_url_dict(nested_codeable_dict, prefix)
-        ]) for nested_codeable_dict in extensions
-    ])
+    return prefixer(
+        concat_dicts(
+            [generic_codeable_to_dict(v, k) for k, v in codeable.items()]))
 
 
 def expand_codeable_column(codeable_col):
     "Convert a pandas dictionary column with codeable data to a data frame"
-
-    def codeable_values(codeables):
-        if type(codeables) is list:
-            return codeables
-        elif type(codeables) is dict and type(codeables.get('tag')) is list:
-            return codeables.get('tag')
-        elif type(codeables) is dict:
-            return [codeables]
-        else:
-            return []
-
-    values = [
-        concat_dicts([
-            generic_codeable_to_dict(codeable, index)
-            for index, codeable in enumerate(codeable_values(codeables))
-        ]) for codeables in codeable_col.values
-    ]
-
-    return pd.DataFrame(values)
+    return pd.DataFrame(map(generic_codeable_to_dict, codeable_col.values))
