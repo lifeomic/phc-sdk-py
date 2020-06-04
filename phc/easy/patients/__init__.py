@@ -1,7 +1,7 @@
 import os
 
 import pandas as pd
-from phc import Session
+from phc.easy.auth import Auth
 from phc.easy import expand_data_frame
 from phc.easy.patients.address import expand_address_column
 from phc.easy.patients.name import expand_name_column
@@ -10,14 +10,9 @@ from phc.services import Fhir
 
 class Patient:
     @staticmethod
-    def get_data_frame(account: str,
-                       project_id: str,
-                       limit: int,
-                       raw: bool = False,
-                       token=os.environ.get('PHC_ACCESS_TOKEN')):
-
-        fhir = Fhir(Session(token=token, account=account))
-        response = fhir.execute_sql(project_id,
+    def get_data_frame(limit: int, raw: bool = False, auth=Auth.shared()):
+        fhir = Fhir(auth.session())
+        response = fhir.execute_sql(auth.project_id,
                                     f'SELECT * FROM patient LIMIT {limit}')
 
         actual_count = response.data['hits']['total']['value']

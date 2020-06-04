@@ -1,7 +1,10 @@
 import os
 from phc import Session
+from phc.services import Accounts
 
 _shared_auth = None
+
+NOT_SET_ACCOUNT_VALUE = '<SET Auth.shared.account>'
 
 
 class Auth:
@@ -17,7 +20,7 @@ class Auth:
     def shared():
         global _shared_auth
         if not _shared_auth:
-            _shared_auth = Auth('<SET Auth.shared.account>',
+            _shared_auth = Auth(NOT_SET_ACCOUNT_VALUE,
                                 '<SET Auth.shared.project>')
 
         return _shared_auth
@@ -43,4 +46,10 @@ class Auth:
                     token=shared.token)
 
     def session(self):
+        if self.account == NOT_SET_ACCOUNT_VALUE:
+            print('An initial account value is required to use the API')
+
         return Session(token=self.token, account=self.account)
+
+    def accounts(self):
+        return Accounts(self.session()).get_list().data.get('accounts')

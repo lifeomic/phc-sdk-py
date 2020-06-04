@@ -3,3 +3,4 @@ backoff==1.10.0
 nest_asyncio
 pyjwt
 pandas
+funcy
