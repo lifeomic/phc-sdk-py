@@ -120,6 +120,8 @@ def generic_codeable_to_dict(codeable, prefix=''):
             [generic_codeable_to_dict(v, k) for k, v in codeable.items()]))
 
 
-def expand_codeable_column(codeable_col):
-    "Convert a pandas dictionary column with codeable data to a data frame"
-    return pd.DataFrame(map(generic_codeable_to_dict, codeable_col.values))
+class Codeable():
+    @staticmethod
+    def expand_column(codeable_col):
+        "Convert a pandas dictionary column with codeable data to a data frame"
+        return pd.DataFrame(map(generic_codeable_to_dict, codeable_col.values))

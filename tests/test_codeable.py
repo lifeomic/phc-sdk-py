@@ -1,4 +1,4 @@
-from phc.easy.codeable import (generic_codeable_to_dict)
+from phc.easy.codeable import generic_codeable_to_dict
 
 def test_parsing_lat_long_extension():
     expected = {
