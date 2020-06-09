@@ -11,20 +11,35 @@ from phc.services import Fhir
 class Patient:
     @staticmethod
     def get_data_frame(limit: int, raw: bool = False, auth=Auth.shared()):
-        fhir = Fhir(auth.session())
-        response = fhir.execute_sql(auth.project_id,
-                                    f'SELECT * FROM patient LIMIT {limit}')
+        """Retrieve all patients (up to limit) as a data frame with unwrapped FHIR columns
 
-        actual_count = response.data['hits']['total']['value']
+
+
+        Attributes
+        ----------
+
+
+        """
+        fhir = Fhir(auth.session())
+        response = fhir.execute_sql(
+            auth.project_id, f"SELECT * FROM patient LIMIT {limit}"
+        )
+
+        actual_count = response.data["hits"]["total"]["value"]
         if actual_count > limit:
-            print(f'Retrieved {limit}/{actual_count} patients')
+            print(f"Retrieved {limit}/{actual_count} patients")
 
         df = pd.DataFrame(
-            [hit['_source'] for hit in response.data.get('hits').get('hits')])
+            [hit["_source"] for hit in response.data.get("hits").get("hits")]
+        )
 
         if raw:
             return df
 
-        return Frame.expand(df,
-                            custom_columns=[('address', expand_address_column),
-                                            ('name', expand_name_column)])
+        return Frame.expand(
+            df,
+            custom_columns=[
+                ("address", expand_address_column),
+                ("name", expand_name_column),
+            ],
+        )
