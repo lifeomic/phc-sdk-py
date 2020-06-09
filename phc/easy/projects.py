@@ -4,37 +4,73 @@ from funcy import memoize
 from phc.easy.auth import Auth
 import phc.services as services
 
-SEARCH_COLUMNS = ['name', 'description', 'id']
+SEARCH_COLUMNS = ["name", "description", "id"]
 
 
 def join_strings(row):
-    return ' '.join([value for value in row if type(value) == str]).lower()
+    return " ".join([value for value in row if type(value) == str]).lower()
 
 
 class Project:
     @staticmethod
     @memoize
     def get_data_frame(auth=Auth.shared()):
+        """Retrieve a list of projects from the authenticated account
+
+        Attributes
+        ----------
+        auth : Auth
+            The authenication to use for the account and project (defaults to shared)
+        """
+
         def list_projects(acc, account):
-            session = auth.custom(account=account['id']).session()
+            session = auth.custom(account=account["id"]).session()
 
             return [
-                *acc, *[{
-                    **project, 'account': account['id']
-                } for project in services.Projects(
-                    session).get_list().data['items']]
+                *acc,
+                *[
+                    {**project, "account": account["id"]}
+                    for project in services.Projects(session)
+                    .get_list()
+                    .data["items"]
+                ],
             ]
 
         return pd.DataFrame(reduce(list_projects, auth.accounts(), []))
 
     @staticmethod
-    def set_current(search, auth=Auth.shared()):
+    def find(search: str, auth: Auth = Auth.shared()):
+        """Search for a project using given criteria and return results as a data frame
+
+        Attributes
+        ----------
+        search : str
+            Part of a project's id, name, or description to search for
+
+        auth : Auth
+            The authenication to use for the account and project (defaults to shared)
+        """
         projects = Project.get_data_frame(auth)
         text = projects[SEARCH_COLUMNS].agg(join_strings, axis=1)
-        matches = projects[text.str.contains(search.lower())]
+        return projects[text.str.contains(search.lower())]
+
+    @staticmethod
+    def set_current(search: str, auth: Auth = Auth.shared()):
+        """Search for a project using given criteria, set it to the authentication
+        object, and return the matching projects as a data frame
+
+        Attributes
+        ----------
+        search : str
+            Part of a project's id, name, or description to search for
+
+        auth : Auth
+            The authenication to use for the account and project (defaults to shared)
+        """
+        matches = Project.find(search, auth)
 
         if len(matches) > 1:
-            print('Multiple projects found. Try a more specific search')
+            print("Multiple projects found. Try a more specific search")
         elif len(matches) == 0:
             print(f'No matches found for search "{search}"')
         else:

@@ -2,8 +2,8 @@ import pandas as pd
 from typing import Callable, List, Tuple
 from phc.easy.codeable import Codeable
 
-CODE_COLUMNS = ['meta', 'identifier', 'extension', 'telecom']
-DATE_COLUMNS = ['dob', 'birth_date', 'birthDate', 'deceasedDateTime']
+CODE_COLUMNS = ["meta", "identifier", "extension", "telecom"]
+DATE_COLUMNS = ["dob", "birth_date", "birthDate", "deceasedDateTime"]
 
 
 def column_to_frame(frame: pd.DataFrame, column_name: str, expand_func):
@@ -14,18 +14,40 @@ def column_to_frame(frame: pd.DataFrame, column_name: str, expand_func):
     return pd.DataFrame([])
 
 
-class Frame():
+class Frame:
     @staticmethod
-    def expand(frame: pd.DataFrame,
-               code_columns: List[str] = [],
-               date_columns: List[str] = [],
-               custom_columns: List[Tuple[str, Callable[[pd.Series],
-                                                        pd.DataFrame]]] = []):
+    def expand(
+        frame: pd.DataFrame,
+        code_columns: List[str] = [],
+        date_columns: List[str] = [],
+        custom_columns: List[
+            Tuple[str, Callable[[pd.Series], pd.DataFrame]]
+        ] = [],
+    ):
+        """Expand a data frame with FHIR codes, nested JSON structures, etc into a full, tabular data frame that can much more easily be wrangled
+
+        Attributes
+        ----------
+        frame : pd.DataFrame
+            The data frame to expand
+
+        code_columns : List[str]
+            The list of column names that contain code-like data (e.g. FHIR dictionaries)
+
+        date_columns : List[str]
+            The list of column names that contain dates (may not able to parse but might)
+
+        custom_columns : List[Tuple[str, Callable[[pd.Series], pd.DataFrame]]]
+            A list of tuples with the column name and a function that expands a
+            column to a data frame. This will get merged index-wise into the
+            combined frame
+        """
         all_code_columns = [*CODE_COLUMNS, *code_columns]
         all_date_columns = [*DATE_COLUMNS, *date_columns]
 
         codeable_col_names = [
-            col_name for col_name in all_code_columns
+            col_name
+            for col_name in all_code_columns
             if col_name in frame.columns
         ]
 
@@ -38,14 +60,17 @@ class Frame():
             key for key, _func in custom_columns if key in frame.columns
         ]
 
-        combined = pd.concat([
-            *[
-                column_to_frame(frame, key, func)
-                for key, func in custom_columns
+        combined = pd.concat(
+            [
+                *[
+                    column_to_frame(frame, key, func)
+                    for key, func in custom_columns
+                ],
+                frame.drop([*codeable_col_names, *custom_names], axis=1),
+                *code_frames,
             ],
-            frame.drop([*codeable_col_names, *custom_names], axis=1),
-            *code_frames
-        ], axis=1)
+            axis=1,
+        )
 
         # Mutate data frame to parse date columns
         for column_key in all_date_columns:

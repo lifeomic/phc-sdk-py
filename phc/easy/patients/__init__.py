@@ -13,14 +13,28 @@ class Patient:
     def get_data_frame(limit: int, raw: bool = False, auth=Auth.shared()):
         """Retrieve all patients (up to limit) as a data frame with unwrapped FHIR columns
 
-
-
         Attributes
         ----------
+        limit : int
+            The number of patients to retrieve
 
+        raw : bool = False
+            If raw, then values will not be expanded (useful for manual
+            inspection if something goes wrong)
 
+        auth : Auth
+            The authenication to use for the account and project (defaults to shared)
+
+        Examples
+        --------
+        >>> import phc.easy as phc
+        >>> phc.Auth.shared().set_details(account='<your-account-name>')
+        >>> phc.Project.set_current('My Project Name')
+        >>> phc.Patient.get_data_frame(limit=100)
         """
         fhir = Fhir(auth.session())
+
+        # TODO: Add scrolling of patient resources
         response = fhir.execute_sql(
             auth.project_id, f"SELECT * FROM patient LIMIT {limit}"
         )
