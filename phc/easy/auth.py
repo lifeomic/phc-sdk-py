@@ -1,19 +1,14 @@
 import os
+from typing import Union, Dict
 from phc import Session
 from phc.services import Accounts
+from phc.easy.util import defaultprop
 
 _shared_auth = None
 
-NOT_SET_ACCOUNT_VALUE = "<SET Auth.shared.account>"
-
 
 class Auth:
-    def __init__(
-        self,
-        account: str,
-        project_id: str,
-        token: str = os.environ.get("PHC_ACCESS_TOKEN"),
-    ):
+    def __init__(self, details: Union[None, Dict[str, str]] = None):
         """Create an authentication object that can be shared as a single argument to
         the 'easy' SDK calls
 
@@ -21,32 +16,64 @@ class Auth:
         ----------
         account : str
             The PHC account to authenticate against
+            Default to $PHC_ACCOUNT
 
         project_id : str
-            The ID of the project to pull resources from
+            (Optional) The ID of the project to pull resources from
+            Defaults to $PHC_PROJECT_ID
 
         token : str
-            (Optional) The API key to use; defaults to the $PHC_ACCESS_TOKEN var
+            (Optional) The API key to use
+            Defaults to $PHC_ACCESS_TOKEN
 
         """
-        self.account = account
-        self.project_id = project_id
-        self.token = token
+        self.update(details)
+
+    @staticmethod
+    def custom(details: Union[None, Dict[str, str]]):
+        "Returns customized auth object from the shared one"
+        custom = Auth.shared().copy()
+        custom.update(details)
+        return custom
+
+    @staticmethod
+    def set(details: Union[None, Dict[str, str]]):
+        "Updates and returns the shared authentication singleton"
+        shared = Auth.shared()
+        shared.update(details)
+        return shared
 
     @staticmethod
     def shared():
-        "Returns the shared authentication singleton"
         global _shared_auth
+
         if not _shared_auth:
-            _shared_auth = Auth(
-                NOT_SET_ACCOUNT_VALUE, "<SET Auth.shared.project>"
-            )
+            _shared_auth = Auth()
 
         return _shared_auth
 
-    def set_details(
-        self, account: str = None, project_id: str = None, token: str = None
-    ):
+    @defaultprop
+    def token(self):
+        return os.environ.get("PHC_ACCESS_TOKEN")
+
+    @defaultprop
+    def account(self):
+        return os.environ.get("PHC_ACCOUNT")
+
+    @defaultprop
+    def project_id(self):
+        return os.environ.get("PHC_PROJECT_ID")
+
+    def copy(self):
+        return Auth(
+            {
+                "account": self.account,
+                "project_id": self.project_id,
+                "token": self.token,
+            }
+        )
+
+    def update(self, details: Union[None, Dict[str, str]] = None):
         """Set details of authentication for API calls
 
         Attributes
@@ -60,42 +87,20 @@ class Auth:
         token : str
             (Optional) The API key to use
         """
-        if account:
-            self.account = account
+        if details is None:
+            return
 
-        if project_id:
-            self.project_id = project_id
+        if details.get("account"):
+            self._account = details.get("account")
 
-        if token:
-            self.token = token
+        if details.get("project_id"):
+            self._project_id = details.get("project_id")
 
-        return self
-
-    @staticmethod
-    def custom(account=None, project_id=None):
-        """Create a new authentication object from the shared one
-
-        Attributes
-        ----------
-        account : str
-            (Optional) The PHC account to authenticate against
-
-        project_id : str
-            (Optional) The ID of the project to pull resources from
-        """
-        shared = Auth.shared()
-
-        return Auth(
-            account=account or shared.account,
-            project_id=project_id or shared.project_id,
-            token=shared.token,
-        )
+        if details.get("token"):
+            self._token = details.get("token")
 
     def session(self):
         "Create an API session for use with modules not in the 'easy' namespace"
-        if self.account == NOT_SET_ACCOUNT_VALUE:
-            print("An initial account value is required to use the API")
-
         return Session(token=self.token, account=self.account)
 
     def accounts(self):

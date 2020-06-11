@@ -8,5 +8,3 @@ flake8
 nose
 pdoc3
 twine
-pytest
-pytest-watch

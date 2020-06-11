@@ -1,11 +1,11 @@
-from functools import reduce
+from functools import reduce, wraps
 from typing import Union
 
 
 def join_underscore(values):
-    return '_'.join([
-        str(value) for value in values if type(value) == int or len(value) > 0
-    ])
+    return "_".join(
+        [str(value) for value in values if type(value) == int or len(value) > 0]
+    )
 
 
 def without_keys(dictionary, keys):
@@ -16,10 +16,10 @@ def prefix_dict_keys(dictionary, prefix: Union[str, int]):
     if type(prefix) == str and len(prefix) == 0:
         return dictionary
 
-    return {f'{prefix}_{key}': value for key, value in dictionary.items()}
+    return {f"{prefix}_{key}": value for key, value in dictionary.items()}
 
 
-def concat_dicts(dicts, prefix: Union[str, int] = ''):
+def concat_dicts(dicts, prefix: Union[str, int] = ""):
     "Concatenate list of dictionaries"
 
     def bump_key_index(key, existing_dict, start=1):
@@ -27,7 +27,7 @@ def concat_dicts(dicts, prefix: Union[str, int] = ''):
         if key not in existing_dict:
             return key
 
-        new_key = f'{key}_{start}'
+        new_key = f"{key}_{start}"
         if new_key in existing_dict:
             return bump_key_index(key, existing_dict, start + 1)
 
@@ -36,8 +36,28 @@ def concat_dicts(dicts, prefix: Union[str, int] = ''):
     def reduce_two_dicts(acc, dictionary):
         return {
             **acc,
-            **{bump_key_index(k, acc): v
-               for k, v in dictionary.items()}
+            **{bump_key_index(k, acc): v for k, v in dictionary.items()},
         }
 
     return prefix_dict_keys(reduce(reduce_two_dicts, dicts, {}), prefix)
+
+
+def defaultprop(fn):
+    """Function decorator to have a default property (but not automatically set
+    it)
+    """
+    attr_name = "_" + fn.__name__
+
+    @property
+    @wraps(fn)
+    def _defaultprop(self):
+        if not hasattr(self, attr_name):
+            return fn(self)
+
+        value = getattr(self, attr_name)
+        if value is None:
+            return fn(self)
+
+        return value
+
+    return _defaultprop

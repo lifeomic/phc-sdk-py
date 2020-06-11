@@ -5,7 +5,12 @@ from typing import List
 
 
 def query_allows_scrolling(query):
-    return next(iter(query.get("limit", [])), {}).get("value", 0) == 0
+    limit = iter(query.get("limit", []))
+
+    lower = next(limit, {}).get("value")
+    upper = next(limit, {}).get("value")
+
+    return type(lower) == int and type(upper) == int
 
 
 class Query:
@@ -75,6 +80,7 @@ class Query:
         if len(current_results) == 0 or scroll is False:
             return results
 
+        # TODO: Revisit private parameters being exposed in public method
         return Query.execute_dsl(
             query,
             scroll=True,
