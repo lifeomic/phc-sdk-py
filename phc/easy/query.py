@@ -18,7 +18,7 @@ class Query:
     def execute_dsl(
         query: dict,
         scroll: bool = False,
-        auth: Auth = Auth.shared(),
+        auth_args: Auth = Auth.shared(),
         _scroll_id: str = "true",
         _prev_hits: List = [],
     ):
@@ -43,7 +43,7 @@ class Query:
         Examples
         --------
         >>> import phc.easy as phc
-        >>> phc.Auth.shared().set_details(account='<your-account-name>')
+        >>> phc.Auth.set({ 'account': '<your-account-name>' })
         >>> phc.Project.set_current('My Project Name')
         >>> phc.Query.execute_dsl({
           "type": "select",
@@ -65,6 +65,7 @@ class Query:
           ]
         }, scroll=True)
         """
+        auth = Auth(auth_args)
         fhir = Fhir(auth.session())
 
         response = fhir.execute_es(
@@ -84,7 +85,7 @@ class Query:
         return Query.execute_dsl(
             query,
             scroll=True,
-            auth=auth,
+            auth_args=auth,
             _scroll_id=_scroll_id,
             _prev_hits=results,
         )

@@ -14,17 +14,18 @@ def join_strings(row):
 class Project:
     @staticmethod
     @memoize
-    def get_data_frame(auth=Auth.shared()):
+    def get_data_frame(auth_args=Auth.shared()):
         """Retrieve a list of projects from the authenticated account
 
         Attributes
         ----------
-        auth : Auth
+        auth_args : Any
             The authenication to use for the account and project (defaults to shared)
         """
+        auth = Auth(auth_args)
 
         def list_projects(acc, account):
-            session = auth.custom(account=account["id"]).session()
+            session = auth.customized({"account": account["id"]}).session()
 
             return [
                 *acc,
@@ -39,7 +40,7 @@ class Project:
         return pd.DataFrame(reduce(list_projects, auth.accounts(), []))
 
     @staticmethod
-    def find(search: str, auth: Auth = Auth.shared()):
+    def find(search: str, auth_args: Auth = Auth.shared()):
         """Search for a project using given criteria and return results as a data frame
 
         Attributes
@@ -47,9 +48,10 @@ class Project:
         search : str
             Part of a project's id, name, or description to search for
 
-        auth : Auth
+        auth_args : Any
             The authenication to use for the account and project (defaults to shared)
         """
+        auth = Auth(auth_args)
         projects = Project.get_data_frame(auth)
         text = projects[SEARCH_COLUMNS].agg(join_strings, axis=1)
         return projects[text.str.contains(search.lower())]
@@ -65,7 +67,7 @@ class Project:
             Part of a project's id, name, or description to search for
 
         auth : Auth
-            The authenication to use for the account and project (defaults to shared)
+            The authenication to update for the account and project (defaults to shared)
         """
         matches = Project.find(search, auth)
 
@@ -75,6 +77,7 @@ class Project:
             print(f'No matches found for search "{search}"')
         else:
             project = matches.iloc[0]
-            auth.set_details(account=project.account, project_id=project.id)
+            # Uses private method since this is a special case
+            auth.update({"account": project.account, "project_id": project.id})
 
         return matches

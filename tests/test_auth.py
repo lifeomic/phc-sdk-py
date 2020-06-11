@@ -22,9 +22,7 @@ def test_updating_attributes():
         }
     )
 
-    auth.update({"account": "new-account"})
-
-    assert auth.account == "new-account"
+    assert auth.customized({"account": "new-account"}).account == "new-account"
 
 
 def test_updated_shared_auth():
@@ -55,3 +53,10 @@ def test_custom_auth():
     # Does not change shared auth object
     assert shared.account == original_account
     assert shared.token == original_token
+
+
+def test_creating_auth_from_another_auth_object():
+    auth = Auth({"account": "demo"})
+
+    auth1 = Auth(auth)
+    assert auth1.account == "demo"

@@ -10,7 +10,7 @@ from phc.services import Fhir
 
 class Patient:
     @staticmethod
-    def get_data_frame(limit: int, raw: bool = False, auth=Auth.shared()):
+    def get_data_frame(limit: int, raw: bool = False, auth_args=Auth.shared()):
         """Retrieve all patients (up to limit) as a data frame with unwrapped FHIR columns
 
         Attributes
@@ -28,10 +28,11 @@ class Patient:
         Examples
         --------
         >>> import phc.easy as phc
-        >>> phc.Auth.shared().set_details(account='<your-account-name>')
+        >>> phc.Auth.set({'account': '<your-account-name>'})
         >>> phc.Project.set_current('My Project Name')
         >>> phc.Patient.get_data_frame(limit=100)
         """
+        auth = Auth(auth_args)
         fhir = Fhir(auth.session())
 
         # TODO: Add scrolling of patient resources
