@@ -1,4 +1,5 @@
 import os
+import math
 import re
 import pandas as pd
 from functools import reduce
@@ -101,19 +102,21 @@ def flatten_and_find_prefix(codeable_dict, prefix):
 
 def generic_codeable_to_dict(codeable, prefix=""):
     "Convert dict/list/str contains code data to a flat dictionary"
+    if isinstance(codeable, float) and math.isnan(codeable):
+        return {}
 
-    if type(codeable) == list:
+    if isinstance(codeable, list):
         return concat_dicts(
             [generic_codeable_to_dict(d, prefix) for d in codeable]
         )
 
-    if type(codeable) != dict:
+    if not isinstance(codeable, dict):
         return {prefix: codeable}
 
     codeable, prefix = flatten_and_find_prefix(codeable, prefix)
 
     # Recurse pre-processed value is not a dictionary (but a list for example)
-    if type(codeable) != dict:
+    if not isinstance(codeable, dict):
         return generic_codeable_to_dict(codeable, prefix)
 
     def prefixer(dictionary):
