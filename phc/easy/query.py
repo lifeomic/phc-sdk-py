@@ -35,7 +35,9 @@ def recursive_execute_dsl(
     results = [*_prev_hits, *current_results]
     _scroll_id = response.data.get("_scroll_id", "")
 
+    actual_count = response.data["hits"]["total"]["value"]
     if len(current_results) == 0 or scroll is False:
+        print(f"Retrieved {len(results)}/{actual_count} results")
         return results
 
     return recursive_execute_dsl(

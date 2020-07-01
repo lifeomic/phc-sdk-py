@@ -1,5 +1,3 @@
-import os
-
 import pandas as pd
 from phc.easy.auth import Auth
 from phc.easy.frame import Frame
@@ -10,7 +8,12 @@ from phc.services import Fhir
 
 class Patient:
     @staticmethod
-    def get_data_frame(limit: int, raw: bool = False, auth_args=Auth.shared()):
+    def get_data_frame(
+        limit: int,
+        raw: bool = False,
+        auth_args=Auth.shared(),
+        expand_args: dict = {},
+    ):
         """Retrieve all patients (up to limit) as a data frame with unwrapped FHIR columns
 
         Attributes
@@ -22,8 +25,11 @@ class Patient:
             If raw, then values will not be expanded (useful for manual
             inspection if something goes wrong)
 
-        auth : Auth
+        auth_args : Any
             The authenication to use for the account and project (defaults to shared)
+
+        expand_args : Any
+            Additional arguments passed to phc.Frame.expand
 
         Examples
         --------
@@ -51,10 +57,13 @@ class Patient:
         if raw:
             return df
 
-        return Frame.expand(
-            df,
-            custom_columns=[
+        args = {
+            **expand_args,
+            "custom_columns": [
+                *expand_args.get("custom_columns", []),
                 ("address", expand_address_column),
                 ("name", expand_name_column),
             ],
-        )
+        }
+
+        return Frame.expand(df, **args)

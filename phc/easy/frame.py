@@ -10,8 +10,16 @@ CODE_COLUMNS = [
     "valueCodeableConcept",
     "code",
     "valueQuantity",
+    "category",
 ]
-DATE_COLUMNS = ["dob", "birth_date", "birthDate", "deceasedDateTime"]
+DATE_COLUMNS = [
+    "dob",
+    "birth_date",
+    "birthDate",
+    "deceasedDateTime",
+    "effectiveDateTime",
+    "tag_lastUpdated",
+]
 
 
 def column_to_frame(frame: pd.DataFrame, column_name: str, expand_func):
