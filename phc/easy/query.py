@@ -101,8 +101,8 @@ class Query:
         # Scroll if limit is above MAX_RESULT_SIZE
         limit = iter(query.get("limit", []))
 
-        lower = next(limit, {}).get("value")
-        upper = next(limit, {}).get("value")
+        lower = next(limit, {}).get("value", 0)
+        upper = next(limit, {}).get("value", 0)
 
         scroll = True if upper - lower > MAX_RESULT_SIZE else all_results
 

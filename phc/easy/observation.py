@@ -8,8 +8,10 @@ from phc.easy.auth import Auth
 class Observation:
     @staticmethod
     def get_data_frame(
+        all_results: bool = False,
         raw: bool = False,
         patient_id: Union[None, str] = None,
+        query_overrides: dict = {},
         auth_args=Auth.shared(),
         expand_args: dict = {},
     ):
@@ -17,9 +19,15 @@ class Observation:
 
         Attributes
         ----------
+        all_results : bool = False
+            Retrieve sample of results (10) or entire set of observations
+
         raw : bool = False
             If raw, then values will not be expanded (useful for manual
             inspection if something goes wrong)
+
+        patient_id : None or str = None
+            Find observations for a given patient_id
 
         auth_args : Any
             The authenication to use for the account and project (defaults to shared)
@@ -56,9 +64,9 @@ class Observation:
                 },
             }
 
-        results = Query.execute_dsl(
-            query, all_results=True, auth_args=auth_args
-        )
+        query = {**query, **query_overrides}
+
+        results = Query.execute_dsl(query, all_results, auth_args)
 
         df = pd.DataFrame(map(lambda r: r["_source"], results))
 
