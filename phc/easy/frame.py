@@ -1,8 +1,16 @@
-import pandas as pd
 from typing import Callable, List, Tuple
+import pandas as pd
 from phc.easy.codeable import Codeable
 
-CODE_COLUMNS = ["meta", "identifier", "extension", "telecom"]
+CODE_COLUMNS = [
+    "meta",
+    "identifier",
+    "extension",
+    "telecom",
+    "valueCodeableConcept",
+    "code",
+    "valueQuantity",
+]
 DATE_COLUMNS = ["dob", "birth_date", "birthDate", "deceasedDateTime"]
 
 
@@ -60,17 +68,16 @@ class Frame:
             key for key, _func in custom_columns if key in frame.columns
         ]
 
-        combined = pd.concat(
-            [
-                *[
-                    column_to_frame(frame, key, func)
-                    for key, func in custom_columns
-                ],
-                frame.drop([*codeable_col_names, *custom_names], axis=1),
-                *code_frames,
+        columns = [
+            *[
+                column_to_frame(frame, key, func)
+                for key, func in custom_columns
             ],
-            axis=1,
-        )
+            frame.drop([*codeable_col_names, *custom_names], axis=1),
+            *code_frames,
+        ]
+
+        combined = pd.concat(columns, axis=1)
 
         # Mutate data frame to parse date columns
         for column_key in all_date_columns:
