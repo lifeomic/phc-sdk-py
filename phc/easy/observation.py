@@ -3,6 +3,14 @@ import pandas as pd
 from phc.easy.query import Query
 from phc.easy.frame import Frame
 from phc.easy.auth import Auth
+from phc.easy.codeable import Codeable
+
+
+def expander_for_codeable_like_column(prefix):
+    def _expander(column):
+        return Codeable.expand_column(column).add_prefix(prefix)
+
+    return _expander
 
 
 class Observation:
@@ -73,4 +81,14 @@ class Observation:
         if raw:
             return df
 
-        return Frame.expand(df, **expand_args)
+        args = {
+            **expand_args,
+            "custom_columns": [
+                *expand_args.get("custom_columns", []),
+                ("subject", expander_for_codeable_like_column("subject.")),
+                ("related", expander_for_codeable_like_column("related.")),
+                ("performer", expander_for_codeable_like_column("performer.")),
+            ],
+        }
+
+        return Frame.expand(df, **args)

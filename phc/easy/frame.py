@@ -68,7 +68,7 @@ class Frame:
         ]
 
         code_frames = [
-            Codeable.expand_column(frame[col_name])
+            Codeable.expand_column(frame[col_name]).add_prefix(f"{col_name}.")
             for col_name in codeable_col_names
         ]
 
