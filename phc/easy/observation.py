@@ -1,19 +1,25 @@
 from typing import Union
 import pandas as pd
-from phc.easy.query import Query
+from phc.easy.patient_item import PatientItem
 from phc.easy.frame import Frame
 from phc.easy.auth import Auth
-from phc.easy.codeable import Codeable
-
-
-def expander_for_codeable_like_column(prefix):
-    def _expander(column):
-        return Codeable.expand_column(column).add_prefix(prefix)
-
-    return _expander
 
 
 class Observation:
+    @staticmethod
+    def transform_results(data_frame: pd.DataFrame, **expand_args):
+        args = {
+            **expand_args,
+            "custom_columns": [
+                *expand_args.get("custom_columns", []),
+                Frame.codeable_like_column_expander("subject"),
+                Frame.codeable_like_column_expander("related"),
+                Frame.codeable_like_column_expander("performer"),
+            ],
+        }
+
+        return Frame.expand(data_frame, **args)
+
     @staticmethod
     def get_data_frame(
         all_results: bool = False,
@@ -50,45 +56,11 @@ class Observation:
         >>> phc.Project.set_current('My Project Name')
         >>> phc.Observation.get_data_frame(patient_id='<patient-id>')
         """
-        query = {
-            "type": "select",
-            "columns": "*",
-            "from": [{"table": "observation"}],
-        }
-
-        if patient_id:
-            query = {
-                **query,
-                "where": {
-                    "type": "elasticsearch",
-                    "query": {
-                        "terms": {
-                            "subject.reference.keyword": [
-                                patient_id,
-                                f"Patient/{patient_id}",
-                            ]
-                        }
-                    },
-                },
-            }
-
-        query = {**query, **query_overrides}
-
-        results = Query.execute_dsl(query, all_results, auth_args)
-
-        df = pd.DataFrame(map(lambda r: r["_source"], results))
+        data_frame = PatientItem.retrieve_raw_data_frame(
+            "observation", all_results, patient_id, query_overrides, auth_args
+        )
 
         if raw:
-            return df
+            return data_frame
 
-        args = {
-            **expand_args,
-            "custom_columns": [
-                *expand_args.get("custom_columns", []),
-                ("subject", expander_for_codeable_like_column("subject.")),
-                ("related", expander_for_codeable_like_column("related.")),
-                ("performer", expander_for_codeable_like_column("performer.")),
-            ],
-        }
-
-        return Frame.expand(df, **args)
+        return Observation.transform_results(data_frame, **expand_args)
