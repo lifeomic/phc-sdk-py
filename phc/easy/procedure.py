@@ -10,6 +10,11 @@ class Procedure:
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,
+            "date_columns": [
+                *expand_args.get("date_columns", []),
+                "performedPeriod.start",
+                "performedPeriod.end",
+            ],
             "custom_columns": [
                 *expand_args.get("custom_columns", []),
                 Frame.codeable_like_column_expander("subject"),
