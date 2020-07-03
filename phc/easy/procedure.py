@@ -47,6 +47,9 @@ class Procedure:
         patient_id : None or str = None
             Find procedures for a given patient_id
 
+        query_overrides : dict = {}
+            Override any part of the elasticsearch FHIR query
+
         auth_args : Any
             The authenication to use for the account and project (defaults to shared)
 

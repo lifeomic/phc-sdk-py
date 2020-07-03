@@ -21,10 +21,13 @@ class PatientItem:
             The name of the elasticsearch FHIR table
 
         all_results : bool = False
-            Retrieve sample of results (10) or entire set of observations
+            Retrieve sample of results (10) or entire set of the table records
 
         patient_id : None or str = None
-            Find observations for a given patient_id
+            Find table records for a given patient_id
+
+        query_overrides : dict = {}
+            Override any part of the elasticsearch FHIR query
 
         auth_args : Any
             The authenication to use for the account and project (defaults to shared)

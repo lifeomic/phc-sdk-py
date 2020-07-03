@@ -4,26 +4,35 @@ from phc.easy.frame import Frame
 from phc.easy.patients.address import expand_address_column
 from phc.easy.patients.name import expand_name_column
 from phc.services import Fhir
+from phc.easy.query import Query
 
 
 class Patient:
     @staticmethod
     def get_data_frame(
-        limit: int,
+        limit: int = 100,
+        all_results: bool = False,
         raw: bool = False,
+        query_overrides: dict = {},
         auth_args=Auth.shared(),
         expand_args: dict = {},
     ):
-        """Retrieve all patients (up to limit) as a data frame with unwrapped FHIR columns
+        """Retrieve patients as a data frame with unwrapped FHIR columns
 
         Attributes
         ----------
         limit : int
             The number of patients to retrieve
 
+        all_results : bool = False
+            Override limit to retrieve all patients
+
         raw : bool = False
             If raw, then values will not be expanded (useful for manual
             inspection if something goes wrong)
+
+        query_overrides : dict = {}
+            Override any part of the elasticsearch FHIR query
 
         auth_args : Any
             The authenication to use for the account and project (defaults to shared)
@@ -36,23 +45,24 @@ class Patient:
         >>> import phc.easy as phc
         >>> phc.Auth.set({'account': '<your-account-name>'})
         >>> phc.Project.set_current('My Project Name')
-        >>> phc.Patient.get_data_frame(limit=100)
+        >>> phc.Patient.get_data_frame()
         """
-        auth = Auth(auth_args)
-        fhir = Fhir(auth.session())
-
-        # TODO: Add scrolling of patient resources
-        response = fhir.execute_sql(
-            auth.project_id, f"SELECT * FROM patient LIMIT {limit}"
+        results = Query.execute_dsl(
+            {
+                "type": "select",
+                "columns": "*",
+                "from": [{"table": "patient"}],
+                "limit": [
+                    {"type": "number", "value": 0},
+                    {"type": "number", "value": limit},
+                ],
+                **query_overrides,
+            },
+            all_results,
+            auth_args,
         )
 
-        actual_count = response.data["hits"]["total"]["value"]
-        if actual_count > limit:
-            print(f"Retrieved {limit}/{actual_count} patients")
-
-        df = pd.DataFrame(
-            [hit["_source"] for hit in response.data.get("hits").get("hits")]
-        )
+        df = pd.DataFrame(map(lambda r: r["_source"], results))
 
         if raw:
             return df
