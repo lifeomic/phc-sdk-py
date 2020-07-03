@@ -3,9 +3,22 @@ import pandas as pd
 from phc.easy.patient_item import PatientItem
 from phc.easy.frame import Frame
 from phc.easy.auth import Auth
+from phc.easy.query import Query
 
 
 class Observation:
+    @staticmethod
+    def get_count(query_overrides: dict = {}, auth_args=Auth.shared()):
+        return Query.find_count_of_dsl_query(
+            {
+                "type": "select",
+                "columns": "*",
+                "from": [{"table": "observation"}],
+                **query_overrides,
+            },
+            auth_args=auth_args,
+        )
+
     @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {

@@ -100,7 +100,7 @@ class Query:
         >>> import phc.easy as phc
         >>> phc.Auth.set({ 'account': '<your-account-name>' })
         >>> phc.Project.set_current('My Project Name')
-        >>> phc.Query.execute_dsl({
+        >>> phc.Query.find_count_of_dsl_query({
           "type": "select",
           "columns": "*",
           "from": [{"table": "patient"}],
