@@ -5,6 +5,7 @@ from phc.easy.projects import Project
 from phc.easy.auth import Auth
 from phc.easy.codeable import Codeable
 from phc.easy.observation import Observation
+from phc.easy.procedure import Procedure
 from phc.easy.patient_item import PatientItem
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "Project",
     "Observation",
     "PatientItem",
+    "Procedure",
 ]
