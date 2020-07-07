@@ -1,9 +1,29 @@
+from typing import List, Union, Callable
 from phc import Session
 from phc.services import Accounts, Projects, Fhir
 from phc.easy.auth import Auth
-from typing import List
 
 MAX_RESULT_SIZE = 10000
+
+try:
+    from tqdm.autonotebook import tqdm
+except ImportError:
+    _has_tqdm = False
+    tqdm = None
+else:
+    _has_tqdm = True
+
+
+def with_progress(
+    init_progress: Callable[[], tqdm], func: Callable[[Union[None, tqdm]], None]
+):
+    if _has_tqdm:
+        progress = init_progress()
+        result = func(progress)
+        progress.close()
+        return result
+
+    return func(None)
 
 
 def query_allows_scrolling(query):
@@ -18,6 +38,7 @@ def query_allows_scrolling(query):
 def recursive_execute_dsl(
     query: dict,
     scroll: bool = False,
+    progress: Union[None, tqdm] = None,
     auth_args: Auth = Auth.shared(),
     _scroll_id: str = "true",
     _prev_hits: List = [],
@@ -36,13 +57,24 @@ def recursive_execute_dsl(
     _scroll_id = response.data.get("_scroll_id", "")
 
     actual_count = response.data["hits"]["total"]["value"]
-    if len(current_results) == 0 or scroll is False:
-        print(f"Retrieved {len(results)}/{actual_count} results")
+    current_result_count = len(current_results)
+
+    if len(_prev_hits) == 0 and progress and scroll:
+        progress.reset(actual_count)
+
+    if progress:
+        progress.update(current_result_count)
+
+    if current_result_count == 0 or scroll is False:
+        print(
+            f"Retrieved {len(results)}/{actual_count}{'+' if actual_count == MAX_RESULT_SIZE else ''} results"
+        )
         return results
 
     return recursive_execute_dsl(
         query,
         scroll=True,
+        progress=progress,
         auth_args=auth,
         _scroll_id=_scroll_id,
         _prev_hits=results,
@@ -84,26 +116,27 @@ class Query:
         }, all_results=True)
         """
         if all_results:
-            return recursive_execute_dsl(
-                {
-                    **query,
-                    "limit": [
-                        {"type": "number", "value": 0},
-                        # Make window size smaller than maximum to reduce
-                        # pressure on API
-                        {"type": "number", "value": int(MAX_RESULT_SIZE / 5)},
-                    ],
-                },
-                all_results,
-                auth_args,
+            return with_progress(
+                lambda: tqdm(total=MAX_RESULT_SIZE),
+                lambda progress: recursive_execute_dsl(
+                    {
+                        "limit": [
+                            {"type": "number", "value": 0},
+                            # Make window size smaller than maximum to reduce
+                            # pressure on API
+                            {
+                                "type": "number",
+                                "value": int(MAX_RESULT_SIZE / 2),
+                            },
+                        ],
+                        **query,
+                    },
+                    scroll=all_results,
+                    progress=progress,
+                    auth_args=auth_args,
+                ),
             )
 
-        # Scroll if limit is above MAX_RESULT_SIZE
-        limit = iter(query.get("limit", []))
-
-        lower = next(limit, {}).get("value", 0)
-        upper = next(limit, {}).get("value", 0)
-
-        scroll = True if upper - lower > MAX_RESULT_SIZE else all_results
-
-        return recursive_execute_dsl(query, scroll, auth_args)
+        return recursive_execute_dsl(
+            query, scroll=all_results, auth_args=auth_args,
+        )
