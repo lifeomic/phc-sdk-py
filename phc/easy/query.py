@@ -1,10 +1,28 @@
-from typing import List, Union
-from tqdm.autonotebook import tqdm
+from typing import List, Union, Callable
 from phc import Session
 from phc.services import Accounts, Projects, Fhir
 from phc.easy.auth import Auth
 
 MAX_RESULT_SIZE = 10000
+
+try:
+    from tqdm.autonotebook import tqdm
+except ImportError:
+    _has_tqdm = False
+else:
+    _has_tqdm = True
+
+
+def with_progress(
+    init_progress: Callable[[], tqdm], func: Callable[[Union[None, tqdm]], None]
+):
+    if _has_tqdm:
+        progress = init_progress()
+        result = func(progress)
+        progress.close()
+        return result
+
+    return func(None)
 
 
 def query_allows_scrolling(query):
@@ -97,8 +115,9 @@ class Query:
         }, all_results=True)
         """
         if all_results:
-            with tqdm(total=MAX_RESULT_SIZE) as progress:
-                return recursive_execute_dsl(
+            return with_progress(
+                lambda: tqdm(total=MAX_RESULT_SIZE),
+                lambda progress: recursive_execute_dsl(
                     {
                         "limit": [
                             {"type": "number", "value": 0},
@@ -114,7 +133,8 @@ class Query:
                     scroll=all_results,
                     progress=progress,
                     auth_args=auth_args,
-                )
+                ),
+            )
 
         return recursive_execute_dsl(
             query, scroll=all_results, auth_args=auth_args,

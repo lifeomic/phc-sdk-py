@@ -4,4 +4,3 @@ nest_asyncio
 pyjwt
 pandas
 funcy
-tqdm
