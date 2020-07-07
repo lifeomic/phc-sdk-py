@@ -5,16 +5,20 @@ from phc.easy.frame import Frame
 from phc.easy.auth import Auth
 
 
-class Observation:
+class Procedure:
     @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,
+            "date_columns": [
+                *expand_args.get("date_columns", []),
+                "performedPeriod.start",
+                "performedPeriod.end",
+            ],
             "custom_columns": [
                 *expand_args.get("custom_columns", []),
                 Frame.codeable_like_column_expander("subject"),
-                Frame.codeable_like_column_expander("related"),
-                Frame.codeable_like_column_expander("performer"),
+                Frame.codeable_like_column_expander("performedPeriod"),
             ],
         }
 
@@ -29,19 +33,19 @@ class Observation:
         auth_args=Auth.shared(),
         expand_args: dict = {},
     ):
-        """Retrieve observations
+        """Retrieve procedures
 
         Attributes
         ----------
         all_results : bool = False
-            Retrieve sample of results (10) or entire set of observations
+            Retrieve sample of results (10) or entire set of procedures
 
         raw : bool = False
             If raw, then values will not be expanded (useful for manual
             inspection if something goes wrong)
 
         patient_id : None or str = None
-            Find observations for a given patient_id
+            Find procedures for a given patient_id
 
         query_overrides : dict = {}
             Override any part of the elasticsearch FHIR query
@@ -57,13 +61,13 @@ class Observation:
         >>> import phc.easy as phc
         >>> phc.Auth.set({'account': '<your-account-name>'})
         >>> phc.Project.set_current('My Project Name')
-        >>> phc.Observation.get_data_frame(patient_id='<patient-id>')
+        >>> phc.Procedure.get_data_frame(patient_id='<patient-id>')
         """
         data_frame = PatientItem.retrieve_raw_data_frame(
-            "observation", all_results, patient_id, query_overrides, auth_args
+            "procedure", all_results, patient_id, query_overrides, auth_args
         )
 
         if raw:
             return data_frame
 
-        return Observation.transform_results(data_frame, **expand_args)
+        return Procedure.transform_results(data_frame, **expand_args)
