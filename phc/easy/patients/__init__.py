@@ -9,6 +9,18 @@ from phc.easy.query import Query
 
 class Patient:
     @staticmethod
+    def get_count(query_overrides: dict = {}, auth_args=Auth.shared()):
+        return Query.find_count_of_dsl_query(
+            {
+                "type": "select",
+                "columns": "*",
+                "from": [{"table": "patient"}],
+                **query_overrides,
+            },
+            auth_args=auth_args,
+        )
+
+    @staticmethod
     def get_data_frame(
         limit: int = 100,
         all_results: bool = False,

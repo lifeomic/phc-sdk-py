@@ -83,6 +83,48 @@ def recursive_execute_dsl(
 
 class Query:
     @staticmethod
+    def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
+        """Find count of a given dsl query
+
+        See https://docs.us.lifeomic.com/development/fhir-service/dsl/
+
+        Attributes
+        ----------
+        query : dict
+            The FHIR query to run a count against
+
+        auth_args : Auth, dict
+            Additional arguments for authentication
+
+        Examples
+        --------
+        >>> import phc.easy as phc
+        >>> phc.Auth.set({ 'account': '<your-account-name>' })
+        >>> phc.Project.set_current('My Project Name')
+        >>> phc.Query.find_count_of_dsl_query({
+          "type": "select",
+          "columns": "*",
+          "from": [{"table": "patient"}],
+        })
+        """
+        auth = Auth(auth_args)
+        fhir = Fhir(auth.session())
+
+        response = fhir.execute_es(
+            auth.project_id,
+            {
+                **query,
+                "limit": [
+                    {"type": "number", "value": 0},
+                    {"type": "number", "value": 1},
+                ],
+            },
+            scroll="true",
+        )
+
+        return response.data["hits"]["total"]["value"]
+
+    @staticmethod
     def execute_dsl(
         query: dict, all_results: bool = False, auth_args: Auth = Auth.shared(),
     ):
