@@ -21,6 +21,19 @@ class Patient:
         )
 
     @staticmethod
+    def transform_results(data_frame: pd.DataFrame, **expand_args):
+        args = {
+            **expand_args,
+            "custom_columns": [
+                *expand_args.get("custom_columns", []),
+                ("address", expand_address_column),
+                ("name", expand_name_column),
+            ],
+        }
+
+        return Frame.expand(data_frame, **args)
+
+    @staticmethod
     def get_data_frame(
         limit: int = 100,
         all_results: bool = False,
@@ -41,7 +54,8 @@ class Patient:
 
         raw : bool = False
             If raw, then values will not be expanded (useful for manual
-            inspection if something goes wrong)
+            inspection if something goes wrong). Note that this option will
+            override all_results if True.
 
         query_overrides : dict = {}
             Override any part of the elasticsearch FHIR query
@@ -58,6 +72,7 @@ class Patient:
         >>> phc.Auth.set({'account': '<your-account-name>'})
         >>> phc.Project.set_current('My Project Name')
         >>> phc.Patient.get_data_frame()
+
         """
         results = Query.execute_dsl(
             {
@@ -79,13 +94,4 @@ class Patient:
         if raw:
             return df
 
-        args = {
-            **expand_args,
-            "custom_columns": [
-                *expand_args.get("custom_columns", []),
-                ("address", expand_address_column),
-                ("name", expand_name_column),
-            ],
-        }
-
-        return Frame.expand(df, **args)
+        return Patient.transform_results(df, **expand_args)

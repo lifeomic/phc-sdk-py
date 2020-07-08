@@ -1,4 +1,4 @@
-from typing import List, Union, Callable
+from typing import List, Union, Callable, Any
 from phc import Session
 from phc.services import Accounts, Projects, Fhir
 from phc.easy.auth import Auth
@@ -40,6 +40,7 @@ def recursive_execute_dsl(
     scroll: bool = False,
     progress: Union[None, tqdm] = None,
     auth_args: Auth = Auth.shared(),
+    callback: Union[Callable[[Any, bool], None], None] = None,
     _scroll_id: str = "true",
     _prev_hits: List = [],
 ):
@@ -52,23 +53,31 @@ def recursive_execute_dsl(
         _scroll_id if query_allows_scrolling(query) and scroll else "",
     )
 
+    is_first_iteration = _scroll_id == "true"
     current_results = response.data.get("hits").get("hits")
-    results = [*_prev_hits, *current_results]
     _scroll_id = response.data.get("_scroll_id", "")
-
     actual_count = response.data["hits"]["total"]["value"]
     current_result_count = len(current_results)
 
-    if len(_prev_hits) == 0 and progress and scroll:
+    if is_first_iteration and progress:
         progress.reset(actual_count)
 
     if progress:
         progress.update(current_result_count)
 
-    if current_result_count == 0 or scroll is False:
-        print(
-            f"Retrieved {len(results)}/{actual_count}{'+' if actual_count == MAX_RESULT_SIZE else ''} results"
-        )
+    is_last_batch = current_result_count == 0 or scroll is False
+    results = []
+
+    if callback and not is_last_batch:
+        callback(current_results, False)
+    elif callback and is_last_batch:
+        return callback(current_results, True)
+    elif is_last_batch:
+        results = [*_prev_hits, *current_results]
+
+        suffix = "+" if actual_count == MAX_RESULT_SIZE else ""
+        print(f"Retrieved {len(results)}/{actual_count}{suffix} results")
+
         return results
 
     return recursive_execute_dsl(
@@ -76,6 +85,7 @@ def recursive_execute_dsl(
         scroll=True,
         progress=progress,
         auth_args=auth,
+        callback=callback,
         _scroll_id=_scroll_id,
         _prev_hits=results,
     )
@@ -126,7 +136,10 @@ class Query:
 
     @staticmethod
     def execute_dsl(
-        query: dict, all_results: bool = False, auth_args: Auth = Auth.shared(),
+        query: dict,
+        all_results: bool = False,
+        auth_args: Auth = Auth.shared(),
+        callback: Union[Callable[[Any, bool], None], None] = None,
     ):
         """Execute a FHIR query with the DSL
 
@@ -144,6 +157,20 @@ class Query:
         auth_args : Auth, dict
             Additional arguments for authentication
 
+        callback : Callable[[Any, bool], None] (optional)
+
+            A progress function that is invoked for each batch. When the second
+            argument passed is true, then the result of the callback function is
+            used as the return value. This is useful if writing results out to a
+            file and then returning the completed result from that file.
+
+            Example:
+
+                def handle_batch(batch, is_finished):
+                    print(len(batch))
+                    if is_finished:
+                        return "batch finished
+
         Examples
         --------
         >>> import phc.easy as phc
@@ -156,6 +183,7 @@ class Query:
               {"table": "patient"}
           ],
         }, all_results=True)
+
         """
         if all_results:
             return with_progress(
@@ -175,10 +203,11 @@ class Query:
                     },
                     scroll=all_results,
                     progress=progress,
+                    callback=callback,
                     auth_args=auth_args,
                 ),
             )
 
         return recursive_execute_dsl(
-            query, scroll=all_results, auth_args=auth_args,
+            query, scroll=all_results, callback=callback, auth_args=auth_args,
         )
