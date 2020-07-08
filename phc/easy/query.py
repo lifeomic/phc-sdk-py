@@ -9,6 +9,7 @@ try:
     from tqdm.autonotebook import tqdm
 except ImportError:
     _has_tqdm = False
+    tqdm = None
 else:
     _has_tqdm = True
 
