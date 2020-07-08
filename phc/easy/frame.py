@@ -10,8 +10,16 @@ CODE_COLUMNS = [
     "valueCodeableConcept",
     "code",
     "valueQuantity",
+    "category",
 ]
-DATE_COLUMNS = ["dob", "birth_date", "birthDate", "deceasedDateTime"]
+DATE_COLUMNS = [
+    "dob",
+    "birth_date",
+    "birthDate",
+    "deceasedDateTime",
+    "effectiveDateTime",
+    "tag_lastUpdated",
+]
 
 
 def column_to_frame(frame: pd.DataFrame, column_name: str, expand_func):
@@ -24,6 +32,15 @@ def column_to_frame(frame: pd.DataFrame, column_name: str, expand_func):
 
 class Frame:
     @staticmethod
+    def codeable_like_column_expander(column_name: str):
+        """Codeable expansion with prefix for passing to Frame.expand#custom_columns"""
+
+        def _expander(column):
+            return Codeable.expand_column(column).add_prefix(f"{column_name}.")
+
+        return (column_name, _expander)
+
+    @staticmethod
     def expand(
         frame: pd.DataFrame,
         code_columns: List[str] = [],
@@ -32,7 +49,8 @@ class Frame:
             Tuple[str, Callable[[pd.Series], pd.DataFrame]]
         ] = [],
     ):
-        """Expand a data frame with FHIR codes, nested JSON structures, etc into a full, tabular data frame that can much more easily be wrangled
+        """Expand a data frame with FHIR codes, nested JSON structures, etc into a full,
+        tabular data frame that can much more easily be wrangled
 
         Attributes
         ----------
@@ -49,6 +67,7 @@ class Frame:
             A list of tuples with the column name and a function that expands a
             column to a data frame. This will get merged index-wise into the
             combined frame
+
         """
         all_code_columns = [*CODE_COLUMNS, *code_columns]
         all_date_columns = [*DATE_COLUMNS, *date_columns]
@@ -60,7 +79,7 @@ class Frame:
         ]
 
         code_frames = [
-            Codeable.expand_column(frame[col_name])
+            Codeable.expand_column(frame[col_name]).add_prefix(f"{col_name}.")
             for col_name in codeable_col_names
         ]
 
