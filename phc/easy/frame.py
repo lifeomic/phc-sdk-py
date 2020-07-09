@@ -1,5 +1,7 @@
 from typing import Callable, List, Tuple
+
 import pandas as pd
+
 from phc.easy.codeable import Codeable
 
 CODE_COLUMNS = [

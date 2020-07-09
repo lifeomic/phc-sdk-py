@@ -2,6 +2,7 @@ from typing import Any, Callable, List, Union
 
 import pandas as pd
 
+from phc.services import Fhir
 from phc.easy.auth import Auth
 from phc.easy.query.fhir_dsl import (
     MAX_RESULT_SIZE,

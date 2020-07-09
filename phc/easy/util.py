@@ -4,7 +4,11 @@ from typing import Union
 
 def join_underscore(values):
     return "_".join(
-        [str(value) for value in values if type(value) == int or len(value) > 0]
+        [
+            str(value)
+            for value in values
+            if isinstance(value, int) or len(value) > 0
+        ]
     )
 
 
@@ -13,7 +17,7 @@ def without_keys(dictionary, keys):
 
 
 def prefix_dict_keys(dictionary, prefix: Union[str, int]):
-    if type(prefix) == str and len(prefix) == 0:
+    if isinstance(prefix, str) and len(prefix) == 0:
         return dictionary
 
     return {f"{prefix}_{key}": value for key, value in dictionary.items()}
