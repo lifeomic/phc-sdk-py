@@ -67,6 +67,6 @@ class PatientItem:
 
         query = {**query, **query_overrides}
 
-        results = Query.execute_dsl(query, all_results, auth_args)
+        results = Query.execute_fhir_dsl(query, all_results, auth_args)
 
         return pd.DataFrame(map(lambda r: r["_source"], results))

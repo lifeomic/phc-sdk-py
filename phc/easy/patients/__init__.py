@@ -1,9 +1,9 @@
 import pandas as pd
+
 from phc.easy.auth import Auth
 from phc.easy.frame import Frame
 from phc.easy.patients.address import expand_address_column
 from phc.easy.patients.name import expand_name_column
-from phc.services import Fhir
 from phc.easy.query import Query
 
 
@@ -39,7 +39,8 @@ class Patient:
         all_results: bool = False,
         raw: bool = False,
         query_overrides: dict = {},
-        auth_args=Auth.shared(),
+        auth_args: Auth = Auth.shared(),
+        ignore_cache: bool = False,
         expand_args: dict = {},
     ):
         """Retrieve patients as a data frame with unwrapped FHIR columns
@@ -63,6 +64,10 @@ class Patient:
         auth_args : Any
             The authenication to use for the account and project (defaults to shared)
 
+        ignore_cache : bool = False
+            Bypass the caching system that auto-saves results to a CSV file.
+            Caching only occurs when all results are being retrieved.
+
         expand_args : Any
             Additional arguments passed to phc.Frame.expand
 
@@ -74,24 +79,26 @@ class Patient:
         >>> phc.Patient.get_data_frame()
 
         """
-        results = Query.execute_dsl(
-            {
-                "type": "select",
-                "columns": "*",
-                "from": [{"table": "patient"}],
-                "limit": [
-                    {"type": "number", "value": 0},
-                    {"type": "number", "value": limit},
-                ],
-                **query_overrides,
-            },
+        query = {
+            "type": "select",
+            "columns": "*",
+            "from": [{"table": "patient"}],
+            "limit": [
+                {"type": "number", "value": 0},
+                {"type": "number", "value": limit},
+            ],
+            **query_overrides,
+        }
+
+        def transform(df: pd.DataFrame):
+            return Patient.transform_results(df, **expand_args)
+
+        return Query.execute_fhir_dsl_with_options(
+            query,
+            transform,
             all_results,
+            raw,
+            query_overrides,
             auth_args,
+            ignore_cache,
         )
-
-        df = pd.DataFrame(map(lambda r: r["_source"], results))
-
-        if raw:
-            return df
-
-        return Patient.transform_results(df, **expand_args)

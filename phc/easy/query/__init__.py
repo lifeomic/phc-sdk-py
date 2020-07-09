@@ -1,94 +1,15 @@
-from typing import List, Union, Callable, Any
-from phc import Session
-from phc.services import Accounts, Projects, Fhir
+from typing import Any, Callable, List, Union
+
+import pandas as pd
+
 from phc.easy.auth import Auth
-
-MAX_RESULT_SIZE = 10000
-
-try:
-    from tqdm.autonotebook import tqdm
-except ImportError:
-    _has_tqdm = False
-    tqdm = None
-else:
-    _has_tqdm = True
-
-
-def with_progress(
-    init_progress: Callable[[], tqdm], func: Callable[[Union[None, tqdm]], None]
-):
-    if _has_tqdm:
-        progress = init_progress()
-        result = func(progress)
-        progress.close()
-        return result
-
-    return func(None)
-
-
-def query_allows_scrolling(query):
-    limit = iter(query.get("limit", []))
-
-    lower = next(limit, {}).get("value")
-    upper = next(limit, {}).get("value")
-
-    return type(lower) == int and type(upper) == int
-
-
-def recursive_execute_dsl(
-    query: dict,
-    scroll: bool = False,
-    progress: Union[None, tqdm] = None,
-    auth_args: Auth = Auth.shared(),
-    callback: Union[Callable[[Any, bool], None], None] = None,
-    _scroll_id: str = "true",
-    _prev_hits: List = [],
-):
-    auth = Auth(auth_args)
-    fhir = Fhir(auth.session())
-
-    response = fhir.execute_es(
-        auth.project_id,
-        query,
-        _scroll_id if query_allows_scrolling(query) and scroll else "",
-    )
-
-    is_first_iteration = _scroll_id == "true"
-    current_results = response.data.get("hits").get("hits")
-    _scroll_id = response.data.get("_scroll_id", "")
-    actual_count = response.data["hits"]["total"]["value"]
-    current_result_count = len(current_results)
-
-    if is_first_iteration and progress:
-        progress.reset(actual_count)
-
-    if progress:
-        progress.update(current_result_count)
-
-    is_last_batch = current_result_count == 0 or scroll is False
-    results = []
-
-    if callback and not is_last_batch:
-        callback(current_results, False)
-    elif callback and is_last_batch:
-        return callback(current_results, True)
-    elif is_last_batch:
-        results = [*_prev_hits, *current_results]
-
-        suffix = "+" if actual_count == MAX_RESULT_SIZE else ""
-        print(f"Retrieved {len(results)}/{actual_count}{suffix} results")
-
-        return results
-
-    return recursive_execute_dsl(
-        query,
-        scroll=True,
-        progress=progress,
-        auth_args=auth,
-        callback=callback,
-        _scroll_id=_scroll_id,
-        _prev_hits=results,
-    )
+from phc.easy.query.fhir_dsl import (
+    MAX_RESULT_SIZE,
+    recursive_execute_fhir_dsl,
+    tqdm,
+    with_progress,
+)
+from phc.util.api_cache import APICache
 
 
 class Query:
@@ -135,7 +56,7 @@ class Query:
         return response.data["hits"]["total"]["value"]
 
     @staticmethod
-    def execute_dsl(
+    def execute_fhir_dsl(
         query: dict,
         all_results: bool = False,
         auth_args: Auth = Auth.shared(),
@@ -158,7 +79,6 @@ class Query:
             Additional arguments for authentication
 
         callback : Callable[[Any, bool], None] (optional)
-
             A progress function that is invoked for each batch. When the second
             argument passed is true, then the result of the callback function is
             used as the return value. This is useful if writing results out to a
@@ -176,7 +96,7 @@ class Query:
         >>> import phc.easy as phc
         >>> phc.Auth.set({ 'account': '<your-account-name>' })
         >>> phc.Project.set_current('My Project Name')
-        >>> phc.Query.execute_dsl({
+        >>> phc.Query.execute_fhir_dsl({
           "type": "select",
           "columns": "*",
           "from": [
@@ -188,7 +108,7 @@ class Query:
         if all_results:
             return with_progress(
                 lambda: tqdm(total=MAX_RESULT_SIZE),
-                lambda progress: recursive_execute_dsl(
+                lambda progress: recursive_execute_fhir_dsl(
                     {
                         "limit": [
                             {"type": "number", "value": 0},
@@ -208,6 +128,42 @@ class Query:
                 ),
             )
 
-        return recursive_execute_dsl(
+        return recursive_execute_fhir_dsl(
             query, scroll=all_results, callback=callback, auth_args=auth_args,
         )
+
+    @staticmethod
+    def execute_fhir_dsl_with_options(
+        query: dict,
+        transform: Callable[[pd.DataFrame], pd.DataFrame],
+        all_results: bool,
+        raw: bool,
+        query_overrides: dict,
+        auth_args: Auth,
+        ignore_cache: bool,
+    ):
+        query = {**query, **query_overrides}
+
+        use_cache = (not ignore_cache) and (not raw) and all_results
+
+        if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
+            return APICache.load_cache_for_fhir_dsl(query)
+
+        if use_cache:
+            return Query.execute_fhir_dsl(
+                query,
+                all_results,
+                auth_args,
+                callback=APICache.build_cache_fhir_dsl_callback(
+                    query, transform
+                ),
+            )
+
+        results = Query.execute_fhir_dsl(query, all_results, auth_args)
+
+        df = pd.DataFrame(map(lambda r: r["_source"], results))
+
+        if raw:
+            return df
+
+        return transform(df)
