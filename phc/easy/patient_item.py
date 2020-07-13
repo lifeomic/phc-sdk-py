@@ -16,6 +16,10 @@ class PatientItem:
         "Returns the FSS table name for retrieval"
         raise ValueError("Table name should be implemented by subclass")
 
+    @staticmethod
+    def patient_key() -> str:
+        return "subject.reference"
+
     @classmethod
     def get_count(cls, query_overrides: dict = {}, auth_args=Auth.shared()):
         "Get the count for a given FSS query"
@@ -82,7 +86,9 @@ class PatientItem:
         >>>
         >>> phc.Goal.get_data_frame(patient_id='<patient-id>')
         """
-        query = PatientItem.build_query(cls.table_name(), patient_id)
+        query = PatientItem.build_query(
+            cls.table_name(), patient_id, cls.patient_key()
+        )
 
         def transform(df: pd.DataFrame):
             return cls.transform_results(df, **expand_args)
@@ -99,7 +105,9 @@ class PatientItem:
 
     @staticmethod
     def build_query(
-        table_name: str, patient_id: Union[None, str] = None
+        table_name: str,
+        patient_id: Union[None, str] = None,
+        patient_key: str = "subject.reference",
     ) -> dict:
         """Build query for a given table that relates to a patient
 
@@ -125,7 +133,7 @@ class PatientItem:
                     "type": "elasticsearch",
                     "query": {
                         "terms": {
-                            "subject.reference.keyword": [
+                            f"{patient_key}.keyword": [
                                 patient_id,
                                 f"Patient/{patient_id}",
                             ]
