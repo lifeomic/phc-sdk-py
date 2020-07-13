@@ -85,9 +85,12 @@ class APICache:
     @staticmethod
     def read_csv(filename: str) -> pd.DataFrame:
         df = pd.read_csv(filename)
-        # Columns are considered dates if 5 examples of that format are found
+        min_count = max(min(int(len(df) / 3), 5), 1)
+
+        # Columns are considered dates if enough examples of that format are found
         mask = df.astype(str).apply(
-            lambda c: np.count_nonzero(c.str.match(DATE_FORMAT_REGEX)) > 5
+            lambda c: np.count_nonzero(c.str.match(DATE_FORMAT_REGEX))
+            > min_count
         )
         df.loc[:, mask] = df.loc[:, mask].apply(pd.to_datetime)
         return df
