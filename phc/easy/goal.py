@@ -4,20 +4,19 @@ from phc.easy.frame import Frame
 from phc.easy.patient_item import PatientItem
 
 
-class Observation(PatientItem):
+class Goal(PatientItem):
     @staticmethod
     def table_name():
-        return "observation"
+        return "goal"
 
     @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,
+            "date_columns": [*expand_args.get("date_columns", []), "startDate"],
             "custom_columns": [
                 *expand_args.get("custom_columns", []),
                 Frame.codeable_like_column_expander("subject"),
-                Frame.codeable_like_column_expander("related"),
-                Frame.codeable_like_column_expander("performer"),
             ],
         }
 

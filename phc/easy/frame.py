@@ -13,6 +13,7 @@ CODE_COLUMNS = [
     "code",
     "valueQuantity",
     "category",
+    "target",
 ]
 DATE_COLUMNS = [
     "dob",
