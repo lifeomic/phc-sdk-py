@@ -7,6 +7,9 @@ from phc.easy.codeable import Codeable
 from phc.easy.observation import Observation
 from phc.easy.procedure import Procedure
 from phc.easy.patient_item import PatientItem
+from phc.easy.consent import Consent
+from phc.easy.goal import Goal
+from phc.easy.condition import Condition
 
 __all__ = [
     "Frame",
@@ -18,4 +21,7 @@ __all__ = [
     "Observation",
     "PatientItem",
     "Procedure",
+    "Consent",
+    "Goal",
+    "Condition",
 ]
