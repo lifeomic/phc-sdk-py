@@ -3,11 +3,15 @@ import json
 from pathlib import Path
 from typing import Callable
 
+import numpy as np
 import pandas as pd
 
 from phc.util.csv_writer import CSVWriter
 
-DIR = "~/_phc/api-cache"
+DIR = "~/Downloads/phc/api-cache"
+DATE_FORMAT_REGEX = (
+    r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([-+]\d{4}|Z)"
+)
 
 
 class APICache:
@@ -45,7 +49,7 @@ class APICache:
         )
         print(f'Loading cache from "{filename}"')
 
-        return pd.read_csv(filename)
+        return APICache.read_csv(filename)
 
     @staticmethod
     def build_cache_fhir_dsl_callback(
@@ -61,9 +65,19 @@ class APICache:
         def handle_batch(batch, is_finished):
             if is_finished:
                 print(f'Loading data frame from "{filename}"')
-                return pd.read_csv(filename)
+                return APICache.read_csv(filename)
 
             df = pd.DataFrame(map(lambda r: r["_source"], batch))
             writer.write(transform(df))
 
         return handle_batch
+
+    @staticmethod
+    def read_csv(filename: str) -> pd.DataFrame:
+        df = pd.read_csv(filename)
+        # Columns are considered dates if 5 examples of that format are found
+        mask = df.astype(str).apply(
+            lambda c: np.count_nonzero(c.str.match(DATE_FORMAT_REGEX)) > 5
+        )
+        df.loc[:, mask] = df.loc[:, mask].apply(pd.to_datetime)
+        return df

@@ -18,7 +18,9 @@ class CSVWriter:
         file into memory
         """
         if not os.path.exists(self.filename):
-            frame.to_csv(self.filename, index=False)
+            frame.to_csv(
+                self.filename, date_format="%Y-%m-%dT%H:%M:%S%z", index=False
+            )
             return
 
         self._copy_to_backup_file_without_header()
