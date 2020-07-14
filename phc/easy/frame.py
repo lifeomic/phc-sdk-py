@@ -1,5 +1,7 @@
 from typing import Callable, List, Tuple
+
 import pandas as pd
+
 from phc.easy.codeable import Codeable
 
 CODE_COLUMNS = [
@@ -18,7 +20,7 @@ DATE_COLUMNS = [
     "birthDate",
     "deceasedDateTime",
     "effectiveDateTime",
-    "tag_lastUpdated",
+    "meta.tag_lastUpdated",
 ]
 
 
@@ -101,6 +103,8 @@ class Frame:
         # Mutate data frame to parse date columns
         for column_key in all_date_columns:
             if column_key in combined.columns:
-                combined[column_key] = pd.to_datetime(combined[column_key])
+                combined[column_key] = pd.to_datetime(
+                    combined[column_key], utc=True
+                )
 
         return combined

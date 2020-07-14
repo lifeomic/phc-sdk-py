@@ -1,8 +1,10 @@
-import pandas as pd
 from functools import reduce
+
+import pandas as pd
+
+import phc.services as services
 from funcy import memoize
 from phc.easy.auth import Auth
-import phc.services as services
 
 SEARCH_COLUMNS = ["name", "description", "id"]
 

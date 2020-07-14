@@ -1,9 +1,9 @@
 import pandas as pd
+
 from phc.easy.auth import Auth
 from phc.easy.frame import Frame
 from phc.easy.patients.address import expand_address_column
 from phc.easy.patients.name import expand_name_column
-from phc.services import Fhir
 from phc.easy.query import Query
 
 
@@ -21,12 +21,26 @@ class Patient:
         )
 
     @staticmethod
+    def transform_results(data_frame: pd.DataFrame, **expand_args):
+        args = {
+            **expand_args,
+            "custom_columns": [
+                *expand_args.get("custom_columns", []),
+                ("address", expand_address_column),
+                ("name", expand_name_column),
+            ],
+        }
+
+        return Frame.expand(data_frame, **args)
+
+    @staticmethod
     def get_data_frame(
         limit: int = 100,
         all_results: bool = False,
         raw: bool = False,
         query_overrides: dict = {},
-        auth_args=Auth.shared(),
+        auth_args: Auth = Auth.shared(),
+        ignore_cache: bool = False,
         expand_args: dict = {},
     ):
         """Retrieve patients as a data frame with unwrapped FHIR columns
@@ -41,13 +55,18 @@ class Patient:
 
         raw : bool = False
             If raw, then values will not be expanded (useful for manual
-            inspection if something goes wrong)
+            inspection if something goes wrong). Note that this option will
+            override all_results if True.
 
         query_overrides : dict = {}
             Override any part of the elasticsearch FHIR query
 
         auth_args : Any
             The authenication to use for the account and project (defaults to shared)
+
+        ignore_cache : bool = False
+            Bypass the caching system that auto-saves results to a CSV file.
+            Caching only occurs when all results are being retrieved.
 
         expand_args : Any
             Additional arguments passed to phc.Frame.expand
@@ -58,34 +77,28 @@ class Patient:
         >>> phc.Auth.set({'account': '<your-account-name>'})
         >>> phc.Project.set_current('My Project Name')
         >>> phc.Patient.get_data_frame()
+
         """
-        results = Query.execute_dsl(
-            {
-                "type": "select",
-                "columns": "*",
-                "from": [{"table": "patient"}],
-                "limit": [
-                    {"type": "number", "value": 0},
-                    {"type": "number", "value": limit},
-                ],
-                **query_overrides,
-            },
-            all_results,
-            auth_args,
-        )
-
-        df = pd.DataFrame(map(lambda r: r["_source"], results))
-
-        if raw:
-            return df
-
-        args = {
-            **expand_args,
-            "custom_columns": [
-                *expand_args.get("custom_columns", []),
-                ("address", expand_address_column),
-                ("name", expand_name_column),
+        query = {
+            "type": "select",
+            "columns": "*",
+            "from": [{"table": "patient"}],
+            "limit": [
+                {"type": "number", "value": 0},
+                {"type": "number", "value": limit},
             ],
+            **query_overrides,
         }
 
-        return Frame.expand(df, **args)
+        def transform(df: pd.DataFrame):
+            return Patient.transform_results(df, **expand_args)
+
+        return Query.execute_fhir_dsl_with_options(
+            query,
+            transform,
+            all_results,
+            raw,
+            query_overrides,
+            auth_args,
+            ignore_cache,
+        )

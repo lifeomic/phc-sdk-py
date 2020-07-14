@@ -1,15 +1,14 @@
-import os
 import math
 import re
-import pandas as pd
 from functools import reduce
-from phc import Session
-from phc.services import Fhir
+
+import pandas as pd
+
 from phc.easy.util import (
-    join_underscore,
-    without_keys,
     concat_dicts,
+    join_underscore,
     prefix_dict_keys,
+    without_keys,
 )
 
 

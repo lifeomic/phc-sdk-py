@@ -1,8 +1,10 @@
 from typing import Union
+
 import pandas as pd
-from phc.easy.patient_item import PatientItem
-from phc.easy.frame import Frame
+
 from phc.easy.auth import Auth
+from phc.easy.frame import Frame
+from phc.easy.patient_item import PatientItem
 from phc.easy.query import Query
 
 
@@ -40,6 +42,7 @@ class Observation:
         patient_id: Union[None, str] = None,
         query_overrides: dict = {},
         auth_args=Auth.shared(),
+        ignore_cache: bool = False,
         expand_args: dict = {},
     ):
         """Retrieve observations
@@ -62,6 +65,10 @@ class Observation:
         auth_args : Any
             The authenication to use for the account and project (defaults to shared)
 
+        ignore_cache : bool = False
+            Bypass the caching system that auto-saves results to a CSV file.
+            Caching only occurs when all results are being retrieved.
+
         expand_args : Any
             Additional arguments passed to phc.Frame.expand
 
@@ -72,11 +79,17 @@ class Observation:
         >>> phc.Project.set_current('My Project Name')
         >>> phc.Observation.get_data_frame(patient_id='<patient-id>')
         """
-        data_frame = PatientItem.retrieve_raw_data_frame(
-            "observation", all_results, patient_id, query_overrides, auth_args
+        query = PatientItem.build_query("observation", patient_id)
+
+        def transform(df: pd.DataFrame):
+            return Observation.transform_results(df, **expand_args)
+
+        return Query.execute_fhir_dsl_with_options(
+            query,
+            transform,
+            all_results,
+            raw,
+            query_overrides,
+            auth_args,
+            ignore_cache,
         )
-
-        if raw:
-            return data_frame
-
-        return Observation.transform_results(data_frame, **expand_args)
