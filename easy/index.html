@@ -1,0 +1,3024 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.3" />
+<title>phc.easy API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<style>.flex{display:flex !important}body{line-height:1.5em;font-family:"Lato",Helvetica,Roboto,Arial,"Lucida Grande",sans-serif}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:90%}ul li code a{font-size:80%}a{color:#00539a;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#f7944d}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<link rel="shortcut icon" href="./favicon.ico">
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>phc.easy</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from phc.easy.frame import Frame
+from phc.easy.query import Query
+from phc.easy.patients import Patient
+from phc.easy.projects import Project
+from phc.easy.auth import Auth
+from phc.easy.codeable import Codeable
+from phc.easy.observation import Observation
+from phc.easy.procedure import Procedure
+from phc.easy.patient_item import PatientItem
+from phc.easy.consent import Consent
+from phc.easy.goal import Goal
+from phc.easy.condition import Condition
+from phc.easy.specimen import Specimen
+
+__all__ = [
+    &#34;Frame&#34;,
+    &#34;Query&#34;,
+    &#34;Patient&#34;,
+    &#34;Auth&#34;,
+    &#34;Codeable&#34;,
+    &#34;Project&#34;,
+    &#34;Observation&#34;,
+    &#34;PatientItem&#34;,
+    &#34;Procedure&#34;,
+    &#34;Consent&#34;,
+    &#34;Goal&#34;,
+    &#34;Condition&#34;,
+    &#34;Specimen&#34;,
+]</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="phc.easy.auth" href="auth.html">phc.easy.auth</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.codeable" href="codeable.html">phc.easy.codeable</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.condition" href="condition.html">phc.easy.condition</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.consent" href="consent.html">phc.easy.consent</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.frame" href="frame.html">phc.easy.frame</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.goal" href="goal.html">phc.easy.goal</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.observation" href="observation.html">phc.easy.observation</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.patient_item" href="patient_item.html">phc.easy.patient_item</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.patients" href="patients/index.html">phc.easy.patients</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.procedure" href="procedure.html">phc.easy.procedure</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.projects" href="projects.html">phc.easy.projects</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.query" href="query/index.html">phc.easy.query</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.specimen" href="specimen.html">phc.easy.specimen</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.util" href="util.html">phc.easy.util</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="phc.easy.Auth"><code class="flex name class">
+<span>class <span class="ident">Auth</span></span>
+<span>(</span><span>details: Union[Any, NoneType, Dict[str, str]] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create an authentication object that can be shared as a single argument to
+the 'easy' SDK calls</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>details</code></strong> :&ensp;<code>Auth | dict | None</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<p>A dictionary representation of the token, account, and/or project id.
+Can also be another authentication object. Will use environment
+variables as the default.</p>
+<p>account : str
+The PHC account to authenticate against
+Defaults to $PHC_ACCOUNT</p>
+<p>project_id : str
+(Optional) The ID of the project to pull resources from
+Defaults to $PHC_PROJECT_ID</p>
+<p>token : str
+(Optional) The API key to use
+Defaults to $PHC_ACCESS_TOKEN</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Auth:
+    def __init__(self, details: Union[Any, None, Dict[str, str]] = None):
+        &#34;&#34;&#34;Create an authentication object that can be shared as a single argument to
+        the &#39;easy&#39; SDK calls
+
+        Attributes
+        ----------
+        details : Auth | dict | None
+
+          A dictionary representation of the token, account, and/or project id.
+          Can also be another authentication object. Will use environment
+          variables as the default.
+
+          account : str
+              The PHC account to authenticate against
+              Defaults to $PHC_ACCOUNT
+
+          project_id : str
+              (Optional) The ID of the project to pull resources from
+              Defaults to $PHC_PROJECT_ID
+
+          token : str
+              (Optional) The API key to use
+              Defaults to $PHC_ACCESS_TOKEN
+        &#34;&#34;&#34;
+        self.update(details)
+
+    @staticmethod
+    def custom(details: Union[None, Dict[str, str]]):
+        &#34;Returns customized auth object from the shared one&#34;
+        return Auth.shared().customized(details)
+
+    @staticmethod
+    def set(details: Union[None, Dict[str, str]]):
+        &#34;Updates and returns the shared authentication singleton&#34;
+        shared = Auth.shared()
+        shared.update(details)
+        return shared
+
+    @staticmethod
+    def shared():
+        global _shared_auth
+
+        if not _shared_auth:
+            _shared_auth = Auth()
+
+        return _shared_auth
+
+    def customized(self, details: Union[None, Dict[str, str]]):
+        &#34;Returns copied, customized auth object from this object&#34;
+        custom = self.__copy()
+        custom.update(details)
+        return custom
+
+    @defaultprop
+    def token(self):
+        return os.environ.get(&#34;PHC_ACCESS_TOKEN&#34;)
+
+    @defaultprop
+    def account(self):
+        return os.environ.get(&#34;PHC_ACCOUNT&#34;)
+
+    @defaultprop
+    def project_id(self):
+        return os.environ.get(&#34;PHC_PROJECT_ID&#34;)
+
+    def session(self):
+        &#34;Create an API session for use with modules not in the &#39;easy&#39; namespace&#34;
+        return Session(token=self.token, account=self.account)
+
+    def accounts(self):
+        &#34;List available accounts for the authenticated user&#34;
+        return Accounts(self.session()).get_list().data.get(&#34;accounts&#34;)
+
+    def details(self):
+        return {
+            &#34;account&#34;: self.account,
+            &#34;project_id&#34;: self.project_id,
+            &#34;token&#34;: self.token,
+        }
+
+    def __copy(self):
+        return Auth(self)
+
+    def update(self, details: Union[Any, None, Dict[str, str]] = None):
+        &#34;&#34;&#34;Set details of authentication for API calls
+        (Prefer auth.customized unless mutation is required.)
+
+        Attributes
+        ----------
+        details : Auth | dict | None
+
+          A dictionary representation of the token, account, and/or project id.
+          Can also be another authentication object. Will use environment
+          variables as the default.
+
+          account : str
+              The PHC account to authenticate against
+              Defaults to $PHC_ACCOUNT
+
+          project_id : str
+              (Optional) The ID of the project to pull resources from
+              Defaults to $PHC_PROJECT_ID
+
+          token : str
+              (Optional) The API key to use
+              Defaults to $PHC_ACCESS_TOKEN
+        &#34;&#34;&#34;
+        if details is None:
+            return
+
+        if type(details) == Auth:
+            auth = details
+            details = auth.details()
+
+        if details.get(&#34;account&#34;):
+            self._account = details.get(&#34;account&#34;)
+
+        if details.get(&#34;project_id&#34;):
+            self._project_id = details.get(&#34;project_id&#34;)
+
+        if details.get(&#34;token&#34;):
+            self._token = details.get(&#34;token&#34;)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.Auth.custom"><code class="name flex">
+<span>def <span class="ident">custom</span></span>(<span>details: Union[NoneType, Dict[str, str]])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns customized auth object from the shared one</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def custom(details: Union[None, Dict[str, str]]):
+    &#34;Returns customized auth object from the shared one&#34;
+    return Auth.shared().customized(details)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Auth.set"><code class="name flex">
+<span>def <span class="ident">set</span></span>(<span>details: Union[NoneType, Dict[str, str]])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates and returns the shared authentication singleton</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def set(details: Union[None, Dict[str, str]]):
+    &#34;Updates and returns the shared authentication singleton&#34;
+    shared = Auth.shared()
+    shared.update(details)
+    return shared</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Auth.shared"><code class="name flex">
+<span>def <span class="ident">shared</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def shared():
+    global _shared_auth
+
+    if not _shared_auth:
+        _shared_auth = Auth()
+
+    return _shared_auth</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="phc.easy.Auth.account"><code class="name">var <span class="ident">account</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@defaultprop
+def account(self):
+    return os.environ.get(&#34;PHC_ACCOUNT&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Auth.project_id"><code class="name">var <span class="ident">project_id</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@defaultprop
+def project_id(self):
+    return os.environ.get(&#34;PHC_PROJECT_ID&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Auth.token"><code class="name">var <span class="ident">token</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@defaultprop
+def token(self):
+    return os.environ.get(&#34;PHC_ACCESS_TOKEN&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.easy.Auth.accounts"><code class="name flex">
+<span>def <span class="ident">accounts</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List available accounts for the authenticated user</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def accounts(self):
+    &#34;List available accounts for the authenticated user&#34;
+    return Accounts(self.session()).get_list().data.get(&#34;accounts&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Auth.customized"><code class="name flex">
+<span>def <span class="ident">customized</span></span>(<span>self, details: Union[NoneType, Dict[str, str]])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns copied, customized auth object from this object</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def customized(self, details: Union[None, Dict[str, str]]):
+    &#34;Returns copied, customized auth object from this object&#34;
+    custom = self.__copy()
+    custom.update(details)
+    return custom</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Auth.details"><code class="name flex">
+<span>def <span class="ident">details</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def details(self):
+    return {
+        &#34;account&#34;: self.account,
+        &#34;project_id&#34;: self.project_id,
+        &#34;token&#34;: self.token,
+    }</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Auth.session"><code class="name flex">
+<span>def <span class="ident">session</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create an API session for use with modules not in the 'easy' namespace</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def session(self):
+    &#34;Create an API session for use with modules not in the &#39;easy&#39; namespace&#34;
+    return Session(token=self.token, account=self.account)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Auth.update"><code class="name flex">
+<span>def <span class="ident">update</span></span>(<span>self, details: Union[Any, NoneType, Dict[str, str]] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Set details of authentication for API calls
+(Prefer auth.customized unless mutation is required.)</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>details</code></strong> :&ensp;<code>Auth | dict | None</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<p>A dictionary representation of the token, account, and/or project id.
+Can also be another authentication object. Will use environment
+variables as the default.</p>
+<p>account : str
+The PHC account to authenticate against
+Defaults to $PHC_ACCOUNT</p>
+<p>project_id : str
+(Optional) The ID of the project to pull resources from
+Defaults to $PHC_PROJECT_ID</p>
+<p>token : str
+(Optional) The API key to use
+Defaults to $PHC_ACCESS_TOKEN</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update(self, details: Union[Any, None, Dict[str, str]] = None):
+    &#34;&#34;&#34;Set details of authentication for API calls
+    (Prefer auth.customized unless mutation is required.)
+
+    Attributes
+    ----------
+    details : Auth | dict | None
+
+      A dictionary representation of the token, account, and/or project id.
+      Can also be another authentication object. Will use environment
+      variables as the default.
+
+      account : str
+          The PHC account to authenticate against
+          Defaults to $PHC_ACCOUNT
+
+      project_id : str
+          (Optional) The ID of the project to pull resources from
+          Defaults to $PHC_PROJECT_ID
+
+      token : str
+          (Optional) The API key to use
+          Defaults to $PHC_ACCESS_TOKEN
+    &#34;&#34;&#34;
+    if details is None:
+        return
+
+    if type(details) == Auth:
+        auth = details
+        details = auth.details()
+
+    if details.get(&#34;account&#34;):
+        self._account = details.get(&#34;account&#34;)
+
+    if details.get(&#34;project_id&#34;):
+        self._project_id = details.get(&#34;project_id&#34;)
+
+    if details.get(&#34;token&#34;):
+        self._token = details.get(&#34;token&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.Codeable"><code class="flex name class">
+<span>class <span class="ident">Codeable</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Codeable:
+    @staticmethod
+    def expand_column(codeable_col: pd.Series):
+        &#34;&#34;&#34;Convert a pandas dictionary column with codeable data into a data frame
+
+        Attributes
+        ----------
+        codeable_col : pd.Series
+            A pandas column that contains codeable data (FHIR resources)
+        &#34;&#34;&#34;
+        return pd.DataFrame(map(generic_codeable_to_dict, codeable_col.values))</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.Codeable.expand_column"><code class="name flex">
+<span>def <span class="ident">expand_column</span></span>(<span>codeable_col: pandas.core.series.Series)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Convert a pandas dictionary column with codeable data into a data frame</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>codeable_col</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>A pandas column that contains codeable data (FHIR resources)</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def expand_column(codeable_col: pd.Series):
+    &#34;&#34;&#34;Convert a pandas dictionary column with codeable data into a data frame
+
+    Attributes
+    ----------
+    codeable_col : pd.Series
+        A pandas column that contains codeable data (FHIR resources)
+    &#34;&#34;&#34;
+    return pd.DataFrame(map(generic_codeable_to_dict, codeable_col.values))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.Condition"><code class="flex name class">
+<span>class <span class="ident">Condition</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provides an abstract class and/or static methods for retrieving items
+from a FSS table that relates to a patient</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Condition(PatientItem):
+    @staticmethod
+    def table_name():
+        return &#34;condition&#34;
+
+    @staticmethod
+    def transform_results(df: pd.DataFrame, **expand_args):
+        return Frame.expand(
+            df,
+            date_columns=[
+                *expand_args.get(&#34;date_columns&#34;, []),
+                &#34;onsetDateTime&#34;,
+                &#34;assertedDate&#34;,
+                &#34;onsetPeriod.start&#34;,
+                &#34;onsetPeriod.end&#34;,
+            ],
+            code_columns=[
+                *expand_args.get(&#34;code_columns&#34;, []),
+                &#34;bodySite&#34;,
+                &#34;stage&#34;,
+            ],
+            custom_columns=[
+                *expand_args.get(&#34;custom_columns&#34;, []),
+                Frame.codeable_like_column_expander(&#34;subject&#34;),
+                Frame.codeable_like_column_expander(&#34;onsetPeriod&#34;),
+            ],
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.Condition.build_query"><code class="name flex">
+<span>def <span class="ident">build_query</span></span>(<span>table_name: str, patient_id: Union[NoneType, str] = None, patient_key: str = 'subject.reference') ‑> dict</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.build_query" href="patient_item.html#phc.easy.patient_item.PatientItem.build_query">build_query</a></code>
+</p>
+<div class="desc inherited"><p>Build query for a given table that relates to a patient …</p></div>
+</dd>
+<dt id="phc.easy.Condition.get_count"><code class="name flex">
+<span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_count" href="patient_item.html#phc.easy.patient_item.PatientItem.get_count">get_count</a></code>
+</p>
+<div class="desc inherited"><p>Get the count for a given FSS query</p></div>
+</dd>
+<dt id="phc.easy.Condition.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {})</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_data_frame" href="patient_item.html#phc.easy.patient_item.PatientItem.get_data_frame">get_data_frame</a></code>
+</p>
+<div class="desc inherited"><p>Retrieve records …</p></div>
+</dd>
+<dt id="phc.easy.Condition.table_name"><code class="name flex">
+<span>def <span class="ident">table_name</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.table_name" href="patient_item.html#phc.easy.patient_item.PatientItem.table_name">table_name</a></code>
+</p>
+<div class="desc inherited"><p>Returns the FSS table name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def table_name():
+    return &#34;condition&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Condition.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>df: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.transform_results" href="patient_item.html#phc.easy.patient_item.PatientItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(df: pd.DataFrame, **expand_args):
+    return Frame.expand(
+        df,
+        date_columns=[
+            *expand_args.get(&#34;date_columns&#34;, []),
+            &#34;onsetDateTime&#34;,
+            &#34;assertedDate&#34;,
+            &#34;onsetPeriod.start&#34;,
+            &#34;onsetPeriod.end&#34;,
+        ],
+        code_columns=[
+            *expand_args.get(&#34;code_columns&#34;, []),
+            &#34;bodySite&#34;,
+            &#34;stage&#34;,
+        ],
+        custom_columns=[
+            *expand_args.get(&#34;custom_columns&#34;, []),
+            Frame.codeable_like_column_expander(&#34;subject&#34;),
+            Frame.codeable_like_column_expander(&#34;onsetPeriod&#34;),
+        ],
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.Consent"><code class="flex name class">
+<span>class <span class="ident">Consent</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provides an abstract class and/or static methods for retrieving items
+from a FSS table that relates to a patient</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Consent(PatientItem):
+    @staticmethod
+    def table_name():
+        return &#34;consent&#34;
+
+    @staticmethod
+    def patient_key():
+        return &#34;patient.reference&#34;
+
+    @staticmethod
+    def transform_results(df: pd.DataFrame, **expand_args):
+        return Frame.expand(
+            df,
+            date_columns=[*expand_args.get(&#34;date_columns&#34;, []), &#34;dateTime&#34;],
+            custom_columns=[
+                *expand_args.get(&#34;custom_columns&#34;, []),
+                Frame.codeable_like_column_expander(&#34;patient&#34;),
+                Frame.codeable_like_column_expander(&#34;actor&#34;),
+                Frame.codeable_like_column_expander(&#34;sourceReference&#34;),
+            ],
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.Consent.build_query"><code class="name flex">
+<span>def <span class="ident">build_query</span></span>(<span>table_name: str, patient_id: Union[NoneType, str] = None, patient_key: str = 'subject.reference') ‑> dict</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.build_query" href="patient_item.html#phc.easy.patient_item.PatientItem.build_query">build_query</a></code>
+</p>
+<div class="desc inherited"><p>Build query for a given table that relates to a patient …</p></div>
+</dd>
+<dt id="phc.easy.Consent.get_count"><code class="name flex">
+<span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_count" href="patient_item.html#phc.easy.patient_item.PatientItem.get_count">get_count</a></code>
+</p>
+<div class="desc inherited"><p>Get the count for a given FSS query</p></div>
+</dd>
+<dt id="phc.easy.Consent.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {})</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_data_frame" href="patient_item.html#phc.easy.patient_item.PatientItem.get_data_frame">get_data_frame</a></code>
+</p>
+<div class="desc inherited"><p>Retrieve records …</p></div>
+</dd>
+<dt id="phc.easy.Consent.patient_key"><code class="name flex">
+<span>def <span class="ident">patient_key</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def patient_key():
+    return &#34;patient.reference&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Consent.table_name"><code class="name flex">
+<span>def <span class="ident">table_name</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.table_name" href="patient_item.html#phc.easy.patient_item.PatientItem.table_name">table_name</a></code>
+</p>
+<div class="desc inherited"><p>Returns the FSS table name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def table_name():
+    return &#34;consent&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Consent.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>df: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.transform_results" href="patient_item.html#phc.easy.patient_item.PatientItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(df: pd.DataFrame, **expand_args):
+    return Frame.expand(
+        df,
+        date_columns=[*expand_args.get(&#34;date_columns&#34;, []), &#34;dateTime&#34;],
+        custom_columns=[
+            *expand_args.get(&#34;custom_columns&#34;, []),
+            Frame.codeable_like_column_expander(&#34;patient&#34;),
+            Frame.codeable_like_column_expander(&#34;actor&#34;),
+            Frame.codeable_like_column_expander(&#34;sourceReference&#34;),
+        ],
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.Frame"><code class="flex name class">
+<span>class <span class="ident">Frame</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Frame:
+    @staticmethod
+    def codeable_like_column_expander(column_name: str):
+        &#34;&#34;&#34;Codeable expansion with prefix for passing to Frame.expand#custom_columns&#34;&#34;&#34;
+
+        def _expander(column):
+            return Codeable.expand_column(column).add_prefix(f&#34;{column_name}.&#34;)
+
+        return (column_name, _expander)
+
+    @staticmethod
+    def expand(
+        frame: pd.DataFrame,
+        code_columns: List[str] = [],
+        date_columns: List[str] = [],
+        custom_columns: List[
+            Tuple[str, Callable[[pd.Series], pd.DataFrame]]
+        ] = [],
+    ):
+        &#34;&#34;&#34;Expand a data frame with FHIR codes, nested JSON structures, etc into a full,
+        tabular data frame that can much more easily be wrangled
+
+        Attributes
+        ----------
+        frame : pd.DataFrame
+            The data frame to expand
+
+        code_columns : List[str]
+            The list of column names that contain code-like data (e.g. FHIR dictionaries)
+
+        date_columns : List[str]
+            The list of column names that contain dates (may not able to parse but might)
+
+        custom_columns : List[Tuple[str, Callable[[pd.Series], pd.DataFrame]]]
+            A list of tuples with the column name and a function that expands a
+            column to a data frame. This will get merged index-wise into the
+            combined frame
+
+        &#34;&#34;&#34;
+        all_code_columns = [*CODE_COLUMNS, *code_columns]
+        all_date_columns = [*DATE_COLUMNS, *date_columns]
+
+        codeable_col_names = [
+            col_name
+            for col_name in all_code_columns
+            if col_name in frame.columns
+        ]
+
+        code_frames = [
+            Codeable.expand_column(frame[col_name]).add_prefix(f&#34;{col_name}.&#34;)
+            for col_name in codeable_col_names
+        ]
+
+        custom_names = [
+            key for key, _func in custom_columns if key in frame.columns
+        ]
+
+        columns = [
+            *[
+                column_to_frame(frame, key, func)
+                for key, func in custom_columns
+            ],
+            frame.drop([*codeable_col_names, *custom_names], axis=1),
+            *code_frames,
+        ]
+
+        combined = pd.concat(columns, axis=1)
+
+        # Mutate data frame to parse date columns
+        for column_key in all_date_columns:
+            if column_key in combined.columns:
+                combined[column_key] = pd.to_datetime(
+                    combined[column_key], utc=True
+                )
+
+        return combined</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.Frame.codeable_like_column_expander"><code class="name flex">
+<span>def <span class="ident">codeable_like_column_expander</span></span>(<span>column_name: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Codeable expansion with prefix for passing to Frame.expand#custom_columns</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def codeable_like_column_expander(column_name: str):
+    &#34;&#34;&#34;Codeable expansion with prefix for passing to Frame.expand#custom_columns&#34;&#34;&#34;
+
+    def _expander(column):
+        return Codeable.expand_column(column).add_prefix(f&#34;{column_name}.&#34;)
+
+    return (column_name, _expander)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Frame.expand"><code class="name flex">
+<span>def <span class="ident">expand</span></span>(<span>frame: pandas.core.frame.DataFrame, code_columns: List[str] = [], date_columns: List[str] = [], custom_columns: List[Tuple[str, Callable[[pandas.core.series.Series], pandas.core.frame.DataFrame]]] = [])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Expand a data frame with FHIR codes, nested JSON structures, etc into a full,
+tabular data frame that can much more easily be wrangled</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>frame</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>The data frame to expand</dd>
+<dt><strong><code>code_columns</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>The list of column names that contain code-like data (e.g. FHIR dictionaries)</dd>
+<dt><strong><code>date_columns</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>The list of column names that contain dates (may not able to parse but might)</dd>
+<dt><strong><code>custom_columns</code></strong> :&ensp;<code>List[Tuple[str, Callable[[pd.Series], pd.DataFrame]]]</code></dt>
+<dd>A list of tuples with the column name and a function that expands a
+column to a data frame. This will get merged index-wise into the
+combined frame</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def expand(
+    frame: pd.DataFrame,
+    code_columns: List[str] = [],
+    date_columns: List[str] = [],
+    custom_columns: List[
+        Tuple[str, Callable[[pd.Series], pd.DataFrame]]
+    ] = [],
+):
+    &#34;&#34;&#34;Expand a data frame with FHIR codes, nested JSON structures, etc into a full,
+    tabular data frame that can much more easily be wrangled
+
+    Attributes
+    ----------
+    frame : pd.DataFrame
+        The data frame to expand
+
+    code_columns : List[str]
+        The list of column names that contain code-like data (e.g. FHIR dictionaries)
+
+    date_columns : List[str]
+        The list of column names that contain dates (may not able to parse but might)
+
+    custom_columns : List[Tuple[str, Callable[[pd.Series], pd.DataFrame]]]
+        A list of tuples with the column name and a function that expands a
+        column to a data frame. This will get merged index-wise into the
+        combined frame
+
+    &#34;&#34;&#34;
+    all_code_columns = [*CODE_COLUMNS, *code_columns]
+    all_date_columns = [*DATE_COLUMNS, *date_columns]
+
+    codeable_col_names = [
+        col_name
+        for col_name in all_code_columns
+        if col_name in frame.columns
+    ]
+
+    code_frames = [
+        Codeable.expand_column(frame[col_name]).add_prefix(f&#34;{col_name}.&#34;)
+        for col_name in codeable_col_names
+    ]
+
+    custom_names = [
+        key for key, _func in custom_columns if key in frame.columns
+    ]
+
+    columns = [
+        *[
+            column_to_frame(frame, key, func)
+            for key, func in custom_columns
+        ],
+        frame.drop([*codeable_col_names, *custom_names], axis=1),
+        *code_frames,
+    ]
+
+    combined = pd.concat(columns, axis=1)
+
+    # Mutate data frame to parse date columns
+    for column_key in all_date_columns:
+        if column_key in combined.columns:
+            combined[column_key] = pd.to_datetime(
+                combined[column_key], utc=True
+            )
+
+    return combined</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.Goal"><code class="flex name class">
+<span>class <span class="ident">Goal</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provides an abstract class and/or static methods for retrieving items
+from a FSS table that relates to a patient</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Goal(PatientItem):
+    @staticmethod
+    def table_name():
+        return &#34;goal&#34;
+
+    @staticmethod
+    def transform_results(data_frame: pd.DataFrame, **expand_args):
+        args = {
+            **expand_args,
+            &#34;date_columns&#34;: [*expand_args.get(&#34;date_columns&#34;, []), &#34;startDate&#34;],
+            &#34;custom_columns&#34;: [
+                *expand_args.get(&#34;custom_columns&#34;, []),
+                Frame.codeable_like_column_expander(&#34;subject&#34;),
+            ],
+        }
+
+        return Frame.expand(data_frame, **args)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.Goal.build_query"><code class="name flex">
+<span>def <span class="ident">build_query</span></span>(<span>table_name: str, patient_id: Union[NoneType, str] = None, patient_key: str = 'subject.reference') ‑> dict</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.build_query" href="patient_item.html#phc.easy.patient_item.PatientItem.build_query">build_query</a></code>
+</p>
+<div class="desc inherited"><p>Build query for a given table that relates to a patient …</p></div>
+</dd>
+<dt id="phc.easy.Goal.get_count"><code class="name flex">
+<span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_count" href="patient_item.html#phc.easy.patient_item.PatientItem.get_count">get_count</a></code>
+</p>
+<div class="desc inherited"><p>Get the count for a given FSS query</p></div>
+</dd>
+<dt id="phc.easy.Goal.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {})</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_data_frame" href="patient_item.html#phc.easy.patient_item.PatientItem.get_data_frame">get_data_frame</a></code>
+</p>
+<div class="desc inherited"><p>Retrieve records …</p></div>
+</dd>
+<dt id="phc.easy.Goal.table_name"><code class="name flex">
+<span>def <span class="ident">table_name</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.table_name" href="patient_item.html#phc.easy.patient_item.PatientItem.table_name">table_name</a></code>
+</p>
+<div class="desc inherited"><p>Returns the FSS table name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def table_name():
+    return &#34;goal&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Goal.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.transform_results" href="patient_item.html#phc.easy.patient_item.PatientItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(data_frame: pd.DataFrame, **expand_args):
+    args = {
+        **expand_args,
+        &#34;date_columns&#34;: [*expand_args.get(&#34;date_columns&#34;, []), &#34;startDate&#34;],
+        &#34;custom_columns&#34;: [
+            *expand_args.get(&#34;custom_columns&#34;, []),
+            Frame.codeable_like_column_expander(&#34;subject&#34;),
+        ],
+    }
+
+    return Frame.expand(data_frame, **args)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.Observation"><code class="flex name class">
+<span>class <span class="ident">Observation</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provides an abstract class and/or static methods for retrieving items
+from a FSS table that relates to a patient</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Observation(PatientItem):
+    @staticmethod
+    def table_name():
+        return &#34;observation&#34;
+
+    @staticmethod
+    def transform_results(data_frame: pd.DataFrame, **expand_args):
+        args = {
+            **expand_args,
+            &#34;custom_columns&#34;: [
+                *expand_args.get(&#34;custom_columns&#34;, []),
+                Frame.codeable_like_column_expander(&#34;subject&#34;),
+                Frame.codeable_like_column_expander(&#34;related&#34;),
+                Frame.codeable_like_column_expander(&#34;performer&#34;),
+            ],
+        }
+
+        return Frame.expand(data_frame, **args)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.Observation.build_query"><code class="name flex">
+<span>def <span class="ident">build_query</span></span>(<span>table_name: str, patient_id: Union[NoneType, str] = None, patient_key: str = 'subject.reference') ‑> dict</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.build_query" href="patient_item.html#phc.easy.patient_item.PatientItem.build_query">build_query</a></code>
+</p>
+<div class="desc inherited"><p>Build query for a given table that relates to a patient …</p></div>
+</dd>
+<dt id="phc.easy.Observation.get_count"><code class="name flex">
+<span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_count" href="patient_item.html#phc.easy.patient_item.PatientItem.get_count">get_count</a></code>
+</p>
+<div class="desc inherited"><p>Get the count for a given FSS query</p></div>
+</dd>
+<dt id="phc.easy.Observation.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {})</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_data_frame" href="patient_item.html#phc.easy.patient_item.PatientItem.get_data_frame">get_data_frame</a></code>
+</p>
+<div class="desc inherited"><p>Retrieve records …</p></div>
+</dd>
+<dt id="phc.easy.Observation.table_name"><code class="name flex">
+<span>def <span class="ident">table_name</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.table_name" href="patient_item.html#phc.easy.patient_item.PatientItem.table_name">table_name</a></code>
+</p>
+<div class="desc inherited"><p>Returns the FSS table name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def table_name():
+    return &#34;observation&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Observation.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.transform_results" href="patient_item.html#phc.easy.patient_item.PatientItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(data_frame: pd.DataFrame, **expand_args):
+    args = {
+        **expand_args,
+        &#34;custom_columns&#34;: [
+            *expand_args.get(&#34;custom_columns&#34;, []),
+            Frame.codeable_like_column_expander(&#34;subject&#34;),
+            Frame.codeable_like_column_expander(&#34;related&#34;),
+            Frame.codeable_like_column_expander(&#34;performer&#34;),
+        ],
+    }
+
+    return Frame.expand(data_frame, **args)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.Patient"><code class="flex name class">
+<span>class <span class="ident">Patient</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Patient:
+    @staticmethod
+    def get_count(query_overrides: dict = {}, auth_args=Auth.shared()):
+        return Query.find_count_of_dsl_query(
+            {
+                &#34;type&#34;: &#34;select&#34;,
+                &#34;columns&#34;: &#34;*&#34;,
+                &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
+                **query_overrides,
+            },
+            auth_args=auth_args,
+        )
+
+    @staticmethod
+    def transform_results(data_frame: pd.DataFrame, **expand_args):
+        args = {
+            **expand_args,
+            &#34;custom_columns&#34;: [
+                *expand_args.get(&#34;custom_columns&#34;, []),
+                (&#34;address&#34;, expand_address_column),
+                (&#34;name&#34;, expand_name_column),
+            ],
+        }
+
+        return Frame.expand(data_frame, **args)
+
+    @staticmethod
+    def get_data_frame(
+        limit: int = 100,
+        all_results: bool = False,
+        raw: bool = False,
+        query_overrides: dict = {},
+        auth_args: Auth = Auth.shared(),
+        ignore_cache: bool = False,
+        expand_args: dict = {},
+    ):
+        &#34;&#34;&#34;Retrieve patients as a data frame with unwrapped FHIR columns
+
+        Attributes
+        ----------
+        limit : int
+            The number of patients to retrieve
+
+        all_results : bool = False
+            Override limit to retrieve all patients
+
+        raw : bool = False
+            If raw, then values will not be expanded (useful for manual
+            inspection if something goes wrong). Note that this option will
+            override all_results if True.
+
+        query_overrides : dict = {}
+            Override any part of the elasticsearch FHIR query
+
+        auth_args : Any
+            The authenication to use for the account and project (defaults to shared)
+
+        ignore_cache : bool = False
+            Bypass the caching system that auto-saves results to a CSV file.
+            Caching only occurs when all results are being retrieved.
+
+        expand_args : Any
+            Additional arguments passed to phc.Frame.expand
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt; phc.Patient.get_data_frame()
+
+        &#34;&#34;&#34;
+        query = {
+            &#34;type&#34;: &#34;select&#34;,
+            &#34;columns&#34;: &#34;*&#34;,
+            &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
+            &#34;limit&#34;: [
+                {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
+                {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: limit},
+            ],
+            **query_overrides,
+        }
+
+        def transform(df: pd.DataFrame):
+            return Patient.transform_results(df, **expand_args)
+
+        return Query.execute_fhir_dsl_with_options(
+            query,
+            transform,
+            all_results,
+            raw,
+            query_overrides,
+            auth_args,
+            ignore_cache,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.Patient.get_count"><code class="name flex">
+<span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def get_count(query_overrides: dict = {}, auth_args=Auth.shared()):
+    return Query.find_count_of_dsl_query(
+        {
+            &#34;type&#34;: &#34;select&#34;,
+            &#34;columns&#34;: &#34;*&#34;,
+            &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
+            **query_overrides,
+        },
+        auth_args=auth_args,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Patient.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>limit: int = 100, all_results: bool = False, raw: bool = False, query_overrides: dict = {}, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {})</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieve patients as a data frame with unwrapped FHIR columns</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>limit</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of patients to retrieve</dd>
+<dt><strong><code>all_results</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>Override limit to retrieve all patients</dd>
+<dt><strong><code>raw</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>If raw, then values will not be expanded (useful for manual
+inspection if something goes wrong). Note that this option will
+override all_results if True.</dd>
+<dt><strong><code>query_overrides</code></strong> :&ensp;<code>dict = {}</code></dt>
+<dd>Override any part of the elasticsearch FHIR query</dd>
+<dt><strong><code>auth_args</code></strong> :&ensp;<code>Any</code></dt>
+<dd>The authenication to use for the account and project (defaults to shared)</dd>
+<dt><strong><code>ignore_cache</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>Bypass the caching system that auto-saves results to a CSV file.
+Caching only occurs when all results are being retrieved.</dd>
+<dt><strong><code>expand_args</code></strong> :&ensp;<code>Any</code></dt>
+<dd>Additional arguments passed to phc.Frame.expand</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({'account': '&lt;your-account-name&gt;'})
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt; phc.Patient.get_data_frame()
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def get_data_frame(
+    limit: int = 100,
+    all_results: bool = False,
+    raw: bool = False,
+    query_overrides: dict = {},
+    auth_args: Auth = Auth.shared(),
+    ignore_cache: bool = False,
+    expand_args: dict = {},
+):
+    &#34;&#34;&#34;Retrieve patients as a data frame with unwrapped FHIR columns
+
+    Attributes
+    ----------
+    limit : int
+        The number of patients to retrieve
+
+    all_results : bool = False
+        Override limit to retrieve all patients
+
+    raw : bool = False
+        If raw, then values will not be expanded (useful for manual
+        inspection if something goes wrong). Note that this option will
+        override all_results if True.
+
+    query_overrides : dict = {}
+        Override any part of the elasticsearch FHIR query
+
+    auth_args : Any
+        The authenication to use for the account and project (defaults to shared)
+
+    ignore_cache : bool = False
+        Bypass the caching system that auto-saves results to a CSV file.
+        Caching only occurs when all results are being retrieved.
+
+    expand_args : Any
+        Additional arguments passed to phc.Frame.expand
+
+    Examples
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt; phc.Patient.get_data_frame()
+
+    &#34;&#34;&#34;
+    query = {
+        &#34;type&#34;: &#34;select&#34;,
+        &#34;columns&#34;: &#34;*&#34;,
+        &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
+        &#34;limit&#34;: [
+            {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
+            {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: limit},
+        ],
+        **query_overrides,
+    }
+
+    def transform(df: pd.DataFrame):
+        return Patient.transform_results(df, **expand_args)
+
+    return Query.execute_fhir_dsl_with_options(
+        query,
+        transform,
+        all_results,
+        raw,
+        query_overrides,
+        auth_args,
+        ignore_cache,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Patient.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(data_frame: pd.DataFrame, **expand_args):
+    args = {
+        **expand_args,
+        &#34;custom_columns&#34;: [
+            *expand_args.get(&#34;custom_columns&#34;, []),
+            (&#34;address&#34;, expand_address_column),
+            (&#34;name&#34;, expand_name_column),
+        ],
+    }
+
+    return Frame.expand(data_frame, **args)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.PatientItem"><code class="flex name class">
+<span>class <span class="ident">PatientItem</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provides an abstract class and/or static methods for retrieving items
+from a FSS table that relates to a patient</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PatientItem:
+    &#34;&#34;&#34;Provides an abstract class and/or static methods for retrieving items
+    from a FSS table that relates to a patient
+    &#34;&#34;&#34;
+
+    @staticmethod
+    def table_name() -&gt; str:
+        &#34;Returns the FSS table name for retrieval&#34;
+        raise ValueError(&#34;Table name should be implemented by subclass&#34;)
+
+    @staticmethod
+    def patient_key() -&gt; str:
+        return &#34;subject.reference&#34;
+
+    @classmethod
+    def get_count(cls, query_overrides: dict = {}, auth_args=Auth.shared()):
+        &#34;Get the count for a given FSS query&#34;
+        return Query.find_count_of_dsl_query(
+            {
+                &#34;type&#34;: &#34;select&#34;,
+                &#34;columns&#34;: &#34;*&#34;,
+                &#34;from&#34;: [{&#34;table&#34;: cls.table_name()}],
+                **query_overrides,
+            },
+            auth_args=auth_args,
+        )
+
+    @staticmethod
+    def transform_results(data_frame: pd.DataFrame, **expand_args):
+        &#34;Transform data frame batch&#34;
+        return data_frame
+
+    @classmethod
+    def get_data_frame(
+        cls,
+        all_results: bool = False,
+        raw: bool = False,
+        patient_id: Union[None, str] = None,
+        query_overrides: dict = {},
+        auth_args=Auth.shared(),
+        ignore_cache: bool = False,
+        expand_args: dict = {},
+    ):
+        &#34;&#34;&#34;Retrieve records
+
+        Attributes
+        ----------
+        all_results : bool = False
+            Retrieve sample of results (10) or entire set of records
+
+        raw : bool = False
+            If raw, then values will not be expanded (useful for manual
+            inspection if something goes wrong)
+
+        patient_id : None or str = None
+            Find records for a given patient_id
+
+        query_overrides : dict = {}
+            Override any part of the elasticsearch FHIR query
+
+        auth_args : Any
+            The authenication to use for the account and project (defaults to shared)
+
+        ignore_cache : bool = False
+            Bypass the caching system that auto-saves results to a CSV file.
+            Caching only occurs when all results are being retrieved.
+
+        expand_args : Any
+            Additional arguments passed to phc.Frame.expand
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; phc.Observation.get_data_frame(patient_id=&#39;&lt;patient-id&gt;&#39;)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; phc.Goal.get_data_frame(patient_id=&#39;&lt;patient-id&gt;&#39;)
+        &#34;&#34;&#34;
+        query = PatientItem.build_query(
+            cls.table_name(), patient_id, cls.patient_key()
+        )
+
+        def transform(df: pd.DataFrame):
+            return cls.transform_results(df, **expand_args)
+
+        return Query.execute_fhir_dsl_with_options(
+            query,
+            transform,
+            all_results,
+            raw,
+            query_overrides,
+            auth_args,
+            ignore_cache,
+        )
+
+    @staticmethod
+    def build_query(
+        table_name: str,
+        patient_id: Union[None, str] = None,
+        patient_key: str = &#34;subject.reference&#34;,
+    ) -&gt; dict:
+        &#34;&#34;&#34;Build query for a given table that relates to a patient
+
+        Attributes
+        ----------
+        table_name : str
+            The name of the elasticsearch FHIR table
+
+        patient_id : None or str = None
+            Find table records for a given patient_id
+        &#34;&#34;&#34;
+
+        query = {
+            &#34;type&#34;: &#34;select&#34;,
+            &#34;columns&#34;: &#34;*&#34;,
+            &#34;from&#34;: [{&#34;table&#34;: table_name}],
+        }
+
+        if patient_id:
+            return {
+                **query,
+                &#34;where&#34;: {
+                    &#34;type&#34;: &#34;elasticsearch&#34;,
+                    &#34;query&#34;: {
+                        &#34;terms&#34;: {
+                            f&#34;{patient_key}.keyword&#34;: [
+                                patient_id,
+                                f&#34;Patient/{patient_id}&#34;,
+                            ]
+                        }
+                    },
+                },
+            }
+
+        return query</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="phc.easy.condition.Condition" href="condition.html#phc.easy.condition.Condition">Condition</a></li>
+<li><a title="phc.easy.consent.Consent" href="consent.html#phc.easy.consent.Consent">Consent</a></li>
+<li><a title="phc.easy.goal.Goal" href="goal.html#phc.easy.goal.Goal">Goal</a></li>
+<li><a title="phc.easy.observation.Observation" href="observation.html#phc.easy.observation.Observation">Observation</a></li>
+<li><a title="phc.easy.specimen.Specimen" href="specimen.html#phc.easy.specimen.Specimen">Specimen</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.PatientItem.build_query"><code class="name flex">
+<span>def <span class="ident">build_query</span></span>(<span>table_name: str, patient_id: Union[NoneType, str] = None, patient_key: str = 'subject.reference') ‑> dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Build query for a given table that relates to a patient</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>table_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The name of the elasticsearch FHIR table</dd>
+<dt><strong><code>patient_id</code></strong> :&ensp;<code>None</code> or <code>str = None</code></dt>
+<dd>Find table records for a given patient_id</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def build_query(
+    table_name: str,
+    patient_id: Union[None, str] = None,
+    patient_key: str = &#34;subject.reference&#34;,
+) -&gt; dict:
+    &#34;&#34;&#34;Build query for a given table that relates to a patient
+
+    Attributes
+    ----------
+    table_name : str
+        The name of the elasticsearch FHIR table
+
+    patient_id : None or str = None
+        Find table records for a given patient_id
+    &#34;&#34;&#34;
+
+    query = {
+        &#34;type&#34;: &#34;select&#34;,
+        &#34;columns&#34;: &#34;*&#34;,
+        &#34;from&#34;: [{&#34;table&#34;: table_name}],
+    }
+
+    if patient_id:
+        return {
+            **query,
+            &#34;where&#34;: {
+                &#34;type&#34;: &#34;elasticsearch&#34;,
+                &#34;query&#34;: {
+                    &#34;terms&#34;: {
+                        f&#34;{patient_key}.keyword&#34;: [
+                            patient_id,
+                            f&#34;Patient/{patient_id}&#34;,
+                        ]
+                    }
+                },
+            },
+        }
+
+    return query</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.PatientItem.get_count"><code class="name flex">
+<span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the count for a given FSS query</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_count(cls, query_overrides: dict = {}, auth_args=Auth.shared()):
+    &#34;Get the count for a given FSS query&#34;
+    return Query.find_count_of_dsl_query(
+        {
+            &#34;type&#34;: &#34;select&#34;,
+            &#34;columns&#34;: &#34;*&#34;,
+            &#34;from&#34;: [{&#34;table&#34;: cls.table_name()}],
+            **query_overrides,
+        },
+        auth_args=auth_args,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.PatientItem.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {})</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieve records</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>all_results</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>Retrieve sample of results (10) or entire set of records</dd>
+<dt><strong><code>raw</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>If raw, then values will not be expanded (useful for manual
+inspection if something goes wrong)</dd>
+<dt><strong><code>patient_id</code></strong> :&ensp;<code>None</code> or <code>str = None</code></dt>
+<dd>Find records for a given patient_id</dd>
+<dt><strong><code>query_overrides</code></strong> :&ensp;<code>dict = {}</code></dt>
+<dd>Override any part of the elasticsearch FHIR query</dd>
+<dt><strong><code>auth_args</code></strong> :&ensp;<code>Any</code></dt>
+<dd>The authenication to use for the account and project (defaults to shared)</dd>
+<dt><strong><code>ignore_cache</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>Bypass the caching system that auto-saves results to a CSV file.
+Caching only occurs when all results are being retrieved.</dd>
+<dt><strong><code>expand_args</code></strong> :&ensp;<code>Any</code></dt>
+<dd>Additional arguments passed to phc.Frame.expand</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({'account': '&lt;your-account-name&gt;'})
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt;
+&gt;&gt;&gt; phc.Observation.get_data_frame(patient_id='&lt;patient-id&gt;')
+&gt;&gt;&gt;
+&gt;&gt;&gt; phc.Goal.get_data_frame(patient_id='&lt;patient-id&gt;')
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_data_frame(
+    cls,
+    all_results: bool = False,
+    raw: bool = False,
+    patient_id: Union[None, str] = None,
+    query_overrides: dict = {},
+    auth_args=Auth.shared(),
+    ignore_cache: bool = False,
+    expand_args: dict = {},
+):
+    &#34;&#34;&#34;Retrieve records
+
+    Attributes
+    ----------
+    all_results : bool = False
+        Retrieve sample of results (10) or entire set of records
+
+    raw : bool = False
+        If raw, then values will not be expanded (useful for manual
+        inspection if something goes wrong)
+
+    patient_id : None or str = None
+        Find records for a given patient_id
+
+    query_overrides : dict = {}
+        Override any part of the elasticsearch FHIR query
+
+    auth_args : Any
+        The authenication to use for the account and project (defaults to shared)
+
+    ignore_cache : bool = False
+        Bypass the caching system that auto-saves results to a CSV file.
+        Caching only occurs when all results are being retrieved.
+
+    expand_args : Any
+        Additional arguments passed to phc.Frame.expand
+
+    Examples
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; phc.Observation.get_data_frame(patient_id=&#39;&lt;patient-id&gt;&#39;)
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; phc.Goal.get_data_frame(patient_id=&#39;&lt;patient-id&gt;&#39;)
+    &#34;&#34;&#34;
+    query = PatientItem.build_query(
+        cls.table_name(), patient_id, cls.patient_key()
+    )
+
+    def transform(df: pd.DataFrame):
+        return cls.transform_results(df, **expand_args)
+
+    return Query.execute_fhir_dsl_with_options(
+        query,
+        transform,
+        all_results,
+        raw,
+        query_overrides,
+        auth_args,
+        ignore_cache,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.PatientItem.patient_key"><code class="name flex">
+<span>def <span class="ident">patient_key</span></span>(<span>) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def patient_key() -&gt; str:
+    return &#34;subject.reference&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.PatientItem.table_name"><code class="name flex">
+<span>def <span class="ident">table_name</span></span>(<span>) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the FSS table name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def table_name() -&gt; str:
+    &#34;Returns the FSS table name for retrieval&#34;
+    raise ValueError(&#34;Table name should be implemented by subclass&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.PatientItem.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Transform data frame batch</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(data_frame: pd.DataFrame, **expand_args):
+    &#34;Transform data frame batch&#34;
+    return data_frame</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.Procedure"><code class="flex name class">
+<span>class <span class="ident">Procedure</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Procedure:
+    @staticmethod
+    def get_count(query_overrides: dict = {}, auth_args=Auth.shared()):
+        return Query.find_count_of_dsl_query(
+            {
+                &#34;type&#34;: &#34;select&#34;,
+                &#34;columns&#34;: &#34;*&#34;,
+                &#34;from&#34;: [{&#34;table&#34;: &#34;procedure&#34;}],
+                **query_overrides,
+            },
+            auth_args=auth_args,
+        )
+
+    @staticmethod
+    def transform_results(data_frame: pd.DataFrame, **expand_args):
+        args = {
+            **expand_args,
+            &#34;date_columns&#34;: [
+                *expand_args.get(&#34;date_columns&#34;, []),
+                &#34;performedPeriod.start&#34;,
+                &#34;performedPeriod.end&#34;,
+            ],
+            &#34;custom_columns&#34;: [
+                *expand_args.get(&#34;custom_columns&#34;, []),
+                Frame.codeable_like_column_expander(&#34;subject&#34;),
+                Frame.codeable_like_column_expander(&#34;performedPeriod&#34;),
+            ],
+        }
+
+        return Frame.expand(data_frame, **args)
+
+    @staticmethod
+    def get_data_frame(
+        all_results: bool = False,
+        raw: bool = False,
+        patient_id: Union[None, str] = None,
+        query_overrides: dict = {},
+        auth_args=Auth.shared(),
+        ignore_cache: bool = False,
+        expand_args: dict = {},
+    ):
+        &#34;&#34;&#34;Retrieve procedures
+
+        Attributes
+        ----------
+        all_results : bool = False
+            Retrieve sample of results (10) or entire set of procedures
+
+        raw : bool = False
+            If raw, then values will not be expanded (useful for manual
+            inspection if something goes wrong)
+
+        patient_id : None or str = None
+            Find procedures for a given patient_id
+
+        query_overrides : dict = {}
+            Override any part of the elasticsearch FHIR query
+
+        auth_args : Any
+            The authenication to use for the account and project (defaults to shared)
+
+        ignore_cache : bool = False
+            Bypass the caching system that auto-saves results to a CSV file.
+            Caching only occurs when all results are being retrieved.
+
+        expand_args : Any
+            Additional arguments passed to phc.Frame.expand
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt; phc.Procedure.get_data_frame(patient_id=&#39;&lt;patient-id&gt;&#39;)
+        &#34;&#34;&#34;
+        query = PatientItem.build_query(&#34;procedure&#34;, patient_id)
+
+        def transform(df: pd.DataFrame):
+            return Procedure.transform_results(df, **expand_args)
+
+        return Query.execute_fhir_dsl_with_options(
+            query,
+            transform,
+            all_results,
+            raw,
+            query_overrides,
+            auth_args,
+            ignore_cache,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.Procedure.get_count"><code class="name flex">
+<span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def get_count(query_overrides: dict = {}, auth_args=Auth.shared()):
+    return Query.find_count_of_dsl_query(
+        {
+            &#34;type&#34;: &#34;select&#34;,
+            &#34;columns&#34;: &#34;*&#34;,
+            &#34;from&#34;: [{&#34;table&#34;: &#34;procedure&#34;}],
+            **query_overrides,
+        },
+        auth_args=auth_args,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Procedure.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {})</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieve procedures</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>all_results</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>Retrieve sample of results (10) or entire set of procedures</dd>
+<dt><strong><code>raw</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>If raw, then values will not be expanded (useful for manual
+inspection if something goes wrong)</dd>
+<dt><strong><code>patient_id</code></strong> :&ensp;<code>None</code> or <code>str = None</code></dt>
+<dd>Find procedures for a given patient_id</dd>
+<dt><strong><code>query_overrides</code></strong> :&ensp;<code>dict = {}</code></dt>
+<dd>Override any part of the elasticsearch FHIR query</dd>
+<dt><strong><code>auth_args</code></strong> :&ensp;<code>Any</code></dt>
+<dd>The authenication to use for the account and project (defaults to shared)</dd>
+<dt><strong><code>ignore_cache</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>Bypass the caching system that auto-saves results to a CSV file.
+Caching only occurs when all results are being retrieved.</dd>
+<dt><strong><code>expand_args</code></strong> :&ensp;<code>Any</code></dt>
+<dd>Additional arguments passed to phc.Frame.expand</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({'account': '&lt;your-account-name&gt;'})
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt; phc.Procedure.get_data_frame(patient_id='&lt;patient-id&gt;')
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def get_data_frame(
+    all_results: bool = False,
+    raw: bool = False,
+    patient_id: Union[None, str] = None,
+    query_overrides: dict = {},
+    auth_args=Auth.shared(),
+    ignore_cache: bool = False,
+    expand_args: dict = {},
+):
+    &#34;&#34;&#34;Retrieve procedures
+
+    Attributes
+    ----------
+    all_results : bool = False
+        Retrieve sample of results (10) or entire set of procedures
+
+    raw : bool = False
+        If raw, then values will not be expanded (useful for manual
+        inspection if something goes wrong)
+
+    patient_id : None or str = None
+        Find procedures for a given patient_id
+
+    query_overrides : dict = {}
+        Override any part of the elasticsearch FHIR query
+
+    auth_args : Any
+        The authenication to use for the account and project (defaults to shared)
+
+    ignore_cache : bool = False
+        Bypass the caching system that auto-saves results to a CSV file.
+        Caching only occurs when all results are being retrieved.
+
+    expand_args : Any
+        Additional arguments passed to phc.Frame.expand
+
+    Examples
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt; phc.Procedure.get_data_frame(patient_id=&#39;&lt;patient-id&gt;&#39;)
+    &#34;&#34;&#34;
+    query = PatientItem.build_query(&#34;procedure&#34;, patient_id)
+
+    def transform(df: pd.DataFrame):
+        return Procedure.transform_results(df, **expand_args)
+
+    return Query.execute_fhir_dsl_with_options(
+        query,
+        transform,
+        all_results,
+        raw,
+        query_overrides,
+        auth_args,
+        ignore_cache,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Procedure.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(data_frame: pd.DataFrame, **expand_args):
+    args = {
+        **expand_args,
+        &#34;date_columns&#34;: [
+            *expand_args.get(&#34;date_columns&#34;, []),
+            &#34;performedPeriod.start&#34;,
+            &#34;performedPeriod.end&#34;,
+        ],
+        &#34;custom_columns&#34;: [
+            *expand_args.get(&#34;custom_columns&#34;, []),
+            Frame.codeable_like_column_expander(&#34;subject&#34;),
+            Frame.codeable_like_column_expander(&#34;performedPeriod&#34;),
+        ],
+    }
+
+    return Frame.expand(data_frame, **args)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.Project"><code class="flex name class">
+<span>class <span class="ident">Project</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Project:
+    @staticmethod
+    @memoize
+    def get_data_frame(auth_args=Auth.shared()):
+        &#34;&#34;&#34;Retrieve a list of projects from the authenticated account
+
+        Attributes
+        ----------
+        auth_args : Any
+            The authenication to use for the account and project (defaults to shared)
+        &#34;&#34;&#34;
+        auth = Auth(auth_args)
+
+        def list_projects(acc, account):
+            session = auth.customized({&#34;account&#34;: account[&#34;id&#34;]}).session()
+
+            return [
+                *acc,
+                *[
+                    {**project, &#34;account&#34;: account[&#34;id&#34;]}
+                    for project in services.Projects(session)
+                    .get_list()
+                    .data[&#34;items&#34;]
+                ],
+            ]
+
+        return pd.DataFrame(reduce(list_projects, auth.accounts(), []))
+
+    @staticmethod
+    def find(search: str, auth_args: Auth = Auth.shared()):
+        &#34;&#34;&#34;Search for a project using given criteria and return results as a data frame
+
+        Attributes
+        ----------
+        search : str
+            Part of a project&#39;s id, name, or description to search for
+
+        auth_args : Any
+            The authenication to use for the account and project (defaults to shared)
+        &#34;&#34;&#34;
+        auth = Auth(auth_args)
+        projects = Project.get_data_frame(auth)
+        text = projects[SEARCH_COLUMNS].agg(join_strings, axis=1)
+        return projects[text.str.contains(search.lower())]
+
+    @staticmethod
+    def set_current(search: str, auth: Auth = Auth.shared()):
+        &#34;&#34;&#34;Search for a project using given criteria, set it to the authentication
+        object, and return the matching projects as a data frame
+
+        Attributes
+        ----------
+        search : str
+            Part of a project&#39;s id, name, or description to search for
+
+        auth : Auth
+            The authenication to update for the account and project (defaults to shared)
+        &#34;&#34;&#34;
+        matches = Project.find(search, auth)
+
+        if len(matches) &gt; 1:
+            print(&#34;Multiple projects found. Try a more specific search&#34;)
+        elif len(matches) == 0:
+            print(f&#39;No matches found for search &#34;{search}&#34;&#39;)
+        else:
+            project = matches.iloc[0]
+            # Uses private method since this is a special case
+            auth.update({&#34;account&#34;: project.account, &#34;project_id&#34;: project.id})
+
+        return matches</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.Project.find"><code class="name flex">
+<span>def <span class="ident">find</span></span>(<span>search: str, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Search for a project using given criteria and return results as a data frame</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>search</code></strong> :&ensp;<code>str</code></dt>
+<dd>Part of a project's id, name, or description to search for</dd>
+<dt><strong><code>auth_args</code></strong> :&ensp;<code>Any</code></dt>
+<dd>The authenication to use for the account and project (defaults to shared)</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def find(search: str, auth_args: Auth = Auth.shared()):
+    &#34;&#34;&#34;Search for a project using given criteria and return results as a data frame
+
+    Attributes
+    ----------
+    search : str
+        Part of a project&#39;s id, name, or description to search for
+
+    auth_args : Any
+        The authenication to use for the account and project (defaults to shared)
+    &#34;&#34;&#34;
+    auth = Auth(auth_args)
+    projects = Project.get_data_frame(auth)
+    text = projects[SEARCH_COLUMNS].agg(join_strings, axis=1)
+    return projects[text.str.contains(search.lower())]</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Project.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieve a list of projects from the authenticated account</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>auth_args</code></strong> :&ensp;<code>Any</code></dt>
+<dd>The authenication to use for the account and project (defaults to shared)</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+@memoize
+def get_data_frame(auth_args=Auth.shared()):
+    &#34;&#34;&#34;Retrieve a list of projects from the authenticated account
+
+    Attributes
+    ----------
+    auth_args : Any
+        The authenication to use for the account and project (defaults to shared)
+    &#34;&#34;&#34;
+    auth = Auth(auth_args)
+
+    def list_projects(acc, account):
+        session = auth.customized({&#34;account&#34;: account[&#34;id&#34;]}).session()
+
+        return [
+            *acc,
+            *[
+                {**project, &#34;account&#34;: account[&#34;id&#34;]}
+                for project in services.Projects(session)
+                .get_list()
+                .data[&#34;items&#34;]
+            ],
+        ]
+
+    return pd.DataFrame(reduce(list_projects, auth.accounts(), []))</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Project.set_current"><code class="name flex">
+<span>def <span class="ident">set_current</span></span>(<span>search: str, auth: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Search for a project using given criteria, set it to the authentication
+object, and return the matching projects as a data frame</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>search</code></strong> :&ensp;<code>str</code></dt>
+<dd>Part of a project's id, name, or description to search for</dd>
+<dt><strong><code>auth</code></strong> :&ensp;<code><a title="phc.easy.Auth" href="#phc.easy.Auth">Auth</a></code></dt>
+<dd>The authenication to update for the account and project (defaults to shared)</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def set_current(search: str, auth: Auth = Auth.shared()):
+    &#34;&#34;&#34;Search for a project using given criteria, set it to the authentication
+    object, and return the matching projects as a data frame
+
+    Attributes
+    ----------
+    search : str
+        Part of a project&#39;s id, name, or description to search for
+
+    auth : Auth
+        The authenication to update for the account and project (defaults to shared)
+    &#34;&#34;&#34;
+    matches = Project.find(search, auth)
+
+    if len(matches) &gt; 1:
+        print(&#34;Multiple projects found. Try a more specific search&#34;)
+    elif len(matches) == 0:
+        print(f&#39;No matches found for search &#34;{search}&#34;&#39;)
+    else:
+        project = matches.iloc[0]
+        # Uses private method since this is a special case
+        auth.update({&#34;account&#34;: project.account, &#34;project_id&#34;: project.id})
+
+    return matches</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.Query"><code class="flex name class">
+<span>class <span class="ident">Query</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Query:
+    @staticmethod
+    def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
+        &#34;&#34;&#34;Find count of a given dsl query
+
+        See https://docs.us.lifeomic.com/development/fhir-service/dsl/
+
+        Attributes
+        ----------
+        query : dict
+            The FHIR query to run a count against
+
+        auth_args : Auth, dict
+            Additional arguments for authentication
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt; phc.Query.find_count_of_dsl_query({
+          &#34;type&#34;: &#34;select&#34;,
+          &#34;columns&#34;: &#34;*&#34;,
+          &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
+        })
+        &#34;&#34;&#34;
+        auth = Auth(auth_args)
+        fhir = Fhir(auth.session())
+
+        response = fhir.execute_es(
+            auth.project_id,
+            {
+                **query,
+                &#34;limit&#34;: [
+                    {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
+                    {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 1},
+                ],
+            },
+            scroll=&#34;true&#34;,
+        )
+
+        return response.data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]
+
+    @staticmethod
+    def execute_fhir_dsl(
+        query: dict,
+        all_results: bool = False,
+        auth_args: Auth = Auth.shared(),
+        callback: Union[Callable[[Any, bool], None], None] = None,
+    ):
+        &#34;&#34;&#34;Execute a FHIR query with the DSL
+
+        See https://docs.us.lifeomic.com/development/fhir-service/dsl/
+
+        Attributes
+        ----------
+        query : dict
+            The FHIR query to run (is a superset of elasticsearch)
+
+        all_results : bool
+            Return all results by scrolling through mutliple pages of data
+            (Limit is ignored if provided)
+
+        auth_args : Auth, dict
+            Additional arguments for authentication
+
+        callback : Callable[[Any, bool], None] (optional)
+            A progress function that is invoked for each batch. When the second
+            argument passed is true, then the result of the callback function is
+            used as the return value. This is useful if writing results out to a
+            file and then returning the completed result from that file.
+
+            Example:
+
+                def handle_batch(batch, is_finished):
+                    print(len(batch))
+                    if is_finished:
+                        return &#34;batch finished
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt; phc.Query.execute_fhir_dsl({
+          &#34;type&#34;: &#34;select&#34;,
+          &#34;columns&#34;: &#34;*&#34;,
+          &#34;from&#34;: [
+              {&#34;table&#34;: &#34;patient&#34;}
+          ],
+        }, all_results=True)
+
+        &#34;&#34;&#34;
+        if all_results:
+            return with_progress(
+                lambda: tqdm(total=MAX_RESULT_SIZE),
+                lambda progress: recursive_execute_fhir_dsl(
+                    {
+                        &#34;limit&#34;: [
+                            {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
+                            # Make window size smaller than maximum to reduce
+                            # pressure on API
+                            {
+                                &#34;type&#34;: &#34;number&#34;,
+                                &#34;value&#34;: int(MAX_RESULT_SIZE / 2),
+                            },
+                        ],
+                        **query,
+                    },
+                    scroll=all_results,
+                    progress=progress,
+                    callback=callback,
+                    auth_args=auth_args,
+                ),
+            )
+
+        return recursive_execute_fhir_dsl(
+            query, scroll=all_results, callback=callback, auth_args=auth_args,
+        )
+
+    @staticmethod
+    def execute_fhir_dsl_with_options(
+        query: dict,
+        transform: Callable[[pd.DataFrame], pd.DataFrame],
+        all_results: bool,
+        raw: bool,
+        query_overrides: dict,
+        auth_args: Auth,
+        ignore_cache: bool,
+    ):
+        query = {**query, **query_overrides}
+
+        use_cache = (not ignore_cache) and (not raw) and all_results
+
+        if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
+            return APICache.load_cache_for_fhir_dsl(query)
+
+        if use_cache:
+            return Query.execute_fhir_dsl(
+                query,
+                all_results,
+                auth_args,
+                callback=APICache.build_cache_fhir_dsl_callback(
+                    query, transform
+                ),
+            )
+
+        results = Query.execute_fhir_dsl(query, all_results, auth_args)
+
+        df = pd.DataFrame(map(lambda r: r[&#34;_source&#34;], results))
+
+        if raw:
+            return df
+
+        return transform(df)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.Query.execute_fhir_dsl"><code class="name flex">
+<span>def <span class="ident">execute_fhir_dsl</span></span>(<span>query: dict, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Execute a FHIR query with the DSL</p>
+<p>See <a href="https://docs.us.lifeomic.com/development/fhir-service/dsl/">https://docs.us.lifeomic.com/development/fhir-service/dsl/</a></p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>query</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The FHIR query to run (is a superset of elasticsearch)</dd>
+<dt><strong><code>all_results</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Return all results by scrolling through mutliple pages of data
+(Limit is ignored if provided)</dd>
+<dt><strong><code>auth_args</code></strong> :&ensp;<code><a title="phc.easy.Auth" href="#phc.easy.Auth">Auth</a>, dict</code></dt>
+<dd>Additional arguments for authentication</dd>
+<dt><strong><code>callback</code></strong> :&ensp;<code>Callable[[Any, bool], None] (optional)</code></dt>
+<dd>
+<p>A progress function that is invoked for each batch. When the second
+argument passed is true, then the result of the callback function is
+used as the return value. This is useful if writing results out to a
+file and then returning the completed result from that file.</p>
+<p>Example:</p>
+<pre><code>def handle_batch(batch, is_finished):
+    print(len(batch))
+    if is_finished:
+        return "batch finished
+</code></pre>
+</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({ 'account': '&lt;your-account-name&gt;' })
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt; phc.Query.execute_fhir_dsl({
+  &quot;type&quot;: &quot;select&quot;,
+  &quot;columns&quot;: &quot;*&quot;,
+  &quot;from&quot;: [
+      {&quot;table&quot;: &quot;patient&quot;}
+  ],
+}, all_results=True)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def execute_fhir_dsl(
+    query: dict,
+    all_results: bool = False,
+    auth_args: Auth = Auth.shared(),
+    callback: Union[Callable[[Any, bool], None], None] = None,
+):
+    &#34;&#34;&#34;Execute a FHIR query with the DSL
+
+    See https://docs.us.lifeomic.com/development/fhir-service/dsl/
+
+    Attributes
+    ----------
+    query : dict
+        The FHIR query to run (is a superset of elasticsearch)
+
+    all_results : bool
+        Return all results by scrolling through mutliple pages of data
+        (Limit is ignored if provided)
+
+    auth_args : Auth, dict
+        Additional arguments for authentication
+
+    callback : Callable[[Any, bool], None] (optional)
+        A progress function that is invoked for each batch. When the second
+        argument passed is true, then the result of the callback function is
+        used as the return value. This is useful if writing results out to a
+        file and then returning the completed result from that file.
+
+        Example:
+
+            def handle_batch(batch, is_finished):
+                print(len(batch))
+                if is_finished:
+                    return &#34;batch finished
+
+    Examples
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt; phc.Query.execute_fhir_dsl({
+      &#34;type&#34;: &#34;select&#34;,
+      &#34;columns&#34;: &#34;*&#34;,
+      &#34;from&#34;: [
+          {&#34;table&#34;: &#34;patient&#34;}
+      ],
+    }, all_results=True)
+
+    &#34;&#34;&#34;
+    if all_results:
+        return with_progress(
+            lambda: tqdm(total=MAX_RESULT_SIZE),
+            lambda progress: recursive_execute_fhir_dsl(
+                {
+                    &#34;limit&#34;: [
+                        {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
+                        # Make window size smaller than maximum to reduce
+                        # pressure on API
+                        {
+                            &#34;type&#34;: &#34;number&#34;,
+                            &#34;value&#34;: int(MAX_RESULT_SIZE / 2),
+                        },
+                    ],
+                    **query,
+                },
+                scroll=all_results,
+                progress=progress,
+                callback=callback,
+                auth_args=auth_args,
+            ),
+        )
+
+    return recursive_execute_fhir_dsl(
+        query, scroll=all_results, callback=callback, auth_args=auth_args,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Query.execute_fhir_dsl_with_options"><code class="name flex">
+<span>def <span class="ident">execute_fhir_dsl_with_options</span></span>(<span>query: dict, transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame], all_results: bool, raw: bool, query_overrides: dict, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a>, ignore_cache: bool)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def execute_fhir_dsl_with_options(
+    query: dict,
+    transform: Callable[[pd.DataFrame], pd.DataFrame],
+    all_results: bool,
+    raw: bool,
+    query_overrides: dict,
+    auth_args: Auth,
+    ignore_cache: bool,
+):
+    query = {**query, **query_overrides}
+
+    use_cache = (not ignore_cache) and (not raw) and all_results
+
+    if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
+        return APICache.load_cache_for_fhir_dsl(query)
+
+    if use_cache:
+        return Query.execute_fhir_dsl(
+            query,
+            all_results,
+            auth_args,
+            callback=APICache.build_cache_fhir_dsl_callback(
+                query, transform
+            ),
+        )
+
+    results = Query.execute_fhir_dsl(query, all_results, auth_args)
+
+    df = pd.DataFrame(map(lambda r: r[&#34;_source&#34;], results))
+
+    if raw:
+        return df
+
+    return transform(df)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Query.find_count_of_dsl_query"><code class="name flex">
+<span>def <span class="ident">find_count_of_dsl_query</span></span>(<span>query: dict, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Find count of a given dsl query</p>
+<p>See <a href="https://docs.us.lifeomic.com/development/fhir-service/dsl/">https://docs.us.lifeomic.com/development/fhir-service/dsl/</a></p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>query</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The FHIR query to run a count against</dd>
+<dt><strong><code>auth_args</code></strong> :&ensp;<code><a title="phc.easy.Auth" href="#phc.easy.Auth">Auth</a>, dict</code></dt>
+<dd>Additional arguments for authentication</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({ 'account': '&lt;your-account-name&gt;' })
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt; phc.Query.find_count_of_dsl_query({
+  &quot;type&quot;: &quot;select&quot;,
+  &quot;columns&quot;: &quot;*&quot;,
+  &quot;from&quot;: [{&quot;table&quot;: &quot;patient&quot;}],
+})
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
+    &#34;&#34;&#34;Find count of a given dsl query
+
+    See https://docs.us.lifeomic.com/development/fhir-service/dsl/
+
+    Attributes
+    ----------
+    query : dict
+        The FHIR query to run a count against
+
+    auth_args : Auth, dict
+        Additional arguments for authentication
+
+    Examples
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt; phc.Query.find_count_of_dsl_query({
+      &#34;type&#34;: &#34;select&#34;,
+      &#34;columns&#34;: &#34;*&#34;,
+      &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
+    })
+    &#34;&#34;&#34;
+    auth = Auth(auth_args)
+    fhir = Fhir(auth.session())
+
+    response = fhir.execute_es(
+        auth.project_id,
+        {
+            **query,
+            &#34;limit&#34;: [
+                {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
+                {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 1},
+            ],
+        },
+        scroll=&#34;true&#34;,
+    )
+
+    return response.data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.Specimen"><code class="flex name class">
+<span>class <span class="ident">Specimen</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provides an abstract class and/or static methods for retrieving items
+from a FSS table that relates to a patient</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Specimen(PatientItem):
+    @staticmethod
+    def table_name():
+        return &#34;specimen&#34;
+
+    @staticmethod
+    def transform_results(df: pd.DataFrame, **expand_args):
+        return Frame.expand(
+            df,
+            code_columns=[*expand_args.get(&#34;code_columns&#34;, []), &#34;collection&#34;],
+            custom_columns=[
+                *expand_args.get(&#34;custom_columns&#34;, []),
+                Frame.codeable_like_column_expander(&#34;subject&#34;),
+            ],
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.Specimen.build_query"><code class="name flex">
+<span>def <span class="ident">build_query</span></span>(<span>table_name: str, patient_id: Union[NoneType, str] = None, patient_key: str = 'subject.reference') ‑> dict</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.build_query" href="patient_item.html#phc.easy.patient_item.PatientItem.build_query">build_query</a></code>
+</p>
+<div class="desc inherited"><p>Build query for a given table that relates to a patient …</p></div>
+</dd>
+<dt id="phc.easy.Specimen.get_count"><code class="name flex">
+<span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_count" href="patient_item.html#phc.easy.patient_item.PatientItem.get_count">get_count</a></code>
+</p>
+<div class="desc inherited"><p>Get the count for a given FSS query</p></div>
+</dd>
+<dt id="phc.easy.Specimen.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {})</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_data_frame" href="patient_item.html#phc.easy.patient_item.PatientItem.get_data_frame">get_data_frame</a></code>
+</p>
+<div class="desc inherited"><p>Retrieve records …</p></div>
+</dd>
+<dt id="phc.easy.Specimen.table_name"><code class="name flex">
+<span>def <span class="ident">table_name</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.table_name" href="patient_item.html#phc.easy.patient_item.PatientItem.table_name">table_name</a></code>
+</p>
+<div class="desc inherited"><p>Returns the FSS table name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def table_name():
+    return &#34;specimen&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Specimen.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>df: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.transform_results" href="patient_item.html#phc.easy.patient_item.PatientItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(df: pd.DataFrame, **expand_args):
+    return Frame.expand(
+        df,
+        code_columns=[*expand_args.get(&#34;code_columns&#34;, []), &#34;collection&#34;],
+        custom_columns=[
+            *expand_args.get(&#34;custom_columns&#34;, []),
+            Frame.codeable_like_column_expander(&#34;subject&#34;),
+        ],
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<header>
+<a class="homelink" rel="home" title="PHC Home" href="https://lifeomic.github.io/phc-sdk-py/">
+<img src="./phc.png" alt="">
+</a>
+</header>
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="phc" href="../index.html">phc</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="phc.easy.auth" href="auth.html">phc.easy.auth</a></code></li>
+<li><code><a title="phc.easy.codeable" href="codeable.html">phc.easy.codeable</a></code></li>
+<li><code><a title="phc.easy.condition" href="condition.html">phc.easy.condition</a></code></li>
+<li><code><a title="phc.easy.consent" href="consent.html">phc.easy.consent</a></code></li>
+<li><code><a title="phc.easy.frame" href="frame.html">phc.easy.frame</a></code></li>
+<li><code><a title="phc.easy.goal" href="goal.html">phc.easy.goal</a></code></li>
+<li><code><a title="phc.easy.observation" href="observation.html">phc.easy.observation</a></code></li>
+<li><code><a title="phc.easy.patient_item" href="patient_item.html">phc.easy.patient_item</a></code></li>
+<li><code><a title="phc.easy.patients" href="patients/index.html">phc.easy.patients</a></code></li>
+<li><code><a title="phc.easy.procedure" href="procedure.html">phc.easy.procedure</a></code></li>
+<li><code><a title="phc.easy.projects" href="projects.html">phc.easy.projects</a></code></li>
+<li><code><a title="phc.easy.query" href="query/index.html">phc.easy.query</a></code></li>
+<li><code><a title="phc.easy.specimen" href="specimen.html">phc.easy.specimen</a></code></li>
+<li><code><a title="phc.easy.util" href="util.html">phc.easy.util</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="phc.easy.Auth" href="#phc.easy.Auth">Auth</a></code></h4>
+<ul class="two-column">
+<li><code><a title="phc.easy.Auth.accounts" href="#phc.easy.Auth.accounts">accounts</a></code></li>
+<li><code><a title="phc.easy.Auth.custom" href="#phc.easy.Auth.custom">custom</a></code></li>
+<li><code><a title="phc.easy.Auth.customized" href="#phc.easy.Auth.customized">customized</a></code></li>
+<li><code><a title="phc.easy.Auth.details" href="#phc.easy.Auth.details">details</a></code></li>
+<li><code><a title="phc.easy.Auth.session" href="#phc.easy.Auth.session">session</a></code></li>
+<li><code><a title="phc.easy.Auth.set" href="#phc.easy.Auth.set">set</a></code></li>
+<li><code><a title="phc.easy.Auth.shared" href="#phc.easy.Auth.shared">shared</a></code></li>
+<li><code><a title="phc.easy.Auth.update" href="#phc.easy.Auth.update">update</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.Codeable" href="#phc.easy.Codeable">Codeable</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.Codeable.expand_column" href="#phc.easy.Codeable.expand_column">expand_column</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.Condition" href="#phc.easy.Condition">Condition</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.Condition.build_query" href="patient_item.html#phc.easy.Condition.build_query">build_query</a></code></li>
+<li><code><a title="phc.easy.Condition.get_count" href="patient_item.html#phc.easy.Condition.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.Condition.get_data_frame" href="patient_item.html#phc.easy.Condition.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.Condition.table_name" href="#phc.easy.Condition.table_name">table_name</a></code></li>
+<li><code><a title="phc.easy.Condition.transform_results" href="#phc.easy.Condition.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.Consent" href="#phc.easy.Consent">Consent</a></code></h4>
+<ul class="two-column">
+<li><code><a title="phc.easy.Consent.build_query" href="patient_item.html#phc.easy.Consent.build_query">build_query</a></code></li>
+<li><code><a title="phc.easy.Consent.get_count" href="patient_item.html#phc.easy.Consent.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.Consent.get_data_frame" href="patient_item.html#phc.easy.Consent.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.Consent.patient_key" href="#phc.easy.Consent.patient_key">patient_key</a></code></li>
+<li><code><a title="phc.easy.Consent.table_name" href="#phc.easy.Consent.table_name">table_name</a></code></li>
+<li><code><a title="phc.easy.Consent.transform_results" href="#phc.easy.Consent.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.Frame" href="#phc.easy.Frame">Frame</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.Frame.codeable_like_column_expander" href="#phc.easy.Frame.codeable_like_column_expander">codeable_like_column_expander</a></code></li>
+<li><code><a title="phc.easy.Frame.expand" href="#phc.easy.Frame.expand">expand</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.Goal" href="#phc.easy.Goal">Goal</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.Goal.build_query" href="patient_item.html#phc.easy.Goal.build_query">build_query</a></code></li>
+<li><code><a title="phc.easy.Goal.get_count" href="patient_item.html#phc.easy.Goal.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.Goal.get_data_frame" href="patient_item.html#phc.easy.Goal.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.Goal.table_name" href="#phc.easy.Goal.table_name">table_name</a></code></li>
+<li><code><a title="phc.easy.Goal.transform_results" href="#phc.easy.Goal.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.Observation" href="#phc.easy.Observation">Observation</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.Observation.build_query" href="patient_item.html#phc.easy.Observation.build_query">build_query</a></code></li>
+<li><code><a title="phc.easy.Observation.get_count" href="patient_item.html#phc.easy.Observation.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.Observation.get_data_frame" href="patient_item.html#phc.easy.Observation.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.Observation.table_name" href="#phc.easy.Observation.table_name">table_name</a></code></li>
+<li><code><a title="phc.easy.Observation.transform_results" href="#phc.easy.Observation.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.Patient" href="#phc.easy.Patient">Patient</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.Patient.get_count" href="#phc.easy.Patient.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.Patient.get_data_frame" href="#phc.easy.Patient.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.Patient.transform_results" href="#phc.easy.Patient.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.PatientItem" href="#phc.easy.PatientItem">PatientItem</a></code></h4>
+<ul class="two-column">
+<li><code><a title="phc.easy.PatientItem.build_query" href="#phc.easy.PatientItem.build_query">build_query</a></code></li>
+<li><code><a title="phc.easy.PatientItem.get_count" href="#phc.easy.PatientItem.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.PatientItem.get_data_frame" href="#phc.easy.PatientItem.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.PatientItem.patient_key" href="#phc.easy.PatientItem.patient_key">patient_key</a></code></li>
+<li><code><a title="phc.easy.PatientItem.table_name" href="#phc.easy.PatientItem.table_name">table_name</a></code></li>
+<li><code><a title="phc.easy.PatientItem.transform_results" href="#phc.easy.PatientItem.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.Procedure" href="#phc.easy.Procedure">Procedure</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.Procedure.get_count" href="#phc.easy.Procedure.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.Procedure.get_data_frame" href="#phc.easy.Procedure.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.Procedure.transform_results" href="#phc.easy.Procedure.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.Project" href="#phc.easy.Project">Project</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.Project.find" href="#phc.easy.Project.find">find</a></code></li>
+<li><code><a title="phc.easy.Project.get_data_frame" href="#phc.easy.Project.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.Project.set_current" href="#phc.easy.Project.set_current">set_current</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.Query" href="#phc.easy.Query">Query</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.Query.execute_fhir_dsl" href="#phc.easy.Query.execute_fhir_dsl">execute_fhir_dsl</a></code></li>
+<li><code><a title="phc.easy.Query.execute_fhir_dsl_with_options" href="#phc.easy.Query.execute_fhir_dsl_with_options">execute_fhir_dsl_with_options</a></code></li>
+<li><code><a title="phc.easy.Query.find_count_of_dsl_query" href="#phc.easy.Query.find_count_of_dsl_query">find_count_of_dsl_query</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.Specimen" href="#phc.easy.Specimen">Specimen</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.Specimen.build_query" href="patient_item.html#phc.easy.Specimen.build_query">build_query</a></code></li>
+<li><code><a title="phc.easy.Specimen.get_count" href="patient_item.html#phc.easy.Specimen.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.Specimen.get_data_frame" href="patient_item.html#phc.easy.Specimen.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.Specimen.table_name" href="#phc.easy.Specimen.table_name">table_name</a></code></li>
+<li><code><a title="phc.easy.Specimen.transform_results" href="#phc.easy.Specimen.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+</footer>
+</body>
+</html>

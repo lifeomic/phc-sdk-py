@@ -3,15 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.8.1" />
+<meta name="generator" content="pdoc 0.8.3" />
 <title>phc.services API documentation</title>
 <meta name="description" content="Contains services for accessing different parts of the PHC platform." />
-<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
-<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
 <style>.flex{display:flex !important}body{line-height:1.5em;font-family:"Lato",Helvetica,Roboto,Arial,"Lucida Grande",sans-serif}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:90%}ul li code a{font-size:80%}a{color:#00539a;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#f7944d}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
 <link rel="shortcut icon" href="./favicon.ico">
 </head>
 <body>
@@ -122,7 +124,7 @@ __pdoc__ = {
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Accounts.get_list"><code class="name flex">
-<span>def <span class="ident">get_list</span></span>(<span>self) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get_list</span></span>(<span>self) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetches the list of accounts for the current session</p>
@@ -612,7 +614,7 @@ __pdoc__ = {
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Analytics.execute_data_lake_query"><code class="name flex">
-<span>def <span class="ident">execute_data_lake_query</span></span>(<span>self, query: phc.util.data_lake_query.DataLakeQuery) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">execute_data_lake_query</span></span>(<span>self, query: phc.util.data_lake_query.DataLakeQuery) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Executes a data lake query</p>
@@ -780,7 +782,7 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.execute_sql"><code class="name flex">
-<span>def <span class="ident">execute_sql</span></span>(<span>self, statement: str, project_id: str = None, cohort_id: str = None) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">execute_sql</span></span>(<span>self, statement: str, project_id: str = None, cohort_id: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Executes a SQL query against Analytics</p>
@@ -860,7 +862,7 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.get_data_lake_query"><code class="name flex">
-<span>def <span class="ident">get_data_lake_query</span></span>(<span>self, query_id: str) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get_data_lake_query</span></span>(<span>self, query_id: str) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetches a data lake query</p>
@@ -895,7 +897,7 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.get_data_lake_schema"><code class="name flex">
-<span>def <span class="ident">get_data_lake_schema</span></span>(<span>self, project_id: str, table: str) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get_data_lake_schema</span></span>(<span>self, project_id: str, table: str) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetches the schema for a specific data lake table</p>
@@ -939,7 +941,7 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.get_patients"><code class="name flex">
-<span>def <span class="ident">get_patients</span></span>(<span>self, project_id: str, query_builder: phc.util.patient_filter_query_builder.PatientFilterQueryBuilder) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get_patients</span></span>(<span>self, project_id: str, query_builder: phc.util.patient_filter_query_builder.PatientFilterQueryBuilder) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Executes a query that returns patients</p>
@@ -1009,7 +1011,7 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.list_data_lake_queries"><code class="name flex">
-<span>def <span class="ident">list_data_lake_queries</span></span>(<span>self, project_id: str, page_size: int = 25, next_page_token: str = None) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">list_data_lake_queries</span></span>(<span>self, project_id: str, page_size: int = 25, next_page_token: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetches a list of data lake queries</p>
@@ -1060,7 +1062,7 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Analytics.list_data_lake_schemas"><code class="name flex">
-<span>def <span class="ident">list_data_lake_schemas</span></span>(<span>self, project_id: str) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">list_data_lake_schemas</span></span>(<span>self, project_id: str) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetches the data lake table schemas</p>
@@ -1301,7 +1303,7 @@ Defaults to the current working directory.</dd>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Cohorts.create"><code class="name flex">
-<span>def <span class="ident">create</span></span>(<span>self, project_id: str, name: str, queries: list, description: str = None) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create</span></span>(<span>self, project_id: str, name: str, queries: list, description: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a cohort</p>
@@ -1357,7 +1359,7 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Cohorts.delete"><code class="name flex">
-<span>def <span class="ident">delete</span></span>(<span>self, cohort_id: str) -> bool</span>
+<span>def <span class="ident">delete</span></span>(<span>self, cohort_id: str) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Delete a cohort</p>
@@ -1397,7 +1399,7 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Cohorts.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, cohort_id) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get</span></span>(<span>self, cohort_id) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetch a cohort by id</p>
@@ -1432,7 +1434,7 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Cohorts.get_list"><code class="name flex">
-<span>def <span class="ident">get_list</span></span>(<span>self, project_id: str, page_size: int = None, next_page_token: str = None, name: str = None) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get_list</span></span>(<span>self, project_id: str, page_size: int = None, next_page_token: str = None, name: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetch a list of cohorts in a project</p>
@@ -1691,7 +1693,7 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Fhir.execute_es"><code class="name flex">
-<span>def <span class="ident">execute_es</span></span>(<span>self, project_id: str, query: dict, scroll='') -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">execute_es</span></span>(<span>self, project_id: str, query: dict, scroll='') ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Executes an elasticsearch query against fhir-searh-service</p>
@@ -1738,7 +1740,7 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Fhir.execute_sql"><code class="name flex">
-<span>def <span class="ident">execute_sql</span></span>(<span>self, project_id: str, statement: str, scroll='') -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">execute_sql</span></span>(<span>self, project_id: str, statement: str, scroll='') ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Executes an SQL query against fhir-searh-service</p>
@@ -1812,7 +1814,7 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Fhir.sql"><code class="name flex">
-<span>def <span class="ident">sql</span></span>(<span>self, project: str, statement: str, scroll='') -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">sql</span></span>(<span>self, project: str, statement: str, scroll='') ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Executes a LifeOmic FHIR Service SQL request</p>
@@ -2171,7 +2173,7 @@ Defaults to the current working directory.</dd>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Files.delete"><code class="name flex">
-<span>def <span class="ident">delete</span></span>(<span>self, file_id: str) -> bool</span>
+<span>def <span class="ident">delete</span></span>(<span>self, file_id: str) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Delete a file</p>
@@ -2209,7 +2211,7 @@ Defaults to the current working directory.</dd>
 </details>
 </dd>
 <dt id="phc.services.Files.download"><code class="name flex">
-<span>def <span class="ident">download</span></span>(<span>self, file_id: str, dest_dir: str = '/home/runner/work/phc-sdk-py/phc-sdk-py') -> NoneType</span>
+<span>def <span class="ident">download</span></span>(<span>self, file_id: str, dest_dir: str = '/home/runner/work/phc-sdk-py/phc-sdk-py') ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Download a file</p>
@@ -2263,7 +2265,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Files.exists"><code class="name flex">
-<span>def <span class="ident">exists</span></span>(<span>self, file_id: str) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">exists</span></span>(<span>self, file_id: str) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Check if a file exists by id</p>
@@ -2304,7 +2306,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Files.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, file_id: str) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get</span></span>(<span>self, file_id: str) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetch a file by id</p>
@@ -2339,7 +2341,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Files.get_list"><code class="name flex">
-<span>def <span class="ident">get_list</span></span>(<span>self, project_id: str, folder: str = None, page_size: int = None, next_page_token: str = None) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get_list</span></span>(<span>self, project_id: str, folder: str = None, page_size: int = None, next_page_token: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetch a list of files in a project</p>
@@ -2403,7 +2405,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Files.update"><code class="name flex">
-<span>def <span class="ident">update</span></span>(<span>self, file_id: str, project_id: str = None, name: str = None) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">update</span></span>(<span>self, file_id: str, project_id: str = None, name: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Update a files by moving it to a new project or by renaming it.</p>
@@ -2461,7 +2463,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Files.upload"><code class="name flex">
-<span>def <span class="ident">upload</span></span>(<span>self, project_id: str, source: str, file_name: str = None, overwrite: bool = False) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">upload</span></span>(<span>self, project_id: str, source: str, file_name: str = None, overwrite: bool = False) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Upload a file.</p>
@@ -2895,7 +2897,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = 'c59b6f5b-abe9-4fc9-a8b8-a75d98fa1744', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = 'cf5524a3-8efe-436d-868d-f3614deb8185', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
@@ -3030,7 +3032,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Genomics.delete_set"><code class="name flex">
-<span>def <span class="ident">delete_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, set_id: str) -> bool</span>
+<span>def <span class="ident">delete_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, set_id: str) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Delete a genomic set</p>
@@ -3074,7 +3076,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Genomics.delete_test"><code class="name flex">
-<span>def <span class="ident">delete_test</span></span>(<span>self, project_id: str, test_id: str) -> bool</span>
+<span>def <span class="ident">delete_test</span></span>(<span>self, project_id: str, test_id: str) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Delete a genomic test</p>
@@ -3119,7 +3121,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Genomics.get_set"><code class="name flex">
-<span>def <span class="ident">get_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, set_id: str) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, set_id: str) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetch a genomic set</p>
@@ -3158,7 +3160,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Genomics.list_sets"><code class="name flex">
-<span>def <span class="ident">list_sets</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, sequence_id: str = None, patient_id: str = None, status: phc.services.genomics.Genomics.Status = None, next_page_token: str = None, page_size: int = 50) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">list_sets</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, sequence_id: str = None, patient_id: str = None, status: phc.services.genomics.Genomics.Status = None, next_page_token: str = None, page_size: int = 50) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>List genomic sets</p>
@@ -3238,7 +3240,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Genomics.list_tests"><code class="name flex">
-<span>def <span class="ident">list_tests</span></span>(<span>self, project_id: str, patient_id: str) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">list_tests</span></span>(<span>self, project_id: str, patient_id: str) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>List tests for a patient</p>
@@ -3438,7 +3440,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Projects.create"><code class="name flex">
-<span>def <span class="ident">create</span></span>(<span>self, name: str, description: str = None) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create</span></span>(<span>self, name: str, description: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a project</p>
@@ -3480,7 +3482,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Projects.delete"><code class="name flex">
-<span>def <span class="ident">delete</span></span>(<span>self, project_id: str) -> bool</span>
+<span>def <span class="ident">delete</span></span>(<span>self, project_id: str) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Delete a project</p>
@@ -3520,7 +3522,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Projects.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, project_id) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get</span></span>(<span>self, project_id) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetch a project by id</p>
@@ -3555,7 +3557,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Projects.get_list"><code class="name flex">
-<span>def <span class="ident">get_list</span></span>(<span>self, page_size: int = None, next_page_token: str = None, name: str = None) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get_list</span></span>(<span>self, page_size: int = None, next_page_token: str = None, name: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetch a list of projects in an account</p>
@@ -3612,7 +3614,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Projects.update"><code class="name flex">
-<span>def <span class="ident">update</span></span>(<span>self, project_id: str, name: str, description: str = None) -> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">update</span></span>(<span>self, project_id: str, name: str, description: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Update a project</p>
@@ -3761,9 +3763,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
 </footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad()</script>
 </body>
 </html>
