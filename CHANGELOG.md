@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.0]  - 2020-07-14
+
+### Added
+
+- All-new easy module for faster analysis! Simply `import phc.easy as phc`.
+- Add `Auth` for shared authentication details (account, project, and token)
+- Add `Query` for scrolling through FHIR Search Service (FSS) data
+- Add `Frame` for expanding columns that contain FHIR data and parsing dates
+- Add `APICache` for auto-caching results from easy modules
+- Add `CSVWriter` for intelligently writing batches O(1) without having memory grow
+- Includes `Project`, `Patient`, `Observation`, `Procedure`, `Condition`,
+  `Goal`, and `Specimen`
+
 ## [0.13.0]  - 2020-04-17
 
 ### Added
