@@ -40,6 +40,9 @@ doc: venv
 test: lint
 	$(NOSE) -v tests
 
+watch-test:
+	$(NOSE) -v tests --with-watch
+
 package: venv
 	$(PYTHON) setup.py sdist bdist_wheel
 

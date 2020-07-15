@@ -5,6 +5,65 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.0]  - 2020-07-14
+
+### Added
+
+- All-new easy module for faster analysis! Simply `import phc.easy as phc`.
+- Add `Auth` for shared authentication details (account, project, and token)
+- Add `Query` for scrolling through FHIR Search Service (FSS) data
+- Add `Frame` for expanding columns that contain FHIR data and parsing dates
+- Add `APICache` for auto-caching results from easy modules
+- Add `CSVWriter` for intelligently writing batches O(1) without having memory grow
+- Includes `Project`, `Patient`, `Observation`, `Procedure`, `Condition`,
+  `Goal`, and `Specimen`
+
+## [0.13.0]  - 2020-04-17
+
+### Added
+
+- Switched build over to github actions
+
+## [0.12.3]  - 2020-04-13
+
+### Added
+
+- Adds `dsl` and `sql` methods to `phc.services.Fhir`
+
+### Changed
+
+- Deprecates `execute_sql` and `execute_es` methods in `phc.services.Fhir`
+
+## [0.12.2]  - 2020-03-25
+
+### Fixed
+
+- Added retries to file download requests
+
+## [0.12.1]  - 2020-03-25
+
+### Fixed
+
+- Fixed retry logic to include OS level errors.
+
+## [0.12.0]  - 2020-03-23
+
+### Added
+
+- Added retry support for failed API requests.
+
+## [0.11.0]  - 2020-03-17
+
+### Added
+
+- Added the `trust_env` parameter to all service classes to enable http proxy support.
+
+## [0.10.0]  - 2020-03-10
+
+### Added
+
+- Added `execute_sql` to `phc.services.Analytics`.
+
 ## [0.9.2]  - 2020-02-19
 
 ### Added
@@ -59,6 +118,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the `phc.services.Files` submodule that provides actions for files in PHC projects.
 - Added the `phc.services.Cohorts` submodule that provides actions for files in PHC cohorts.
 
+[0.14.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.13.0...v0.14.0
+[0.13.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.12.2...v0.13.0
+[0.12.3]: https://github.com/lifeomic/phc-sdk-py/compare/v0.12.2...v0.12.3
+[0.12.2]: https://github.com/lifeomic/phc-sdk-py/compare/v0.12.1...v0.12.2
+[0.12.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.12.0...v0.12.1
+[0.12.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.11.0...v0.12.0
+[0.11.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.10.0...v0.11.0
+[0.10.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.9.2...v0.10.0
 [0.9.2]: https://github.com/lifeomic/phc-sdk-py/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.8.1...v0.9.0

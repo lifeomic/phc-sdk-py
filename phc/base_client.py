@@ -6,9 +6,10 @@ import sys
 import platform
 import asyncio
 import aiohttp
+import backoff
 
 from phc import Session
-from phc.errors import RequestError
+from phc.errors import RequestError, ApiError
 from phc.api_response import ApiResponse
 import phc.version as ver
 
@@ -17,7 +18,11 @@ class BaseClient:
     """Base client for making API requests."""
 
     def __init__(
-        self, session: Session, run_async: bool = False, timeout: int = 30
+        self,
+        session: Session,
+        run_async: bool = False,
+        timeout: int = 30,
+        trust_env: bool = False,
     ):
         if not session:
             raise ValueError("Must provide a value for 'session'")
@@ -25,6 +30,7 @@ class BaseClient:
         self.session = session
         self.run_async = run_async
         self.timeout = timeout
+        self.trust_env = trust_env
         self._event_loop_ptr = None
 
     @property
@@ -242,6 +248,12 @@ class BaseClient:
         user_agent_string = " ".join([python_version, client, system_info])
         return user_agent_string
 
+    @backoff.on_exception(
+        backoff.expo,
+        (ApiError, OSError),
+        max_tries=3,
+        jitter=backoff.full_jitter,
+    )
     async def _send(self, http_verb, api_url, req_args):
         open_files = []
         upload_file = req_args.pop("file", None)
@@ -275,7 +287,8 @@ class BaseClient:
             A dictionary of the response data.
         """
         async with aiohttp.ClientSession(
-            timeout=aiohttp.ClientTimeout(total=self.timeout)
+            timeout=aiohttp.ClientTimeout(total=self.timeout),
+            trust_env=self.trust_env,
         ) as session:
             async with session.request(http_verb, api_url, **req_args) as res:
                 return {

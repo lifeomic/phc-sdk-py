@@ -2,6 +2,7 @@
 
 import os
 import math
+import backoff
 from phc.base_client import BaseClient
 from phc import ApiResponse
 from urllib.parse import urlencode
@@ -20,6 +21,8 @@ class Files(BaseClient):
         True to return promises, False to return results (default is False)
     timeout: int
         Operation timeout (default is 30)
+    trust_env: bool
+        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
     """
 
     _MULTIPART_MIN_SIZE = 5 * 1024 * 1024
@@ -125,6 +128,9 @@ class Files(BaseClient):
             )
             return res
 
+    @backoff.on_exception(
+        backoff.expo, OSError, max_tries=6, jitter=backoff.full_jitter
+    )
     def download(self, file_id: str, dest_dir: str = os.getcwd()) -> None:
         """Download a file
 
