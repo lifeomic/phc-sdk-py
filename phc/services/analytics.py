@@ -291,7 +291,7 @@ class Analytics(BaseClient):
             The data lake query result contained in a Pandas dataframe.
         """
         analytics_client = (
-            Analytics(self.session, run_async=False, timeout=self.timeout)
+            Analytics(self.session, run_async=False, timeout=self.timeout, trust_env=self.trust_env)
             if self.run_async
             else self
         )
@@ -329,7 +329,7 @@ class Analytics(BaseClient):
             The data lake query result contained in a Pandas dataframe.
         """
         analytics_client = (
-            Analytics(self.session, run_async=False, timeout=self.timeout)
+            Analytics(self.session, run_async=False, timeout=self.timeout, trust_env=self.trust_env)
             if self.run_async
             else self
         )
@@ -338,7 +338,7 @@ class Analytics(BaseClient):
         )  # verify the query exists, an exception will be thrown if it does not
 
         files_client = files.Files(
-            self.session, run_async=False, timeout=self.timeout
+            self.session, run_async=False, timeout=self.timeout, trust_env=self.trust_env)
         )
         if not self.__poll_predicate(files_client.exists, 30, query_id):
             raise RuntimeError(
