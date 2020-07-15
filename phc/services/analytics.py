@@ -385,7 +385,7 @@ class Analytics(BaseClient):
         )  # verify the query exists, an exception will be thrown if it does not
 
         files_client = files.Files(
-            self.session, run_async=False, timeout=self.timeout, trust_env=self.trust_env)
+            self.session, run_async=False, timeout=self.timeout, trust_env=self.trust_env
         )
         if not self.__poll_predicate(files_client.exists, 30, query_id):
             raise RuntimeError(
