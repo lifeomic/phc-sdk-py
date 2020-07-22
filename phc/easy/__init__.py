@@ -11,6 +11,7 @@ from phc.easy.consent import Consent
 from phc.easy.goal import Goal
 from phc.easy.condition import Condition
 from phc.easy.specimen import Specimen
+from phc.easy.sequence import Sequence
 
 __all__ = [
     "Frame",
@@ -26,4 +27,5 @@ __all__ = [
     "Goal",
     "Condition",
     "Specimen",
+    "Sequence",
 ]
