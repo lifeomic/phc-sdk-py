@@ -1,6 +1,7 @@
 import os
 from typing import Union, Dict, Any
 from phc import Session
+from phc.base_client import BaseClient
 from phc.services import Accounts
 from phc.easy.util import defaultprop
 
@@ -76,6 +77,11 @@ class Auth:
     def session(self):
         "Create an API session for use with modules not in the 'easy' namespace"
         return Session(token=self.token, account=self.account)
+
+    @property
+    def client(self) -> BaseClient:
+        "Creates a base client instances from the auth credentials"
+        return BaseClient(self.session())
 
     def accounts(self):
         "List available accounts for the authenticated user"
