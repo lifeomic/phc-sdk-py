@@ -3,7 +3,9 @@ from typing import Any, Callable, List, Union
 import pandas as pd
 
 from phc.services import Fhir
+from phc.base_client import BaseClient
 from phc.easy.auth import Auth
+from phc.easy.query.ga4gh import recursive_execute_ga4gh
 from phc.easy.query.fhir_dsl import (
     MAX_RESULT_SIZE,
     recursive_execute_fhir_dsl,
@@ -168,3 +170,29 @@ class Query:
             return df
 
         return transform(df)
+
+    @staticmethod
+    def execute_ga4gh(
+        query: dict, all_results: bool = False, auth_args: dict = Auth.shared()
+    ) -> pd.DataFrame:
+        auth = Auth(auth_args)
+        client = BaseClient(auth.session())
+        path = query["path"]
+        http_verb = query.get("http_verb", "POST")
+        results_key = query["results_key"]
+        params = {
+            **{"datasetIds": [auth.project_id]},
+            **{
+                k: v for k, v in query.items() if k not in ["path", "http_verb"]
+            },
+        }
+
+        return recursive_execute_ga4gh(
+            auth=auth,
+            client=client,
+            path=path,
+            http_verb=http_verb,
+            results_key=results_key,
+            params=params,
+            scroll=all_results,
+        )

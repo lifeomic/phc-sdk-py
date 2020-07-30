@@ -27,19 +27,13 @@ class Fhir(BaseClient):
             The API response
         """
         path = f"fhir-search/projects/{project}"
-        scroll = scroll if scroll is not True else 'true'
-        params = {"scroll": scroll if scroll is not True else 'true'}
+        scroll = scroll if scroll is not True else "true"
+        params = {"scroll": scroll if scroll is not True else "true"}
         return self._api_call(
-            http_verb="POST",
-            api_path=path,
-            params=params,
-            json=data
+            http_verb="POST", api_path=path, params=params, json=data
         )
 
-    def sql(self,
-            project: str,
-            statement: str,
-            scroll="") -> ApiResponse:
+    def sql(self, project: str, statement: str, scroll="") -> ApiResponse:
         """Executes a LifeOmic FHIR Service SQL request
 
         Parameters
@@ -58,13 +52,13 @@ class Fhir(BaseClient):
         """
         path = f"fhir-search/projects/{project}"
         headers = {"Content-Type": "text/plain"}
-        params = {"scroll": scroll if scroll is not True else 'true'}
+        params = {"scroll": scroll if scroll is not True else "true"}
         return self._api_call(
             http_verb="POST",
             api_path=path,
             headers=headers,
             params=params,
-            data=statement
+            data=statement,
         )
 
     def execute_sql(
@@ -100,7 +94,7 @@ class Fhir(BaseClient):
         Returns:
             [List] -- Dictionary with query response
         """
-        warnings.warn('Use the sql method instead', DeprecationWarning)
+        warnings.warn("Use the sql method instead", DeprecationWarning)
         return self._api_call(
             api_path=f"fhir-search/projects/{project_id}",
             http_verb="POST",
@@ -126,7 +120,7 @@ class Fhir(BaseClient):
         phc.ApiResponse
             The query response
         """
-        warnings.warn('Use the dsl method instead', DeprecationWarning)
+        warnings.warn("Use the dsl method instead", DeprecationWarning)
         return self._api_call(
             api_path=f"fhir-search/projects/{project_id}",
             http_verb="POST",
