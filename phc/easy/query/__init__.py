@@ -6,6 +6,7 @@ from phc.services import Fhir
 from phc.base_client import BaseClient
 from phc.easy.auth import Auth
 from phc.easy.query.ga4gh import recursive_execute_ga4gh
+from phc.easy.query.fhir_dsl_query import build_query
 from phc.easy.query.fhir_dsl import (
     MAX_RESULT_SIZE,
     recursive_execute_fhir_dsl,
@@ -64,6 +65,7 @@ class Query:
         all_results: bool = False,
         auth_args: Auth = Auth.shared(),
         callback: Union[Callable[[Any, bool], None], None] = None,
+        **query_kwargs,
     ):
         """Execute a FHIR query with the DSL
 
@@ -94,6 +96,10 @@ class Query:
                     if is_finished:
                         return "batch finished
 
+        query_kwargs : dict
+            Arguments to pass to build_query such as patient_id, patient_ids,
+            and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+
         Examples
         --------
         >>> import phc.easy as phc
@@ -108,6 +114,8 @@ class Query:
         }, all_results=True)
 
         """
+        query = build_query(query, **query_kwargs)
+
         if all_results:
             return with_progress(
                 lambda: tqdm(total=MAX_RESULT_SIZE),
@@ -144,8 +152,9 @@ class Query:
         query_overrides: dict,
         auth_args: Auth,
         ignore_cache: bool,
+        **query_kwargs,
     ):
-        query = {**query, **query_overrides}
+        query = build_query({**query, **query_overrides}, **query_kwargs)
 
         use_cache = (not ignore_cache) and (not raw) and all_results
 
