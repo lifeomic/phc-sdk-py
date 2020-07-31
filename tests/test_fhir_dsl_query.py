@@ -1,12 +1,30 @@
+from nose.tools import raises
 from phc.easy.query.fhir_dsl_query import build_query
+
+
+def test_no_modification():
+    example = {
+        "where": {
+            "type": "elasticsearch",
+            "query": {"term": {"gender.keyword": "male"}},
+        }
+    }
+
+    assert build_query(example) == example
+
+
+@raises(ValueError)
+def test_throws_with_non_elasticsearch_where():
+    build_query({"where": {"query": "blah-blah-blah"}}, patient_id="a")
 
 
 def test_add_patient_ids_with_no_where_clause():
     assert build_query({}, patient_ids=["a"]) == {
         "where": {
+            "type": "elasticsearch",
             "query": {
                 "terms": {"subject.reference.keyword": ["Patient/a", "a"]}
-            }
+            },
         }
     }
 
@@ -88,8 +106,9 @@ def test_add_single_patient_id_to_query():
 
     assert result == {
         "where": {
+            "type": "elasticsearch",
             "query": {
                 "terms": {"subject.reference.keyword": ["Patient/a", "a"]}
-            }
+            },
         }
     }

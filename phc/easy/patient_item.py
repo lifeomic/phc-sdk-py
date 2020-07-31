@@ -49,6 +49,7 @@ class PatientItem:
         auth_args=Auth.shared(),
         ignore_cache: bool = False,
         expand_args: dict = {},
+        log: bool = False,
     ):
         """Retrieve records
 
@@ -76,6 +77,9 @@ class PatientItem:
 
         expand_args : Any
             Additional arguments passed to phc.Frame.expand
+
+        log : bool = False
+            Whether to log some diagnostic statements for debugging
 
         Examples
         --------
@@ -107,4 +111,5 @@ class PatientItem:
             patient_id=patient_id,
             patient_ids=patient_ids,
             patient_key=cls.patient_key(),
+            log=log,
         )

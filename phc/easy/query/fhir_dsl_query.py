@@ -1,55 +1,62 @@
+from toolz import pipe, identity, curry
 from typing import List, Union
 from lenses import lens
 
 FHIR_WHERE = lens.Get("where", {})
+FHIR_WHERE_TYPE = FHIR_WHERE.Get("type", "")
 FHIR_SIMPLE_QUERY = FHIR_WHERE.Get("query", {})
 FHIR_BOOL_QUERY = FHIR_SIMPLE_QUERY.Get("bool", {})
 
 
-def add_should_clause(query: dict, should_clause: dict):
+@curry
+def and_query_clause_terms(second_query_clause, first_query_clause):
+    return {
+        "bool": {
+            "should": [first_query_clause, second_query_clause],
+            "minimum_should_match": 2,
+        }
+    }
+
+
+def and_query_clause(query: dict, query_clause: dict):
     "Append a term/terms clause to an existing FSS query"
     if FHIR_WHERE.get()(query) == {}:
-        return FHIR_SIMPLE_QUERY.set(should_clause)(query)
+        return pipe(
+            query,
+            FHIR_SIMPLE_QUERY.set(query_clause),
+            FHIR_WHERE_TYPE.set("elasticsearch"),
+        )
 
-    query_keys = FHIR_SIMPLE_QUERY.get()(query).keys()
-    if len(query_keys) == 1 and ("term" in query_keys or "terms" in query_keys):
+    if FHIR_WHERE_TYPE.get()(query) != "elasticsearch":
+        raise ValueError(
+            "Could not add clause to query that is not elasticsearch",
+            query_clause,
+            query,
+        )
 
-        def combined_with_term(query_clause):
-            return {
-                "bool": {
-                    "should": [query_clause, should_clause],
-                    "minimum_should_match": 2,
-                }
-            }
-
-        return FHIR_SIMPLE_QUERY.modify(combined_with_term)(query)
-
+    query_keys = list(FHIR_SIMPLE_QUERY.get()(query).keys())
     bool_keys = FHIR_BOOL_QUERY.get()(query).keys()
-    if "should" in bool_keys:
+    if (len(query_keys) == 1 and (query_keys[0] in ["term", "terms"])) or (
+        "should" in bool_keys
+    ):
+        return FHIR_SIMPLE_QUERY.modify(and_query_clause_terms(query_clause))(
+            query
+        )
 
-        def combined_with_bool(query_with_bool_clause):
-            return {
-                "bool": {
-                    "should": [query_with_bool_clause, should_clause],
-                    "minimum_should_match": 2,
-                }
-            }
-
-        return FHIR_SIMPLE_QUERY.modify(combined_with_bool)(query)
-
-    raise ValueError("Could not add clause to query", should_clause, query)
+    raise ValueError("Could not add clause to query", query_clause, query)
 
 
-def build_query(
-    query: dict,
+def _patient_ids_adder(
     patient_id: Union[str, None] = None,
     patient_ids: List[str] = [],
     patient_key: str = "subject.reference",
 ):
-    "Build query with patient_ids"
     patient_ids = [*patient_ids, *([patient_id] if patient_id else [])]
 
-    return add_should_clause(
+    if len(patient_ids) == 0:
+        return identity
+
+    return lambda query: and_query_clause(
         query,
         {
             "terms": {
@@ -59,4 +66,22 @@ def build_query(
                 ]
             }
         },
+    )
+
+
+def build_query(
+    query: dict,
+    patient_id: Union[str, None] = None,
+    patient_ids: List[str] = [],
+    patient_key: str = "subject.reference",
+):
+    "Build query with patient_ids"
+
+    return pipe(
+        query,
+        _patient_ids_adder(
+            patient_id=patient_id,
+            patient_ids=patient_ids,
+            patient_key=patient_key,
+        ),
     )
