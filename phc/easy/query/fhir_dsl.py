@@ -1,5 +1,7 @@
 from typing import Any, Callable, List, Union
 
+import pandas as pd
+
 from phc.easy.auth import Auth
 from phc.services import Fhir
 

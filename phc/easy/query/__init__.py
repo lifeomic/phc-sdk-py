@@ -212,6 +212,26 @@ class Query:
         return transform(df)
 
     @staticmethod
+    def get_count_by_field(
+        table_name: str,
+        field: str,
+        batch_size: int = 1000,
+        query_overrides: dict = {},
+        **query_kwargs,
+    ):
+        return with_progress(
+            tqdm,
+            lambda progress: Query._recursive_get_count_by_field(
+                field=field,
+                table_name=table_name,
+                batch_size=batch_size,
+                progress=progress,
+                query_overrides=query_overrides,
+                **query_kwargs,
+            ),
+        )
+
+    @staticmethod
     def execute_ga4gh(
         query: dict, all_results: bool = False, auth_args: dict = Auth.shared()
     ) -> pd.DataFrame:
@@ -236,3 +256,73 @@ class Query:
             params=params,
             scroll=all_results,
         )
+
+    @staticmethod
+    def _recursive_get_count_by_field(
+        table_name: str,
+        field: str,
+        batch_size: int,
+        progress: Union[tqdm, None] = None,
+        query_overrides: dict = {},
+        _prev_results: List[dict] = [],
+        _after_key: dict = {},
+        **query_kwargs,
+    ):
+        data = Query.execute_fhir_dsl(
+            {
+                "type": "select",
+                "columns": [
+                    {
+                        "type": "elasticsearch",
+                        "aggregations": {
+                            "results": {
+                                "composite": {
+                                    "sources": [
+                                        {
+                                            "value": {
+                                                "terms": {
+                                                    "field": f"{field}.keyword"
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "size": batch_size,
+                                    **(
+                                        {"after": _after_key}
+                                        if len(_after_key) > 0
+                                        else {}
+                                    ),
+                                }
+                            }
+                        },
+                    }
+                ],
+                "from": [{"table": table_name}],
+            },
+            **query_kwargs,
+        ).data
+
+        after_key = data["results"].get("after_key", None)
+
+        current_results = [
+            {field: r["key"]["value"], "doc_count": r["doc_count"]}
+            for r in data["results"]["buckets"]
+        ]
+        results = [*_prev_results, *current_results]
+
+        if progress is not None:
+            progress.update(len(current_results))
+
+        if (len(current_results) == batch_size) and after_key:
+            return Query._recursive_get_count_by_field(
+                table_name=table_name,
+                field=field,
+                batch_size=batch_size,
+                progress=progress,
+                query_overrides=query_overrides,
+                _prev_results=results,
+                _after_key=after_key,
+                **query_kwargs,
+            )
+
+        return pd.DataFrame(results)
