@@ -103,8 +103,8 @@ class APICache:
         filename = str(folder.joinpath(APICache.filename_for_fhir_dsl(query)))
 
         print(f'Writing aggregation to "{filename}"')
-        with open(filename, "w") as f:
-            json.dump(agg, f, indent=2)
+        with open(filename, "w") as file:
+            json.dump(agg.data, file, indent=2)
 
     @staticmethod
     def read_csv(filename: str) -> pd.DataFrame:

@@ -217,8 +217,71 @@ class Query:
         field: str,
         batch_size: int = 1000,
         query_overrides: dict = {},
+        log: bool = False,
+        auth_args: Auth = Auth.shared(),
         **query_kwargs,
     ):
+        """Count records by a given field
+
+        Attributes
+        ----------
+        table_name : str
+            The FHIR Search Service table to retrieve from
+
+        field : str
+            The field name to count the values of (e.g. "subject.reference")
+
+        batch_size : int
+            The size of each page from elasticsearch to use
+
+        query_overrides : dict
+            Parts of the FSS query to override
+            (Note that passing certain values can cause the method to error out)
+
+            The aggregation query is similar to this:
+                {
+                    "type": "select",
+                    "columns": [{
+                        "type": "elasticsearch",
+                        "aggregations": {
+                            "results": {
+                                "composite": {
+                                    "sources": [{
+                                        "value": {
+                                            "terms": {
+                                                "field": "gender.keyword"
+                                            }
+                                        }
+                                    }],
+                                    "size": 100,
+                                }
+                            }
+                        },
+                    }],
+                    "from": [{"table": "patient"}],
+                }
+
+
+        auth_args : Auth, dict
+            Additional arguments for authentication
+
+        log : bool = False
+            Whether to log the elasticsearch query sent to the server
+
+        query_kwargs : dict
+            Arguments to pass to build_query such as patient_id, patient_ids,
+            and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+
+        Examples
+        --------
+        >>> import phc.easy as phc
+        >>> phc.Auth.set({ 'account': '<your-account-name>' })
+        >>> phc.Project.set_current('My Project Name')
+        >>> phc.Query.get_count_by_field(
+            table_name="patient",
+            field="gender"
+        )
+        """
         return with_progress(
             tqdm,
             lambda progress: Query._recursive_get_count_by_field(
@@ -226,6 +289,8 @@ class Query:
                 table_name=table_name,
                 batch_size=batch_size,
                 progress=progress,
+                log=log,
+                auth_args=auth_args,
                 query_overrides=query_overrides,
                 **query_kwargs,
             ),
@@ -264,6 +329,8 @@ class Query:
         batch_size: int,
         progress: Union[tqdm, None] = None,
         query_overrides: dict = {},
+        log: bool = False,
+        auth_args: Auth = Auth.shared,
         _prev_results: List[dict] = [],
         _after_key: dict = {},
         **query_kwargs,
@@ -299,6 +366,8 @@ class Query:
                 ],
                 "from": [{"table": table_name}],
             },
+            auth_args=auth_args,
+            log=log,
             **query_kwargs,
         ).data
 
@@ -320,6 +389,8 @@ class Query:
                 batch_size=batch_size,
                 progress=progress,
                 query_overrides=query_overrides,
+                log=log,
+                auth_args=auth_args,
                 _prev_results=results,
                 _after_key=after_key,
                 **query_kwargs,

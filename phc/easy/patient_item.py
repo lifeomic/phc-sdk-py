@@ -113,3 +113,51 @@ class PatientItem:
             patient_key=cls.patient_key(),
             log=log,
         )
+
+    @classmethod
+    def get_count_by_field(cls, field: str, **kwargs):
+        """Count records by a given field
+
+        See argments for :func:`~phc.easy.query.Query.get_count_by_field`
+
+        Attributes
+        ----------
+        field : str
+            The field name to count the values of (e.g. "gender")
+
+        Examples
+        --------
+        >>> import phc.easy as phc
+        >>> phc.Auth.set({'account': '<your-account-name>'})
+        >>> phc.Project.set_current('My Project Name')
+        >>>
+        >>> phc.Observation.get_count_by_field('category.coding.code')
+        """
+        return Query.get_count_by_field(
+            table_name=cls.table_name(), field=field, **kwargs
+        )
+
+    @classmethod
+    def get_count_by_patient(cls, **kwargs):
+        """Count records by a given field
+
+        See argments for :func:`~phc.easy.query.Query.get_count_by_field`
+
+        Examples
+        --------
+        >>> import phc.easy as phc
+        >>> phc.Auth.set({'account': '<your-account-name>'})
+        >>> phc.Project.set_current('My Project Name')
+        >>>
+        >>> phc.Observation.get_count_by_patient('gender')
+        """
+        patient_key = cls.patient_key()
+
+        df = Query.get_count_by_field(
+            table_name=cls.table_name(), field=cls.patient_key(), **kwargs
+        )
+
+        # Make keys consistent (some are prefixed while others are not)
+        df[patient_key] = df[patient_key].str.replace("Patient/", "")
+
+        return df.groupby(patient_key).sum()
