@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, List
 
 import pandas as pd
 
@@ -44,10 +44,12 @@ class PatientItem:
         all_results: bool = False,
         raw: bool = False,
         patient_id: Union[None, str] = None,
+        patient_ids: List[str] = [],
         query_overrides: dict = {},
         auth_args=Auth.shared(),
         ignore_cache: bool = False,
         expand_args: dict = {},
+        log: bool = False,
     ):
         """Retrieve records
 
@@ -76,6 +78,9 @@ class PatientItem:
         expand_args : Any
             Additional arguments passed to phc.Frame.expand
 
+        log : bool = False
+            Whether to log some diagnostic statements for debugging
+
         Examples
         --------
         >>> import phc.easy as phc
@@ -86,9 +91,11 @@ class PatientItem:
         >>>
         >>> phc.Goal.get_data_frame(patient_id='<patient-id>')
         """
-        query = PatientItem.build_query(
-            cls.table_name(), patient_id, cls.patient_key()
-        )
+        query = {
+            "type": "select",
+            "columns": "*",
+            "from": [{"table": cls.table_name()}],
+        }
 
         def transform(df: pd.DataFrame):
             return cls.transform_results(df, **expand_args)
@@ -101,45 +108,8 @@ class PatientItem:
             query_overrides,
             auth_args,
             ignore_cache,
+            patient_id=patient_id,
+            patient_ids=patient_ids,
+            patient_key=cls.patient_key(),
+            log=log,
         )
-
-    @staticmethod
-    def build_query(
-        table_name: str,
-        patient_id: Union[None, str] = None,
-        patient_key: str = "subject.reference",
-    ) -> dict:
-        """Build query for a given table that relates to a patient
-
-        Attributes
-        ----------
-        table_name : str
-            The name of the elasticsearch FHIR table
-
-        patient_id : None or str = None
-            Find table records for a given patient_id
-        """
-
-        query = {
-            "type": "select",
-            "columns": "*",
-            "from": [{"table": table_name}],
-        }
-
-        if patient_id:
-            return {
-                **query,
-                "where": {
-                    "type": "elasticsearch",
-                    "query": {
-                        "terms": {
-                            f"{patient_key}.keyword": [
-                                patient_id,
-                                f"Patient/{patient_id}",
-                            ]
-                        }
-                    },
-                },
-            }
-
-        return query
