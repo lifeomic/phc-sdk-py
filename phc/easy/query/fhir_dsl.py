@@ -35,6 +35,15 @@ def query_allows_scrolling(query):
     return isinstance(lower, int) and isinstance(upper, int)
 
 
+def execute_single_fhir_dsl(
+    query: dict, scroll_id: str = "", auth_args: Auth = Auth.shared()
+):
+    auth = Auth(auth_args)
+    fhir = Fhir(auth.session())
+
+    return fhir.execute_es(auth.project_id, query, scroll_id)
+
+
 def recursive_execute_fhir_dsl(
     query: dict,
     scroll: bool = False,
@@ -44,13 +53,10 @@ def recursive_execute_fhir_dsl(
     _scroll_id: str = "true",
     _prev_hits: List = [],
 ):
-    auth = Auth(auth_args)
-    fhir = Fhir(auth.session())
-
-    response = fhir.execute_es(
-        auth.project_id,
+    response = execute_single_fhir_dsl(
         query,
         _scroll_id if query_allows_scrolling(query) and scroll else "",
+        auth_args,
     )
 
     is_first_iteration = _scroll_id == "true"
@@ -82,7 +88,7 @@ def recursive_execute_fhir_dsl(
         query,
         scroll=True,
         progress=progress,
-        auth_args=auth,
+        auth_args=auth_args,
         callback=callback,
         _scroll_id=_scroll_id,
         _prev_hits=results,

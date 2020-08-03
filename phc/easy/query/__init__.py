@@ -1,5 +1,4 @@
-from typing import Any, Callable, List, Union
-
+from typing import Any, Callable, List, Union, NamedTuple
 import pandas as pd
 
 from phc.services import Fhir
@@ -10,10 +9,12 @@ from phc.easy.query.fhir_dsl_query import build_query
 from phc.easy.query.fhir_dsl import (
     MAX_RESULT_SIZE,
     recursive_execute_fhir_dsl,
+    execute_single_fhir_dsl,
     tqdm,
     with_progress,
 )
 from phc.util.api_cache import APICache
+from phc.easy.query.fhir_aggregation import FhirAggregation
 
 
 class Query:
@@ -42,6 +43,9 @@ class Query:
           "from": [{"table": "patient"}],
         })
         """
+        if FhirAggregation.is_aggregation_query(query):
+            raise ValueError("Count is not support for aggregation queries.")
+
         auth = Auth(auth_args)
         fhir = Fhir(auth.session())
 
@@ -123,6 +127,10 @@ class Query:
         if log:
             print(query)
 
+        if FhirAggregation.is_aggregation_query(query):
+            response = execute_single_fhir_dsl(query, auth_args=auth_args)
+            return FhirAggregation.from_response(response)
+
         if all_results:
             return with_progress(
                 lambda: tqdm(total=MAX_RESULT_SIZE),
@@ -167,22 +175,34 @@ class Query:
         if log:
             print(query)
 
-        use_cache = (not ignore_cache) and (not raw) and all_results
+        use_cache = (
+            (not ignore_cache)
+            and (not raw)
+            and (all_results or FhirAggregation.is_aggregation_query(query))
+        )
 
         if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
             return APICache.load_cache_for_fhir_dsl(query)
 
-        if use_cache:
-            return Query.execute_fhir_dsl(
-                query,
-                all_results,
-                auth_args,
-                callback=APICache.build_cache_fhir_dsl_callback(
-                    query, transform
-                ),
-            )
+        callback = (
+            APICache.build_cache_fhir_dsl_callback(query, transform)
+            if use_cache
+            else None
+        )
 
-        results = Query.execute_fhir_dsl(query, all_results, auth_args)
+        results = Query.execute_fhir_dsl(
+            query, all_results, auth_args, callback=callback
+        )
+
+        if isinstance(results, FhirAggregation):
+            # Cache isn't written in batches so we need to explicitly do it here
+            if use_cache:
+                APICache.write_agg(query, results)
+
+            return results
+
+        if isinstance(results, pd.DataFrame):
+            return results
 
         df = pd.DataFrame(map(lambda r: r["_source"], results))
 
