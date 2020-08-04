@@ -212,6 +212,70 @@ class Query:
         return transform(df)
 
     @staticmethod
+    def find_codes(table_name: str, code_fields: List[str], **kwargs):
+        """Find FHIR codes for a given table
+
+        Attributes
+        ----------
+        table_name : str
+            The FHIR Search Service table to retrieve from
+
+        code_fields : List[str]
+            The fields of this table that contain a system, code, and display
+
+        kwargs : dict
+            Arguments to pass to :func:`~phc.easy.query.Query.execute_composite_aggregations`
+
+        Examples
+        --------
+        >>> import phc.easy as phc
+        >>> phc.Auth.set({ 'account': '<your-account-name>' })
+        >>> phc.Project.set_current('My Project Name')
+        >>> phc.Query.find_codes(
+            table_name="observation",
+            code_fields=["meta.tag", "code.coding"],
+            patient_id="<my-patient-id>"
+        )
+        """
+
+        def agg_composite_to_frame(prefix: str, data: dict):
+            frame = pd.json_normalize(data["buckets"])
+            frame.columns = frame.columns.str.lstrip("key.")
+            frame["field"] = prefix
+            return frame
+
+        results = Query.execute_composite_aggregations(
+            table_name=table_name,
+            key_sources_pairs=[
+                (
+                    field,
+                    [
+                        {
+                            "system": {
+                                "terms": {"field": f"{field}.system.keyword"}
+                            }
+                        },
+                        {"code": {"terms": {"field": f"{field}.code.keyword"}}},
+                        {
+                            "display": {
+                                "terms": {"field": f"{field}.display.keyword"}
+                            }
+                        },
+                    ],
+                )
+                for field in code_fields
+            ],
+            **kwargs,
+        )
+
+        return pd.concat(
+            [
+                agg_composite_to_frame(key, value)
+                for key, value in results.items()
+            ]
+        )
+
+    @staticmethod
     def execute_composite_aggregations(
         table_name: str,
         key_sources_pairs: List[Tuple[str, List[dict]]],
@@ -222,7 +286,7 @@ class Query:
         max_pages: Union[int, None] = None,
         **query_kwargs,
     ):
-        """Count records by a given field
+        """Count records by multiple fields
 
         Attributes
         ----------
@@ -316,17 +380,6 @@ class Query:
             ),
         )
 
-    # @staticmethod
-    # def find_codes(
-    #     table_name: str,
-    #     code_fields: List[str],
-    #     query_overrides: dict = {},
-    #     log: bool = False,
-    #     auth_args: Auth = Auth.shared(),
-    #     **query_kwargs
-    # ):
-    #     """TODO: Write some good docs"""
-
     @staticmethod
     def get_count_by_field(
         table_name: str,
@@ -398,18 +451,26 @@ class Query:
             field="gender"
         )
         """
-        return with_progress(
-            tqdm,
-            lambda progress: Query._recursive_get_count_by_field(
-                field=field,
-                table_name=table_name,
-                batch_size=batch_size,
-                progress=progress,
-                log=log,
-                auth_args=auth_args,
-                query_overrides=query_overrides,
-                **query_kwargs,
-            ),
+        data = Query.execute_composite_aggregations(
+            table_name=table_name,
+            key_sources_pairs=[
+                (
+                    "results",
+                    [{"value": {"terms": {"field": f"{field}.keyword"}}}],
+                )
+            ],
+            batch_size=batch_size,
+            log=log,
+            auth_args=auth_args,
+            query_overrides=query_overrides,
+            **query_kwargs,
+        )
+
+        return pd.DataFrame(
+            [
+                {field: r["key"]["value"], "doc_count": r["doc_count"]}
+                for r in data["results"]["buckets"]
+            ]
         )
 
     @staticmethod
@@ -437,82 +498,6 @@ class Query:
             params=params,
             scroll=all_results,
         )
-
-    @staticmethod
-    def _recursive_get_count_by_field(
-        table_name: str,
-        field: str,
-        batch_size: int,
-        progress: Union[tqdm, None] = None,
-        query_overrides: dict = {},
-        log: bool = False,
-        auth_args: Auth = Auth.shared,
-        _prev_results: List[dict] = [],
-        _after_key: dict = {},
-        **query_kwargs,
-    ):
-        data = Query.execute_fhir_dsl(
-            {
-                "type": "select",
-                "columns": [
-                    {
-                        "type": "elasticsearch",
-                        "aggregations": {
-                            "results": {
-                                "composite": {
-                                    "sources": [
-                                        {
-                                            "value": {
-                                                "terms": {
-                                                    "field": f"{field}.keyword"
-                                                }
-                                            }
-                                        }
-                                    ],
-                                    "size": batch_size,
-                                    **(
-                                        {"after": _after_key}
-                                        if len(_after_key) > 0
-                                        else {}
-                                    ),
-                                }
-                            }
-                        },
-                    }
-                ],
-                "from": [{"table": table_name}],
-            },
-            auth_args=auth_args,
-            log=log,
-            **query_kwargs,
-        ).data
-
-        after_key = data["results"].get("after_key", None)
-
-        current_results = [
-            {field: r["key"]["value"], "doc_count": r["doc_count"]}
-            for r in data["results"]["buckets"]
-        ]
-        results = [*_prev_results, *current_results]
-
-        if progress is not None:
-            progress.update(len(current_results))
-
-        if (len(current_results) == batch_size) and after_key:
-            return Query._recursive_get_count_by_field(
-                table_name=table_name,
-                field=field,
-                batch_size=batch_size,
-                progress=progress,
-                query_overrides=query_overrides,
-                log=log,
-                auth_args=auth_args,
-                _prev_results=results,
-                _after_key=after_key,
-                **query_kwargs,
-            )
-
-        return pd.DataFrame(results)
 
     @staticmethod
     def _recursive_execute_composite_aggregations(
