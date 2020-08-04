@@ -1,5 +1,4 @@
-from typing import Any, Callable, List, Union
-
+from typing import Any, Callable, List, Union, NamedTuple
 import pandas as pd
 
 from phc.services import Fhir
@@ -10,10 +9,12 @@ from phc.easy.query.fhir_dsl_query import build_query
 from phc.easy.query.fhir_dsl import (
     MAX_RESULT_SIZE,
     recursive_execute_fhir_dsl,
+    execute_single_fhir_dsl,
     tqdm,
     with_progress,
 )
 from phc.util.api_cache import APICache
+from phc.easy.query.fhir_aggregation import FhirAggregation
 
 
 class Query:
@@ -42,6 +43,9 @@ class Query:
           "from": [{"table": "patient"}],
         })
         """
+        if FhirAggregation.is_aggregation_query(query):
+            raise ValueError("Count is not support for aggregation queries.")
+
         auth = Auth(auth_args)
         fhir = Fhir(auth.session())
 
@@ -123,6 +127,10 @@ class Query:
         if log:
             print(query)
 
+        if FhirAggregation.is_aggregation_query(query):
+            response = execute_single_fhir_dsl(query, auth_args=auth_args)
+            return FhirAggregation.from_response(response)
+
         if all_results:
             return with_progress(
                 lambda: tqdm(total=MAX_RESULT_SIZE),
@@ -167,22 +175,34 @@ class Query:
         if log:
             print(query)
 
-        use_cache = (not ignore_cache) and (not raw) and all_results
+        use_cache = (
+            (not ignore_cache)
+            and (not raw)
+            and (all_results or FhirAggregation.is_aggregation_query(query))
+        )
 
         if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
             return APICache.load_cache_for_fhir_dsl(query)
 
-        if use_cache:
-            return Query.execute_fhir_dsl(
-                query,
-                all_results,
-                auth_args,
-                callback=APICache.build_cache_fhir_dsl_callback(
-                    query, transform
-                ),
-            )
+        callback = (
+            APICache.build_cache_fhir_dsl_callback(query, transform)
+            if use_cache
+            else None
+        )
 
-        results = Query.execute_fhir_dsl(query, all_results, auth_args)
+        results = Query.execute_fhir_dsl(
+            query, all_results, auth_args, callback=callback
+        )
+
+        if isinstance(results, FhirAggregation):
+            # Cache isn't written in batches so we need to explicitly do it here
+            if use_cache:
+                APICache.write_agg(query, results)
+
+            return results
+
+        if isinstance(results, pd.DataFrame):
+            return results
 
         df = pd.DataFrame(map(lambda r: r["_source"], results))
 
@@ -190,6 +210,91 @@ class Query:
             return df
 
         return transform(df)
+
+    @staticmethod
+    def get_count_by_field(
+        table_name: str,
+        field: str,
+        batch_size: int = 1000,
+        query_overrides: dict = {},
+        log: bool = False,
+        auth_args: Auth = Auth.shared(),
+        **query_kwargs,
+    ):
+        """Count records by a given field
+
+        Attributes
+        ----------
+        table_name : str
+            The FHIR Search Service table to retrieve from
+
+        field : str
+            The field name to count the values of (e.g. "subject.reference")
+
+        batch_size : int
+            The size of each page from elasticsearch to use
+
+        query_overrides : dict
+            Parts of the FSS query to override
+            (Note that passing certain values can cause the method to error out)
+
+            The aggregation query is similar to this:
+                {
+                    "type": "select",
+                    "columns": [{
+                        "type": "elasticsearch",
+                        "aggregations": {
+                            "results": {
+                                "composite": {
+                                    "sources": [{
+                                        "value": {
+                                            "terms": {
+                                                "field": "gender.keyword"
+                                            }
+                                        }
+                                    }],
+                                    "size": 100,
+                                }
+                            }
+                        },
+                    }],
+                    "from": [{"table": "patient"}],
+                }
+
+
+        auth_args : Auth, dict
+            Additional arguments for authentication
+
+        log : bool = False
+            Whether to log the elasticsearch query sent to the server
+
+        query_kwargs : dict
+            Arguments to pass to build_query such as patient_id, patient_ids,
+            and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+
+        Examples
+        --------
+        >>> import phc.easy as phc
+        >>> phc.Auth.set({ 'account': '<your-account-name>' })
+        >>> phc.Project.set_current('My Project Name')
+        >>> phc.Query.get_count_by_field(
+            table_name="patient",
+            field="gender"
+        )
+        """
+        return with_progress(
+            tqdm,
+            lambda progress: Query._recursive_get_count_by_field(
+                field=field,
+                table_name=table_name,
+                batch_size=batch_size,
+                progress=progress,
+                log=log,
+                auth_args=auth_args,
+                query_overrides=query_overrides,
+                **query_kwargs,
+            ),
+        )
 
     @staticmethod
     def execute_ga4gh(
@@ -216,3 +321,79 @@ class Query:
             params=params,
             scroll=all_results,
         )
+
+    @staticmethod
+    def _recursive_get_count_by_field(
+        table_name: str,
+        field: str,
+        batch_size: int,
+        progress: Union[tqdm, None] = None,
+        query_overrides: dict = {},
+        log: bool = False,
+        auth_args: Auth = Auth.shared,
+        _prev_results: List[dict] = [],
+        _after_key: dict = {},
+        **query_kwargs,
+    ):
+        data = Query.execute_fhir_dsl(
+            {
+                "type": "select",
+                "columns": [
+                    {
+                        "type": "elasticsearch",
+                        "aggregations": {
+                            "results": {
+                                "composite": {
+                                    "sources": [
+                                        {
+                                            "value": {
+                                                "terms": {
+                                                    "field": f"{field}.keyword"
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "size": batch_size,
+                                    **(
+                                        {"after": _after_key}
+                                        if len(_after_key) > 0
+                                        else {}
+                                    ),
+                                }
+                            }
+                        },
+                    }
+                ],
+                "from": [{"table": table_name}],
+            },
+            auth_args=auth_args,
+            log=log,
+            **query_kwargs,
+        ).data
+
+        after_key = data["results"].get("after_key", None)
+
+        current_results = [
+            {field: r["key"]["value"], "doc_count": r["doc_count"]}
+            for r in data["results"]["buckets"]
+        ]
+        results = [*_prev_results, *current_results]
+
+        if progress is not None:
+            progress.update(len(current_results))
+
+        if (len(current_results) == batch_size) and after_key:
+            return Query._recursive_get_count_by_field(
+                table_name=table_name,
+                field=field,
+                batch_size=batch_size,
+                progress=progress,
+                query_overrides=query_overrides,
+                log=log,
+                auth_args=auth_args,
+                _prev_results=results,
+                _after_key=after_key,
+                **query_kwargs,
+            )
+
+        return pd.DataFrame(results)

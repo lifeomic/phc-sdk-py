@@ -6,6 +6,7 @@ from typing import Callable
 import numpy as np
 import pandas as pd
 
+from phc.easy.query.fhir_aggregation import FhirAggregation
 from phc.util.csv_writer import CSVWriter
 
 DIR = "~/Downloads/phc/api-cache"
@@ -18,9 +19,13 @@ class APICache:
     @staticmethod
     def filename_for_fhir_dsl(query: dict):
         "Descriptive filename with hash of query for easy retrieval"
+        is_aggregation = FhirAggregation.is_aggregation_query(query)
+
+        agg_description = "agg" if is_aggregation else ""
+
         column_description = (
             f"{len(query.get('columns', []))}col"
-            if isinstance(query.get("columns"), list)
+            if not is_aggregation and isinstance(query.get("columns"), list)
             else ""
         )
 
@@ -34,12 +39,15 @@ class APICache:
             "fhir",
             "dsl",
             *[d.get("table", "") for d in query.get("from", [])],
+            agg_description,
             column_description,
             where_description,
             unique_hash,
         ]
 
-        return "_".join([c for c in components if len(c) > 0]) + ".csv"
+        extension = "json" if is_aggregation else "csv"
+
+        return "_".join([c for c in components if len(c) > 0]) + "." + extension
 
     @staticmethod
     def does_cache_for_fhir_dsl_exist(query: dict) -> bool:
@@ -57,7 +65,11 @@ class APICache:
             .expanduser()
             .joinpath(APICache.filename_for_fhir_dsl(query))
         )
-        print(f'Loading cache from "{filename}"')
+        print(f'[CACHE] Loading from "{filename}"')
+
+        if FhirAggregation.is_aggregation_query(query):
+            with open(filename, "r") as f:
+                return FhirAggregation(json.load(f))
 
         return APICache.read_csv(filename)
 
@@ -65,6 +77,7 @@ class APICache:
     def build_cache_fhir_dsl_callback(
         query: dict, transform: Callable[[pd.DataFrame], pd.DataFrame]
     ):
+        "Build a CSV callback (not used for aggregations)"
         folder = Path(DIR).expanduser()
         folder.mkdir(parents=True, exist_ok=True)
 
@@ -81,6 +94,17 @@ class APICache:
             writer.write(transform(df))
 
         return handle_batch
+
+    @staticmethod
+    def write_agg(query: dict, agg: FhirAggregation):
+        folder = Path(DIR).expanduser()
+        folder.mkdir(parents=True, exist_ok=True)
+
+        filename = str(folder.joinpath(APICache.filename_for_fhir_dsl(query)))
+
+        print(f'Writing aggregation to "{filename}"')
+        with open(filename, "w") as file:
+            json.dump(agg.data, file, indent=2)
 
     @staticmethod
     def read_csv(filename: str) -> pd.DataFrame:

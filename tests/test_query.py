@@ -18,6 +18,40 @@ def test_filename_for_fhir_dsl_with_complex_statement():
         {
             "type": "select",
             "columns": [
+                {"expr": {"type": "column_ref", "column": "id.keyword"}}
+            ],
+            "from": [{"table": "goal"}],
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "term": {
+                                    "target.measure.coding.system.keyword": "http://my-system/fhir/measure1"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "target.measure.coding.code.keyword": "12345-6"
+                                }
+                            },
+                        ],
+                        "minimum_should_match": 2,
+                    }
+                },
+            },
+        }
+    )
+
+    assert filename == "fhir_dsl_goal_1col_where_08c25b4c.csv"
+
+
+def test_filename_for_fhir_dsl_with_aggregation():
+    filename = APICache.filename_for_fhir_dsl(
+        {
+            "type": "select",
+            "columns": [
                 {
                     "type": "elasticsearch",
                     "aggregations": {
@@ -51,4 +85,4 @@ def test_filename_for_fhir_dsl_with_complex_statement():
         }
     )
 
-    assert filename == "fhir_dsl_goal_1col_where_58a8bb32.csv"
+    assert filename == "fhir_dsl_goal_agg_where_58a8bb32.json"
