@@ -14,6 +14,10 @@ class Procedure(PatientItem):
         return "procedure"
 
     @staticmethod
+    def code_keys():
+        return ["meta.tag", "code.coding", "category.coding"]
+
+    @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,

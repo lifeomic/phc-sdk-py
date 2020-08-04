@@ -10,6 +10,15 @@ class Condition(PatientItem):
         return "condition"
 
     @staticmethod
+    def code_keys():
+        return [
+            "meta.tag",
+            "code.coding",
+            "bodySite.coding",
+            "stage.summary.coding",
+        ]
+
+    @staticmethod
     def transform_results(df: pd.DataFrame, **expand_args):
         return Frame.expand(
             df,

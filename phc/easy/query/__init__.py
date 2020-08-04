@@ -212,7 +212,7 @@ class Query:
         return transform(df)
 
     @staticmethod
-    def find_codes(table_name: str, code_fields: List[str], **kwargs):
+    def get_codes(table_name: str, code_fields: List[str], **kwargs):
         """Find FHIR codes for a given table
 
         Attributes
@@ -231,12 +231,14 @@ class Query:
         >>> import phc.easy as phc
         >>> phc.Auth.set({ 'account': '<your-account-name>' })
         >>> phc.Project.set_current('My Project Name')
-        >>> phc.Query.find_codes(
+        >>> phc.Query.get_codes(
             table_name="observation",
             code_fields=["meta.tag", "code.coding"],
             patient_id="<my-patient-id>"
         )
         """
+        if len(code_fields) == 0:
+            raise ValueError("No code columns specified.")
 
         def agg_composite_to_frame(prefix: str, data: dict):
             frame = pd.json_normalize(data["buckets"])
@@ -258,7 +260,10 @@ class Query:
                         {"code": {"terms": {"field": f"{field}.code.keyword"}}},
                         {
                             "display": {
-                                "terms": {"field": f"{field}.display.keyword"}
+                                "terms": {
+                                    "field": f"{field}.display.keyword",
+                                    "missing_bucket": True,
+                                }
                             }
                         },
                     ],
@@ -364,6 +369,8 @@ class Query:
             ]
         )
         """
+        if len(key_sources_pairs) == 0:
+            raise ValueError("No aggregate composite terms specified.")
 
         return with_progress(
             tqdm,

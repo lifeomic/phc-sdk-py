@@ -10,6 +10,16 @@ class Observation(PatientItem):
         return "observation"
 
     @staticmethod
+    def code_keys():
+        return [
+            "meta.tag",
+            "code.coding",
+            "component.code.coding",
+            "valueCodeableConcept.coding",
+            "category.coding",
+        ]
+
+    @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,
