@@ -27,12 +27,13 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from typing import Union
+<pre><code class="python">from typing import Union, List
 
 import pandas as pd
 
 from phc.easy.auth import Auth
 from phc.easy.query import Query
+from phc.easy.util import without_keys
 
 
 class PatientItem:
@@ -48,6 +49,11 @@ class PatientItem:
     @staticmethod
     def patient_key() -&gt; str:
         return &#34;subject.reference&#34;
+
+    @staticmethod
+    def code_keys() -&gt; List[str]:
+        &#34;Returns the code keys (e.g. when searching for codes)&#34;
+        return []
 
     @classmethod
     def get_count(cls, query_overrides: dict = {}, auth_args=Auth.shared()):
@@ -73,10 +79,12 @@ class PatientItem:
         all_results: bool = False,
         raw: bool = False,
         patient_id: Union[None, str] = None,
+        patient_ids: List[str] = [],
         query_overrides: dict = {},
         auth_args=Auth.shared(),
         ignore_cache: bool = False,
         expand_args: dict = {},
+        log: bool = False,
     ):
         &#34;&#34;&#34;Retrieve records
 
@@ -105,6 +113,9 @@ class PatientItem:
         expand_args : Any
             Additional arguments passed to phc.Frame.expand
 
+        log : bool = False
+            Whether to log some diagnostic statements for debugging
+
         Examples
         --------
         &gt;&gt;&gt; import phc.easy as phc
@@ -115,9 +126,11 @@ class PatientItem:
         &gt;&gt;&gt;
         &gt;&gt;&gt; phc.Goal.get_data_frame(patient_id=&#39;&lt;patient-id&gt;&#39;)
         &#34;&#34;&#34;
-        query = PatientItem.build_query(
-            cls.table_name(), patient_id, cls.patient_key()
-        )
+        query = {
+            &#34;type&#34;: &#34;select&#34;,
+            &#34;columns&#34;: &#34;*&#34;,
+            &#34;from&#34;: [{&#34;table&#34;: cls.table_name()}],
+        }
 
         def transform(df: pd.DataFrame):
             return cls.transform_results(df, **expand_args)
@@ -130,48 +143,81 @@ class PatientItem:
             query_overrides,
             auth_args,
             ignore_cache,
+            patient_id=patient_id,
+            patient_ids=patient_ids,
+            patient_key=cls.patient_key(),
+            log=log,
         )
 
-    @staticmethod
-    def build_query(
-        table_name: str,
-        patient_id: Union[None, str] = None,
-        patient_key: str = &#34;subject.reference&#34;,
-    ) -&gt; dict:
-        &#34;&#34;&#34;Build query for a given table that relates to a patient
+    @classmethod
+    def get_codes(cls, **kwargs):
+        &#34;&#34;&#34;Find all codes
+
+        See possible argments for :func:`~phc.easy.query.Query.get_codes`
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; phc.Observation.get_codes(patient_id=&#34;&lt;id&gt;&#34;, max_pages=3)
+        &#34;&#34;&#34;
+        code_fields = [*cls.code_keys(), *kwargs.get(&#34;code_fields&#34;, [])]
+
+        return Query.get_codes(
+            table_name=cls.table_name(),
+            code_fields=code_fields,
+            **without_keys(kwargs, [&#34;code_fields&#34;]),
+        )
+
+    @classmethod
+    def get_count_by_field(cls, field: str, **kwargs):
+        &#34;&#34;&#34;Count records by a given field
+
+        See argments for :func:`~phc.easy.query.Query.get_count_by_field`
 
         Attributes
         ----------
-        table_name : str
-            The name of the elasticsearch FHIR table
+        field : str
+            The field name to count the values of (e.g. &#34;gender&#34;)
 
-        patient_id : None or str = None
-            Find table records for a given patient_id
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; phc.Observation.get_count_by_field(&#39;category.coding.code&#39;)
         &#34;&#34;&#34;
+        return Query.get_count_by_field(
+            table_name=cls.table_name(), field=field, **kwargs
+        )
 
-        query = {
-            &#34;type&#34;: &#34;select&#34;,
-            &#34;columns&#34;: &#34;*&#34;,
-            &#34;from&#34;: [{&#34;table&#34;: table_name}],
-        }
+    @classmethod
+    def get_count_by_patient(cls, **kwargs):
+        &#34;&#34;&#34;Count records by a given field
 
-        if patient_id:
-            return {
-                **query,
-                &#34;where&#34;: {
-                    &#34;type&#34;: &#34;elasticsearch&#34;,
-                    &#34;query&#34;: {
-                        &#34;terms&#34;: {
-                            f&#34;{patient_key}.keyword&#34;: [
-                                patient_id,
-                                f&#34;Patient/{patient_id}&#34;,
-                            ]
-                        }
-                    },
-                },
-            }
+        See argments for :func:`~phc.easy.query.Query.get_count_by_field`
 
-        return query</code></pre>
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; phc.Observation.get_count_by_patient()
+        &#34;&#34;&#34;
+        patient_key = cls.patient_key()
+
+        df = Query.get_count_by_field(
+            table_name=cls.table_name(), field=cls.patient_key(), **kwargs
+        )
+
+        # Make keys consistent (some are prefixed while others are not)
+        df[patient_key] = df[patient_key].str.replace(&#34;Patient/&#34;, &#34;&#34;)
+
+        return df.groupby(patient_key).sum()</code></pre>
 </details>
 </section>
 <section>
@@ -207,6 +253,11 @@ from a FSS table that relates to a patient</p></div>
     def patient_key() -&gt; str:
         return &#34;subject.reference&#34;
 
+    @staticmethod
+    def code_keys() -&gt; List[str]:
+        &#34;Returns the code keys (e.g. when searching for codes)&#34;
+        return []
+
     @classmethod
     def get_count(cls, query_overrides: dict = {}, auth_args=Auth.shared()):
         &#34;Get the count for a given FSS query&#34;
@@ -231,10 +282,12 @@ from a FSS table that relates to a patient</p></div>
         all_results: bool = False,
         raw: bool = False,
         patient_id: Union[None, str] = None,
+        patient_ids: List[str] = [],
         query_overrides: dict = {},
         auth_args=Auth.shared(),
         ignore_cache: bool = False,
         expand_args: dict = {},
+        log: bool = False,
     ):
         &#34;&#34;&#34;Retrieve records
 
@@ -263,6 +316,9 @@ from a FSS table that relates to a patient</p></div>
         expand_args : Any
             Additional arguments passed to phc.Frame.expand
 
+        log : bool = False
+            Whether to log some diagnostic statements for debugging
+
         Examples
         --------
         &gt;&gt;&gt; import phc.easy as phc
@@ -273,9 +329,11 @@ from a FSS table that relates to a patient</p></div>
         &gt;&gt;&gt;
         &gt;&gt;&gt; phc.Goal.get_data_frame(patient_id=&#39;&lt;patient-id&gt;&#39;)
         &#34;&#34;&#34;
-        query = PatientItem.build_query(
-            cls.table_name(), patient_id, cls.patient_key()
-        )
+        query = {
+            &#34;type&#34;: &#34;select&#34;,
+            &#34;columns&#34;: &#34;*&#34;,
+            &#34;from&#34;: [{&#34;table&#34;: cls.table_name()}],
+        }
 
         def transform(df: pd.DataFrame):
             return cls.transform_results(df, **expand_args)
@@ -288,48 +346,81 @@ from a FSS table that relates to a patient</p></div>
             query_overrides,
             auth_args,
             ignore_cache,
+            patient_id=patient_id,
+            patient_ids=patient_ids,
+            patient_key=cls.patient_key(),
+            log=log,
         )
 
-    @staticmethod
-    def build_query(
-        table_name: str,
-        patient_id: Union[None, str] = None,
-        patient_key: str = &#34;subject.reference&#34;,
-    ) -&gt; dict:
-        &#34;&#34;&#34;Build query for a given table that relates to a patient
+    @classmethod
+    def get_codes(cls, **kwargs):
+        &#34;&#34;&#34;Find all codes
+
+        See possible argments for :func:`~phc.easy.query.Query.get_codes`
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; phc.Observation.get_codes(patient_id=&#34;&lt;id&gt;&#34;, max_pages=3)
+        &#34;&#34;&#34;
+        code_fields = [*cls.code_keys(), *kwargs.get(&#34;code_fields&#34;, [])]
+
+        return Query.get_codes(
+            table_name=cls.table_name(),
+            code_fields=code_fields,
+            **without_keys(kwargs, [&#34;code_fields&#34;]),
+        )
+
+    @classmethod
+    def get_count_by_field(cls, field: str, **kwargs):
+        &#34;&#34;&#34;Count records by a given field
+
+        See argments for :func:`~phc.easy.query.Query.get_count_by_field`
 
         Attributes
         ----------
-        table_name : str
-            The name of the elasticsearch FHIR table
+        field : str
+            The field name to count the values of (e.g. &#34;gender&#34;)
 
-        patient_id : None or str = None
-            Find table records for a given patient_id
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; phc.Observation.get_count_by_field(&#39;category.coding.code&#39;)
         &#34;&#34;&#34;
+        return Query.get_count_by_field(
+            table_name=cls.table_name(), field=field, **kwargs
+        )
 
-        query = {
-            &#34;type&#34;: &#34;select&#34;,
-            &#34;columns&#34;: &#34;*&#34;,
-            &#34;from&#34;: [{&#34;table&#34;: table_name}],
-        }
+    @classmethod
+    def get_count_by_patient(cls, **kwargs):
+        &#34;&#34;&#34;Count records by a given field
 
-        if patient_id:
-            return {
-                **query,
-                &#34;where&#34;: {
-                    &#34;type&#34;: &#34;elasticsearch&#34;,
-                    &#34;query&#34;: {
-                        &#34;terms&#34;: {
-                            f&#34;{patient_key}.keyword&#34;: [
-                                patient_id,
-                                f&#34;Patient/{patient_id}&#34;,
-                            ]
-                        }
-                    },
-                },
-            }
+        See argments for :func:`~phc.easy.query.Query.get_count_by_field`
 
-        return query</code></pre>
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; phc.Observation.get_count_by_patient()
+        &#34;&#34;&#34;
+        patient_key = cls.patient_key()
+
+        df = Query.get_count_by_field(
+            table_name=cls.table_name(), field=cls.patient_key(), **kwargs
+        )
+
+        # Make keys consistent (some are prefixed while others are not)
+        df[patient_key] = df[patient_key].str.replace(&#34;Patient/&#34;, &#34;&#34;)
+
+        return df.groupby(patient_key).sum()</code></pre>
 </details>
 <h3>Subclasses</h3>
 <ul class="hlist">
@@ -337,66 +428,65 @@ from a FSS table that relates to a patient</p></div>
 <li><a title="phc.easy.consent.Consent" href="consent.html#phc.easy.consent.Consent">Consent</a></li>
 <li><a title="phc.easy.goal.Goal" href="goal.html#phc.easy.goal.Goal">Goal</a></li>
 <li><a title="phc.easy.observation.Observation" href="observation.html#phc.easy.observation.Observation">Observation</a></li>
+<li><a title="phc.easy.procedure.Procedure" href="procedure.html#phc.easy.procedure.Procedure">Procedure</a></li>
+<li><a title="phc.easy.sequence.Sequence" href="sequence.html#phc.easy.sequence.Sequence">Sequence</a></li>
 <li><a title="phc.easy.specimen.Specimen" href="specimen.html#phc.easy.specimen.Specimen">Specimen</a></li>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.patient_item.PatientItem.build_query"><code class="name flex">
-<span>def <span class="ident">build_query</span></span>(<span>table_name: str, patient_id: Union[NoneType, str] = None, patient_key: str = 'subject.reference') ‑> dict</span>
+<dt id="phc.easy.patient_item.PatientItem.code_keys"><code class="name flex">
+<span>def <span class="ident">code_keys</span></span>(<span>) ‑> List[str]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Build query for a given table that relates to a patient</p>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>table_name</code></strong> :&ensp;<code>str</code></dt>
-<dd>The name of the elasticsearch FHIR table</dd>
-<dt><strong><code>patient_id</code></strong> :&ensp;<code>None</code> or <code>str = None</code></dt>
-<dd>Find table records for a given patient_id</dd>
-</dl></div>
+<div class="desc"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def build_query(
-    table_name: str,
-    patient_id: Union[None, str] = None,
-    patient_key: str = &#34;subject.reference&#34;,
-) -&gt; dict:
-    &#34;&#34;&#34;Build query for a given table that relates to a patient
+def code_keys() -&gt; List[str]:
+    &#34;Returns the code keys (e.g. when searching for codes)&#34;
+    return []</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.patient_item.PatientItem.get_codes"><code class="name flex">
+<span>def <span class="ident">get_codes</span></span>(<span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Find all codes</p>
+<p>See possible argments for :func:<code>~phc.easy.query.Query.get_codes</code></p>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({'account': '&lt;your-account-name&gt;'})
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt;
+&gt;&gt;&gt; phc.Observation.get_codes(patient_id=&quot;&lt;id&gt;&quot;, max_pages=3)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_codes(cls, **kwargs):
+    &#34;&#34;&#34;Find all codes
 
-    Attributes
-    ----------
-    table_name : str
-        The name of the elasticsearch FHIR table
+    See possible argments for :func:`~phc.easy.query.Query.get_codes`
 
-    patient_id : None or str = None
-        Find table records for a given patient_id
+    Examples
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; phc.Observation.get_codes(patient_id=&#34;&lt;id&gt;&#34;, max_pages=3)
     &#34;&#34;&#34;
+    code_fields = [*cls.code_keys(), *kwargs.get(&#34;code_fields&#34;, [])]
 
-    query = {
-        &#34;type&#34;: &#34;select&#34;,
-        &#34;columns&#34;: &#34;*&#34;,
-        &#34;from&#34;: [{&#34;table&#34;: table_name}],
-    }
-
-    if patient_id:
-        return {
-            **query,
-            &#34;where&#34;: {
-                &#34;type&#34;: &#34;elasticsearch&#34;,
-                &#34;query&#34;: {
-                    &#34;terms&#34;: {
-                        f&#34;{patient_key}.keyword&#34;: [
-                            patient_id,
-                            f&#34;Patient/{patient_id}&#34;,
-                        ]
-                    }
-                },
-            },
-        }
-
-    return query</code></pre>
+    return Query.get_codes(
+        table_name=cls.table_name(),
+        code_fields=code_fields,
+        **without_keys(kwargs, [&#34;code_fields&#34;]),
+    )</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.patient_item.PatientItem.get_count"><code class="name flex">
@@ -422,8 +512,97 @@ def get_count(cls, query_overrides: dict = {}, auth_args=Auth.shared()):
     )</code></pre>
 </details>
 </dd>
+<dt id="phc.easy.patient_item.PatientItem.get_count_by_field"><code class="name flex">
+<span>def <span class="ident">get_count_by_field</span></span>(<span>field: str, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Count records by a given field</p>
+<p>See argments for :func:<code>~phc.easy.query.Query.get_count_by_field</code></p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>field</code></strong> :&ensp;<code>str</code></dt>
+<dd>The field name to count the values of (e.g. "gender")</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({'account': '&lt;your-account-name&gt;'})
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt;
+&gt;&gt;&gt; phc.Observation.get_count_by_field('category.coding.code')
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_count_by_field(cls, field: str, **kwargs):
+    &#34;&#34;&#34;Count records by a given field
+
+    See argments for :func:`~phc.easy.query.Query.get_count_by_field`
+
+    Attributes
+    ----------
+    field : str
+        The field name to count the values of (e.g. &#34;gender&#34;)
+
+    Examples
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; phc.Observation.get_count_by_field(&#39;category.coding.code&#39;)
+    &#34;&#34;&#34;
+    return Query.get_count_by_field(
+        table_name=cls.table_name(), field=field, **kwargs
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.patient_item.PatientItem.get_count_by_patient"><code class="name flex">
+<span>def <span class="ident">get_count_by_patient</span></span>(<span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Count records by a given field</p>
+<p>See argments for :func:<code>~phc.easy.query.Query.get_count_by_field</code></p>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({'account': '&lt;your-account-name&gt;'})
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt;
+&gt;&gt;&gt; phc.Observation.get_count_by_patient()
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_count_by_patient(cls, **kwargs):
+    &#34;&#34;&#34;Count records by a given field
+
+    See argments for :func:`~phc.easy.query.Query.get_count_by_field`
+
+    Examples
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; phc.Observation.get_count_by_patient()
+    &#34;&#34;&#34;
+    patient_key = cls.patient_key()
+
+    df = Query.get_count_by_field(
+        table_name=cls.table_name(), field=cls.patient_key(), **kwargs
+    )
+
+    # Make keys consistent (some are prefixed while others are not)
+    df[patient_key] = df[patient_key].str.replace(&#34;Patient/&#34;, &#34;&#34;)
+
+    return df.groupby(patient_key).sum()</code></pre>
+</details>
+</dd>
 <dt id="phc.easy.patient_item.PatientItem.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {})</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retrieve records</p>
@@ -445,6 +624,8 @@ inspection if something goes wrong)</dd>
 Caching only occurs when all results are being retrieved.</dd>
 <dt><strong><code>expand_args</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Additional arguments passed to phc.Frame.expand</dd>
+<dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>Whether to log some diagnostic statements for debugging</dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <pre><code class="python">&gt;&gt;&gt; import phc.easy as phc
@@ -465,10 +646,12 @@ def get_data_frame(
     all_results: bool = False,
     raw: bool = False,
     patient_id: Union[None, str] = None,
+    patient_ids: List[str] = [],
     query_overrides: dict = {},
     auth_args=Auth.shared(),
     ignore_cache: bool = False,
     expand_args: dict = {},
+    log: bool = False,
 ):
     &#34;&#34;&#34;Retrieve records
 
@@ -497,6 +680,9 @@ def get_data_frame(
     expand_args : Any
         Additional arguments passed to phc.Frame.expand
 
+    log : bool = False
+        Whether to log some diagnostic statements for debugging
+
     Examples
     --------
     &gt;&gt;&gt; import phc.easy as phc
@@ -507,9 +693,11 @@ def get_data_frame(
     &gt;&gt;&gt;
     &gt;&gt;&gt; phc.Goal.get_data_frame(patient_id=&#39;&lt;patient-id&gt;&#39;)
     &#34;&#34;&#34;
-    query = PatientItem.build_query(
-        cls.table_name(), patient_id, cls.patient_key()
-    )
+    query = {
+        &#34;type&#34;: &#34;select&#34;,
+        &#34;columns&#34;: &#34;*&#34;,
+        &#34;from&#34;: [{&#34;table&#34;: cls.table_name()}],
+    }
 
     def transform(df: pd.DataFrame):
         return cls.transform_results(df, **expand_args)
@@ -522,6 +710,10 @@ def get_data_frame(
         query_overrides,
         auth_args,
         ignore_cache,
+        patient_id=patient_id,
+        patient_ids=patient_ids,
+        patient_key=cls.patient_key(),
+        log=log,
     )</code></pre>
 </details>
 </dd>
@@ -594,9 +786,12 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 <ul>
 <li>
 <h4><code><a title="phc.easy.patient_item.PatientItem" href="#phc.easy.patient_item.PatientItem">PatientItem</a></code></h4>
-<ul class="two-column">
-<li><code><a title="phc.easy.patient_item.PatientItem.build_query" href="#phc.easy.patient_item.PatientItem.build_query">build_query</a></code></li>
+<ul class="">
+<li><code><a title="phc.easy.patient_item.PatientItem.code_keys" href="#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.patient_item.PatientItem.get_codes" href="#phc.easy.patient_item.PatientItem.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.patient_item.PatientItem.get_count" href="#phc.easy.patient_item.PatientItem.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.patient_item.PatientItem.get_count_by_field" href="#phc.easy.patient_item.PatientItem.get_count_by_field">get_count_by_field</a></code></li>
+<li><code><a title="phc.easy.patient_item.PatientItem.get_count_by_patient" href="#phc.easy.patient_item.PatientItem.get_count_by_patient">get_count_by_patient</a></code></li>
 <li><code><a title="phc.easy.patient_item.PatientItem.get_data_frame" href="#phc.easy.patient_item.PatientItem.get_data_frame">get_data_frame</a></code></li>
 <li><code><a title="phc.easy.patient_item.PatientItem.patient_key" href="#phc.easy.patient_item.PatientItem.patient_key">patient_key</a></code></li>
 <li><code><a title="phc.easy.patient_item.PatientItem.table_name" href="#phc.easy.patient_item.PatientItem.table_name">table_name</a></code></li>

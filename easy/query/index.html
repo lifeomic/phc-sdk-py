@@ -27,19 +27,23 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from typing import Any, Callable, List, Union
-
+<pre><code class="python">from typing import Any, Callable, List, Union, NamedTuple, Tuple
 import pandas as pd
 
 from phc.services import Fhir
+from phc.base_client import BaseClient
 from phc.easy.auth import Auth
+from phc.easy.query.ga4gh import recursive_execute_ga4gh
+from phc.easy.query.fhir_dsl_query import build_query
 from phc.easy.query.fhir_dsl import (
     MAX_RESULT_SIZE,
     recursive_execute_fhir_dsl,
+    execute_single_fhir_dsl,
     tqdm,
     with_progress,
 )
 from phc.util.api_cache import APICache
+from phc.easy.query.fhir_aggregation import FhirAggregation
 
 
 class Query:
@@ -68,6 +72,9 @@ class Query:
           &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
         })
         &#34;&#34;&#34;
+        if FhirAggregation.is_aggregation_query(query):
+            raise ValueError(&#34;Count is not support for aggregation queries.&#34;)
+
         auth = Auth(auth_args)
         fhir = Fhir(auth.session())
 
@@ -91,6 +98,8 @@ class Query:
         all_results: bool = False,
         auth_args: Auth = Auth.shared(),
         callback: Union[Callable[[Any, bool], None], None] = None,
+        log: bool = False,
+        **query_kwargs,
     ):
         &#34;&#34;&#34;Execute a FHIR query with the DSL
 
@@ -121,6 +130,13 @@ class Query:
                     if is_finished:
                         return &#34;batch finished
 
+        log : bool = False
+            Whether to log the elasticsearch query sent to the server
+
+        query_kwargs : dict
+            Arguments to pass to build_query such as patient_id, patient_ids,
+            and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+
         Examples
         --------
         &gt;&gt;&gt; import phc.easy as phc
@@ -135,6 +151,15 @@ class Query:
         }, all_results=True)
 
         &#34;&#34;&#34;
+        query = build_query(query, **query_kwargs)
+
+        if log:
+            print(query)
+
+        if FhirAggregation.is_aggregation_query(query):
+            response = execute_single_fhir_dsl(query, auth_args=auth_args)
+            return FhirAggregation.from_response(response)
+
         if all_results:
             return with_progress(
                 lambda: tqdm(total=MAX_RESULT_SIZE),
@@ -171,38 +196,451 @@ class Query:
         query_overrides: dict,
         auth_args: Auth,
         ignore_cache: bool,
+        log: bool = False,
+        **query_kwargs,
     ):
-        query = {**query, **query_overrides}
+        query = build_query({**query, **query_overrides}, **query_kwargs)
 
-        use_cache = (not ignore_cache) and (not raw) and all_results
+        if log:
+            print(query)
+
+        use_cache = (
+            (not ignore_cache)
+            and (not raw)
+            and (all_results or FhirAggregation.is_aggregation_query(query))
+        )
 
         if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
             return APICache.load_cache_for_fhir_dsl(query)
 
-        if use_cache:
-            return Query.execute_fhir_dsl(
-                query,
-                all_results,
-                auth_args,
-                callback=APICache.build_cache_fhir_dsl_callback(
-                    query, transform
-                ),
-            )
+        callback = (
+            APICache.build_cache_fhir_dsl_callback(query, transform)
+            if use_cache
+            else None
+        )
 
-        results = Query.execute_fhir_dsl(query, all_results, auth_args)
+        results = Query.execute_fhir_dsl(
+            query, all_results, auth_args, callback=callback
+        )
+
+        if isinstance(results, FhirAggregation):
+            # Cache isn&#39;t written in batches so we need to explicitly do it here
+            if use_cache:
+                APICache.write_agg(query, results)
+
+            return results
+
+        if isinstance(results, pd.DataFrame):
+            return results
 
         df = pd.DataFrame(map(lambda r: r[&#34;_source&#34;], results))
 
         if raw:
             return df
 
-        return transform(df)</code></pre>
+        return transform(df)
+
+    @staticmethod
+    def get_codes(table_name: str, code_fields: List[str], **kwargs):
+        &#34;&#34;&#34;Find FHIR codes for a given table
+
+        Attributes
+        ----------
+        table_name : str
+            The FHIR Search Service table to retrieve from
+
+        code_fields : List[str]
+            The fields of this table that contain a system, code, and display
+
+        kwargs : dict
+            Arguments to pass to :func:`~phc.easy.query.Query.execute_composite_aggregations`
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt; phc.Query.get_codes(
+            table_name=&#34;observation&#34;,
+            code_fields=[&#34;meta.tag&#34;, &#34;code.coding&#34;],
+            patient_id=&#34;&lt;my-patient-id&gt;&#34;
+        )
+        &#34;&#34;&#34;
+        if len(code_fields) == 0:
+            raise ValueError(&#34;No code columns specified.&#34;)
+
+        def agg_composite_to_frame(prefix: str, data: dict):
+            frame = pd.json_normalize(data[&#34;buckets&#34;])
+            frame.columns = frame.columns.str.lstrip(&#34;key.&#34;)
+            frame[&#34;field&#34;] = prefix
+            return frame
+
+        results = Query.execute_composite_aggregations(
+            table_name=table_name,
+            key_sources_pairs=[
+                (
+                    field,
+                    [
+                        {
+                            &#34;system&#34;: {
+                                &#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.system.keyword&#34;}
+                            }
+                        },
+                        {&#34;code&#34;: {&#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.code.keyword&#34;}}},
+                        {
+                            &#34;display&#34;: {
+                                &#34;terms&#34;: {
+                                    &#34;field&#34;: f&#34;{field}.display.keyword&#34;,
+                                    &#34;missing_bucket&#34;: True,
+                                }
+                            }
+                        },
+                    ],
+                )
+                for field in code_fields
+            ],
+            **kwargs,
+        )
+
+        return pd.concat(
+            [
+                agg_composite_to_frame(key, value)
+                for key, value in results.items()
+            ]
+        )
+
+    @staticmethod
+    def execute_composite_aggregations(
+        table_name: str,
+        key_sources_pairs: List[Tuple[str, List[dict]]],
+        batch_size: int = 100,
+        query_overrides: dict = {},
+        log: bool = False,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Union[int, None] = None,
+        **query_kwargs,
+    ):
+        &#34;&#34;&#34;Count records by multiple fields
+
+        Attributes
+        ----------
+        table_name : str
+            The FHIR Search Service table to retrieve from
+
+        key_sources_pairs : str
+            Pairs of keys and sources to pull composite results from
+
+            Example Input:
+                [
+                    (&#34;meta.tag&#34;, [{&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.system.keyword&#34;}}])
+                ]
+
+        batch_size : int
+            The size of each page from elasticsearch to use
+
+        query_overrides : dict
+            Parts of the FSS query to override
+            (Note that passing certain values can cause the method to error out)
+
+            Example aggregation query executed (can use log=True to inspect):
+                {
+                    &#34;type&#34;: &#34;select&#34;,
+                    &#34;columns&#34;: [{
+                        &#34;type&#34;: &#34;elasticsearch&#34;,
+                        &#34;aggregations&#34;: {
+                            &#34;results&#34;: {
+                                &#34;composite&#34;: {
+                                    &#34;sources&#34;: [{
+                                        &#34;meta.tag&#34;: {
+                                            &#34;terms&#34;: {
+                                                &#34;field&#34;: &#34;meta.tag.system.keyword&#34;
+                                            }
+                                        }
+                                    }],
+                                    &#34;size&#34;: 100,
+                                }
+                            }
+                        },
+                    }],
+                    &#34;from&#34;: [{&#34;table&#34;: &#34;observation&#34;}],
+                }
+
+
+        auth_args : Auth, dict
+            Additional arguments for authentication
+
+        log : bool = False
+            Whether to log the elasticsearch query sent to the server
+
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
+
+        query_kwargs : dict
+            Arguments to pass to build_query such as patient_id, patient_ids,
+            and patient_key. See :func:`~phc.easy.query.fhir_dsl_query.build_query`.
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt; phc.Query.execute_composite_aggregations(
+            table_name=&#34;observation&#34;,
+            key_sources_pairs=[
+                (&#34;meta.tag&#34;, [
+                    {&#34;system&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.system.keyword&#34;}}},
+                    {&#34;code&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.code.keyword&#34;}}},
+                    {&#34;display&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.display.keyword&#34;}}},
+                ]),
+                (&#34;code.coding&#34;, [
+                    {&#34;display&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;code.coding.display.keyword&#34;}}}
+                ]),
+            ]
+        )
+        &#34;&#34;&#34;
+        if len(key_sources_pairs) == 0:
+            raise ValueError(&#34;No aggregate composite terms specified.&#34;)
+
+        return with_progress(
+            tqdm,
+            lambda progress: Query._recursive_execute_composite_aggregations(
+                table_name=table_name,
+                key_sources_pairs=key_sources_pairs,
+                batch_size=batch_size,
+                progress=progress,
+                log=log,
+                auth_args=auth_args,
+                query_overrides=query_overrides,
+                max_pages=max_pages,
+                **query_kwargs,
+            ),
+        )
+
+    @staticmethod
+    def get_count_by_field(
+        table_name: str,
+        field: str,
+        batch_size: int = 1000,
+        query_overrides: dict = {},
+        log: bool = False,
+        auth_args: Auth = Auth.shared(),
+        **query_kwargs,
+    ):
+        &#34;&#34;&#34;Count records by a given field
+
+        Attributes
+        ----------
+        table_name : str
+            The FHIR Search Service table to retrieve from
+
+        field : str
+            The field name to count the values of (e.g. &#34;subject.reference&#34;)
+
+        batch_size : int
+            The size of each page from elasticsearch to use
+
+        query_overrides : dict
+            Parts of the FSS query to override
+            (Note that passing certain values can cause the method to error out)
+
+            The aggregation query is similar to this:
+                {
+                    &#34;type&#34;: &#34;select&#34;,
+                    &#34;columns&#34;: [{
+                        &#34;type&#34;: &#34;elasticsearch&#34;,
+                        &#34;aggregations&#34;: {
+                            &#34;results&#34;: {
+                                &#34;composite&#34;: {
+                                    &#34;sources&#34;: [{
+                                        &#34;value&#34;: {
+                                            &#34;terms&#34;: {
+                                                &#34;field&#34;: &#34;gender.keyword&#34;
+                                            }
+                                        }
+                                    }],
+                                    &#34;size&#34;: 100,
+                                }
+                            }
+                        },
+                    }],
+                    &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
+                }
+
+
+        auth_args : Auth, dict
+            Additional arguments for authentication
+
+        log : bool = False
+            Whether to log the elasticsearch query sent to the server
+
+        query_kwargs : dict
+            Arguments to pass to build_query such as patient_id, patient_ids,
+            and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt; phc.Query.get_count_by_field(
+            table_name=&#34;patient&#34;,
+            field=&#34;gender&#34;
+        )
+        &#34;&#34;&#34;
+        data = Query.execute_composite_aggregations(
+            table_name=table_name,
+            key_sources_pairs=[
+                (
+                    &#34;results&#34;,
+                    [{&#34;value&#34;: {&#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.keyword&#34;}}}],
+                )
+            ],
+            batch_size=batch_size,
+            log=log,
+            auth_args=auth_args,
+            query_overrides=query_overrides,
+            **query_kwargs,
+        )
+
+        return pd.DataFrame(
+            [
+                {field: r[&#34;key&#34;][&#34;value&#34;], &#34;doc_count&#34;: r[&#34;doc_count&#34;]}
+                for r in data[&#34;results&#34;][&#34;buckets&#34;]
+            ]
+        )
+
+    @staticmethod
+    def execute_ga4gh(
+        query: dict, all_results: bool = False, auth_args: dict = Auth.shared()
+    ) -&gt; pd.DataFrame:
+        auth = Auth(auth_args)
+        client = BaseClient(auth.session())
+        path = query[&#34;path&#34;]
+        http_verb = query.get(&#34;http_verb&#34;, &#34;POST&#34;)
+        results_key = query[&#34;results_key&#34;]
+        params = {
+            **{&#34;datasetIds&#34;: [auth.project_id]},
+            **{
+                k: v for k, v in query.items() if k not in [&#34;path&#34;, &#34;http_verb&#34;]
+            },
+        }
+
+        return recursive_execute_ga4gh(
+            auth=auth,
+            client=client,
+            path=path,
+            http_verb=http_verb,
+            results_key=results_key,
+            params=params,
+            scroll=all_results,
+        )
+
+    @staticmethod
+    def _recursive_execute_composite_aggregations(
+        table_name: str,
+        key_sources_pairs: List[Tuple[str, List[dict]]],
+        batch_size: int = 100,
+        progress: Union[tqdm, None] = None,
+        query_overrides: dict = {},
+        log: bool = False,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Union[int, None] = None,
+        _current_page: int = 1,
+        _prev_results: dict = {},
+        _after_keys: dict = {},
+        **query_kwargs,
+    ):
+        aggregation = Query.execute_fhir_dsl(
+            {
+                &#34;type&#34;: &#34;select&#34;,
+                &#34;columns&#34;: [
+                    {
+                        &#34;type&#34;: &#34;elasticsearch&#34;,
+                        &#34;aggregations&#34;: {
+                            key: {
+                                &#34;composite&#34;: {
+                                    &#34;sources&#34;: sources,
+                                    &#34;size&#34;: batch_size,
+                                    **(
+                                        {&#34;after&#34;: _after_keys[key]}
+                                        if key in _after_keys
+                                        else {}
+                                    ),
+                                }
+                            }
+                            for key, sources in key_sources_pairs
+                            if (len(_after_keys) == 0) or (key in _after_keys)
+                        },
+                    }
+                ],
+                &#34;from&#34;: [{&#34;table&#34;: table_name}],
+                **query_overrides,
+            },
+            auth_args=auth_args,
+            log=log,
+            **query_kwargs,
+        )
+
+        current_results = aggregation.data
+        results = FhirAggregation.reduce_composite_results(
+            _prev_results, current_results
+        )
+
+        if (progress is not None) and (_current_page == 1) and max_pages:
+            progress.reset(max_pages)
+
+        if progress is not None:
+            # Update by count or pages (if max_pages specified)
+            progress.update(
+                1
+                if max_pages
+                else FhirAggregation.count_composite_results(current_results)
+            )
+
+        after_keys = FhirAggregation.find_composite_after_keys(
+            current_results, batch_size
+        )
+
+        if len(after_keys) == 0 or (
+            (max_pages is not None) and (_current_page &gt;= max_pages)
+        ):
+            print(
+                f&#34;Retrieved {FhirAggregation.count_composite_results(results)} results&#34;
+            )
+            return results
+
+        return Query._recursive_execute_composite_aggregations(
+            table_name=table_name,
+            key_sources_pairs=key_sources_pairs,
+            batch_size=batch_size,
+            progress=progress,
+            query_overrides=query_overrides,
+            log=log,
+            auth_args=auth_args,
+            max_pages=max_pages,
+            _current_page=_current_page + 1,
+            _prev_results=results,
+            _after_keys=after_keys,
+            **query_kwargs,
+        )</code></pre>
 </details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
+<dt><code class="name"><a title="phc.easy.query.fhir_aggregation" href="fhir_aggregation.html">phc.easy.query.fhir_aggregation</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt><code class="name"><a title="phc.easy.query.fhir_dsl" href="fhir_dsl.html">phc.easy.query.fhir_dsl</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.query.fhir_dsl_query" href="fhir_dsl_query.html">phc.easy.query.fhir_dsl_query</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.query.ga4gh" href="ga4gh.html">phc.easy.query.ga4gh</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -250,6 +688,9 @@ class Query:
           &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
         })
         &#34;&#34;&#34;
+        if FhirAggregation.is_aggregation_query(query):
+            raise ValueError(&#34;Count is not support for aggregation queries.&#34;)
+
         auth = Auth(auth_args)
         fhir = Fhir(auth.session())
 
@@ -273,6 +714,8 @@ class Query:
         all_results: bool = False,
         auth_args: Auth = Auth.shared(),
         callback: Union[Callable[[Any, bool], None], None] = None,
+        log: bool = False,
+        **query_kwargs,
     ):
         &#34;&#34;&#34;Execute a FHIR query with the DSL
 
@@ -303,6 +746,13 @@ class Query:
                     if is_finished:
                         return &#34;batch finished
 
+        log : bool = False
+            Whether to log the elasticsearch query sent to the server
+
+        query_kwargs : dict
+            Arguments to pass to build_query such as patient_id, patient_ids,
+            and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+
         Examples
         --------
         &gt;&gt;&gt; import phc.easy as phc
@@ -317,6 +767,15 @@ class Query:
         }, all_results=True)
 
         &#34;&#34;&#34;
+        query = build_query(query, **query_kwargs)
+
+        if log:
+            print(query)
+
+        if FhirAggregation.is_aggregation_query(query):
+            response = execute_single_fhir_dsl(query, auth_args=auth_args)
+            return FhirAggregation.from_response(response)
+
         if all_results:
             return with_progress(
                 lambda: tqdm(total=MAX_RESULT_SIZE),
@@ -353,37 +812,624 @@ class Query:
         query_overrides: dict,
         auth_args: Auth,
         ignore_cache: bool,
+        log: bool = False,
+        **query_kwargs,
     ):
-        query = {**query, **query_overrides}
+        query = build_query({**query, **query_overrides}, **query_kwargs)
 
-        use_cache = (not ignore_cache) and (not raw) and all_results
+        if log:
+            print(query)
+
+        use_cache = (
+            (not ignore_cache)
+            and (not raw)
+            and (all_results or FhirAggregation.is_aggregation_query(query))
+        )
 
         if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
             return APICache.load_cache_for_fhir_dsl(query)
 
-        if use_cache:
-            return Query.execute_fhir_dsl(
-                query,
-                all_results,
-                auth_args,
-                callback=APICache.build_cache_fhir_dsl_callback(
-                    query, transform
-                ),
-            )
+        callback = (
+            APICache.build_cache_fhir_dsl_callback(query, transform)
+            if use_cache
+            else None
+        )
 
-        results = Query.execute_fhir_dsl(query, all_results, auth_args)
+        results = Query.execute_fhir_dsl(
+            query, all_results, auth_args, callback=callback
+        )
+
+        if isinstance(results, FhirAggregation):
+            # Cache isn&#39;t written in batches so we need to explicitly do it here
+            if use_cache:
+                APICache.write_agg(query, results)
+
+            return results
+
+        if isinstance(results, pd.DataFrame):
+            return results
 
         df = pd.DataFrame(map(lambda r: r[&#34;_source&#34;], results))
 
         if raw:
             return df
 
-        return transform(df)</code></pre>
+        return transform(df)
+
+    @staticmethod
+    def get_codes(table_name: str, code_fields: List[str], **kwargs):
+        &#34;&#34;&#34;Find FHIR codes for a given table
+
+        Attributes
+        ----------
+        table_name : str
+            The FHIR Search Service table to retrieve from
+
+        code_fields : List[str]
+            The fields of this table that contain a system, code, and display
+
+        kwargs : dict
+            Arguments to pass to :func:`~phc.easy.query.Query.execute_composite_aggregations`
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt; phc.Query.get_codes(
+            table_name=&#34;observation&#34;,
+            code_fields=[&#34;meta.tag&#34;, &#34;code.coding&#34;],
+            patient_id=&#34;&lt;my-patient-id&gt;&#34;
+        )
+        &#34;&#34;&#34;
+        if len(code_fields) == 0:
+            raise ValueError(&#34;No code columns specified.&#34;)
+
+        def agg_composite_to_frame(prefix: str, data: dict):
+            frame = pd.json_normalize(data[&#34;buckets&#34;])
+            frame.columns = frame.columns.str.lstrip(&#34;key.&#34;)
+            frame[&#34;field&#34;] = prefix
+            return frame
+
+        results = Query.execute_composite_aggregations(
+            table_name=table_name,
+            key_sources_pairs=[
+                (
+                    field,
+                    [
+                        {
+                            &#34;system&#34;: {
+                                &#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.system.keyword&#34;}
+                            }
+                        },
+                        {&#34;code&#34;: {&#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.code.keyword&#34;}}},
+                        {
+                            &#34;display&#34;: {
+                                &#34;terms&#34;: {
+                                    &#34;field&#34;: f&#34;{field}.display.keyword&#34;,
+                                    &#34;missing_bucket&#34;: True,
+                                }
+                            }
+                        },
+                    ],
+                )
+                for field in code_fields
+            ],
+            **kwargs,
+        )
+
+        return pd.concat(
+            [
+                agg_composite_to_frame(key, value)
+                for key, value in results.items()
+            ]
+        )
+
+    @staticmethod
+    def execute_composite_aggregations(
+        table_name: str,
+        key_sources_pairs: List[Tuple[str, List[dict]]],
+        batch_size: int = 100,
+        query_overrides: dict = {},
+        log: bool = False,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Union[int, None] = None,
+        **query_kwargs,
+    ):
+        &#34;&#34;&#34;Count records by multiple fields
+
+        Attributes
+        ----------
+        table_name : str
+            The FHIR Search Service table to retrieve from
+
+        key_sources_pairs : str
+            Pairs of keys and sources to pull composite results from
+
+            Example Input:
+                [
+                    (&#34;meta.tag&#34;, [{&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.system.keyword&#34;}}])
+                ]
+
+        batch_size : int
+            The size of each page from elasticsearch to use
+
+        query_overrides : dict
+            Parts of the FSS query to override
+            (Note that passing certain values can cause the method to error out)
+
+            Example aggregation query executed (can use log=True to inspect):
+                {
+                    &#34;type&#34;: &#34;select&#34;,
+                    &#34;columns&#34;: [{
+                        &#34;type&#34;: &#34;elasticsearch&#34;,
+                        &#34;aggregations&#34;: {
+                            &#34;results&#34;: {
+                                &#34;composite&#34;: {
+                                    &#34;sources&#34;: [{
+                                        &#34;meta.tag&#34;: {
+                                            &#34;terms&#34;: {
+                                                &#34;field&#34;: &#34;meta.tag.system.keyword&#34;
+                                            }
+                                        }
+                                    }],
+                                    &#34;size&#34;: 100,
+                                }
+                            }
+                        },
+                    }],
+                    &#34;from&#34;: [{&#34;table&#34;: &#34;observation&#34;}],
+                }
+
+
+        auth_args : Auth, dict
+            Additional arguments for authentication
+
+        log : bool = False
+            Whether to log the elasticsearch query sent to the server
+
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
+
+        query_kwargs : dict
+            Arguments to pass to build_query such as patient_id, patient_ids,
+            and patient_key. See :func:`~phc.easy.query.fhir_dsl_query.build_query`.
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt; phc.Query.execute_composite_aggregations(
+            table_name=&#34;observation&#34;,
+            key_sources_pairs=[
+                (&#34;meta.tag&#34;, [
+                    {&#34;system&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.system.keyword&#34;}}},
+                    {&#34;code&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.code.keyword&#34;}}},
+                    {&#34;display&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.display.keyword&#34;}}},
+                ]),
+                (&#34;code.coding&#34;, [
+                    {&#34;display&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;code.coding.display.keyword&#34;}}}
+                ]),
+            ]
+        )
+        &#34;&#34;&#34;
+        if len(key_sources_pairs) == 0:
+            raise ValueError(&#34;No aggregate composite terms specified.&#34;)
+
+        return with_progress(
+            tqdm,
+            lambda progress: Query._recursive_execute_composite_aggregations(
+                table_name=table_name,
+                key_sources_pairs=key_sources_pairs,
+                batch_size=batch_size,
+                progress=progress,
+                log=log,
+                auth_args=auth_args,
+                query_overrides=query_overrides,
+                max_pages=max_pages,
+                **query_kwargs,
+            ),
+        )
+
+    @staticmethod
+    def get_count_by_field(
+        table_name: str,
+        field: str,
+        batch_size: int = 1000,
+        query_overrides: dict = {},
+        log: bool = False,
+        auth_args: Auth = Auth.shared(),
+        **query_kwargs,
+    ):
+        &#34;&#34;&#34;Count records by a given field
+
+        Attributes
+        ----------
+        table_name : str
+            The FHIR Search Service table to retrieve from
+
+        field : str
+            The field name to count the values of (e.g. &#34;subject.reference&#34;)
+
+        batch_size : int
+            The size of each page from elasticsearch to use
+
+        query_overrides : dict
+            Parts of the FSS query to override
+            (Note that passing certain values can cause the method to error out)
+
+            The aggregation query is similar to this:
+                {
+                    &#34;type&#34;: &#34;select&#34;,
+                    &#34;columns&#34;: [{
+                        &#34;type&#34;: &#34;elasticsearch&#34;,
+                        &#34;aggregations&#34;: {
+                            &#34;results&#34;: {
+                                &#34;composite&#34;: {
+                                    &#34;sources&#34;: [{
+                                        &#34;value&#34;: {
+                                            &#34;terms&#34;: {
+                                                &#34;field&#34;: &#34;gender.keyword&#34;
+                                            }
+                                        }
+                                    }],
+                                    &#34;size&#34;: 100,
+                                }
+                            }
+                        },
+                    }],
+                    &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
+                }
+
+
+        auth_args : Auth, dict
+            Additional arguments for authentication
+
+        log : bool = False
+            Whether to log the elasticsearch query sent to the server
+
+        query_kwargs : dict
+            Arguments to pass to build_query such as patient_id, patient_ids,
+            and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt; phc.Query.get_count_by_field(
+            table_name=&#34;patient&#34;,
+            field=&#34;gender&#34;
+        )
+        &#34;&#34;&#34;
+        data = Query.execute_composite_aggregations(
+            table_name=table_name,
+            key_sources_pairs=[
+                (
+                    &#34;results&#34;,
+                    [{&#34;value&#34;: {&#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.keyword&#34;}}}],
+                )
+            ],
+            batch_size=batch_size,
+            log=log,
+            auth_args=auth_args,
+            query_overrides=query_overrides,
+            **query_kwargs,
+        )
+
+        return pd.DataFrame(
+            [
+                {field: r[&#34;key&#34;][&#34;value&#34;], &#34;doc_count&#34;: r[&#34;doc_count&#34;]}
+                for r in data[&#34;results&#34;][&#34;buckets&#34;]
+            ]
+        )
+
+    @staticmethod
+    def execute_ga4gh(
+        query: dict, all_results: bool = False, auth_args: dict = Auth.shared()
+    ) -&gt; pd.DataFrame:
+        auth = Auth(auth_args)
+        client = BaseClient(auth.session())
+        path = query[&#34;path&#34;]
+        http_verb = query.get(&#34;http_verb&#34;, &#34;POST&#34;)
+        results_key = query[&#34;results_key&#34;]
+        params = {
+            **{&#34;datasetIds&#34;: [auth.project_id]},
+            **{
+                k: v for k, v in query.items() if k not in [&#34;path&#34;, &#34;http_verb&#34;]
+            },
+        }
+
+        return recursive_execute_ga4gh(
+            auth=auth,
+            client=client,
+            path=path,
+            http_verb=http_verb,
+            results_key=results_key,
+            params=params,
+            scroll=all_results,
+        )
+
+    @staticmethod
+    def _recursive_execute_composite_aggregations(
+        table_name: str,
+        key_sources_pairs: List[Tuple[str, List[dict]]],
+        batch_size: int = 100,
+        progress: Union[tqdm, None] = None,
+        query_overrides: dict = {},
+        log: bool = False,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Union[int, None] = None,
+        _current_page: int = 1,
+        _prev_results: dict = {},
+        _after_keys: dict = {},
+        **query_kwargs,
+    ):
+        aggregation = Query.execute_fhir_dsl(
+            {
+                &#34;type&#34;: &#34;select&#34;,
+                &#34;columns&#34;: [
+                    {
+                        &#34;type&#34;: &#34;elasticsearch&#34;,
+                        &#34;aggregations&#34;: {
+                            key: {
+                                &#34;composite&#34;: {
+                                    &#34;sources&#34;: sources,
+                                    &#34;size&#34;: batch_size,
+                                    **(
+                                        {&#34;after&#34;: _after_keys[key]}
+                                        if key in _after_keys
+                                        else {}
+                                    ),
+                                }
+                            }
+                            for key, sources in key_sources_pairs
+                            if (len(_after_keys) == 0) or (key in _after_keys)
+                        },
+                    }
+                ],
+                &#34;from&#34;: [{&#34;table&#34;: table_name}],
+                **query_overrides,
+            },
+            auth_args=auth_args,
+            log=log,
+            **query_kwargs,
+        )
+
+        current_results = aggregation.data
+        results = FhirAggregation.reduce_composite_results(
+            _prev_results, current_results
+        )
+
+        if (progress is not None) and (_current_page == 1) and max_pages:
+            progress.reset(max_pages)
+
+        if progress is not None:
+            # Update by count or pages (if max_pages specified)
+            progress.update(
+                1
+                if max_pages
+                else FhirAggregation.count_composite_results(current_results)
+            )
+
+        after_keys = FhirAggregation.find_composite_after_keys(
+            current_results, batch_size
+        )
+
+        if len(after_keys) == 0 or (
+            (max_pages is not None) and (_current_page &gt;= max_pages)
+        ):
+            print(
+                f&#34;Retrieved {FhirAggregation.count_composite_results(results)} results&#34;
+            )
+            return results
+
+        return Query._recursive_execute_composite_aggregations(
+            table_name=table_name,
+            key_sources_pairs=key_sources_pairs,
+            batch_size=batch_size,
+            progress=progress,
+            query_overrides=query_overrides,
+            log=log,
+            auth_args=auth_args,
+            max_pages=max_pages,
+            _current_page=_current_page + 1,
+            _prev_results=results,
+            _after_keys=after_keys,
+            **query_kwargs,
+        )</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
+<dt id="phc.easy.query.Query.execute_composite_aggregations"><code class="name flex">
+<span>def <span class="ident">execute_composite_aggregations</span></span>(<span>table_name: str, key_sources_pairs: List[Tuple[str, List[dict]]], batch_size: int = 100, query_overrides: dict = {}, log: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, **query_kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Count records by multiple fields</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>table_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The FHIR Search Service table to retrieve from</dd>
+<dt><strong><code>key_sources_pairs</code></strong> :&ensp;<code>str</code></dt>
+<dd>
+<p>Pairs of keys and sources to pull composite results from</p>
+<p>Example Input:
+[
+("meta.tag", [{"terms": {"field": "meta.tag.system.keyword"}}])
+]</p>
+</dd>
+<dt><strong><code>batch_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>The size of each page from elasticsearch to use</dd>
+<dt><strong><code>query_overrides</code></strong> :&ensp;<code>dict</code></dt>
+<dd>
+<p>Parts of the FSS query to override
+(Note that passing certain values can cause the method to error out)</p>
+<p>Example aggregation query executed (can use log=True to inspect):
+{
+"type": "select",
+"columns": [{
+"type": "elasticsearch",
+"aggregations": {
+"results": {
+"composite": {
+"sources": [{
+"meta.tag": {
+"terms": {
+"field": "meta.tag.system.keyword"
+}
+}
+}],
+"size": 100,
+}
+}
+},
+}],
+"from": [{"table": "observation"}],
+}</p>
+</dd>
+<dt><strong><code>auth_args</code></strong> :&ensp;<code>Auth, dict</code></dt>
+<dd>Additional arguments for authentication</dd>
+<dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>Whether to log the elasticsearch query sent to the server</dd>
+<dt><strong><code>max_pages</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of pages to retrieve (useful if working with tons of records)</dd>
+<dt><strong><code>query_kwargs</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Arguments to pass to build_query such as patient_id, patient_ids,
+and patient_key. See :func:<code>~phc.easy.query.fhir_dsl_query.build_query</code>.</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({ 'account': '&lt;your-account-name&gt;' })
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt; phc.Query.execute_composite_aggregations(
+    table_name=&quot;observation&quot;,
+    key_sources_pairs=[
+        (&quot;meta.tag&quot;, [
+            {&quot;system&quot;: {&quot;terms&quot;: {&quot;field&quot;: &quot;meta.tag.system.keyword&quot;}}},
+            {&quot;code&quot;: {&quot;terms&quot;: {&quot;field&quot;: &quot;meta.tag.code.keyword&quot;}}},
+            {&quot;display&quot;: {&quot;terms&quot;: {&quot;field&quot;: &quot;meta.tag.display.keyword&quot;}}},
+        ]),
+        (&quot;code.coding&quot;, [
+            {&quot;display&quot;: {&quot;terms&quot;: {&quot;field&quot;: &quot;code.coding.display.keyword&quot;}}}
+        ]),
+    ]
+)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def execute_composite_aggregations(
+    table_name: str,
+    key_sources_pairs: List[Tuple[str, List[dict]]],
+    batch_size: int = 100,
+    query_overrides: dict = {},
+    log: bool = False,
+    auth_args: Auth = Auth.shared(),
+    max_pages: Union[int, None] = None,
+    **query_kwargs,
+):
+    &#34;&#34;&#34;Count records by multiple fields
+
+    Attributes
+    ----------
+    table_name : str
+        The FHIR Search Service table to retrieve from
+
+    key_sources_pairs : str
+        Pairs of keys and sources to pull composite results from
+
+        Example Input:
+            [
+                (&#34;meta.tag&#34;, [{&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.system.keyword&#34;}}])
+            ]
+
+    batch_size : int
+        The size of each page from elasticsearch to use
+
+    query_overrides : dict
+        Parts of the FSS query to override
+        (Note that passing certain values can cause the method to error out)
+
+        Example aggregation query executed (can use log=True to inspect):
+            {
+                &#34;type&#34;: &#34;select&#34;,
+                &#34;columns&#34;: [{
+                    &#34;type&#34;: &#34;elasticsearch&#34;,
+                    &#34;aggregations&#34;: {
+                        &#34;results&#34;: {
+                            &#34;composite&#34;: {
+                                &#34;sources&#34;: [{
+                                    &#34;meta.tag&#34;: {
+                                        &#34;terms&#34;: {
+                                            &#34;field&#34;: &#34;meta.tag.system.keyword&#34;
+                                        }
+                                    }
+                                }],
+                                &#34;size&#34;: 100,
+                            }
+                        }
+                    },
+                }],
+                &#34;from&#34;: [{&#34;table&#34;: &#34;observation&#34;}],
+            }
+
+
+    auth_args : Auth, dict
+        Additional arguments for authentication
+
+    log : bool = False
+        Whether to log the elasticsearch query sent to the server
+
+    max_pages : int
+        The number of pages to retrieve (useful if working with tons of records)
+
+    query_kwargs : dict
+        Arguments to pass to build_query such as patient_id, patient_ids,
+        and patient_key. See :func:`~phc.easy.query.fhir_dsl_query.build_query`.
+
+    Examples
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt; phc.Query.execute_composite_aggregations(
+        table_name=&#34;observation&#34;,
+        key_sources_pairs=[
+            (&#34;meta.tag&#34;, [
+                {&#34;system&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.system.keyword&#34;}}},
+                {&#34;code&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.code.keyword&#34;}}},
+                {&#34;display&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.display.keyword&#34;}}},
+            ]),
+            (&#34;code.coding&#34;, [
+                {&#34;display&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;code.coding.display.keyword&#34;}}}
+            ]),
+        ]
+    )
+    &#34;&#34;&#34;
+    if len(key_sources_pairs) == 0:
+        raise ValueError(&#34;No aggregate composite terms specified.&#34;)
+
+    return with_progress(
+        tqdm,
+        lambda progress: Query._recursive_execute_composite_aggregations(
+            table_name=table_name,
+            key_sources_pairs=key_sources_pairs,
+            batch_size=batch_size,
+            progress=progress,
+            log=log,
+            auth_args=auth_args,
+            query_overrides=query_overrides,
+            max_pages=max_pages,
+            **query_kwargs,
+        ),
+    )</code></pre>
+</details>
+</dd>
 <dt id="phc.easy.query.Query.execute_fhir_dsl"><code class="name flex">
-<span>def <span class="ident">execute_fhir_dsl</span></span>(<span>query: dict, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None)</span>
+<span>def <span class="ident">execute_fhir_dsl</span></span>(<span>query: dict, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None, log: bool = False, **query_kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a FHIR query with the DSL</p>
@@ -410,6 +1456,11 @@ file and then returning the completed result from that file.</p>
         return "batch finished
 </code></pre>
 </dd>
+<dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>Whether to log the elasticsearch query sent to the server</dd>
+<dt><strong><code>query_kwargs</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Arguments to pass to build_query such as patient_id, patient_ids,
+and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)</dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <pre><code class="python">&gt;&gt;&gt; import phc.easy as phc
@@ -433,6 +1484,8 @@ def execute_fhir_dsl(
     all_results: bool = False,
     auth_args: Auth = Auth.shared(),
     callback: Union[Callable[[Any, bool], None], None] = None,
+    log: bool = False,
+    **query_kwargs,
 ):
     &#34;&#34;&#34;Execute a FHIR query with the DSL
 
@@ -463,6 +1516,13 @@ def execute_fhir_dsl(
                 if is_finished:
                     return &#34;batch finished
 
+    log : bool = False
+        Whether to log the elasticsearch query sent to the server
+
+    query_kwargs : dict
+        Arguments to pass to build_query such as patient_id, patient_ids,
+        and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+
     Examples
     --------
     &gt;&gt;&gt; import phc.easy as phc
@@ -477,6 +1537,15 @@ def execute_fhir_dsl(
     }, all_results=True)
 
     &#34;&#34;&#34;
+    query = build_query(query, **query_kwargs)
+
+    if log:
+        print(query)
+
+    if FhirAggregation.is_aggregation_query(query):
+        response = execute_single_fhir_dsl(query, auth_args=auth_args)
+        return FhirAggregation.from_response(response)
+
     if all_results:
         return with_progress(
             lambda: tqdm(total=MAX_RESULT_SIZE),
@@ -506,7 +1575,7 @@ def execute_fhir_dsl(
 </details>
 </dd>
 <dt id="phc.easy.query.Query.execute_fhir_dsl_with_options"><code class="name flex">
-<span>def <span class="ident">execute_fhir_dsl_with_options</span></span>(<span>query: dict, transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame], all_results: bool, raw: bool, query_overrides: dict, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a>, ignore_cache: bool)</span>
+<span>def <span class="ident">execute_fhir_dsl_with_options</span></span>(<span>query: dict, transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame], all_results: bool, raw: bool, query_overrides: dict, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a>, ignore_cache: bool, log: bool = False, **query_kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -523,25 +1592,42 @@ def execute_fhir_dsl_with_options(
     query_overrides: dict,
     auth_args: Auth,
     ignore_cache: bool,
+    log: bool = False,
+    **query_kwargs,
 ):
-    query = {**query, **query_overrides}
+    query = build_query({**query, **query_overrides}, **query_kwargs)
 
-    use_cache = (not ignore_cache) and (not raw) and all_results
+    if log:
+        print(query)
+
+    use_cache = (
+        (not ignore_cache)
+        and (not raw)
+        and (all_results or FhirAggregation.is_aggregation_query(query))
+    )
 
     if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
         return APICache.load_cache_for_fhir_dsl(query)
 
-    if use_cache:
-        return Query.execute_fhir_dsl(
-            query,
-            all_results,
-            auth_args,
-            callback=APICache.build_cache_fhir_dsl_callback(
-                query, transform
-            ),
-        )
+    callback = (
+        APICache.build_cache_fhir_dsl_callback(query, transform)
+        if use_cache
+        else None
+    )
 
-    results = Query.execute_fhir_dsl(query, all_results, auth_args)
+    results = Query.execute_fhir_dsl(
+        query, all_results, auth_args, callback=callback
+    )
+
+    if isinstance(results, FhirAggregation):
+        # Cache isn&#39;t written in batches so we need to explicitly do it here
+        if use_cache:
+            APICache.write_agg(query, results)
+
+        return results
+
+    if isinstance(results, pd.DataFrame):
+        return results
 
     df = pd.DataFrame(map(lambda r: r[&#34;_source&#34;], results))
 
@@ -549,6 +1635,42 @@ def execute_fhir_dsl_with_options(
         return df
 
     return transform(df)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.query.Query.execute_ga4gh"><code class="name flex">
+<span>def <span class="ident">execute_ga4gh</span></span>(<span>query: dict, all_results: bool = False, auth_args: dict = &lt;phc.easy.auth.Auth object&gt;) ‑> pandas.core.frame.DataFrame</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def execute_ga4gh(
+    query: dict, all_results: bool = False, auth_args: dict = Auth.shared()
+) -&gt; pd.DataFrame:
+    auth = Auth(auth_args)
+    client = BaseClient(auth.session())
+    path = query[&#34;path&#34;]
+    http_verb = query.get(&#34;http_verb&#34;, &#34;POST&#34;)
+    results_key = query[&#34;results_key&#34;]
+    params = {
+        **{&#34;datasetIds&#34;: [auth.project_id]},
+        **{
+            k: v for k, v in query.items() if k not in [&#34;path&#34;, &#34;http_verb&#34;]
+        },
+    }
+
+    return recursive_execute_ga4gh(
+        auth=auth,
+        client=client,
+        path=path,
+        http_verb=http_verb,
+        results_key=results_key,
+        params=params,
+        scroll=all_results,
+    )</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.query.Query.find_count_of_dsl_query"><code class="name flex">
@@ -603,6 +1725,9 @@ def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
       &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
     })
     &#34;&#34;&#34;
+    if FhirAggregation.is_aggregation_query(query):
+        raise ValueError(&#34;Count is not support for aggregation queries.&#34;)
+
     auth = Auth(auth_args)
     fhir = Fhir(auth.session())
 
@@ -619,6 +1744,259 @@ def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
     )
 
     return response.data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.query.Query.get_codes"><code class="name flex">
+<span>def <span class="ident">get_codes</span></span>(<span>table_name: str, code_fields: List[str], **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Find FHIR codes for a given table</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>table_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The FHIR Search Service table to retrieve from</dd>
+<dt><strong><code>code_fields</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>The fields of this table that contain a system, code, and display</dd>
+<dt><strong><code>kwargs</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Arguments to pass to :func:<code>~phc.easy.query.Query.execute_composite_aggregations</code></dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({ 'account': '&lt;your-account-name&gt;' })
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt; phc.Query.get_codes(
+    table_name=&quot;observation&quot;,
+    code_fields=[&quot;meta.tag&quot;, &quot;code.coding&quot;],
+    patient_id=&quot;&lt;my-patient-id&gt;&quot;
+)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def get_codes(table_name: str, code_fields: List[str], **kwargs):
+    &#34;&#34;&#34;Find FHIR codes for a given table
+
+    Attributes
+    ----------
+    table_name : str
+        The FHIR Search Service table to retrieve from
+
+    code_fields : List[str]
+        The fields of this table that contain a system, code, and display
+
+    kwargs : dict
+        Arguments to pass to :func:`~phc.easy.query.Query.execute_composite_aggregations`
+
+    Examples
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt; phc.Query.get_codes(
+        table_name=&#34;observation&#34;,
+        code_fields=[&#34;meta.tag&#34;, &#34;code.coding&#34;],
+        patient_id=&#34;&lt;my-patient-id&gt;&#34;
+    )
+    &#34;&#34;&#34;
+    if len(code_fields) == 0:
+        raise ValueError(&#34;No code columns specified.&#34;)
+
+    def agg_composite_to_frame(prefix: str, data: dict):
+        frame = pd.json_normalize(data[&#34;buckets&#34;])
+        frame.columns = frame.columns.str.lstrip(&#34;key.&#34;)
+        frame[&#34;field&#34;] = prefix
+        return frame
+
+    results = Query.execute_composite_aggregations(
+        table_name=table_name,
+        key_sources_pairs=[
+            (
+                field,
+                [
+                    {
+                        &#34;system&#34;: {
+                            &#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.system.keyword&#34;}
+                        }
+                    },
+                    {&#34;code&#34;: {&#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.code.keyword&#34;}}},
+                    {
+                        &#34;display&#34;: {
+                            &#34;terms&#34;: {
+                                &#34;field&#34;: f&#34;{field}.display.keyword&#34;,
+                                &#34;missing_bucket&#34;: True,
+                            }
+                        }
+                    },
+                ],
+            )
+            for field in code_fields
+        ],
+        **kwargs,
+    )
+
+    return pd.concat(
+        [
+            agg_composite_to_frame(key, value)
+            for key, value in results.items()
+        ]
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.query.Query.get_count_by_field"><code class="name flex">
+<span>def <span class="ident">get_count_by_field</span></span>(<span>table_name: str, field: str, batch_size: int = 1000, query_overrides: dict = {}, log: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, **query_kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Count records by a given field</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>table_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The FHIR Search Service table to retrieve from</dd>
+<dt><strong><code>field</code></strong> :&ensp;<code>str</code></dt>
+<dd>The field name to count the values of (e.g. "subject.reference")</dd>
+<dt><strong><code>batch_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>The size of each page from elasticsearch to use</dd>
+<dt><strong><code>query_overrides</code></strong> :&ensp;<code>dict</code></dt>
+<dd>
+<p>Parts of the FSS query to override
+(Note that passing certain values can cause the method to error out)</p>
+<p>The aggregation query is similar to this:
+{
+"type": "select",
+"columns": [{
+"type": "elasticsearch",
+"aggregations": {
+"results": {
+"composite": {
+"sources": [{
+"value": {
+"terms": {
+"field": "gender.keyword"
+}
+}
+}],
+"size": 100,
+}
+}
+},
+}],
+"from": [{"table": "patient"}],
+}</p>
+</dd>
+<dt><strong><code>auth_args</code></strong> :&ensp;<code>Auth, dict</code></dt>
+<dd>Additional arguments for authentication</dd>
+<dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>Whether to log the elasticsearch query sent to the server</dd>
+<dt><strong><code>query_kwargs</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Arguments to pass to build_query such as patient_id, patient_ids,
+and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({ 'account': '&lt;your-account-name&gt;' })
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt; phc.Query.get_count_by_field(
+    table_name=&quot;patient&quot;,
+    field=&quot;gender&quot;
+)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def get_count_by_field(
+    table_name: str,
+    field: str,
+    batch_size: int = 1000,
+    query_overrides: dict = {},
+    log: bool = False,
+    auth_args: Auth = Auth.shared(),
+    **query_kwargs,
+):
+    &#34;&#34;&#34;Count records by a given field
+
+    Attributes
+    ----------
+    table_name : str
+        The FHIR Search Service table to retrieve from
+
+    field : str
+        The field name to count the values of (e.g. &#34;subject.reference&#34;)
+
+    batch_size : int
+        The size of each page from elasticsearch to use
+
+    query_overrides : dict
+        Parts of the FSS query to override
+        (Note that passing certain values can cause the method to error out)
+
+        The aggregation query is similar to this:
+            {
+                &#34;type&#34;: &#34;select&#34;,
+                &#34;columns&#34;: [{
+                    &#34;type&#34;: &#34;elasticsearch&#34;,
+                    &#34;aggregations&#34;: {
+                        &#34;results&#34;: {
+                            &#34;composite&#34;: {
+                                &#34;sources&#34;: [{
+                                    &#34;value&#34;: {
+                                        &#34;terms&#34;: {
+                                            &#34;field&#34;: &#34;gender.keyword&#34;
+                                        }
+                                    }
+                                }],
+                                &#34;size&#34;: 100,
+                            }
+                        }
+                    },
+                }],
+                &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
+            }
+
+
+    auth_args : Auth, dict
+        Additional arguments for authentication
+
+    log : bool = False
+        Whether to log the elasticsearch query sent to the server
+
+    query_kwargs : dict
+        Arguments to pass to build_query such as patient_id, patient_ids,
+        and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+
+    Examples
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt; phc.Query.get_count_by_field(
+        table_name=&#34;patient&#34;,
+        field=&#34;gender&#34;
+    )
+    &#34;&#34;&#34;
+    data = Query.execute_composite_aggregations(
+        table_name=table_name,
+        key_sources_pairs=[
+            (
+                &#34;results&#34;,
+                [{&#34;value&#34;: {&#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.keyword&#34;}}}],
+            )
+        ],
+        batch_size=batch_size,
+        log=log,
+        auth_args=auth_args,
+        query_overrides=query_overrides,
+        **query_kwargs,
+    )
+
+    return pd.DataFrame(
+        [
+            {field: r[&#34;key&#34;][&#34;value&#34;], &#34;doc_count&#34;: r[&#34;doc_count&#34;]}
+            for r in data[&#34;results&#34;][&#34;buckets&#34;]
+        ]
+    )</code></pre>
 </details>
 </dd>
 </dl>
@@ -644,7 +2022,10 @@ def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
 </li>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
+<li><code><a title="phc.easy.query.fhir_aggregation" href="fhir_aggregation.html">phc.easy.query.fhir_aggregation</a></code></li>
 <li><code><a title="phc.easy.query.fhir_dsl" href="fhir_dsl.html">phc.easy.query.fhir_dsl</a></code></li>
+<li><code><a title="phc.easy.query.fhir_dsl_query" href="fhir_dsl_query.html">phc.easy.query.fhir_dsl_query</a></code></li>
+<li><code><a title="phc.easy.query.ga4gh" href="ga4gh.html">phc.easy.query.ga4gh</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
@@ -652,9 +2033,13 @@ def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
 <li>
 <h4><code><a title="phc.easy.query.Query" href="#phc.easy.query.Query">Query</a></code></h4>
 <ul class="">
+<li><code><a title="phc.easy.query.Query.execute_composite_aggregations" href="#phc.easy.query.Query.execute_composite_aggregations">execute_composite_aggregations</a></code></li>
 <li><code><a title="phc.easy.query.Query.execute_fhir_dsl" href="#phc.easy.query.Query.execute_fhir_dsl">execute_fhir_dsl</a></code></li>
 <li><code><a title="phc.easy.query.Query.execute_fhir_dsl_with_options" href="#phc.easy.query.Query.execute_fhir_dsl_with_options">execute_fhir_dsl_with_options</a></code></li>
+<li><code><a title="phc.easy.query.Query.execute_ga4gh" href="#phc.easy.query.Query.execute_ga4gh">execute_ga4gh</a></code></li>
 <li><code><a title="phc.easy.query.Query.find_count_of_dsl_query" href="#phc.easy.query.Query.find_count_of_dsl_query">find_count_of_dsl_query</a></code></li>
+<li><code><a title="phc.easy.query.Query.get_codes" href="#phc.easy.query.Query.get_codes">get_codes</a></code></li>
+<li><code><a title="phc.easy.query.Query.get_count_by_field" href="#phc.easy.query.Query.get_count_by_field">get_count_by_field</a></code></li>
 </ul>
 </li>
 </ul>

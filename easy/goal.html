@@ -39,6 +39,10 @@ class Goal(PatientItem):
         return &#34;goal&#34;
 
     @staticmethod
+    def code_keys():
+        return [&#34;meta.tag&#34;, &#34;target.detailQuantity&#34;, &#34;target.measure.coding&#34;]
+
+    @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,
@@ -77,6 +81,10 @@ from a FSS table that relates to a patient</p></div>
         return &#34;goal&#34;
 
     @staticmethod
+    def code_keys():
+        return [&#34;meta.tag&#34;, &#34;target.detailQuantity&#34;, &#34;target.measure.coding&#34;]
+
+    @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,
@@ -95,15 +103,33 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.goal.Goal.build_query"><code class="name flex">
-<span>def <span class="ident">build_query</span></span>(<span>table_name: str, patient_id: Union[NoneType, str] = None, patient_key: str = 'subject.reference') ‑> dict</span>
+<dt id="phc.easy.goal.Goal.code_keys"><code class="name flex">
+<span>def <span class="ident">code_keys</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.build_query" href="patient_item.html#phc.easy.patient_item.PatientItem.build_query">build_query</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="patient_item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
 </p>
-<div class="desc inherited"><p>Build query for a given table that relates to a patient …</p></div>
+<div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def code_keys():
+    return [&#34;meta.tag&#34;, &#34;target.detailQuantity&#34;, &#34;target.measure.coding&#34;]</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.goal.Goal.get_codes"><code class="name flex">
+<span>def <span class="ident">get_codes</span></span>(<span>**kwargs)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_codes" href="patient_item.html#phc.easy.patient_item.PatientItem.get_codes">get_codes</a></code>
+</p>
+<div class="desc inherited"><p>Find all codes …</p></div>
 </dd>
 <dt id="phc.easy.goal.Goal.get_count"><code class="name flex">
 <span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
@@ -115,8 +141,28 @@ from a FSS table that relates to a patient</p></div>
 </p>
 <div class="desc inherited"><p>Get the count for a given FSS query</p></div>
 </dd>
+<dt id="phc.easy.goal.Goal.get_count_by_field"><code class="name flex">
+<span>def <span class="ident">get_count_by_field</span></span>(<span>field: str, **kwargs)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_count_by_field" href="patient_item.html#phc.easy.patient_item.PatientItem.get_count_by_field">get_count_by_field</a></code>
+</p>
+<div class="desc inherited"><p>Count records by a given field …</p></div>
+</dd>
+<dt id="phc.easy.goal.Goal.get_count_by_patient"><code class="name flex">
+<span>def <span class="ident">get_count_by_patient</span></span>(<span>**kwargs)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_count_by_patient" href="patient_item.html#phc.easy.patient_item.PatientItem.get_count_by_patient">get_count_by_patient</a></code>
+</p>
+<div class="desc inherited"><p>Count records by a given field …</p></div>
+</dd>
 <dt id="phc.easy.goal.Goal.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {})</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -196,8 +242,11 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.goal.Goal" href="#phc.easy.goal.Goal">Goal</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.goal.Goal.build_query" href="patient_item.html#phc.easy.goal.Goal.build_query">build_query</a></code></li>
+<li><code><a title="phc.easy.goal.Goal.code_keys" href="#phc.easy.goal.Goal.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.goal.Goal.get_codes" href="patient_item.html#phc.easy.goal.Goal.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.goal.Goal.get_count" href="patient_item.html#phc.easy.goal.Goal.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.goal.Goal.get_count_by_field" href="patient_item.html#phc.easy.goal.Goal.get_count_by_field">get_count_by_field</a></code></li>
+<li><code><a title="phc.easy.goal.Goal.get_count_by_patient" href="patient_item.html#phc.easy.goal.Goal.get_count_by_patient">get_count_by_patient</a></code></li>
 <li><code><a title="phc.easy.goal.Goal.get_data_frame" href="patient_item.html#phc.easy.goal.Goal.get_data_frame">get_data_frame</a></code></li>
 <li><code><a title="phc.easy.goal.Goal.table_name" href="#phc.easy.goal.Goal.table_name">table_name</a></code></li>
 <li><code><a title="phc.easy.goal.Goal.transform_results" href="#phc.easy.goal.Goal.transform_results">transform_results</a></code></li>

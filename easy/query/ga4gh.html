@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.4" />
-<title>phc.easy.patients.address API documentation</title>
+<title>phc.easy.query.ga4gh API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -20,52 +20,57 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>phc.easy.patients.address</code></h1>
+<h1 class="title">Module <code>phc.easy.query.ga4gh</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import pandas as pd
-from phc.easy.codeable import generic_codeable_to_dict
-from phc.easy.util import concat_dicts
+<pre><code class="python">from typing import List, Union
+from phc.easy.auth import Auth
+from phc.base_client import BaseClient
+
+PAGE_SIZE = 50
 
 
-def expand_address_attr(key, attr_value):
-    if type(attr_value) is dict:
-        return generic_codeable_to_dict(attr_value, key)
+def recursive_execute_ga4gh(
+    auth: Auth,
+    client: BaseClient,
+    path: str,
+    http_verb: str,
+    results_key: str,
+    params: dict,
+    scroll: bool = False,
+    next_page_token: Union[str, None] = None,
+    _prev_results: List[dict] = [],
+):
+    page_size = params.get(&#34;pageSize&#34;, PAGE_SIZE)
 
-    if type(attr_value) is list:
-        return concat_dicts(
-            [
-                expand_address_attr(f&#34;{key}_{index}&#34;, value)
-                for index, value in enumerate(attr_value)
-            ]
-        )
-
-    return {key: attr_value}
-
-
-def expand_address_value(value):
-    if type(value) is not list:
-        return {}
-
-    # Value is always list of one item
-    assert len(value) == 1
-    value = value[0]
-
-    return concat_dicts(
-        [
-            expand_address_attr(f&#34;address_{key}&#34;, item_value)
-            for key, item_value in value.items()
-            if key != &#34;text&#34;
-        ]
+    response = client._ga4gh_call(
+        path, http_verb=http_verb, json={**params, &#34;pageToken&#34;: next_page_token}
     )
 
+    current_results = response.data[results_key]
+    results = [*_prev_results, *current_results]
 
-def expand_address_column(address_col):
-    return pd.DataFrame(map(expand_address_value, address_col.values))</code></pre>
+    is_last_batch = len(current_results) &lt; page_size or scroll is False
+
+    if is_last_batch:
+        print(f&#34;Retrieved {len(results)} results&#34;)
+        return results
+
+    return recursive_execute_ga4gh(
+        auth=auth,
+        client=client,
+        path=path,
+        http_verb=http_verb,
+        results_key=results_key,
+        params=params,
+        scroll=scroll,
+        next_page_token=response.data[&#34;nextPageToken&#34;],
+        _prev_results=results,
+    )</code></pre>
 </details>
 </section>
 <section>
@@ -75,8 +80,8 @@ def expand_address_column(address_col):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="phc.easy.patients.address.expand_address_attr"><code class="name flex">
-<span>def <span class="ident">expand_address_attr</span></span>(<span>key, attr_value)</span>
+<dt id="phc.easy.query.ga4gh.recursive_execute_ga4gh"><code class="name flex">
+<span>def <span class="ident">recursive_execute_ga4gh</span></span>(<span>auth: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a>, client: phc.base_client.BaseClient, path: str, http_verb: str, results_key: str, params: dict, scroll: bool = False, next_page_token: Union[str, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -84,57 +89,42 @@ def expand_address_column(address_col):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def expand_address_attr(key, attr_value):
-    if type(attr_value) is dict:
-        return generic_codeable_to_dict(attr_value, key)
+<pre><code class="python">def recursive_execute_ga4gh(
+    auth: Auth,
+    client: BaseClient,
+    path: str,
+    http_verb: str,
+    results_key: str,
+    params: dict,
+    scroll: bool = False,
+    next_page_token: Union[str, None] = None,
+    _prev_results: List[dict] = [],
+):
+    page_size = params.get(&#34;pageSize&#34;, PAGE_SIZE)
 
-    if type(attr_value) is list:
-        return concat_dicts(
-            [
-                expand_address_attr(f&#34;{key}_{index}&#34;, value)
-                for index, value in enumerate(attr_value)
-            ]
-        )
+    response = client._ga4gh_call(
+        path, http_verb=http_verb, json={**params, &#34;pageToken&#34;: next_page_token}
+    )
 
-    return {key: attr_value}</code></pre>
-</details>
-</dd>
-<dt id="phc.easy.patients.address.expand_address_column"><code class="name flex">
-<span>def <span class="ident">expand_address_column</span></span>(<span>address_col)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def expand_address_column(address_col):
-    return pd.DataFrame(map(expand_address_value, address_col.values))</code></pre>
-</details>
-</dd>
-<dt id="phc.easy.patients.address.expand_address_value"><code class="name flex">
-<span>def <span class="ident">expand_address_value</span></span>(<span>value)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def expand_address_value(value):
-    if type(value) is not list:
-        return {}
+    current_results = response.data[results_key]
+    results = [*_prev_results, *current_results]
 
-    # Value is always list of one item
-    assert len(value) == 1
-    value = value[0]
+    is_last_batch = len(current_results) &lt; page_size or scroll is False
 
-    return concat_dicts(
-        [
-            expand_address_attr(f&#34;address_{key}&#34;, item_value)
-            for key, item_value in value.items()
-            if key != &#34;text&#34;
-        ]
+    if is_last_batch:
+        print(f&#34;Retrieved {len(results)} results&#34;)
+        return results
+
+    return recursive_execute_ga4gh(
+        auth=auth,
+        client=client,
+        path=path,
+        http_verb=http_verb,
+        results_key=results_key,
+        params=params,
+        scroll=scroll,
+        next_page_token=response.data[&#34;nextPageToken&#34;],
+        _prev_results=results,
     )</code></pre>
 </details>
 </dd>
@@ -156,14 +146,12 @@ def expand_address_column(address_col):
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="phc.easy.patients" href="index.html">phc.easy.patients</a></code></li>
+<li><code><a title="phc.easy.query" href="index.html">phc.easy.query</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="phc.easy.patients.address.expand_address_attr" href="#phc.easy.patients.address.expand_address_attr">expand_address_attr</a></code></li>
-<li><code><a title="phc.easy.patients.address.expand_address_column" href="#phc.easy.patients.address.expand_address_column">expand_address_column</a></code></li>
-<li><code><a title="phc.easy.patients.address.expand_address_value" href="#phc.easy.patients.address.expand_address_value">expand_address_value</a></code></li>
+<li><code><a title="phc.easy.query.ga4gh.recursive_execute_ga4gh" href="#phc.easy.query.ga4gh.recursive_execute_ga4gh">recursive_execute_ga4gh</a></code></li>
 </ul>
 </li>
 </ul>

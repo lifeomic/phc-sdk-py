@@ -1528,19 +1528,13 @@ Defaults to the current working directory.</dd>
             The API response
         &#34;&#34;&#34;
         path = f&#34;fhir-search/projects/{project}&#34;
-        scroll = scroll if scroll is not True else &#39;true&#39;
-        params = {&#34;scroll&#34;: scroll if scroll is not True else &#39;true&#39;}
+        scroll = scroll if scroll is not True else &#34;true&#34;
+        params = {&#34;scroll&#34;: scroll if scroll is not True else &#34;true&#34;}
         return self._api_call(
-            http_verb=&#34;POST&#34;,
-            api_path=path,
-            params=params,
-            json=data
+            http_verb=&#34;POST&#34;, api_path=path, params=params, json=data
         )
 
-    def sql(self,
-            project: str,
-            statement: str,
-            scroll=&#34;&#34;) -&gt; ApiResponse:
+    def sql(self, project: str, statement: str, scroll=&#34;&#34;) -&gt; ApiResponse:
         &#34;&#34;&#34;Executes a LifeOmic FHIR Service SQL request
 
         Parameters
@@ -1559,13 +1553,13 @@ Defaults to the current working directory.</dd>
         &#34;&#34;&#34;
         path = f&#34;fhir-search/projects/{project}&#34;
         headers = {&#34;Content-Type&#34;: &#34;text/plain&#34;}
-        params = {&#34;scroll&#34;: scroll if scroll is not True else &#39;true&#39;}
+        params = {&#34;scroll&#34;: scroll if scroll is not True else &#34;true&#34;}
         return self._api_call(
             http_verb=&#34;POST&#34;,
             api_path=path,
             headers=headers,
             params=params,
-            data=statement
+            data=statement,
         )
 
     def execute_sql(
@@ -1601,7 +1595,7 @@ Defaults to the current working directory.</dd>
         Returns:
             [List] -- Dictionary with query response
         &#34;&#34;&#34;
-        warnings.warn(&#39;Use the sql method instead&#39;, DeprecationWarning)
+        warnings.warn(&#34;Use the sql method instead&#34;, DeprecationWarning)
         return self._api_call(
             api_path=f&#34;fhir-search/projects/{project_id}&#34;,
             http_verb=&#34;POST&#34;,
@@ -1627,7 +1621,7 @@ Defaults to the current working directory.</dd>
         phc.ApiResponse
             The query response
         &#34;&#34;&#34;
-        warnings.warn(&#39;Use the dsl method instead&#39;, DeprecationWarning)
+        warnings.warn(&#34;Use the dsl method instead&#34;, DeprecationWarning)
         return self._api_call(
             api_path=f&#34;fhir-search/projects/{project_id}&#34;,
             http_verb=&#34;POST&#34;,
@@ -1682,13 +1676,10 @@ Defaults to the current working directory.</dd>
         The API response
     &#34;&#34;&#34;
     path = f&#34;fhir-search/projects/{project}&#34;
-    scroll = scroll if scroll is not True else &#39;true&#39;
-    params = {&#34;scroll&#34;: scroll if scroll is not True else &#39;true&#39;}
+    scroll = scroll if scroll is not True else &#34;true&#34;
+    params = {&#34;scroll&#34;: scroll if scroll is not True else &#34;true&#34;}
     return self._api_call(
-        http_verb=&#34;POST&#34;,
-        api_path=path,
-        params=params,
-        json=data
+        http_verb=&#34;POST&#34;, api_path=path, params=params, json=data
     )</code></pre>
 </details>
 </dd>
@@ -1730,7 +1721,7 @@ Defaults to the current working directory.</dd>
     phc.ApiResponse
         The query response
     &#34;&#34;&#34;
-    warnings.warn(&#39;Use the dsl method instead&#39;, DeprecationWarning)
+    warnings.warn(&#34;Use the dsl method instead&#34;, DeprecationWarning)
     return self._api_call(
         api_path=f&#34;fhir-search/projects/{project_id}&#34;,
         http_verb=&#34;POST&#34;,
@@ -1803,7 +1794,7 @@ Defaults to the current working directory.</dd>
     Returns:
         [List] -- Dictionary with query response
     &#34;&#34;&#34;
-    warnings.warn(&#39;Use the sql method instead&#39;, DeprecationWarning)
+    warnings.warn(&#34;Use the sql method instead&#34;, DeprecationWarning)
     return self._api_call(
         api_path=f&#34;fhir-search/projects/{project_id}&#34;,
         http_verb=&#34;POST&#34;,
@@ -1836,10 +1827,7 @@ Defaults to the current working directory.</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def sql(self,
-        project: str,
-        statement: str,
-        scroll=&#34;&#34;) -&gt; ApiResponse:
+<pre><code class="python">def sql(self, project: str, statement: str, scroll=&#34;&#34;) -&gt; ApiResponse:
     &#34;&#34;&#34;Executes a LifeOmic FHIR Service SQL request
 
     Parameters
@@ -1858,13 +1846,13 @@ Defaults to the current working directory.</dd>
     &#34;&#34;&#34;
     path = f&#34;fhir-search/projects/{project}&#34;
     headers = {&#34;Content-Type&#34;: &#34;text/plain&#34;}
-    params = {&#34;scroll&#34;: scroll if scroll is not True else &#39;true&#39;}
+    params = {&#34;scroll&#34;: scroll if scroll is not True else &#34;true&#34;}
     return self._api_call(
         http_verb=&#34;POST&#34;,
         api_path=path,
         headers=headers,
         params=params,
-        data=statement
+        data=statement,
     )</code></pre>
 </details>
 </dd>
@@ -2897,7 +2885,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = 'b9487893-2f8a-449f-a99c-219218178687', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = '5c7d19cb-e154-4a10-bdc2-7e2791b1db7a', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
