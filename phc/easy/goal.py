@@ -10,6 +10,10 @@ class Goal(PatientItem):
         return "goal"
 
     @staticmethod
+    def code_keys():
+        return ["meta.tag", "target.detailQuantity", "target.measure.coding"]
+
+    @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,

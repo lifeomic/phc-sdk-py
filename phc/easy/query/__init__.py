@@ -1,4 +1,4 @@
-from typing import Any, Callable, List, Union, NamedTuple
+from typing import Any, Callable, List, Union, NamedTuple, Tuple
 import pandas as pd
 
 from phc.services import Fhir
@@ -212,6 +212,182 @@ class Query:
         return transform(df)
 
     @staticmethod
+    def get_codes(table_name: str, code_fields: List[str], **kwargs):
+        """Find FHIR codes for a given table
+
+        Attributes
+        ----------
+        table_name : str
+            The FHIR Search Service table to retrieve from
+
+        code_fields : List[str]
+            The fields of this table that contain a system, code, and display
+
+        kwargs : dict
+            Arguments to pass to :func:`~phc.easy.query.Query.execute_composite_aggregations`
+
+        Examples
+        --------
+        >>> import phc.easy as phc
+        >>> phc.Auth.set({ 'account': '<your-account-name>' })
+        >>> phc.Project.set_current('My Project Name')
+        >>> phc.Query.get_codes(
+            table_name="observation",
+            code_fields=["meta.tag", "code.coding"],
+            patient_id="<my-patient-id>"
+        )
+        """
+        if len(code_fields) == 0:
+            raise ValueError("No code columns specified.")
+
+        def agg_composite_to_frame(prefix: str, data: dict):
+            frame = pd.json_normalize(data["buckets"])
+            frame.columns = frame.columns.str.lstrip("key.")
+            frame["field"] = prefix
+            return frame
+
+        results = Query.execute_composite_aggregations(
+            table_name=table_name,
+            key_sources_pairs=[
+                (
+                    field,
+                    [
+                        {
+                            "system": {
+                                "terms": {"field": f"{field}.system.keyword"}
+                            }
+                        },
+                        {"code": {"terms": {"field": f"{field}.code.keyword"}}},
+                        {
+                            "display": {
+                                "terms": {
+                                    "field": f"{field}.display.keyword",
+                                    "missing_bucket": True,
+                                }
+                            }
+                        },
+                    ],
+                )
+                for field in code_fields
+            ],
+            **kwargs,
+        )
+
+        return pd.concat(
+            [
+                agg_composite_to_frame(key, value)
+                for key, value in results.items()
+            ]
+        )
+
+    @staticmethod
+    def execute_composite_aggregations(
+        table_name: str,
+        key_sources_pairs: List[Tuple[str, List[dict]]],
+        batch_size: int = 100,
+        query_overrides: dict = {},
+        log: bool = False,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Union[int, None] = None,
+        **query_kwargs,
+    ):
+        """Count records by multiple fields
+
+        Attributes
+        ----------
+        table_name : str
+            The FHIR Search Service table to retrieve from
+
+        key_sources_pairs : str
+            Pairs of keys and sources to pull composite results from
+
+            Example Input:
+                [
+                    ("meta.tag", [{"terms": {"field": "meta.tag.system.keyword"}}])
+                ]
+
+        batch_size : int
+            The size of each page from elasticsearch to use
+
+        query_overrides : dict
+            Parts of the FSS query to override
+            (Note that passing certain values can cause the method to error out)
+
+            Example aggregation query executed (can use log=True to inspect):
+                {
+                    "type": "select",
+                    "columns": [{
+                        "type": "elasticsearch",
+                        "aggregations": {
+                            "results": {
+                                "composite": {
+                                    "sources": [{
+                                        "meta.tag": {
+                                            "terms": {
+                                                "field": "meta.tag.system.keyword"
+                                            }
+                                        }
+                                    }],
+                                    "size": 100,
+                                }
+                            }
+                        },
+                    }],
+                    "from": [{"table": "observation"}],
+                }
+
+
+        auth_args : Auth, dict
+            Additional arguments for authentication
+
+        log : bool = False
+            Whether to log the elasticsearch query sent to the server
+
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
+
+        query_kwargs : dict
+            Arguments to pass to build_query such as patient_id, patient_ids,
+            and patient_key. See :func:`~phc.easy.query.fhir_dsl_query.build_query`.
+
+        Examples
+        --------
+        >>> import phc.easy as phc
+        >>> phc.Auth.set({ 'account': '<your-account-name>' })
+        >>> phc.Project.set_current('My Project Name')
+        >>> phc.Query.execute_composite_aggregations(
+            table_name="observation",
+            key_sources_pairs=[
+                ("meta.tag", [
+                    {"system": {"terms": {"field": "meta.tag.system.keyword"}}},
+                    {"code": {"terms": {"field": "meta.tag.code.keyword"}}},
+                    {"display": {"terms": {"field": "meta.tag.display.keyword"}}},
+                ]),
+                ("code.coding", [
+                    {"display": {"terms": {"field": "code.coding.display.keyword"}}}
+                ]),
+            ]
+        )
+        """
+        if len(key_sources_pairs) == 0:
+            raise ValueError("No aggregate composite terms specified.")
+
+        return with_progress(
+            tqdm,
+            lambda progress: Query._recursive_execute_composite_aggregations(
+                table_name=table_name,
+                key_sources_pairs=key_sources_pairs,
+                batch_size=batch_size,
+                progress=progress,
+                log=log,
+                auth_args=auth_args,
+                query_overrides=query_overrides,
+                max_pages=max_pages,
+                **query_kwargs,
+            ),
+        )
+
+    @staticmethod
     def get_count_by_field(
         table_name: str,
         field: str,
@@ -282,18 +458,26 @@ class Query:
             field="gender"
         )
         """
-        return with_progress(
-            tqdm,
-            lambda progress: Query._recursive_get_count_by_field(
-                field=field,
-                table_name=table_name,
-                batch_size=batch_size,
-                progress=progress,
-                log=log,
-                auth_args=auth_args,
-                query_overrides=query_overrides,
-                **query_kwargs,
-            ),
+        data = Query.execute_composite_aggregations(
+            table_name=table_name,
+            key_sources_pairs=[
+                (
+                    "results",
+                    [{"value": {"terms": {"field": f"{field}.keyword"}}}],
+                )
+            ],
+            batch_size=batch_size,
+            log=log,
+            auth_args=auth_args,
+            query_overrides=query_overrides,
+            **query_kwargs,
+        )
+
+        return pd.DataFrame(
+            [
+                {field: r["key"]["value"], "doc_count": r["doc_count"]}
+                for r in data["results"]["buckets"]
+            ]
         )
 
     @staticmethod
@@ -323,77 +507,90 @@ class Query:
         )
 
     @staticmethod
-    def _recursive_get_count_by_field(
+    def _recursive_execute_composite_aggregations(
         table_name: str,
-        field: str,
-        batch_size: int,
+        key_sources_pairs: List[Tuple[str, List[dict]]],
+        batch_size: int = 100,
         progress: Union[tqdm, None] = None,
         query_overrides: dict = {},
         log: bool = False,
-        auth_args: Auth = Auth.shared,
-        _prev_results: List[dict] = [],
-        _after_key: dict = {},
+        auth_args: Auth = Auth.shared(),
+        max_pages: Union[int, None] = None,
+        _current_page: int = 1,
+        _prev_results: dict = {},
+        _after_keys: dict = {},
         **query_kwargs,
     ):
-        data = Query.execute_fhir_dsl(
+        aggregation = Query.execute_fhir_dsl(
             {
                 "type": "select",
                 "columns": [
                     {
                         "type": "elasticsearch",
                         "aggregations": {
-                            "results": {
+                            key: {
                                 "composite": {
-                                    "sources": [
-                                        {
-                                            "value": {
-                                                "terms": {
-                                                    "field": f"{field}.keyword"
-                                                }
-                                            }
-                                        }
-                                    ],
+                                    "sources": sources,
                                     "size": batch_size,
                                     **(
-                                        {"after": _after_key}
-                                        if len(_after_key) > 0
+                                        {"after": _after_keys[key]}
+                                        if key in _after_keys
                                         else {}
                                     ),
                                 }
                             }
+                            for key, sources in key_sources_pairs
+                            if (len(_after_keys) == 0) or (key in _after_keys)
                         },
                     }
                 ],
                 "from": [{"table": table_name}],
+                **query_overrides,
             },
             auth_args=auth_args,
             log=log,
             **query_kwargs,
-        ).data
+        )
 
-        after_key = data["results"].get("after_key", None)
+        current_results = aggregation.data
+        results = FhirAggregation.reduce_composite_results(
+            _prev_results, current_results
+        )
 
-        current_results = [
-            {field: r["key"]["value"], "doc_count": r["doc_count"]}
-            for r in data["results"]["buckets"]
-        ]
-        results = [*_prev_results, *current_results]
+        if (progress is not None) and (_current_page == 1) and max_pages:
+            progress.reset(max_pages)
 
         if progress is not None:
-            progress.update(len(current_results))
-
-        if (len(current_results) == batch_size) and after_key:
-            return Query._recursive_get_count_by_field(
-                table_name=table_name,
-                field=field,
-                batch_size=batch_size,
-                progress=progress,
-                query_overrides=query_overrides,
-                log=log,
-                auth_args=auth_args,
-                _prev_results=results,
-                _after_key=after_key,
-                **query_kwargs,
+            # Update by count or pages (if max_pages specified)
+            progress.update(
+                1
+                if max_pages
+                else FhirAggregation.count_composite_results(current_results)
             )
 
-        return pd.DataFrame(results)
+        after_keys = FhirAggregation.find_composite_after_keys(
+            current_results, batch_size
+        )
+
+        if len(after_keys) == 0 or (
+            (max_pages is not None) and (_current_page >= max_pages)
+        ):
+            print(
+                f"Retrieved {FhirAggregation.count_composite_results(results)} results"
+            )
+            return results
+
+        return Query._recursive_execute_composite_aggregations(
+            table_name=table_name,
+            key_sources_pairs=key_sources_pairs,
+            batch_size=batch_size,
+            progress=progress,
+            query_overrides=query_overrides,
+            log=log,
+            auth_args=auth_args,
+            max_pages=max_pages,
+            _current_page=_current_page + 1,
+            _prev_results=results,
+            _after_keys=after_keys,
+            **query_kwargs,
+        )

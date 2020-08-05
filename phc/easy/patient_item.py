@@ -4,6 +4,7 @@ import pandas as pd
 
 from phc.easy.auth import Auth
 from phc.easy.query import Query
+from phc.easy.util import without_keys
 
 
 class PatientItem:
@@ -19,6 +20,11 @@ class PatientItem:
     @staticmethod
     def patient_key() -> str:
         return "subject.reference"
+
+    @staticmethod
+    def code_keys() -> List[str]:
+        "Returns the code keys (e.g. when searching for codes)"
+        return []
 
     @classmethod
     def get_count(cls, query_overrides: dict = {}, auth_args=Auth.shared()):
@@ -112,6 +118,28 @@ class PatientItem:
             patient_ids=patient_ids,
             patient_key=cls.patient_key(),
             log=log,
+        )
+
+    @classmethod
+    def get_codes(cls, **kwargs):
+        """Find all codes
+
+        See possible argments for :func:`~phc.easy.query.Query.get_codes`
+
+        Examples
+        --------
+        >>> import phc.easy as phc
+        >>> phc.Auth.set({'account': '<your-account-name>'})
+        >>> phc.Project.set_current('My Project Name')
+        >>>
+        >>> phc.Observation.get_codes(patient_id="<id>", max_pages=3)
+        """
+        code_fields = [*cls.code_keys(), *kwargs.get("code_fields", [])]
+
+        return Query.get_codes(
+            table_name=cls.table_name(),
+            code_fields=code_fields,
+            **without_keys(kwargs, ["code_fields"]),
         )
 
     @classmethod

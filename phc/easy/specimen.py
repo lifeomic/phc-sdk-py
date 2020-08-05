@@ -10,6 +10,10 @@ class Specimen(PatientItem):
         return "specimen"
 
     @staticmethod
+    def code_keys():
+        return ["type.coding", "meta.tag", "collection.bodySite.coding"]
+
+    @staticmethod
     def transform_results(df: pd.DataFrame, **expand_args):
         return Frame.expand(
             df,
