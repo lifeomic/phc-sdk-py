@@ -177,7 +177,7 @@ class PatientItem:
         >>> phc.Auth.set({'account': '<your-account-name>'})
         >>> phc.Project.set_current('My Project Name')
         >>>
-        >>> phc.Observation.get_count_by_patient('gender')
+        >>> phc.Observation.get_count_by_patient()
         """
         patient_key = cls.patient_key()
 

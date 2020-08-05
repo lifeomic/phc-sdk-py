@@ -5,6 +5,92 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+*(NOTE: All examples use fictious data or freely available data sets.)*
+
+## [0.15.0] - 2020-08-05
+
+Includes more work on the easy modules (imported via `import phc.easy as phc`). 
+
+### Added
+
+- Added `phc.easy.Query.execute_ga4gh` that auto-scrolls GA4GH results
+- Added `phc.easy.Sequence` as another entity module
+- Added generic methods on `phc.easy.Query`
+  - `get_count_by_field`
+  - `get_codes`
+  - `execute_composite_aggregations` (used by `get_count_by_field` and `get_codes`)
+- Added `phc.easy.PatientItem.get_count_by_patient` (Observation, Procedure, Specimen, etc.)
+
+```python
+# Example: Get number of procedures by patient
+phc.Procedure.get_count_by_patient()
+
+#                                      doc_count
+# subject.reference                              
+# 518eb55d-adbf-42c3-8aed-68176d0ed4b7        334
+# 67233488-ddd6-46e1-88cc-a93140b86c02       2088
+# b41f8107-85e1-42c3-b36e-400085799ab5        176
+```
+
+- Added `phc.easy.PatientItem.get_count_by_field` (Observation, Procedure, Specimen, etc.)
+
+```python
+# Example: Get count of unique procedure display codes
+phc.Procedure.get_count_by_field("code.coding.display")
+
+#                      code.coding.display  doc_count
+# 0                             lumpectomy        247
+# 1            modified radical mastectomy        322
+# 2                                  other        272
+# 3                      simple mastectomy        200
+```
+
+- Added `phc.easy.PatientItem.get_codes` (Observation, Procedure, Specimen, etc.)
+
+```python
+# Example: Get observation codes for specific patients
+phc.Observation.get_codes(patient_ids=[
+    "e296f292-230f-444c-887f-0b213bde90fa",
+    "78adf262-c77e-4cb3-8435-034bd9e73b64"
+])
+
+#    doc_count            system     code                                     display        field
+# 0        1.0  http://loinc.org  21893-3  Regional lymph nodes positive [#] Specimen  code.coding
+# 1        2.0  http://loinc.org  21975-8                        Date of Last Contact  code.coding
+# 2        1.0  http://loinc.org  21981-6                 Date of Disease Progression  code.coding
+# 3        2.0  http://loinc.org  49683-6                    HER2/neu receptor status  code.coding
+# 4        2.0  http://loinc.org  63931-0                           Date of Diagnosis  code.coding
+# 5        2.0  http://loinc.org  85337-4                    Estrogen Receptor Status  code.coding
+```
+
+### Changed
+
+- Passing `log` to any PatientItem entities now logs the FSS query being run
+- For aggregations, `phc.Query.execute_fhir_dsl` now returns a `FhirAggregation` if an aggregation is specified in the query
+- `phc.Query.execute_fhir_dsl_with_options` now caches aggregation queries in JSON format
+- Specifying `patient_id` and/or `patient_ids` is now properly supported with a custom FHIR query.
+
+```python
+# Example: Get observations tagged with loinc for a specific patient
+
+phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
+    "where": {
+        "type": "elasticsearch",
+        "query": {
+            "term": {
+                "code.coding.system.keyword": "http://loinc.org"
+            }
+        }
+    }
+})
+```
+
+
+### Fixed
+
+- Fix `phc.easy.Procedure` not inheriting new `phc.easy.PatientItem` behavior
+
+
 ## [0.14.1]  - 2020-07-15
 
 ### Fixed
