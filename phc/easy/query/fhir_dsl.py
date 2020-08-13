@@ -4,28 +4,9 @@ import pandas as pd
 
 from phc.easy.auth import Auth
 from phc.services import Fhir
-
-try:
-    from tqdm.autonotebook import tqdm
-except ImportError:
-    _has_tqdm = False
-    tqdm = None
-else:
-    _has_tqdm = True
+from phc.easy.util import with_progress, tqdm
 
 MAX_RESULT_SIZE = 10000
-
-
-def with_progress(
-    init_progress: Callable[[], tqdm], func: Callable[[Union[None, tqdm]], None]
-):
-    if _has_tqdm:
-        progress = init_progress()
-        result = func(progress)
-        progress.close()
-        return result
-
-    return func(None)
 
 
 def query_allows_scrolling(query):

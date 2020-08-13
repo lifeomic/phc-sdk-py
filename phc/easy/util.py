@@ -1,5 +1,13 @@
 from functools import reduce, wraps
-from typing import Union
+from typing import Union, Callable
+
+try:
+    from tqdm.autonotebook import tqdm
+except ImportError:
+    _has_tqdm = False
+    tqdm = None
+else:
+    _has_tqdm = True
 
 
 def join_underscore(values):
@@ -65,3 +73,28 @@ def defaultprop(fn):
         return value
 
     return _defaultprop
+
+
+def with_progress(
+    init_progress: Callable[[], tqdm], func: Callable[[Union[None, tqdm]], None]
+):
+    if _has_tqdm:
+        progress = init_progress()
+        result = func(progress)
+        progress.close()
+        return result
+
+    return func(None)
+
+
+def update_progress(progress: tqdm, n: int, description: str = ""):
+    """Update progress if available (Returns True to allow `and` chaining):
+
+        update_progress(None, 0, "hey") and my_return_value
+    """
+    if not progress:
+        return True
+
+    progress.set_description(description, refresh=False)
+    progress.update(n)
+    return True
