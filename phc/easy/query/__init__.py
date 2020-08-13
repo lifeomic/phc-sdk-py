@@ -142,7 +142,7 @@ class Query:
                             # pressure on API
                             {
                                 "type": "number",
-                                "value": int(MAX_RESULT_SIZE / 2),
+                                "value": int(MAX_RESULT_SIZE * 0.9),
                             },
                         ],
                         **query,

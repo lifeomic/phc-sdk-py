@@ -35,7 +35,6 @@ class Patient:
 
     @staticmethod
     def get_data_frame(
-        limit: int = 100,
         all_results: bool = False,
         raw: bool = False,
         query_overrides: dict = {},
@@ -47,9 +46,6 @@ class Patient:
 
         Attributes
         ----------
-        limit : int
-            The number of patients to retrieve
-
         all_results : bool = False
             Override limit to retrieve all patients
 
@@ -83,10 +79,6 @@ class Patient:
             "type": "select",
             "columns": "*",
             "from": [{"table": "patient"}],
-            "limit": [
-                {"type": "number", "value": 0},
-                {"type": "number", "value": limit},
-            ],
             **query_overrides,
         }
 
