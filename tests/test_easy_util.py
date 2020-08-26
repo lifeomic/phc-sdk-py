@@ -4,6 +4,7 @@ from phc.easy.util import (
     prefix_dict_keys,
     without_keys,
     defaultprop,
+    add_prefixes,
 )
 
 
@@ -49,6 +50,14 @@ def test_without_keys():
     assert without_keys({"a": "z", "b": "y", "c": "x"}, ["b", "c"]) == {
         "a": "z"
     }
+
+
+def test_add_prefixes():
+    assert add_prefixes(["a", "b", "Patient/c"], ["Patient/"]) == [
+        "Patient/a",
+        "Patient/b",
+        "Patient/c",
+    ]
 
 
 # defaultprop

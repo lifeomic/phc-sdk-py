@@ -22,6 +22,10 @@ class PatientItem:
         return "subject.reference"
 
     @staticmethod
+    def patient_id_prefixes() -> List[str]:
+        return ["Patient/"]
+
+    @staticmethod
     def code_keys() -> List[str]:
         "Returns the code keys (e.g. when searching for codes)"
         return []
@@ -118,6 +122,7 @@ class PatientItem:
             patient_ids=patient_ids,
             patient_key=cls.patient_key(),
             log=log,
+            patient_id_prefixes=cls.patient_id_prefixes(),
         )
 
     @classmethod

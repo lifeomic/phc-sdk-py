@@ -112,3 +112,24 @@ def test_add_single_patient_id_to_query():
             },
         }
     }
+
+
+def test_add_single_patient_id_with_prefix():
+    result = build_query(
+        {}, patient_id="a", patient_id_prefixes=["Patient/", "urn:uuid:"]
+    )
+
+    assert result == {
+        "where": {
+            "type": "elasticsearch",
+            "query": {
+                "terms": {
+                    "subject.reference.keyword": [
+                        "Patient/a",
+                        "urn:uuid:a",
+                        "a",
+                    ]
+                }
+            },
+        }
+    }
