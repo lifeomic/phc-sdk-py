@@ -4,27 +4,24 @@ from phc.easy.frame import Frame
 from phc.easy.patient_item import PatientItem
 
 
-class MedicationStatement(PatientItem):
+class Person(PatientItem):
     @staticmethod
     def table_name():
-        return "medication_statement"
+        return "person"
+
+    @staticmethod
+    def patient_key():
+        return "link.target.reference"
 
     @staticmethod
     def code_keys():
-        return ["medicationCodeableConcept.coding", "meta.tag"]
+        return ["meta.tag"]
 
     @staticmethod
     def transform_results(df: pd.DataFrame, **expand_args):
         return Frame.expand(
             df,
-            date_columns=[
-                *expand_args.get("date_columns", []),
-                "effectiveDateTime",
-            ],
-            code_columns=[
-                *expand_args.get("code_columns", []),
-                "medicationCodeableConcept",
-            ],
+            code_columns=[*expand_args.get("code_columns", []), "link"],
             custom_columns=[
                 *expand_args.get("custom_columns", []),
                 Frame.codeable_like_column_expander("subject"),

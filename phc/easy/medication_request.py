@@ -4,10 +4,10 @@ from phc.easy.frame import Frame
 from phc.easy.patient_item import PatientItem
 
 
-class MedicationStatement(PatientItem):
+class MedicationRequest(PatientItem):
     @staticmethod
     def table_name():
-        return "medication_statement"
+        return "medication_request"
 
     @staticmethod
     def code_keys():
@@ -19,7 +19,9 @@ class MedicationStatement(PatientItem):
             df,
             date_columns=[
                 *expand_args.get("date_columns", []),
-                "effectiveDateTime",
+                "authoredOn",
+                "dispenseRequest.validityPeriod.start",
+                "dispenseRequest.validityPeriod.end",
             ],
             code_columns=[
                 *expand_args.get("code_columns", []),
@@ -28,5 +30,13 @@ class MedicationStatement(PatientItem):
             custom_columns=[
                 *expand_args.get("custom_columns", []),
                 Frame.codeable_like_column_expander("subject"),
+                Frame.codeable_like_column_expander("context"),
+                Frame.codeable_like_column_expander("note"),
+                (
+                    "dispenseRequest",
+                    lambda r: pd.json_normalize(r).add_prefix(
+                        "dispenseRequest."
+                    ),
+                ),
             ],
         )

@@ -4,14 +4,14 @@ from phc.easy.frame import Frame
 from phc.easy.patient_item import PatientItem
 
 
-class MedicationStatement(PatientItem):
+class Media(PatientItem):
     @staticmethod
     def table_name():
-        return "medication_statement"
+        return "media"
 
     @staticmethod
     def code_keys():
-        return ["medicationCodeableConcept.coding", "meta.tag"]
+        return ["bodySite.coding", "meta.tag"]
 
     @staticmethod
     def transform_results(df: pd.DataFrame, **expand_args):
@@ -19,14 +19,15 @@ class MedicationStatement(PatientItem):
             df,
             date_columns=[
                 *expand_args.get("date_columns", []),
-                "effectiveDateTime",
+                "occurrenceDateTime",
             ],
-            code_columns=[
-                *expand_args.get("code_columns", []),
-                "medicationCodeableConcept",
-            ],
+            code_columns=[*expand_args.get("code_columns", []), "bodySite"],
             custom_columns=[
                 *expand_args.get("custom_columns", []),
                 Frame.codeable_like_column_expander("subject"),
+                (
+                    "content",
+                    lambda r: pd.json_normalize(r).add_prefix("content."),
+                ),
             ],
         )
