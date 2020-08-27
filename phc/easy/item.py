@@ -45,8 +45,6 @@ class Item:
         cls,
         all_results: bool = False,
         raw: bool = False,
-        patient_id: Union[None, str] = None,
-        patient_ids: List[str] = [],
         query_overrides: dict = {},
         auth_args=Auth.shared(),
         ignore_cache: bool = False,
@@ -110,13 +108,11 @@ class Item:
             query_overrides,
             auth_args,
             ignore_cache,
-            patient_id=patient_id,
-            patient_ids=patient_ids,
             log=log,
         )
 
     @classmethod
-    def get_codes(cls, **kwargs):
+    def get_codes(cls, exclude_meta_tag=True, **kwargs):
         """Find all codes
 
         See possible argments for :func:`~phc.easy.query.Query.get_codes`
@@ -130,6 +126,13 @@ class Item:
         >>> phc.Observation.get_codes(patient_id="<id>", max_pages=3)
         """
         code_fields = [*cls.code_keys(), *kwargs.get("code_fields", [])]
+
+        # Meta tag can significantly clutter things up since it's often a date
+        # value instead of a real code
+        if exclude_meta_tag:
+            code_fields = [
+                field for field in code_fields if field != "meta.tag"
+            ]
 
         return Query.get_codes(
             table_name=cls.table_name(),
