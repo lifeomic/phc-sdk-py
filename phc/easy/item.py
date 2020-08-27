@@ -4,22 +4,41 @@ import pandas as pd
 
 from phc.easy.auth import Auth
 from phc.easy.query import Query
-from phc.easy.item import Item
 from phc.easy.util import without_keys
 
 
-class PatientItem(Item):
+class Item:
     """Provides an abstract class and/or static methods for retrieving items
-    from a FSS table that relates to a patient
+    from a FSS table
     """
 
     @staticmethod
-    def patient_key() -> str:
-        return "subject.reference"
+    def table_name() -> str:
+        "Returns the FSS table name for retrieval"
+        raise ValueError("Table name should be implemented by subclass")
 
     @staticmethod
-    def patient_id_prefixes() -> List[str]:
-        return ["Patient/"]
+    def code_keys() -> List[str]:
+        "Returns the code keys (e.g. when searching for codes)"
+        return []
+
+    @classmethod
+    def get_count(cls, query_overrides: dict = {}, auth_args=Auth.shared()):
+        "Get the count for a given FSS query"
+        return Query.find_count_of_dsl_query(
+            {
+                "type": "select",
+                "columns": "*",
+                "from": [{"table": cls.table_name()}],
+                **query_overrides,
+            },
+            auth_args=auth_args,
+        )
+
+    @staticmethod
+    def transform_results(data_frame: pd.DataFrame, **expand_args):
+        "Transform data frame batch"
+        return data_frame
 
     @classmethod
     def get_data_frame(
@@ -93,16 +112,14 @@ class PatientItem(Item):
             ignore_cache,
             patient_id=patient_id,
             patient_ids=patient_ids,
-            patient_key=cls.patient_key(),
             log=log,
-            patient_id_prefixes=cls.patient_id_prefixes(),
         )
 
     @classmethod
-    def get_count_by_patient(cls, **kwargs):
-        """Count records by a given field
+    def get_codes(cls, **kwargs):
+        """Find all codes
 
-        See argments for :func:`~phc.easy.query.Query.get_count_by_field`
+        See possible argments for :func:`~phc.easy.query.Query.get_codes`
 
         Examples
         --------
@@ -110,15 +127,35 @@ class PatientItem(Item):
         >>> phc.Auth.set({'account': '<your-account-name>'})
         >>> phc.Project.set_current('My Project Name')
         >>>
-        >>> phc.Observation.get_count_by_patient()
+        >>> phc.Observation.get_codes(patient_id="<id>", max_pages=3)
         """
-        patient_key = cls.patient_key()
+        code_fields = [*cls.code_keys(), *kwargs.get("code_fields", [])]
 
-        df = Query.get_count_by_field(
-            table_name=cls.table_name(), field=cls.patient_key(), **kwargs
+        return Query.get_codes(
+            table_name=cls.table_name(),
+            code_fields=code_fields,
+            **without_keys(kwargs, ["code_fields"]),
         )
 
-        # Make keys consistent (some are prefixed while others are not)
-        df[patient_key] = df[patient_key].str.replace("Patient/", "")
+    @classmethod
+    def get_count_by_field(cls, field: str, **kwargs):
+        """Count records by a given field
 
-        return df.groupby(patient_key).sum()
+        See argments for :func:`~phc.easy.query.Query.get_count_by_field`
+
+        Attributes
+        ----------
+        field : str
+            The field name to count the values of (e.g. "gender")
+
+        Examples
+        --------
+        >>> import phc.easy as phc
+        >>> phc.Auth.set({'account': '<your-account-name>'})
+        >>> phc.Project.set_current('My Project Name')
+        >>>
+        >>> phc.Observation.get_count_by_field('category.coding.code')
+        """
+        return Query.get_count_by_field(
+            table_name=cls.table_name(), field=field, **kwargs
+        )
