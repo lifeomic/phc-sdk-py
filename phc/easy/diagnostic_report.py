@@ -4,14 +4,18 @@ from phc.easy.frame import Frame
 from phc.easy.patient_item import PatientItem
 
 
-class Consent(PatientItem):
+class DiagnosticReport(PatientItem):
     @staticmethod
     def table_name():
-        return "consent"
+        return "diagnostic_report"
+
+    @staticmethod
+    def patient_id_prefixes():
+        return ["Patient/", "urn:uuid:"]
 
     @staticmethod
     def patient_key():
-        return "patient.reference"
+        return "subject.reference"
 
     @staticmethod
     def code_keys():
@@ -21,11 +25,10 @@ class Consent(PatientItem):
     def transform_results(df: pd.DataFrame, **expand_args):
         return Frame.expand(
             df,
-            date_columns=[*expand_args.get("date_columns", []), "dateTime"],
             custom_columns=[
                 *expand_args.get("custom_columns", []),
-                Frame.codeable_like_column_expander("sourceReference"),
-                Frame.codeable_like_column_expander("actor"),
-                Frame.codeable_like_column_expander("patient"),
+                Frame.codeable_like_column_expander("subject"),
+                Frame.codeable_like_column_expander("presentedForm"),
+                Frame.codeable_like_column_expander("result"),
             ],
         )

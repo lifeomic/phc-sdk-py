@@ -2,6 +2,8 @@ from toolz import pipe, identity, curry
 from typing import List, Union
 from lenses import lens
 
+from phc.easy.util import add_prefixes
+
 FHIR_WHERE = lens.Get("where", {})
 FHIR_WHERE_TYPE = FHIR_WHERE.Get("type", "")
 FHIR_SIMPLE_QUERY = FHIR_WHERE.Get("query", {})
@@ -50,6 +52,7 @@ def _patient_ids_adder(
     patient_id: Union[str, None] = None,
     patient_ids: List[str] = [],
     patient_key: str = "subject.reference",
+    patient_id_prefixes: List[str] = ["Patient/"],
 ):
     patient_ids = [*patient_ids, *([patient_id] if patient_id else [])]
 
@@ -61,7 +64,7 @@ def _patient_ids_adder(
         {
             "terms": {
                 f"{patient_key}.keyword": [
-                    *[f"Patient/{patient_id}" for patient_id in patient_ids],
+                    *add_prefixes(patient_ids, patient_id_prefixes),
                     *patient_ids,
                 ]
             }
@@ -74,6 +77,7 @@ def build_query(
     patient_id: Union[str, None] = None,
     patient_ids: List[str] = [],
     patient_key: str = "subject.reference",
+    patient_id_prefixes: List[str] = ["Patient/"],
 ):
     "Build query with patient_ids"
 
@@ -83,5 +87,6 @@ def build_query(
             patient_id=patient_id,
             patient_ids=patient_ids,
             patient_key=patient_key,
+            patient_id_prefixes=patient_id_prefixes,
         ),
     )

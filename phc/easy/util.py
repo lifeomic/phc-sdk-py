@@ -1,5 +1,6 @@
 from functools import reduce, wraps
-from typing import Union, Callable
+from funcy import lmapcat
+from typing import Union, Callable, List
 
 try:
     from tqdm.autonotebook import tqdm
@@ -98,3 +99,17 @@ def update_progress(progress: tqdm, n: int, description: str = ""):
     progress.set_description(description, refresh=False)
     progress.update(n)
     return True
+
+
+def add_prefixes(values: List[str], prefixes: List[str]):
+    """Add prefix to each value if not already present"""
+    if len(prefixes) == 0:
+        return values
+
+    return lmapcat(
+        lambda prefix: [
+            (value if value.startswith(prefix) else f"{prefix}{value}")
+            for value in values
+        ],
+        prefixes,
+    )
