@@ -7,6 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *(NOTE: All examples use fictious data or freely available data sets.)*
 
+## [0.16.0] - 2020-08-27
+
+### Added
+
+- Added most of remaining FSS entities: 
+  - AuditEvent
+  - CarePlan
+  - DiagnosticReport
+  - DocumentReference
+  - Encounter
+  - ImagingStudy
+  - Immunization
+  - Media
+  - MedicationAdministration
+  - MedicationDispense
+  - MedicationRequest
+  - MedicationStatement
+  - Person
+  - Practitioner
+  - Procedure
+  - ProcedureRequest
+  - Provenance
+  - ReferralRequest
+  - Sequence
+  - Specimen
+- Add abstract `Item` class for entities that don't relate to a patient (e.g. Organization and Practitioner)
+
+### Changed
+
+All date columns now return two columns--one for the local time (with time zone removed) and one for the time zone offset in hours. Consider the `onsetDateTime` column from BRCA's `Condition` table:
+
+```
+   onsetDateTime.tz       onsetDateTime.local
+0               0.0 1998-01-01 00:00:00+00:00
+1               0.0 2010-01-01 00:00:00+00:00
+2               0.0 2008-01-01 00:00:00+00:00
+3               0.0 1994-01-01 00:00:00+00:00
+4               0.0 2008-01-01 00:00:00+00:00
+5               0.0 2012-01-01 00:00:00+00:00
+6               0.0 2017-06-27 04:00:00+00:00
+```
+
+
 ## [0.15.0] - 2020-08-05
 
 Includes more work on the easy modules (imported via `import phc.easy as phc`). 

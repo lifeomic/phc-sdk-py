@@ -48,6 +48,9 @@ class PatientItem(Item):
         patient_id : None or str = None
             Find records for a given patient_id
 
+        patient_ids : List[str]
+            Find records for given patient_ids
+
         query_overrides : dict = {}
             Override any part of the elasticsearch FHIR query
 

@@ -62,9 +62,6 @@ class Item:
             If raw, then values will not be expanded (useful for manual
             inspection if something goes wrong)
 
-        patient_id : None or str = None
-            Find records for a given patient_id
-
         query_overrides : dict = {}
             Override any part of the elasticsearch FHIR query
 
