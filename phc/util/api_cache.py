@@ -1,5 +1,6 @@
 import hashlib
 import json
+import os
 from pathlib import Path
 from typing import Callable
 
@@ -86,6 +87,9 @@ class APICache:
         writer = CSVWriter(filename)
 
         def handle_batch(batch, is_finished):
+            if is_finished and not os.path.exists(filename):
+                return pd.DataFrame()
+
             if is_finished:
                 print(f'Loading data frame from "{filename}"')
                 return APICache.read_csv(filename)
