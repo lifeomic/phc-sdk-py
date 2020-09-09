@@ -159,14 +159,28 @@ class Frame:
             local_key = f"{column_key}.local"
             tz_key = f"{column_key}.tz"
 
-            utc = pd.to_datetime(combined[column_key], utc=True)
+            try:
+                utc = pd.to_datetime(combined[column_key], utc=True)
 
-            # Cleverness: Use regex to remove TZ and parse as utc=True to
-            # produce local datetime. The column name will have ".local" as
-            # suffix so it'll be clear what's happening.
-            localized = pd.to_datetime(
-                combined[column_key].str.replace(TZ_REGEX, ""), utc=True
-            )
+                # Cleverness: Use regex to remove TZ and parse as utc=True to
+                # produce local datetime. The column name will have ".local" as
+                # suffix so it'll be clear what's happening.
+                localized = pd.to_datetime(
+                    combined[column_key].str.replace(TZ_REGEX, ""), utc=True
+                )
+            except pd.errors.OutOfBoundsDatetime as ex:
+                print(
+                    "[WARNING]: OutOfBoundsDatetime encountered. Casting to NaT.",
+                    ex,
+                )
+                utc = pd.to_datetime(
+                    combined[column_key], utc=True, errors="coerce"
+                )
+                localized = pd.to_datetime(
+                    combined[column_key].str.replace(TZ_REGEX, ""),
+                    utc=True,
+                    errors="coerce",
+                )
 
             combined[tz_key] = (localized - utc).dt.total_seconds() / 3600
             combined[local_key] = localized
