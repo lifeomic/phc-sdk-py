@@ -8,6 +8,7 @@ FHIR_WHERE = lens.Get("where", {})
 FHIR_WHERE_TYPE = FHIR_WHERE.Get("type", "")
 FHIR_SIMPLE_QUERY = FHIR_WHERE.Get("query", {})
 FHIR_BOOL_QUERY = FHIR_SIMPLE_QUERY.Get("bool", {})
+FHIR_BOOL_MUST_QUERY = FHIR_BOOL_QUERY.Get("must", [])
 
 
 @curry
@@ -42,6 +43,11 @@ def and_query_clause(query: dict, query_clause: dict):
         "should" in bool_keys
     ):
         return FHIR_SIMPLE_QUERY.modify(and_query_clause_terms(query_clause))(
+            query
+        )
+
+    if len(bool_keys) == 1 and "must" in bool_keys:
+        return FHIR_BOOL_MUST_QUERY.modify(lambda must: [*must, query_clause])(
             query
         )
 
