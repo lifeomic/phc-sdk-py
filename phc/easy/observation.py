@@ -23,6 +23,7 @@ class Observation(PatientItem):
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,
+            "code_columns": [*expand_args.get("code_columns", []), "component"],
             "custom_columns": [
                 *expand_args.get("custom_columns", []),
                 Frame.codeable_like_column_expander("subject"),
