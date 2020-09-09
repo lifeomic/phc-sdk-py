@@ -1,5 +1,6 @@
 from typing import Any, Callable, List, Union, NamedTuple, Tuple
 import pandas as pd
+import json
 
 from phc.services import Fhir
 from phc.base_client import BaseClient
@@ -129,7 +130,7 @@ class Query:
         query = build_query(query, **query_kwargs)
 
         if log:
-            print(query)
+            print(json.dumps(query, indent=4))
 
         if FhirAggregation.is_aggregation_query(query):
             response = execute_single_fhir_dsl(query, auth_args=auth_args)
@@ -183,7 +184,7 @@ class Query:
         query = build_query({**query, **query_overrides}, **query_kwargs)
 
         if log:
-            print(query)
+            print(json.dumps(query, indent=4))
 
         use_cache = (
             (not ignore_cache)
