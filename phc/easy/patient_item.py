@@ -28,6 +28,7 @@ class PatientItem(Item):
         raw: bool = False,
         patient_id: Union[None, str] = None,
         patient_ids: List[str] = [],
+        max_pages: Union[int, None] = None,
         query_overrides: dict = {},
         auth_args=Auth.shared(),
         ignore_cache: bool = False,
@@ -50,6 +51,9 @@ class PatientItem(Item):
 
         patient_ids : List[str]
             Find records for given patient_ids
+
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
 
         query_overrides : dict = {}
             Override any part of the elasticsearch FHIR query
@@ -96,6 +100,7 @@ class PatientItem(Item):
             ignore_cache,
             patient_id=patient_id,
             patient_ids=patient_ids,
+            max_pages=max_pages,
             patient_key=cls.patient_key(),
             log=log,
             patient_id_prefixes=cls.patient_id_prefixes(),

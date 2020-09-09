@@ -45,6 +45,7 @@ class Item:
         cls,
         all_results: bool = False,
         raw: bool = False,
+        max_pages: Union[int, None] = None,
         query_overrides: dict = {},
         auth_args=Auth.shared(),
         ignore_cache: bool = False,
@@ -61,6 +62,9 @@ class Item:
         raw : bool = False
             If raw, then values will not be expanded (useful for manual
             inspection if something goes wrong)
+
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
 
         query_overrides : dict = {}
             Override any part of the elasticsearch FHIR query
@@ -105,6 +109,7 @@ class Item:
             query_overrides,
             auth_args,
             ignore_cache,
+            max_pages=max_pages,
             log=log,
         )
 

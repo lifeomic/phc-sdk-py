@@ -33,6 +33,8 @@ def recursive_execute_fhir_dsl(
     progress: Union[None, tqdm] = None,
     auth_args: Auth = Auth.shared(),
     callback: Union[Callable[[Any, bool], None], None] = None,
+    max_pages: Union[int, None] = None,
+    _current_page: int = 1,
     _scroll_id: str = "true",
     _prev_hits: List = [],
 ):
@@ -54,7 +56,11 @@ def recursive_execute_fhir_dsl(
     if progress:
         progress.update(current_result_count)
 
-    is_last_batch = current_result_count == 0 or scroll is False
+    is_last_batch = (
+        (current_result_count == 0)
+        or (scroll is False)
+        or ((max_pages is not None) and (_current_page >= max_pages))
+    )
     results = [] if callback else [*_prev_hits, *current_results]
 
     if callback and not is_last_batch:
@@ -73,6 +79,8 @@ def recursive_execute_fhir_dsl(
         progress=progress,
         auth_args=auth_args,
         callback=callback,
+        max_pages=max_pages,
+        _current_page=_current_page + 1,
         _scroll_id=_scroll_id,
         _prev_hits=results,
     )

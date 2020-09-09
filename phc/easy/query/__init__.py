@@ -69,6 +69,7 @@ class Query:
         all_results: bool = False,
         auth_args: Auth = Auth.shared(),
         callback: Union[Callable[[Any, bool], None], None] = None,
+        max_pages: Union[int, None] = None,
         log: bool = False,
         **query_kwargs,
     ):
@@ -100,6 +101,9 @@ class Query:
                     print(len(batch))
                     if is_finished:
                         return "batch finished
+
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
 
         log : bool = False
             Whether to log the elasticsearch query sent to the server
@@ -151,11 +155,16 @@ class Query:
                     progress=progress,
                     callback=callback,
                     auth_args=auth_args,
+                    max_pages=max_pages,
                 ),
             )
 
         return recursive_execute_fhir_dsl(
-            query, scroll=all_results, callback=callback, auth_args=auth_args,
+            query,
+            scroll=all_results,
+            callback=callback,
+            auth_args=auth_args,
+            max_pages=max_pages,
         )
 
     @staticmethod
@@ -167,6 +176,7 @@ class Query:
         query_overrides: dict,
         auth_args: Auth,
         ignore_cache: bool,
+        max_pages: Union[int, None],
         log: bool = False,
         **query_kwargs,
     ):
@@ -179,6 +189,7 @@ class Query:
             (not ignore_cache)
             and (not raw)
             and (all_results or FhirAggregation.is_aggregation_query(query))
+            and (max_pages is None)
         )
 
         if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
@@ -191,7 +202,11 @@ class Query:
         )
 
         results = Query.execute_fhir_dsl(
-            query, all_results, auth_args, callback=callback
+            query,
+            all_results,
+            auth_args,
+            callback=callback,
+            max_pages=max_pages,
         )
 
         if isinstance(results, FhirAggregation):
