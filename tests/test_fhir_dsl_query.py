@@ -65,6 +65,35 @@ def test_add_patient_id_with_query_term():
     }
 
 
+def test_add_patient_id_with_bool_must_query():
+    result = build_query(
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "bool": {"must": [{"term": {"gender.keyword": "male"}}]}
+                },
+            }
+        },
+        patient_ids=["a"],
+        patient_key="id",
+    )
+
+    assert result == {
+        "where": {
+            "type": "elasticsearch",
+            "query": {
+                "bool": {
+                    "must": [
+                        {"term": {"gender.keyword": "male"}},
+                        {"terms": {"id.keyword": ["Patient/a", "a"]}},
+                    ],
+                }
+            },
+        }
+    }
+
+
 def test_add_patient_id_with_bool_should_query():
     result = build_query(
         {
