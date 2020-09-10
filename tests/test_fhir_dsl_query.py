@@ -1,5 +1,33 @@
+import math
+
 from nose.tools import raises
-from phc.easy.query.fhir_dsl_query import build_query
+from phc.easy.query.fhir_dsl_query import build_query, update_limit
+
+
+def test_update_limit_with_base_query():
+    example = {}
+    assert update_limit(example, lambda x: x / 1000) == {
+        "limit": [
+            {"type": "number", "value": 0},
+            {"type": "number", "value": 9},
+        ]
+    }
+
+
+def test_update_limit_with_existing_limit():
+    example = {
+        "limit": [
+            {"type": "number", "value": 0},
+            {"type": "number", "value": 100},
+        ]
+    }
+
+    assert update_limit(example, math.sqrt) == {
+        "limit": [
+            {"type": "number", "value": 0},
+            {"type": "number", "value": 10},
+        ]
+    }
 
 
 def test_no_modification():
@@ -29,7 +57,7 @@ def test_add_patient_ids_with_no_where_clause():
     }
 
 
-def test_add_patient_id_with_query_term():
+def test_add_patient_id_and_limit_with_query_term():
     result = build_query(
         {
             "where": {
@@ -38,6 +66,7 @@ def test_add_patient_id_with_query_term():
             }
         },
         patient_ids=["a", "b"],
+        page_size=100,
     )
 
     assert result == {
@@ -61,7 +90,30 @@ def test_add_patient_id_with_query_term():
                     "minimum_should_match": 2,
                 }
             },
-        }
+        },
+        "limit": [
+            {"type": "number", "value": 0},
+            {"type": "number", "value": 100},
+        ],
+    }
+
+
+def test_replace_limit():
+    result = build_query(
+        {
+            "limit": [
+                {"type": "number", "value": 0},
+                {"type": "number", "value": 100},
+            ]
+        },
+        page_size=1000,
+    )
+
+    assert result == {
+        "limit": [
+            {"type": "number", "value": 0},
+            {"type": "number", "value": 1000},
+        ]
     }
 
 
