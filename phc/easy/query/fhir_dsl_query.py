@@ -22,7 +22,7 @@ FHIR_LIMIT = lens.Get(
 
 
 def get_limit(query: dict):
-    return lens.Get("limit", [])[1].Get("value", None).get()(query)
+    return lens.Get("limit", [{}, {}])[1].Get("value", None).get()(query)
 
 
 def update_limit(query: dict, update: Callable[[int], int]):
@@ -111,7 +111,31 @@ def build_query(
     patient_id_prefixes: List[str] = ["Patient/"],
     page_size: Union[int, None] = None,
 ):
-    "Build query with patient_ids"
+    """Build query with various options
+
+    Attributes
+    ----------
+    query : dict
+        The base FSS query
+
+    patient_id : str
+        Adds where clause for a single patient (will be merged with
+        patient_ids if both supplied)
+
+    patient_ids : List[str]
+        Adds where clause for multiple patients
+
+    patient_key : str
+        The column that associates this table's records to a patient
+
+    patient_id_prefixes : str
+        Adds a prefix to patient_id values (e.g.
+        "Patient/0a20d90f-c73c-4149-953d-7614ce7867f" as well as
+        "0a20d90f-c73c-4149-953d-7614ce7867f")
+
+    page_size: int
+        The number of records to fetch per page
+    """
 
     return pipe(
         query,

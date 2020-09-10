@@ -9,6 +9,7 @@ from phc.easy.query.ga4gh import recursive_execute_ga4gh
 from phc.easy.query.fhir_dsl_query import build_query
 from phc.easy.query.fhir_dsl import (
     MAX_RESULT_SIZE,
+    DEFAULT_SCROLL_SIZE,
     recursive_execute_fhir_dsl,
     execute_single_fhir_dsl,
     tqdm,
@@ -51,15 +52,7 @@ class Query:
         fhir = Fhir(auth.session())
 
         response = fhir.execute_es(
-            auth.project_id,
-            {
-                **query,
-                "limit": [
-                    {"type": "number", "value": 0},
-                    {"type": "number", "value": 1},
-                ],
-            },
-            scroll="true",
+            auth.project_id, build_query(query, page_size=1), scroll="true",
         )
 
         return response.data["hits"]["total"]["value"]
@@ -145,10 +138,7 @@ class Query:
                             {"type": "number", "value": 0},
                             # Make window size smaller than maximum to reduce
                             # pressure on API
-                            {
-                                "type": "number",
-                                "value": int(MAX_RESULT_SIZE * 0.9),
-                            },
+                            {"type": "number", "value": DEFAULT_SCROLL_SIZE},
                         ],
                         **query,
                     },

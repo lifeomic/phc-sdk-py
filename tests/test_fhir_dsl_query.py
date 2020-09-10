@@ -1,7 +1,7 @@
 import math
 
 from nose.tools import raises
-from phc.easy.query.fhir_dsl_query import build_query, update_limit
+from phc.easy.query.fhir_dsl_query import build_query, update_limit, get_limit
 
 
 def test_update_limit_with_base_query():
@@ -214,3 +214,19 @@ def test_add_single_patient_id_with_prefix():
             },
         }
     }
+
+
+def test_get_limit():
+    assert get_limit({}) == None
+
+    assert (
+        get_limit(
+            {
+                "limit": [
+                    {"type": "number", "value": 0},
+                    {"type": "number", "value": 100},
+                ]
+            }
+        )
+        == 100
+    )

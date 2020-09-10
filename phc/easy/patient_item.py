@@ -28,6 +28,7 @@ class PatientItem(Item):
         raw: bool = False,
         patient_id: Union[None, str] = None,
         patient_ids: List[str] = [],
+        page_size: Union[int, None] = None,
         max_pages: Union[int, None] = None,
         query_overrides: dict = {},
         auth_args=Auth.shared(),
@@ -51,6 +52,9 @@ class PatientItem(Item):
 
         patient_ids : List[str]
             Find records for given patient_ids
+
+        page_size : int
+            The number of records to fetch per page
 
         max_pages : int
             The number of pages to retrieve (useful if working with tons of records)
@@ -100,6 +104,7 @@ class PatientItem(Item):
             ignore_cache,
             patient_id=patient_id,
             patient_ids=patient_ids,
+            page_size=page_size,
             max_pages=max_pages,
             patient_key=cls.patient_key(),
             log=log,

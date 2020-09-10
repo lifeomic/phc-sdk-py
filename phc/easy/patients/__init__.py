@@ -23,6 +23,10 @@ class Patient(Item):
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,
+            "code_columns": [
+                *expand_args.get("code_columns", []),
+                "maritalStatus",
+            ],
             "custom_columns": [
                 *expand_args.get("custom_columns", []),
                 ("address", expand_address_column),
