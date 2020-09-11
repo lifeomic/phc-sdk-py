@@ -14,8 +14,7 @@ from phc.easy.util import (
 
 def system_to_column(system):
     "Convert system name (potentially URL) to a readable column name"
-    (new_string, _) = re.subn(r"https?:\/\/", "", system)
-    return new_string  # .replace(".", "_").replace("/", "_")
+    return re.subn(r"https?:\/\/", "", system)[0]
 
 
 def value_string_to_dict(codeable):
