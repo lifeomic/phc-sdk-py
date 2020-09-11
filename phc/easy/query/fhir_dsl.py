@@ -37,13 +37,14 @@ def execute_single_fhir_dsl(
     auth = Auth(auth_args)
     fhir = Fhir(auth.session())
 
-    if _retry_time >= MAX_RETRY_BACKOFF or retry_backoff is False:
-        return fhir.dsl(auth.project_id, query, scroll_id)
-
     try:
         return fhir.dsl(auth.project_id, query, scroll_id)
     except Exception as err:
-        if "Internal server error" not in str(err):
+        if (
+            (_retry_time >= MAX_RETRY_BACKOFF)
+            or (retry_backoff is False)
+            or ("Internal server error" not in str(err))
+        ):
             raise err
 
         if _retry_time == 1:
