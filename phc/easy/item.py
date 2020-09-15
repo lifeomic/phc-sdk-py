@@ -45,6 +45,7 @@ class Item:
         cls,
         all_results: bool = False,
         raw: bool = False,
+        page_size: Union[int, None] = None,
         max_pages: Union[int, None] = None,
         query_overrides: dict = {},
         auth_args=Auth.shared(),
@@ -62,6 +63,9 @@ class Item:
         raw : bool = False
             If raw, then values will not be expanded (useful for manual
             inspection if something goes wrong)
+
+        page_size : int
+            The number of records to fetch per page
 
         max_pages : int
             The number of pages to retrieve (useful if working with tons of records)
@@ -109,6 +113,7 @@ class Item:
             query_overrides,
             auth_args,
             ignore_cache,
+            page_size=page_size,
             max_pages=max_pages,
             log=log,
         )

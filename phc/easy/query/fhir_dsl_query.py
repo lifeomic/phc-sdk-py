@@ -1,14 +1,32 @@
-from toolz import pipe, identity, curry
-from typing import List, Union
+from toolz import pipe, identity, curry, compose
+from typing import List, Union, Callable
 from lenses import lens
 
 from phc.easy.util import add_prefixes
+
+MAX_RESULT_SIZE = 10000
+DEFAULT_SCROLL_SIZE = int(MAX_RESULT_SIZE * 0.9)
 
 FHIR_WHERE = lens.Get("where", {})
 FHIR_WHERE_TYPE = FHIR_WHERE.Get("type", "")
 FHIR_SIMPLE_QUERY = FHIR_WHERE.Get("query", {})
 FHIR_BOOL_QUERY = FHIR_SIMPLE_QUERY.Get("bool", {})
 FHIR_BOOL_MUST_QUERY = FHIR_BOOL_QUERY.Get("must", [])
+FHIR_LIMIT = lens.Get(
+    "limit",
+    [
+        {"type": "number", "value": 0},
+        {"type": "number", "value": DEFAULT_SCROLL_SIZE},
+    ],
+)[1]["value"]
+
+
+def get_limit(query: dict):
+    return lens.Get("limit", [{}, {}])[1].Get("value", None).get()(query)
+
+
+def update_limit(query: dict, update: Callable[[int], int]):
+    return FHIR_LIMIT.modify(compose(int, update))(query)
 
 
 @curry
@@ -78,14 +96,46 @@ def _patient_ids_adder(
     )
 
 
+def _limit_adder(page_size: Union[int, None]):
+    if page_size is None:
+        return identity
+
+    return FHIR_LIMIT.set(page_size)
+
+
 def build_query(
     query: dict,
     patient_id: Union[str, None] = None,
     patient_ids: List[str] = [],
     patient_key: str = "subject.reference",
     patient_id_prefixes: List[str] = ["Patient/"],
+    page_size: Union[int, None] = None,
 ):
-    "Build query with patient_ids"
+    """Build query with various options
+
+    Attributes
+    ----------
+    query : dict
+        The base FSS query
+
+    patient_id : str
+        Adds where clause for a single patient (will be merged with
+        patient_ids if both supplied)
+
+    patient_ids : List[str]
+        Adds where clause for multiple patients
+
+    patient_key : str
+        The column that associates this table's records to a patient
+
+    patient_id_prefixes : str
+        Adds a prefix to patient_id values (e.g.
+        "Patient/0a20d90f-c73c-4149-953d-7614ce7867f" as well as
+        "0a20d90f-c73c-4149-953d-7614ce7867f")
+
+    page_size: int
+        The number of records to fetch per page
+    """
 
     return pipe(
         query,
@@ -95,4 +145,5 @@ def build_query(
             patient_key=patient_key,
             patient_id_prefixes=patient_id_prefixes,
         ),
+        _limit_adder(page_size),
     )
