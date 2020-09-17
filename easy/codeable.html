@@ -193,10 +193,6 @@ def generic_codeable_to_dict(codeable, prefix=&#34;&#34;):
         )
     )
 
-    import json
-
-    print(json.dumps(result, indent=4))
-
     return result
 
 
@@ -362,10 +358,6 @@ dictionaries for simple prefixing</p></div>
             [generic_codeable_to_dict(v, k) for k, v in codeable.items()]
         )
     )
-
-    import json
-
-    print(json.dumps(result, indent=4))
 
     return result</code></pre>
 </details>
