@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.0" />
+<meta name="generator" content="pdoc 0.9.1" />
 <title>phc.easy.patient_item API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -57,6 +57,8 @@ class PatientItem(Item):
         raw: bool = False,
         patient_id: Union[None, str] = None,
         patient_ids: List[str] = [],
+        page_size: Union[int, None] = None,
+        max_pages: Union[int, None] = None,
         query_overrides: dict = {},
         auth_args=Auth.shared(),
         ignore_cache: bool = False,
@@ -79,6 +81,12 @@ class PatientItem(Item):
 
         patient_ids : List[str]
             Find records for given patient_ids
+
+        page_size : int
+            The number of records to fetch per page
+
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
 
         query_overrides : dict = {}
             Override any part of the elasticsearch FHIR query
@@ -125,6 +133,8 @@ class PatientItem(Item):
             ignore_cache,
             patient_id=patient_id,
             patient_ids=patient_ids,
+            page_size=page_size,
+            max_pages=max_pages,
             patient_key=cls.patient_key(),
             log=log,
             patient_id_prefixes=cls.patient_id_prefixes(),
@@ -195,6 +205,8 @@ from a FSS table that relates to a patient</p></div>
         raw: bool = False,
         patient_id: Union[None, str] = None,
         patient_ids: List[str] = [],
+        page_size: Union[int, None] = None,
+        max_pages: Union[int, None] = None,
         query_overrides: dict = {},
         auth_args=Auth.shared(),
         ignore_cache: bool = False,
@@ -217,6 +229,12 @@ from a FSS table that relates to a patient</p></div>
 
         patient_ids : List[str]
             Find records for given patient_ids
+
+        page_size : int
+            The number of records to fetch per page
+
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
 
         query_overrides : dict = {}
             Override any part of the elasticsearch FHIR query
@@ -263,6 +281,8 @@ from a FSS table that relates to a patient</p></div>
             ignore_cache,
             patient_id=patient_id,
             patient_ids=patient_ids,
+            page_size=page_size,
+            max_pages=max_pages,
             patient_key=cls.patient_key(),
             log=log,
             patient_id_prefixes=cls.patient_id_prefixes(),
@@ -409,7 +429,7 @@ def get_count_by_patient(cls, **kwargs):
 </details>
 </dd>
 <dt id="phc.easy.patient_item.PatientItem.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retrieve records</p>
@@ -424,6 +444,10 @@ inspection if something goes wrong)</dd>
 <dd>Find records for a given patient_id</dd>
 <dt><strong><code>patient_ids</code></strong> :&ensp;<code>List[str]</code></dt>
 <dd>Find records for given patient_ids</dd>
+<dt><strong><code>page_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of records to fetch per page</dd>
+<dt><strong><code>max_pages</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of pages to retrieve (useful if working with tons of records)</dd>
 <dt><strong><code>query_overrides</code></strong> :&ensp;<code>dict = {}</code></dt>
 <dd>Override any part of the elasticsearch FHIR query</dd>
 <dt><strong><code>auth_args</code></strong> :&ensp;<code>Any</code></dt>
@@ -456,6 +480,8 @@ def get_data_frame(
     raw: bool = False,
     patient_id: Union[None, str] = None,
     patient_ids: List[str] = [],
+    page_size: Union[int, None] = None,
+    max_pages: Union[int, None] = None,
     query_overrides: dict = {},
     auth_args=Auth.shared(),
     ignore_cache: bool = False,
@@ -478,6 +504,12 @@ def get_data_frame(
 
     patient_ids : List[str]
         Find records for given patient_ids
+
+    page_size : int
+        The number of records to fetch per page
+
+    max_pages : int
+        The number of pages to retrieve (useful if working with tons of records)
 
     query_overrides : dict = {}
         Override any part of the elasticsearch FHIR query
@@ -524,6 +556,8 @@ def get_data_frame(
         ignore_cache,
         patient_id=patient_id,
         patient_ids=patient_ids,
+        page_size=page_size,
+        max_pages=max_pages,
         patient_key=cls.patient_key(),
         log=log,
         patient_id_prefixes=cls.patient_id_prefixes(),
@@ -622,7 +656,7 @@ def patient_key() -&gt; str:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
 </footer>
 </body>
 </html>

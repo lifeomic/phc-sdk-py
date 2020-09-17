@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.0" />
+<meta name="generator" content="pdoc 0.9.1" />
 <title>phc.easy.query.fhir_dsl API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -28,14 +28,23 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from typing import Any, Callable, List, Union
+from lenses import lens
 
+import math
 import pandas as pd
 
 from phc.easy.auth import Auth
 from phc.services import Fhir
 from phc.easy.util import with_progress, tqdm
+from phc.easy.query.fhir_dsl_query import (
+    MAX_RESULT_SIZE,
+    DEFAULT_SCROLL_SIZE,
+    get_limit,
+    update_limit,
+    build_query,
+)
 
-MAX_RESULT_SIZE = 10000
+MAX_RETRY_BACKOFF = 3
 
 
 def query_allows_scrolling(query):
@@ -48,12 +57,55 @@ def query_allows_scrolling(query):
 
 
 def execute_single_fhir_dsl(
-    query: dict, scroll_id: str = &#34;&#34;, auth_args: Auth = Auth.shared()
+    query: dict,
+    scroll_id: str = &#34;&#34;,
+    retry_backoff: bool = False,
+    auth_args: Auth = Auth.shared(),
+    _retry_time: int = 1,
 ):
     auth = Auth(auth_args)
     fhir = Fhir(auth.session())
 
-    return fhir.execute_es(auth.project_id, query, scroll_id)
+    try:
+        return fhir.dsl(auth.project_id, query, scroll_id)
+    except Exception as err:
+        if (
+            (_retry_time &gt;= MAX_RETRY_BACKOFF)
+            or (retry_backoff is False)
+            or (&#34;Internal server error&#34; not in str(err))
+        ):
+            raise err
+
+        if _retry_time == 1:
+            # Base first retry attempt on record count
+            record_count = fhir.dsl(
+                auth.project_id, build_query(query, page_size=1), scroll=&#34;true&#34;
+            ).data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]
+
+            def backoff_limit(limit: int):
+                return min(
+                    (get_limit(query) or DEFAULT_SCROLL_SIZE) / 2,
+                    math.pow(record_count, 0.85),
+                )
+
+        else:
+
+            def backoff_limit(limit: int):
+                return math.pow(limit, 0.85)
+
+        new_query = update_limit(query, backoff_limit)
+
+        print(
+            f&#34;Received server error. Retrying with page_size={get_limit(new_query)}&#34;
+        )
+
+        return execute_single_fhir_dsl(
+            new_query,
+            scroll_id=scroll_id,
+            retry_backoff=True,
+            auth_args=auth_args,
+            _retry_time=_retry_time + 1,
+        )
 
 
 def recursive_execute_fhir_dsl(
@@ -62,13 +114,18 @@ def recursive_execute_fhir_dsl(
     progress: Union[None, tqdm] = None,
     auth_args: Auth = Auth.shared(),
     callback: Union[Callable[[Any, bool], None], None] = None,
+    max_pages: Union[int, None] = None,
+    _current_page: int = 1,
     _scroll_id: str = &#34;true&#34;,
     _prev_hits: List = [],
 ):
+    will_scroll = query_allows_scrolling(query) and scroll
+
     response = execute_single_fhir_dsl(
         query,
-        _scroll_id if query_allows_scrolling(query) and scroll else &#34;&#34;,
-        auth_args,
+        scroll_id=_scroll_id if will_scroll else &#34;&#34;,
+        retry_backoff=will_scroll,
+        auth_args=auth_args,
     )
 
     is_first_iteration = _scroll_id == &#34;true&#34;
@@ -83,7 +140,11 @@ def recursive_execute_fhir_dsl(
     if progress:
         progress.update(current_result_count)
 
-    is_last_batch = current_result_count == 0 or scroll is False
+    is_last_batch = (
+        (current_result_count == 0)
+        or (scroll is False)
+        or ((max_pages is not None) and (_current_page &gt;= max_pages))
+    )
     results = [] if callback else [*_prev_hits, *current_results]
 
     if callback and not is_last_batch:
@@ -102,6 +163,8 @@ def recursive_execute_fhir_dsl(
         progress=progress,
         auth_args=auth_args,
         callback=callback,
+        max_pages=max_pages,
+        _current_page=_current_page + 1,
         _scroll_id=_scroll_id,
         _prev_hits=results,
     )</code></pre>
@@ -115,7 +178,7 @@ def recursive_execute_fhir_dsl(
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="phc.easy.query.fhir_dsl.execute_single_fhir_dsl"><code class="name flex">
-<span>def <span class="ident">execute_single_fhir_dsl</span></span>(<span>query: dict, scroll_id: str = '', auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
+<span>def <span class="ident">execute_single_fhir_dsl</span></span>(<span>query: dict, scroll_id: str = '', retry_backoff: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -124,12 +187,55 @@ def recursive_execute_fhir_dsl(
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def execute_single_fhir_dsl(
-    query: dict, scroll_id: str = &#34;&#34;, auth_args: Auth = Auth.shared()
+    query: dict,
+    scroll_id: str = &#34;&#34;,
+    retry_backoff: bool = False,
+    auth_args: Auth = Auth.shared(),
+    _retry_time: int = 1,
 ):
     auth = Auth(auth_args)
     fhir = Fhir(auth.session())
 
-    return fhir.execute_es(auth.project_id, query, scroll_id)</code></pre>
+    try:
+        return fhir.dsl(auth.project_id, query, scroll_id)
+    except Exception as err:
+        if (
+            (_retry_time &gt;= MAX_RETRY_BACKOFF)
+            or (retry_backoff is False)
+            or (&#34;Internal server error&#34; not in str(err))
+        ):
+            raise err
+
+        if _retry_time == 1:
+            # Base first retry attempt on record count
+            record_count = fhir.dsl(
+                auth.project_id, build_query(query, page_size=1), scroll=&#34;true&#34;
+            ).data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]
+
+            def backoff_limit(limit: int):
+                return min(
+                    (get_limit(query) or DEFAULT_SCROLL_SIZE) / 2,
+                    math.pow(record_count, 0.85),
+                )
+
+        else:
+
+            def backoff_limit(limit: int):
+                return math.pow(limit, 0.85)
+
+        new_query = update_limit(query, backoff_limit)
+
+        print(
+            f&#34;Received server error. Retrying with page_size={get_limit(new_query)}&#34;
+        )
+
+        return execute_single_fhir_dsl(
+            new_query,
+            scroll_id=scroll_id,
+            retry_backoff=True,
+            auth_args=auth_args,
+            _retry_time=_retry_time + 1,
+        )</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.query.fhir_dsl.query_allows_scrolling"><code class="name flex">
@@ -151,7 +257,7 @@ def recursive_execute_fhir_dsl(
 </details>
 </dd>
 <dt id="phc.easy.query.fhir_dsl.recursive_execute_fhir_dsl"><code class="name flex">
-<span>def <span class="ident">recursive_execute_fhir_dsl</span></span>(<span>query: dict, scroll: bool = False, progress: Union[NoneType, tqdm.std.tqdm] = None, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None)</span>
+<span>def <span class="ident">recursive_execute_fhir_dsl</span></span>(<span>query: dict, scroll: bool = False, progress: Union[NoneType, tqdm.std.tqdm] = None, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None, max_pages: Union[int, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -165,13 +271,18 @@ def recursive_execute_fhir_dsl(
     progress: Union[None, tqdm] = None,
     auth_args: Auth = Auth.shared(),
     callback: Union[Callable[[Any, bool], None], None] = None,
+    max_pages: Union[int, None] = None,
+    _current_page: int = 1,
     _scroll_id: str = &#34;true&#34;,
     _prev_hits: List = [],
 ):
+    will_scroll = query_allows_scrolling(query) and scroll
+
     response = execute_single_fhir_dsl(
         query,
-        _scroll_id if query_allows_scrolling(query) and scroll else &#34;&#34;,
-        auth_args,
+        scroll_id=_scroll_id if will_scroll else &#34;&#34;,
+        retry_backoff=will_scroll,
+        auth_args=auth_args,
     )
 
     is_first_iteration = _scroll_id == &#34;true&#34;
@@ -186,7 +297,11 @@ def recursive_execute_fhir_dsl(
     if progress:
         progress.update(current_result_count)
 
-    is_last_batch = current_result_count == 0 or scroll is False
+    is_last_batch = (
+        (current_result_count == 0)
+        or (scroll is False)
+        or ((max_pages is not None) and (_current_page &gt;= max_pages))
+    )
     results = [] if callback else [*_prev_hits, *current_results]
 
     if callback and not is_last_batch:
@@ -205,6 +320,8 @@ def recursive_execute_fhir_dsl(
         progress=progress,
         auth_args=auth_args,
         callback=callback,
+        max_pages=max_pages,
+        _current_page=_current_page + 1,
         _scroll_id=_scroll_id,
         _prev_hits=results,
     )</code></pre>
@@ -242,7 +359,7 @@ def recursive_execute_fhir_dsl(
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
 </footer>
 </body>
 </html>

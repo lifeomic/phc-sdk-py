@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.0" />
+<meta name="generator" content="pdoc 0.9.1" />
 <title>phc.easy API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -369,7 +369,7 @@ def get_count_by_patient():
 </details>
 </dd>
 <dt id="phc.easy.AuditEvent.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -922,7 +922,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.CarePlan.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1146,7 +1146,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Condition.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1314,7 +1314,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Consent.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1489,7 +1489,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.DiagnosticReport.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1675,7 +1675,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.DocumentReference.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1868,7 +1868,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Encounter.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2082,14 +2082,28 @@ def transform_results(df: pd.DataFrame, **expand_args):
             local_key = f&#34;{column_key}.local&#34;
             tz_key = f&#34;{column_key}.tz&#34;
 
-            utc = pd.to_datetime(combined[column_key], utc=True)
+            try:
+                utc = pd.to_datetime(combined[column_key], utc=True)
 
-            # Cleverness: Use regex to remove TZ and parse as utc=True to
-            # produce local datetime. The column name will have &#34;.local&#34; as
-            # suffix so it&#39;ll be clear what&#39;s happening.
-            localized = pd.to_datetime(
-                combined[column_key].str.replace(TZ_REGEX, &#34;&#34;), utc=True
-            )
+                # Cleverness: Use regex to remove TZ and parse as utc=True to
+                # produce local datetime. The column name will have &#34;.local&#34; as
+                # suffix so it&#39;ll be clear what&#39;s happening.
+                localized = pd.to_datetime(
+                    combined[column_key].str.replace(TZ_REGEX, &#34;&#34;), utc=True
+                )
+            except pd.errors.OutOfBoundsDatetime as ex:
+                print(
+                    &#34;[WARNING]: OutOfBoundsDatetime encountered. Casting to NaT.&#34;,
+                    ex,
+                )
+                utc = pd.to_datetime(
+                    combined[column_key], utc=True, errors=&#34;coerce&#34;
+                )
+                localized = pd.to_datetime(
+                    combined[column_key].str.replace(TZ_REGEX, &#34;&#34;),
+                    utc=True,
+                    errors=&#34;coerce&#34;,
+                )
 
             combined[tz_key] = (localized - utc).dt.total_seconds() / 3600
             combined[local_key] = localized
@@ -2248,14 +2262,28 @@ def expand(
         local_key = f&#34;{column_key}.local&#34;
         tz_key = f&#34;{column_key}.tz&#34;
 
-        utc = pd.to_datetime(combined[column_key], utc=True)
+        try:
+            utc = pd.to_datetime(combined[column_key], utc=True)
 
-        # Cleverness: Use regex to remove TZ and parse as utc=True to
-        # produce local datetime. The column name will have &#34;.local&#34; as
-        # suffix so it&#39;ll be clear what&#39;s happening.
-        localized = pd.to_datetime(
-            combined[column_key].str.replace(TZ_REGEX, &#34;&#34;), utc=True
-        )
+            # Cleverness: Use regex to remove TZ and parse as utc=True to
+            # produce local datetime. The column name will have &#34;.local&#34; as
+            # suffix so it&#39;ll be clear what&#39;s happening.
+            localized = pd.to_datetime(
+                combined[column_key].str.replace(TZ_REGEX, &#34;&#34;), utc=True
+            )
+        except pd.errors.OutOfBoundsDatetime as ex:
+            print(
+                &#34;[WARNING]: OutOfBoundsDatetime encountered. Casting to NaT.&#34;,
+                ex,
+            )
+            utc = pd.to_datetime(
+                combined[column_key], utc=True, errors=&#34;coerce&#34;
+            )
+            localized = pd.to_datetime(
+                combined[column_key].str.replace(TZ_REGEX, &#34;&#34;),
+                utc=True,
+                errors=&#34;coerce&#34;,
+            )
 
         combined[tz_key] = (localized - utc).dt.total_seconds() / 3600
         combined[local_key] = localized
@@ -2375,7 +2403,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Goal.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2535,7 +2563,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.ImagingStudy.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2713,7 +2741,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Immunization.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2845,6 +2873,8 @@ from a FSS table</p></div>
         cls,
         all_results: bool = False,
         raw: bool = False,
+        page_size: Union[int, None] = None,
+        max_pages: Union[int, None] = None,
         query_overrides: dict = {},
         auth_args=Auth.shared(),
         ignore_cache: bool = False,
@@ -2861,6 +2891,12 @@ from a FSS table</p></div>
         raw : bool = False
             If raw, then values will not be expanded (useful for manual
             inspection if something goes wrong)
+
+        page_size : int
+            The number of records to fetch per page
+
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
 
         query_overrides : dict = {}
             Override any part of the elasticsearch FHIR query
@@ -2905,6 +2941,8 @@ from a FSS table</p></div>
             query_overrides,
             auth_args,
             ignore_cache,
+            page_size=page_size,
+            max_pages=max_pages,
             log=log,
         )
 
@@ -2964,6 +3002,7 @@ from a FSS table</p></div>
 <ul class="hlist">
 <li><a title="phc.easy.organization.Organization" href="organization.html#phc.easy.organization.Organization">Organization</a></li>
 <li><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></li>
+<li><a title="phc.easy.patients.Patient" href="patients/index.html#phc.easy.patients.Patient">Patient</a></li>
 <li><a title="phc.easy.practitioner.Practitioner" href="practitioner.html#phc.easy.practitioner.Practitioner">Practitioner</a></li>
 </ul>
 <h3>Static methods</h3>
@@ -3100,7 +3139,7 @@ def get_count_by_field(cls, field: str, **kwargs):
 </details>
 </dd>
 <dt id="phc.easy.Item.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retrieve records</p>
@@ -3111,6 +3150,10 @@ def get_count_by_field(cls, field: str, **kwargs):
 <dt><strong><code>raw</code></strong> :&ensp;<code>bool = False</code></dt>
 <dd>If raw, then values will not be expanded (useful for manual
 inspection if something goes wrong)</dd>
+<dt><strong><code>page_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of records to fetch per page</dd>
+<dt><strong><code>max_pages</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of pages to retrieve (useful if working with tons of records)</dd>
 <dt><strong><code>query_overrides</code></strong> :&ensp;<code>dict = {}</code></dt>
 <dd>Override any part of the elasticsearch FHIR query</dd>
 <dt><strong><code>auth_args</code></strong> :&ensp;<code>Any</code></dt>
@@ -3141,6 +3184,8 @@ def get_data_frame(
     cls,
     all_results: bool = False,
     raw: bool = False,
+    page_size: Union[int, None] = None,
+    max_pages: Union[int, None] = None,
     query_overrides: dict = {},
     auth_args=Auth.shared(),
     ignore_cache: bool = False,
@@ -3157,6 +3202,12 @@ def get_data_frame(
     raw : bool = False
         If raw, then values will not be expanded (useful for manual
         inspection if something goes wrong)
+
+    page_size : int
+        The number of records to fetch per page
+
+    max_pages : int
+        The number of pages to retrieve (useful if working with tons of records)
 
     query_overrides : dict = {}
         Override any part of the elasticsearch FHIR query
@@ -3201,6 +3252,8 @@ def get_data_frame(
         query_overrides,
         auth_args,
         ignore_cache,
+        page_size=page_size,
+        max_pages=max_pages,
         log=log,
     )</code></pre>
 </details>
@@ -3341,7 +3394,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Media.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -3511,7 +3564,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.MedicationAdministration.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -3691,7 +3744,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.MedicationDispense.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -3864,7 +3917,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.MedicationRequest.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4038,7 +4091,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.MedicationStatement.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4128,6 +4181,7 @@ from a FSS table that relates to a patient</p></div>
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,
+            &#34;code_columns&#34;: [*expand_args.get(&#34;code_columns&#34;, []), &#34;component&#34;],
             &#34;custom_columns&#34;: [
                 *expand_args.get(&#34;custom_columns&#34;, []),
                 Frame.codeable_like_column_expander(&#34;subject&#34;),
@@ -4210,7 +4264,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Observation.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4254,6 +4308,7 @@ def table_name():
 def transform_results(data_frame: pd.DataFrame, **expand_args):
     args = {
         **expand_args,
+        &#34;code_columns&#34;: [*expand_args.get(&#34;code_columns&#34;, []), &#34;component&#34;],
         &#34;custom_columns&#34;: [
             *expand_args.get(&#34;custom_columns&#34;, []),
             Frame.codeable_like_column_expander(&#34;subject&#34;),
@@ -4352,7 +4407,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Organization.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4410,28 +4465,33 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <span>class <span class="ident">Patient</span></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Provides an abstract class and/or static methods for retrieving items
+from a FSS table</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Patient:
+<pre><code class="python">class Patient(Item):
     @staticmethod
-    def get_count(query_overrides: dict = {}, auth_args=Auth.shared()):
-        return Query.find_count_of_dsl_query(
-            {
-                &#34;type&#34;: &#34;select&#34;,
-                &#34;columns&#34;: &#34;*&#34;,
-                &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
-                **query_overrides,
-            },
-            auth_args=auth_args,
-        )
+    def table_name():
+        return &#34;patient&#34;
+
+    @staticmethod
+    def code_keys():
+        return [
+            &#34;extension.valueCodeableConcept.coding&#34;,
+            &#34;identifier.type.coding&#34;,
+            &#34;meta.tag&#34;,
+        ]
 
     @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,
+            &#34;code_columns&#34;: [
+                *expand_args.get(&#34;code_columns&#34;, []),
+                &#34;maritalStatus&#34;,
+            ],
             &#34;custom_columns&#34;: [
                 *expand_args.get(&#34;custom_columns&#34;, []),
                 (&#34;address&#34;, expand_address_column),
@@ -4439,195 +4499,103 @@ def transform_results(df: pd.DataFrame, **expand_args):
             ],
         }
 
-        return Frame.expand(data_frame, **args)
-
-    @staticmethod
-    def get_data_frame(
-        all_results: bool = False,
-        raw: bool = False,
-        query_overrides: dict = {},
-        auth_args: Auth = Auth.shared(),
-        ignore_cache: bool = False,
-        expand_args: dict = {},
-    ):
-        &#34;&#34;&#34;Retrieve patients as a data frame with unwrapped FHIR columns
-
-        Attributes
-        ----------
-        all_results : bool = False
-            Override limit to retrieve all patients
-
-        raw : bool = False
-            If raw, then values will not be expanded (useful for manual
-            inspection if something goes wrong). Note that this option will
-            override all_results if True.
-
-        query_overrides : dict = {}
-            Override any part of the elasticsearch FHIR query
-
-        auth_args : Any
-            The authenication to use for the account and project (defaults to shared)
-
-        ignore_cache : bool = False
-            Bypass the caching system that auto-saves results to a CSV file.
-            Caching only occurs when all results are being retrieved.
-
-        expand_args : Any
-            Additional arguments passed to phc.Frame.expand
-
-        Examples
-        --------
-        &gt;&gt;&gt; import phc.easy as phc
-        &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
-        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
-        &gt;&gt;&gt; phc.Patient.get_data_frame()
-
-        &#34;&#34;&#34;
-        query = {
-            &#34;type&#34;: &#34;select&#34;,
-            &#34;columns&#34;: &#34;*&#34;,
-            &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
-            **query_overrides,
-        }
-
-        def transform(df: pd.DataFrame):
-            return Patient.transform_results(df, **expand_args)
-
-        return Query.execute_fhir_dsl_with_options(
-            query,
-            transform,
-            all_results,
-            raw,
-            query_overrides,
-            auth_args,
-            ignore_cache,
-        )</code></pre>
+        return Frame.expand(data_frame, **args)</code></pre>
 </details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></li>
+</ul>
 <h3>Static methods</h3>
 <dl>
+<dt id="phc.easy.Patient.code_keys"><code class="name flex">
+<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.code_keys" href="item.html#phc.easy.item.Item.code_keys">code_keys</a></code>
+</p>
+<div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def code_keys():
+    return [
+        &#34;extension.valueCodeableConcept.coding&#34;,
+        &#34;identifier.type.coding&#34;,
+        &#34;meta.tag&#34;,
+    ]</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Patient.get_codes"><code class="name flex">
+<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.get_codes" href="item.html#phc.easy.item.Item.get_codes">get_codes</a></code>
+</p>
+<div class="desc inherited"><p>Find all codes …</p></div>
+</dd>
 <dt id="phc.easy.Patient.get_count"><code class="name flex">
 <span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@staticmethod
-def get_count(query_overrides: dict = {}, auth_args=Auth.shared()):
-    return Query.find_count_of_dsl_query(
-        {
-            &#34;type&#34;: &#34;select&#34;,
-            &#34;columns&#34;: &#34;*&#34;,
-            &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
-            **query_overrides,
-        },
-        auth_args=auth_args,
-    )</code></pre>
-</details>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.get_count" href="item.html#phc.easy.item.Item.get_count">get_count</a></code>
+</p>
+<div class="desc inherited"><p>Get the count for a given FSS query</p></div>
 </dd>
-<dt id="phc.easy.Patient.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, query_overrides: dict = {}, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {})</span>
+<dt id="phc.easy.Patient.get_count_by_field"><code class="name flex">
+<span>def <span class="ident">get_count_by_field</span></span>(<span>field: str, **kwargs)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Retrieve patients as a data frame with unwrapped FHIR columns</p>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>all_results</code></strong> :&ensp;<code>bool = False</code></dt>
-<dd>Override limit to retrieve all patients</dd>
-<dt><strong><code>raw</code></strong> :&ensp;<code>bool = False</code></dt>
-<dd>If raw, then values will not be expanded (useful for manual
-inspection if something goes wrong). Note that this option will
-override all_results if True.</dd>
-<dt><strong><code>query_overrides</code></strong> :&ensp;<code>dict = {}</code></dt>
-<dd>Override any part of the elasticsearch FHIR query</dd>
-<dt><strong><code>auth_args</code></strong> :&ensp;<code>Any</code></dt>
-<dd>The authenication to use for the account and project (defaults to shared)</dd>
-<dt><strong><code>ignore_cache</code></strong> :&ensp;<code>bool = False</code></dt>
-<dd>Bypass the caching system that auto-saves results to a CSV file.
-Caching only occurs when all results are being retrieved.</dd>
-<dt><strong><code>expand_args</code></strong> :&ensp;<code>Any</code></dt>
-<dd>Additional arguments passed to phc.Frame.expand</dd>
-</dl>
-<h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; import phc.easy as phc
-&gt;&gt;&gt; phc.Auth.set({'account': '&lt;your-account-name&gt;'})
-&gt;&gt;&gt; phc.Project.set_current('My Project Name')
-&gt;&gt;&gt; phc.Patient.get_data_frame()
-</code></pre></div>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.get_count_by_field" href="item.html#phc.easy.item.Item.get_count_by_field">get_count_by_field</a></code>
+</p>
+<div class="desc inherited"><p>Count records by a given field …</p></div>
+</dd>
+<dt id="phc.easy.Patient.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.get_data_frame" href="item.html#phc.easy.item.Item.get_data_frame">get_data_frame</a></code>
+</p>
+<div class="desc inherited"><p>Retrieve records …</p></div>
+</dd>
+<dt id="phc.easy.Patient.table_name"><code class="name flex">
+<span>def <span class="ident">table_name</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.table_name" href="item.html#phc.easy.item.Item.table_name">table_name</a></code>
+</p>
+<div class="desc inherited"><p>Returns the FSS table name for retrieval</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def get_data_frame(
-    all_results: bool = False,
-    raw: bool = False,
-    query_overrides: dict = {},
-    auth_args: Auth = Auth.shared(),
-    ignore_cache: bool = False,
-    expand_args: dict = {},
-):
-    &#34;&#34;&#34;Retrieve patients as a data frame with unwrapped FHIR columns
-
-    Attributes
-    ----------
-    all_results : bool = False
-        Override limit to retrieve all patients
-
-    raw : bool = False
-        If raw, then values will not be expanded (useful for manual
-        inspection if something goes wrong). Note that this option will
-        override all_results if True.
-
-    query_overrides : dict = {}
-        Override any part of the elasticsearch FHIR query
-
-    auth_args : Any
-        The authenication to use for the account and project (defaults to shared)
-
-    ignore_cache : bool = False
-        Bypass the caching system that auto-saves results to a CSV file.
-        Caching only occurs when all results are being retrieved.
-
-    expand_args : Any
-        Additional arguments passed to phc.Frame.expand
-
-    Examples
-    --------
-    &gt;&gt;&gt; import phc.easy as phc
-    &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
-    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
-    &gt;&gt;&gt; phc.Patient.get_data_frame()
-
-    &#34;&#34;&#34;
-    query = {
-        &#34;type&#34;: &#34;select&#34;,
-        &#34;columns&#34;: &#34;*&#34;,
-        &#34;from&#34;: [{&#34;table&#34;: &#34;patient&#34;}],
-        **query_overrides,
-    }
-
-    def transform(df: pd.DataFrame):
-        return Patient.transform_results(df, **expand_args)
-
-    return Query.execute_fhir_dsl_with_options(
-        query,
-        transform,
-        all_results,
-        raw,
-        query_overrides,
-        auth_args,
-        ignore_cache,
-    )</code></pre>
+def table_name():
+    return &#34;patient&#34;</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Patient.transform_results"><code class="name flex">
 <span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.transform_results" href="item.html#phc.easy.item.Item.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4636,6 +4604,10 @@ def get_data_frame(
 def transform_results(data_frame: pd.DataFrame, **expand_args):
     args = {
         **expand_args,
+        &#34;code_columns&#34;: [
+            *expand_args.get(&#34;code_columns&#34;, []),
+            &#34;maritalStatus&#34;,
+        ],
         &#34;custom_columns&#34;: [
             *expand_args.get(&#34;custom_columns&#34;, []),
             (&#34;address&#34;, expand_address_column),
@@ -4678,6 +4650,8 @@ from a FSS table that relates to a patient</p></div>
         raw: bool = False,
         patient_id: Union[None, str] = None,
         patient_ids: List[str] = [],
+        page_size: Union[int, None] = None,
+        max_pages: Union[int, None] = None,
         query_overrides: dict = {},
         auth_args=Auth.shared(),
         ignore_cache: bool = False,
@@ -4700,6 +4674,12 @@ from a FSS table that relates to a patient</p></div>
 
         patient_ids : List[str]
             Find records for given patient_ids
+
+        page_size : int
+            The number of records to fetch per page
+
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
 
         query_overrides : dict = {}
             Override any part of the elasticsearch FHIR query
@@ -4746,6 +4726,8 @@ from a FSS table that relates to a patient</p></div>
             ignore_cache,
             patient_id=patient_id,
             patient_ids=patient_ids,
+            page_size=page_size,
+            max_pages=max_pages,
             patient_key=cls.patient_key(),
             log=log,
             patient_id_prefixes=cls.patient_id_prefixes(),
@@ -4892,7 +4874,7 @@ def get_count_by_patient(cls, **kwargs):
 </details>
 </dd>
 <dt id="phc.easy.PatientItem.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retrieve records</p>
@@ -4907,6 +4889,10 @@ inspection if something goes wrong)</dd>
 <dd>Find records for a given patient_id</dd>
 <dt><strong><code>patient_ids</code></strong> :&ensp;<code>List[str]</code></dt>
 <dd>Find records for given patient_ids</dd>
+<dt><strong><code>page_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of records to fetch per page</dd>
+<dt><strong><code>max_pages</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of pages to retrieve (useful if working with tons of records)</dd>
 <dt><strong><code>query_overrides</code></strong> :&ensp;<code>dict = {}</code></dt>
 <dd>Override any part of the elasticsearch FHIR query</dd>
 <dt><strong><code>auth_args</code></strong> :&ensp;<code>Any</code></dt>
@@ -4939,6 +4925,8 @@ def get_data_frame(
     raw: bool = False,
     patient_id: Union[None, str] = None,
     patient_ids: List[str] = [],
+    page_size: Union[int, None] = None,
+    max_pages: Union[int, None] = None,
     query_overrides: dict = {},
     auth_args=Auth.shared(),
     ignore_cache: bool = False,
@@ -4961,6 +4949,12 @@ def get_data_frame(
 
     patient_ids : List[str]
         Find records for given patient_ids
+
+    page_size : int
+        The number of records to fetch per page
+
+    max_pages : int
+        The number of pages to retrieve (useful if working with tons of records)
 
     query_overrides : dict = {}
         Override any part of the elasticsearch FHIR query
@@ -5007,6 +5001,8 @@ def get_data_frame(
         ignore_cache,
         patient_id=patient_id,
         patient_ids=patient_ids,
+        page_size=page_size,
+        max_pages=max_pages,
         patient_key=cls.patient_key(),
         log=log,
         patient_id_prefixes=cls.patient_id_prefixes(),
@@ -5163,7 +5159,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Person.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5315,7 +5311,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Practitioner.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5471,7 +5467,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Procedure.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5637,7 +5633,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.ProcedureRequest.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -6010,7 +6006,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Provenance.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -6126,15 +6122,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
         fhir = Fhir(auth.session())
 
         response = fhir.execute_es(
-            auth.project_id,
-            {
-                **query,
-                &#34;limit&#34;: [
-                    {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
-                    {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 1},
-                ],
-            },
-            scroll=&#34;true&#34;,
+            auth.project_id, build_query(query, page_size=1), scroll=&#34;true&#34;,
         )
 
         return response.data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]
@@ -6145,6 +6133,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
         all_results: bool = False,
         auth_args: Auth = Auth.shared(),
         callback: Union[Callable[[Any, bool], None], None] = None,
+        max_pages: Union[int, None] = None,
         log: bool = False,
         **query_kwargs,
     ):
@@ -6177,6 +6166,9 @@ def transform_results(df: pd.DataFrame, **expand_args):
                     if is_finished:
                         return &#34;batch finished
 
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
+
         log : bool = False
             Whether to log the elasticsearch query sent to the server
 
@@ -6201,7 +6193,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
         query = build_query(query, **query_kwargs)
 
         if log:
-            print(query)
+            print(json.dumps(query, indent=4))
 
         if FhirAggregation.is_aggregation_query(query):
             response = execute_single_fhir_dsl(query, auth_args=auth_args)
@@ -6216,10 +6208,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
                             {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
                             # Make window size smaller than maximum to reduce
                             # pressure on API
-                            {
-                                &#34;type&#34;: &#34;number&#34;,
-                                &#34;value&#34;: int(MAX_RESULT_SIZE * 0.9),
-                            },
+                            {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: DEFAULT_SCROLL_SIZE},
                         ],
                         **query,
                     },
@@ -6227,11 +6216,16 @@ def transform_results(df: pd.DataFrame, **expand_args):
                     progress=progress,
                     callback=callback,
                     auth_args=auth_args,
+                    max_pages=max_pages,
                 ),
             )
 
         return recursive_execute_fhir_dsl(
-            query, scroll=all_results, callback=callback, auth_args=auth_args,
+            query,
+            scroll=all_results,
+            callback=callback,
+            auth_args=auth_args,
+            max_pages=max_pages,
         )
 
     @staticmethod
@@ -6243,18 +6237,20 @@ def transform_results(df: pd.DataFrame, **expand_args):
         query_overrides: dict,
         auth_args: Auth,
         ignore_cache: bool,
+        max_pages: Union[int, None],
         log: bool = False,
         **query_kwargs,
     ):
         query = build_query({**query, **query_overrides}, **query_kwargs)
 
         if log:
-            print(query)
+            print(json.dumps(query, indent=4))
 
         use_cache = (
             (not ignore_cache)
             and (not raw)
             and (all_results or FhirAggregation.is_aggregation_query(query))
+            and (max_pages is None)
         )
 
         if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
@@ -6267,7 +6263,11 @@ def transform_results(df: pd.DataFrame, **expand_args):
         )
 
         results = Query.execute_fhir_dsl(
-            query, all_results, auth_args, callback=callback
+            query,
+            all_results,
+            auth_args,
+            callback=callback,
+            max_pages=max_pages,
         )
 
         if isinstance(results, FhirAggregation):
@@ -6860,7 +6860,7 @@ def execute_composite_aggregations(
 </details>
 </dd>
 <dt id="phc.easy.Query.execute_fhir_dsl"><code class="name flex">
-<span>def <span class="ident">execute_fhir_dsl</span></span>(<span>query: dict, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None, log: bool = False, **query_kwargs)</span>
+<span>def <span class="ident">execute_fhir_dsl</span></span>(<span>query: dict, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None, max_pages: Union[int, NoneType] = None, log: bool = False, **query_kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a FHIR query with the DSL</p>
@@ -6887,6 +6887,8 @@ file and then returning the completed result from that file.</p>
         return "batch finished
 </code></pre>
 </dd>
+<dt><strong><code>max_pages</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of pages to retrieve (useful if working with tons of records)</dd>
 <dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
 <dd>Whether to log the elasticsearch query sent to the server</dd>
 <dt><strong><code>query_kwargs</code></strong> :&ensp;<code>dict</code></dt>
@@ -6915,6 +6917,7 @@ def execute_fhir_dsl(
     all_results: bool = False,
     auth_args: Auth = Auth.shared(),
     callback: Union[Callable[[Any, bool], None], None] = None,
+    max_pages: Union[int, None] = None,
     log: bool = False,
     **query_kwargs,
 ):
@@ -6947,6 +6950,9 @@ def execute_fhir_dsl(
                 if is_finished:
                     return &#34;batch finished
 
+    max_pages : int
+        The number of pages to retrieve (useful if working with tons of records)
+
     log : bool = False
         Whether to log the elasticsearch query sent to the server
 
@@ -6971,7 +6977,7 @@ def execute_fhir_dsl(
     query = build_query(query, **query_kwargs)
 
     if log:
-        print(query)
+        print(json.dumps(query, indent=4))
 
     if FhirAggregation.is_aggregation_query(query):
         response = execute_single_fhir_dsl(query, auth_args=auth_args)
@@ -6986,10 +6992,7 @@ def execute_fhir_dsl(
                         {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
                         # Make window size smaller than maximum to reduce
                         # pressure on API
-                        {
-                            &#34;type&#34;: &#34;number&#34;,
-                            &#34;value&#34;: int(MAX_RESULT_SIZE * 0.9),
-                        },
+                        {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: DEFAULT_SCROLL_SIZE},
                     ],
                     **query,
                 },
@@ -6997,16 +7000,21 @@ def execute_fhir_dsl(
                 progress=progress,
                 callback=callback,
                 auth_args=auth_args,
+                max_pages=max_pages,
             ),
         )
 
     return recursive_execute_fhir_dsl(
-        query, scroll=all_results, callback=callback, auth_args=auth_args,
+        query,
+        scroll=all_results,
+        callback=callback,
+        auth_args=auth_args,
+        max_pages=max_pages,
     )</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Query.execute_fhir_dsl_with_options"><code class="name flex">
-<span>def <span class="ident">execute_fhir_dsl_with_options</span></span>(<span>query: dict, transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame], all_results: bool, raw: bool, query_overrides: dict, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a>, ignore_cache: bool, log: bool = False, **query_kwargs)</span>
+<span>def <span class="ident">execute_fhir_dsl_with_options</span></span>(<span>query: dict, transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame], all_results: bool, raw: bool, query_overrides: dict, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a>, ignore_cache: bool, max_pages: Union[int, NoneType], log: bool = False, **query_kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -7023,18 +7031,20 @@ def execute_fhir_dsl_with_options(
     query_overrides: dict,
     auth_args: Auth,
     ignore_cache: bool,
+    max_pages: Union[int, None],
     log: bool = False,
     **query_kwargs,
 ):
     query = build_query({**query, **query_overrides}, **query_kwargs)
 
     if log:
-        print(query)
+        print(json.dumps(query, indent=4))
 
     use_cache = (
         (not ignore_cache)
         and (not raw)
         and (all_results or FhirAggregation.is_aggregation_query(query))
+        and (max_pages is None)
     )
 
     if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
@@ -7047,7 +7057,11 @@ def execute_fhir_dsl_with_options(
     )
 
     results = Query.execute_fhir_dsl(
-        query, all_results, auth_args, callback=callback
+        query,
+        all_results,
+        auth_args,
+        callback=callback,
+        max_pages=max_pages,
     )
 
     if isinstance(results, FhirAggregation):
@@ -7163,15 +7177,7 @@ def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
     fhir = Fhir(auth.session())
 
     response = fhir.execute_es(
-        auth.project_id,
-        {
-            **query,
-            &#34;limit&#34;: [
-                {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
-                {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 1},
-            ],
-        },
-        scroll=&#34;true&#34;,
+        auth.project_id, build_query(query, page_size=1), scroll=&#34;true&#34;,
     )
 
     return response.data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]</code></pre>
@@ -7533,7 +7539,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.ReferralRequest.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7687,7 +7693,7 @@ from a FSS table that relates to a patient</p></div>
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Sequence.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7858,7 +7864,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Specimen.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -8239,9 +8245,13 @@ def transform_results(df: pd.DataFrame, **expand_args):
 </li>
 <li>
 <h4><code><a title="phc.easy.Patient" href="#phc.easy.Patient">Patient</a></code></h4>
-<ul class="">
-<li><code><a title="phc.easy.Patient.get_count" href="#phc.easy.Patient.get_count">get_count</a></code></li>
-<li><code><a title="phc.easy.Patient.get_data_frame" href="#phc.easy.Patient.get_data_frame">get_data_frame</a></code></li>
+<ul class="two-column">
+<li><code><a title="phc.easy.Patient.code_keys" href="#phc.easy.Patient.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Patient.get_codes" href="item.html#phc.easy.Patient.get_codes">get_codes</a></code></li>
+<li><code><a title="phc.easy.Patient.get_count" href="item.html#phc.easy.Patient.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.Patient.get_count_by_field" href="item.html#phc.easy.Patient.get_count_by_field">get_count_by_field</a></code></li>
+<li><code><a title="phc.easy.Patient.get_data_frame" href="item.html#phc.easy.Patient.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.Patient.table_name" href="#phc.easy.Patient.table_name">table_name</a></code></li>
 <li><code><a title="phc.easy.Patient.transform_results" href="#phc.easy.Patient.transform_results">transform_results</a></code></li>
 </ul>
 </li>
@@ -8392,7 +8402,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
 </footer>
 </body>
 </html>

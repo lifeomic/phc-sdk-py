@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.0" />
+<meta name="generator" content="pdoc 0.9.1" />
 <title>phc.easy.query API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -29,6 +29,7 @@
 </summary>
 <pre><code class="python">from typing import Any, Callable, List, Union, NamedTuple, Tuple
 import pandas as pd
+import json
 
 from phc.services import Fhir
 from phc.base_client import BaseClient
@@ -37,6 +38,7 @@ from phc.easy.query.ga4gh import recursive_execute_ga4gh
 from phc.easy.query.fhir_dsl_query import build_query
 from phc.easy.query.fhir_dsl import (
     MAX_RESULT_SIZE,
+    DEFAULT_SCROLL_SIZE,
     recursive_execute_fhir_dsl,
     execute_single_fhir_dsl,
     tqdm,
@@ -79,15 +81,7 @@ class Query:
         fhir = Fhir(auth.session())
 
         response = fhir.execute_es(
-            auth.project_id,
-            {
-                **query,
-                &#34;limit&#34;: [
-                    {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
-                    {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 1},
-                ],
-            },
-            scroll=&#34;true&#34;,
+            auth.project_id, build_query(query, page_size=1), scroll=&#34;true&#34;,
         )
 
         return response.data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]
@@ -98,6 +92,7 @@ class Query:
         all_results: bool = False,
         auth_args: Auth = Auth.shared(),
         callback: Union[Callable[[Any, bool], None], None] = None,
+        max_pages: Union[int, None] = None,
         log: bool = False,
         **query_kwargs,
     ):
@@ -130,6 +125,9 @@ class Query:
                     if is_finished:
                         return &#34;batch finished
 
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
+
         log : bool = False
             Whether to log the elasticsearch query sent to the server
 
@@ -154,7 +152,7 @@ class Query:
         query = build_query(query, **query_kwargs)
 
         if log:
-            print(query)
+            print(json.dumps(query, indent=4))
 
         if FhirAggregation.is_aggregation_query(query):
             response = execute_single_fhir_dsl(query, auth_args=auth_args)
@@ -169,10 +167,7 @@ class Query:
                             {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
                             # Make window size smaller than maximum to reduce
                             # pressure on API
-                            {
-                                &#34;type&#34;: &#34;number&#34;,
-                                &#34;value&#34;: int(MAX_RESULT_SIZE * 0.9),
-                            },
+                            {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: DEFAULT_SCROLL_SIZE},
                         ],
                         **query,
                     },
@@ -180,11 +175,16 @@ class Query:
                     progress=progress,
                     callback=callback,
                     auth_args=auth_args,
+                    max_pages=max_pages,
                 ),
             )
 
         return recursive_execute_fhir_dsl(
-            query, scroll=all_results, callback=callback, auth_args=auth_args,
+            query,
+            scroll=all_results,
+            callback=callback,
+            auth_args=auth_args,
+            max_pages=max_pages,
         )
 
     @staticmethod
@@ -196,18 +196,20 @@ class Query:
         query_overrides: dict,
         auth_args: Auth,
         ignore_cache: bool,
+        max_pages: Union[int, None],
         log: bool = False,
         **query_kwargs,
     ):
         query = build_query({**query, **query_overrides}, **query_kwargs)
 
         if log:
-            print(query)
+            print(json.dumps(query, indent=4))
 
         use_cache = (
             (not ignore_cache)
             and (not raw)
             and (all_results or FhirAggregation.is_aggregation_query(query))
+            and (max_pages is None)
         )
 
         if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
@@ -220,7 +222,11 @@ class Query:
         )
 
         results = Query.execute_fhir_dsl(
-            query, all_results, auth_args, callback=callback
+            query,
+            all_results,
+            auth_args,
+            callback=callback,
+            max_pages=max_pages,
         )
 
         if isinstance(results, FhirAggregation):
@@ -695,15 +701,7 @@ class Query:
         fhir = Fhir(auth.session())
 
         response = fhir.execute_es(
-            auth.project_id,
-            {
-                **query,
-                &#34;limit&#34;: [
-                    {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
-                    {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 1},
-                ],
-            },
-            scroll=&#34;true&#34;,
+            auth.project_id, build_query(query, page_size=1), scroll=&#34;true&#34;,
         )
 
         return response.data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]
@@ -714,6 +712,7 @@ class Query:
         all_results: bool = False,
         auth_args: Auth = Auth.shared(),
         callback: Union[Callable[[Any, bool], None], None] = None,
+        max_pages: Union[int, None] = None,
         log: bool = False,
         **query_kwargs,
     ):
@@ -746,6 +745,9 @@ class Query:
                     if is_finished:
                         return &#34;batch finished
 
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
+
         log : bool = False
             Whether to log the elasticsearch query sent to the server
 
@@ -770,7 +772,7 @@ class Query:
         query = build_query(query, **query_kwargs)
 
         if log:
-            print(query)
+            print(json.dumps(query, indent=4))
 
         if FhirAggregation.is_aggregation_query(query):
             response = execute_single_fhir_dsl(query, auth_args=auth_args)
@@ -785,10 +787,7 @@ class Query:
                             {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
                             # Make window size smaller than maximum to reduce
                             # pressure on API
-                            {
-                                &#34;type&#34;: &#34;number&#34;,
-                                &#34;value&#34;: int(MAX_RESULT_SIZE * 0.9),
-                            },
+                            {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: DEFAULT_SCROLL_SIZE},
                         ],
                         **query,
                     },
@@ -796,11 +795,16 @@ class Query:
                     progress=progress,
                     callback=callback,
                     auth_args=auth_args,
+                    max_pages=max_pages,
                 ),
             )
 
         return recursive_execute_fhir_dsl(
-            query, scroll=all_results, callback=callback, auth_args=auth_args,
+            query,
+            scroll=all_results,
+            callback=callback,
+            auth_args=auth_args,
+            max_pages=max_pages,
         )
 
     @staticmethod
@@ -812,18 +816,20 @@ class Query:
         query_overrides: dict,
         auth_args: Auth,
         ignore_cache: bool,
+        max_pages: Union[int, None],
         log: bool = False,
         **query_kwargs,
     ):
         query = build_query({**query, **query_overrides}, **query_kwargs)
 
         if log:
-            print(query)
+            print(json.dumps(query, indent=4))
 
         use_cache = (
             (not ignore_cache)
             and (not raw)
             and (all_results or FhirAggregation.is_aggregation_query(query))
+            and (max_pages is None)
         )
 
         if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
@@ -836,7 +842,11 @@ class Query:
         )
 
         results = Query.execute_fhir_dsl(
-            query, all_results, auth_args, callback=callback
+            query,
+            all_results,
+            auth_args,
+            callback=callback,
+            max_pages=max_pages,
         )
 
         if isinstance(results, FhirAggregation):
@@ -1429,7 +1439,7 @@ def execute_composite_aggregations(
 </details>
 </dd>
 <dt id="phc.easy.query.Query.execute_fhir_dsl"><code class="name flex">
-<span>def <span class="ident">execute_fhir_dsl</span></span>(<span>query: dict, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None, log: bool = False, **query_kwargs)</span>
+<span>def <span class="ident">execute_fhir_dsl</span></span>(<span>query: dict, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None, max_pages: Union[int, NoneType] = None, log: bool = False, **query_kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a FHIR query with the DSL</p>
@@ -1456,6 +1466,8 @@ file and then returning the completed result from that file.</p>
         return "batch finished
 </code></pre>
 </dd>
+<dt><strong><code>max_pages</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of pages to retrieve (useful if working with tons of records)</dd>
 <dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
 <dd>Whether to log the elasticsearch query sent to the server</dd>
 <dt><strong><code>query_kwargs</code></strong> :&ensp;<code>dict</code></dt>
@@ -1484,6 +1496,7 @@ def execute_fhir_dsl(
     all_results: bool = False,
     auth_args: Auth = Auth.shared(),
     callback: Union[Callable[[Any, bool], None], None] = None,
+    max_pages: Union[int, None] = None,
     log: bool = False,
     **query_kwargs,
 ):
@@ -1516,6 +1529,9 @@ def execute_fhir_dsl(
                 if is_finished:
                     return &#34;batch finished
 
+    max_pages : int
+        The number of pages to retrieve (useful if working with tons of records)
+
     log : bool = False
         Whether to log the elasticsearch query sent to the server
 
@@ -1540,7 +1556,7 @@ def execute_fhir_dsl(
     query = build_query(query, **query_kwargs)
 
     if log:
-        print(query)
+        print(json.dumps(query, indent=4))
 
     if FhirAggregation.is_aggregation_query(query):
         response = execute_single_fhir_dsl(query, auth_args=auth_args)
@@ -1555,10 +1571,7 @@ def execute_fhir_dsl(
                         {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
                         # Make window size smaller than maximum to reduce
                         # pressure on API
-                        {
-                            &#34;type&#34;: &#34;number&#34;,
-                            &#34;value&#34;: int(MAX_RESULT_SIZE * 0.9),
-                        },
+                        {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: DEFAULT_SCROLL_SIZE},
                     ],
                     **query,
                 },
@@ -1566,16 +1579,21 @@ def execute_fhir_dsl(
                 progress=progress,
                 callback=callback,
                 auth_args=auth_args,
+                max_pages=max_pages,
             ),
         )
 
     return recursive_execute_fhir_dsl(
-        query, scroll=all_results, callback=callback, auth_args=auth_args,
+        query,
+        scroll=all_results,
+        callback=callback,
+        auth_args=auth_args,
+        max_pages=max_pages,
     )</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.query.Query.execute_fhir_dsl_with_options"><code class="name flex">
-<span>def <span class="ident">execute_fhir_dsl_with_options</span></span>(<span>query: dict, transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame], all_results: bool, raw: bool, query_overrides: dict, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a>, ignore_cache: bool, log: bool = False, **query_kwargs)</span>
+<span>def <span class="ident">execute_fhir_dsl_with_options</span></span>(<span>query: dict, transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame], all_results: bool, raw: bool, query_overrides: dict, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a>, ignore_cache: bool, max_pages: Union[int, NoneType], log: bool = False, **query_kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1592,18 +1610,20 @@ def execute_fhir_dsl_with_options(
     query_overrides: dict,
     auth_args: Auth,
     ignore_cache: bool,
+    max_pages: Union[int, None],
     log: bool = False,
     **query_kwargs,
 ):
     query = build_query({**query, **query_overrides}, **query_kwargs)
 
     if log:
-        print(query)
+        print(json.dumps(query, indent=4))
 
     use_cache = (
         (not ignore_cache)
         and (not raw)
         and (all_results or FhirAggregation.is_aggregation_query(query))
+        and (max_pages is None)
     )
 
     if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
@@ -1616,7 +1636,11 @@ def execute_fhir_dsl_with_options(
     )
 
     results = Query.execute_fhir_dsl(
-        query, all_results, auth_args, callback=callback
+        query,
+        all_results,
+        auth_args,
+        callback=callback,
+        max_pages=max_pages,
     )
 
     if isinstance(results, FhirAggregation):
@@ -1732,15 +1756,7 @@ def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
     fhir = Fhir(auth.session())
 
     response = fhir.execute_es(
-        auth.project_id,
-        {
-            **query,
-            &#34;limit&#34;: [
-                {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
-                {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 1},
-            ],
-        },
-        scroll=&#34;true&#34;,
+        auth.project_id, build_query(query, page_size=1), scroll=&#34;true&#34;,
     )
 
     return response.data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]</code></pre>
@@ -2048,7 +2064,7 @@ def get_count_by_field(
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
 </footer>
 </body>
 </html>

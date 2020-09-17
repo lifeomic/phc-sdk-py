@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.0" />
+<meta name="generator" content="pdoc 0.9.1" />
 <title>phc.easy.frame API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -36,7 +36,7 @@ import pandas as pd
 from phc.easy.codeable import Codeable
 from phc.easy.util import tqdm, update_progress
 
-TZ_REGEX = re.compile(r&#34;-\d{2}:?\d{2}Z?$&#34;)
+TZ_REGEX = re.compile(r&#34;[-+]\d{2}:?\d{2}Z?$&#34;)
 
 CODE_COLUMNS = [
     &#34;meta&#34;,
@@ -188,14 +188,28 @@ class Frame:
             local_key = f&#34;{column_key}.local&#34;
             tz_key = f&#34;{column_key}.tz&#34;
 
-            utc = pd.to_datetime(combined[column_key], utc=True)
+            try:
+                utc = pd.to_datetime(combined[column_key], utc=True)
 
-            # Cleverness: Use regex to remove TZ and parse as utc=True to
-            # produce local datetime. The column name will have &#34;.local&#34; as
-            # suffix so it&#39;ll be clear what&#39;s happening.
-            localized = pd.to_datetime(
-                combined[column_key].str.replace(TZ_REGEX, &#34;&#34;), utc=True
-            )
+                # Cleverness: Use regex to remove TZ and parse as utc=True to
+                # produce local datetime. The column name will have &#34;.local&#34; as
+                # suffix so it&#39;ll be clear what&#39;s happening.
+                localized = pd.to_datetime(
+                    combined[column_key].str.replace(TZ_REGEX, &#34;&#34;), utc=True
+                )
+            except pd.errors.OutOfBoundsDatetime as ex:
+                print(
+                    &#34;[WARNING]: OutOfBoundsDatetime encountered. Casting to NaT.&#34;,
+                    ex,
+                )
+                utc = pd.to_datetime(
+                    combined[column_key], utc=True, errors=&#34;coerce&#34;
+                )
+                localized = pd.to_datetime(
+                    combined[column_key].str.replace(TZ_REGEX, &#34;&#34;),
+                    utc=True,
+                    errors=&#34;coerce&#34;,
+                )
 
             combined[tz_key] = (localized - utc).dt.total_seconds() / 3600
             combined[local_key] = localized
@@ -374,14 +388,28 @@ class Frame:
             local_key = f&#34;{column_key}.local&#34;
             tz_key = f&#34;{column_key}.tz&#34;
 
-            utc = pd.to_datetime(combined[column_key], utc=True)
+            try:
+                utc = pd.to_datetime(combined[column_key], utc=True)
 
-            # Cleverness: Use regex to remove TZ and parse as utc=True to
-            # produce local datetime. The column name will have &#34;.local&#34; as
-            # suffix so it&#39;ll be clear what&#39;s happening.
-            localized = pd.to_datetime(
-                combined[column_key].str.replace(TZ_REGEX, &#34;&#34;), utc=True
-            )
+                # Cleverness: Use regex to remove TZ and parse as utc=True to
+                # produce local datetime. The column name will have &#34;.local&#34; as
+                # suffix so it&#39;ll be clear what&#39;s happening.
+                localized = pd.to_datetime(
+                    combined[column_key].str.replace(TZ_REGEX, &#34;&#34;), utc=True
+                )
+            except pd.errors.OutOfBoundsDatetime as ex:
+                print(
+                    &#34;[WARNING]: OutOfBoundsDatetime encountered. Casting to NaT.&#34;,
+                    ex,
+                )
+                utc = pd.to_datetime(
+                    combined[column_key], utc=True, errors=&#34;coerce&#34;
+                )
+                localized = pd.to_datetime(
+                    combined[column_key].str.replace(TZ_REGEX, &#34;&#34;),
+                    utc=True,
+                    errors=&#34;coerce&#34;,
+                )
 
             combined[tz_key] = (localized - utc).dt.total_seconds() / 3600
             combined[local_key] = localized
@@ -540,14 +568,28 @@ def expand(
         local_key = f&#34;{column_key}.local&#34;
         tz_key = f&#34;{column_key}.tz&#34;
 
-        utc = pd.to_datetime(combined[column_key], utc=True)
+        try:
+            utc = pd.to_datetime(combined[column_key], utc=True)
 
-        # Cleverness: Use regex to remove TZ and parse as utc=True to
-        # produce local datetime. The column name will have &#34;.local&#34; as
-        # suffix so it&#39;ll be clear what&#39;s happening.
-        localized = pd.to_datetime(
-            combined[column_key].str.replace(TZ_REGEX, &#34;&#34;), utc=True
-        )
+            # Cleverness: Use regex to remove TZ and parse as utc=True to
+            # produce local datetime. The column name will have &#34;.local&#34; as
+            # suffix so it&#39;ll be clear what&#39;s happening.
+            localized = pd.to_datetime(
+                combined[column_key].str.replace(TZ_REGEX, &#34;&#34;), utc=True
+            )
+        except pd.errors.OutOfBoundsDatetime as ex:
+            print(
+                &#34;[WARNING]: OutOfBoundsDatetime encountered. Casting to NaT.&#34;,
+                ex,
+            )
+            utc = pd.to_datetime(
+                combined[column_key], utc=True, errors=&#34;coerce&#34;
+            )
+            localized = pd.to_datetime(
+                combined[column_key].str.replace(TZ_REGEX, &#34;&#34;),
+                utc=True,
+                errors=&#34;coerce&#34;,
+            )
 
         combined[tz_key] = (localized - utc).dt.total_seconds() / 3600
         combined[local_key] = localized
@@ -608,7 +650,7 @@ def expand(
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
 </footer>
 </body>
 </html>
