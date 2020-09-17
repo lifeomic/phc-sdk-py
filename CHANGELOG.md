@@ -7,6 +7,69 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *(NOTE: All examples use fictious data or freely available data sets.)*
 
+## [0.17.0] - 2020-09-17
+
+### Added
+
+- Paging requests with `all_results=True` now automatically retries to the server with an exponentially smaller batch size on error (`pow(limit, 0.85)`). We can't tell what the error is, but we can retry with a smaller page size.
+- Added `page_size` to the easy modules for a custom batch size
+- Added `max_pages` to the easy modules for capping the number of pages returned
+- Added pretty print to FHIR Search Service queries when passing `log=True`
+- Warn and convert out of range date times (e.g. `0217-01-01`) to `NaT`
+
+### Fixed
+
+- Properly parse date columns with positive time zones into the local time and time zone
+- Resolved a `KeyError` issue with `coding` where the `valueCodeableConcept` didn't have a system or url
+- Passing `patient_id` / `patient_ids` with a `must` FHIR Search Service query now works as expected
+
+
+### Changed
+
+[BREAKING] The expanded columns have changed to more reflect the location of
+the value. All systems and URLs are separated by `__` and prefixed with either
+`url` or `system`. Here is an example:
+
+```python
+input_dict = [
+    {
+        "url": "http://hl7.org/fhir/StructureDefinition/us-core-race",
+        "valueCodeableConcept": {
+            "text": "race",
+            "coding": [
+                {
+                    "code": "2106-3",
+                    "system": "http://hl7.org/fhir/v3/Race",
+                    "display": "white",
+                }
+            ],
+        },
+    },
+    {
+        "url": "http://hl7.org/fhir/StructureDefinition/us-core-ethnicity",
+        "valueCodeableConcept": {
+            "text": "ethnicity",
+            "coding": [
+                {
+                    "code": "2186-5",
+                    "system": "http://hl7.org/fhir/v3/Ethnicity",
+                    "display": "not hispanic or latino",
+                }
+            ],
+        },
+    },
+]
+
+assert generic_codeable_to_dict(input_dict) == {
+    "url__hl7.org/fhir/StructureDefinition/us-core-race__valueCodeableConcept_text": "race",
+    "url__hl7.org/fhir/StructureDefinition/us-core-race__valueCodeableConcept_coding_system__hl7.org/fhir/v3/Race__code": "2106-3",
+    "url__hl7.org/fhir/StructureDefinition/us-core-race__valueCodeableConcept_coding_system__hl7.org/fhir/v3/Race__display": "white",
+    "url__hl7.org/fhir/StructureDefinition/us-core-ethnicity__valueCodeableConcept_text": "ethnicity",
+    "url__hl7.org/fhir/StructureDefinition/us-core-ethnicity__valueCodeableConcept_coding_system__hl7.org/fhir/v3/Ethnicity__code": "2186-5",
+    "url__hl7.org/fhir/StructureDefinition/us-core-ethnicity__valueCodeableConcept_coding_system__hl7.org/fhir/v3/Ethnicity__display": "not hispanic or latino",
+}
+```
+
 ## [0.16.0] - 2020-08-27
 
 ### Added
@@ -253,6 +316,7 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 - Added the `phc.services.Files` submodule that provides actions for files in PHC projects.
 - Added the `phc.services.Cohorts` submodule that provides actions for files in PHC cohorts.
 
+[0.17.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.14.1...v0.15.0
 [0.14.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.14.0...v0.14.1
