@@ -164,10 +164,6 @@ def generic_codeable_to_dict(codeable, prefix=""):
         )
     )
 
-    import json
-
-    print(json.dumps(result, indent=4))
-
     return result
 
 
