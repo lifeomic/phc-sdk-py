@@ -30,6 +30,8 @@ class Procedure(PatientItem):
                 *expand_args.get("custom_columns", []),
                 Frame.codeable_like_column_expander("subject"),
                 Frame.codeable_like_column_expander("performedPeriod"),
+                Frame.codeable_like_column_expander("context"),
+                Frame.codeable_like_column_expander("managingOrganization"),
             ],
         }
 
