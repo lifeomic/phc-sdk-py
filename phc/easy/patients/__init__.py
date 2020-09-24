@@ -16,6 +16,7 @@ class Patient(Item):
         return [
             "extension.valueCodeableConcept.coding",
             "identifier.type.coding",
+            "maritalStatus.coding",
             "meta.tag",
         ]
 
@@ -25,10 +26,12 @@ class Patient(Item):
             **expand_args,
             "code_columns": [
                 *expand_args.get("code_columns", []),
+                "contained",
                 "maritalStatus",
             ],
             "custom_columns": [
                 *expand_args.get("custom_columns", []),
+                Frame.codeable_like_column_expander("managingOrganization"),
                 ("address", expand_address_column),
                 ("name", expand_name_column),
             ],

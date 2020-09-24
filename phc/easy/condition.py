@@ -38,5 +38,6 @@ class Condition(PatientItem):
                 *expand_args.get("custom_columns", []),
                 Frame.codeable_like_column_expander("subject"),
                 Frame.codeable_like_column_expander("onsetPeriod"),
+                Frame.codeable_like_column_expander("context"),
             ],
         )
