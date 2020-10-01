@@ -32,6 +32,8 @@ from phc.easy.referral_request import ReferralRequest
 from phc.easy.sequence import Sequence
 from phc.easy.specimen import Specimen
 
+from phc.explore import Explore
+
 
 __all__ = [
     "AuditEvent",
@@ -67,4 +69,5 @@ __all__ = [
     "ReferralRequest",
     "Sequence",
     "Specimen",
+    "Explore",
 ]

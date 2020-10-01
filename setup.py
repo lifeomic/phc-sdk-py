@@ -33,7 +33,11 @@ setup(
     packages=find_packages(exclude=("tests")),
     install_requires=requirements,
     include_package_data=True,
-    extras_require={"pandas": ["pandas"], "tqdm": ["tqdm"]},
+    extras_require={
+        "pandas": ["pandas"],
+        "tqdm": ["tqdm"],
+        "ipywidgets": ["ipywidgets"],
+    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License",
