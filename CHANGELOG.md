@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *(NOTE: All examples use fictious data or freely available data sets.)*
 
+## [0.18.0] - 2020-10-09
+
+### Added
+
+- Added `Genomics.update_set` method for updating genomic sets
+
 ## [0.17.1] - 2020-09-17
 
 ### Added
@@ -115,7 +121,7 @@ All date columns now return two columns--one for the local time (with time zone 
 
 ## [0.15.0] - 2020-08-05
 
-Includes more work on the easy modules (imported via `import phc.easy as phc`). 
+Includes more work on the easy modules (imported via `import phc.easy as phc`).
 
 ### Added
 
@@ -132,7 +138,7 @@ Includes more work on the easy modules (imported via `import phc.easy as phc`).
 phc.Procedure.get_count_by_patient()
 
 #                                      doc_count
-# subject.reference                              
+# subject.reference
 # 518eb55d-adbf-42c3-8aed-68176d0ed4b7        334
 # 67233488-ddd6-46e1-88cc-a93140b86c02       2088
 # b41f8107-85e1-42c3-b36e-400085799ab5        176
@@ -316,6 +322,7 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 - Added the `phc.services.Files` submodule that provides actions for files in PHC projects.
 - Added the `phc.services.Cohorts` submodule that provides actions for files in PHC cohorts.
 
+[0.18.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.17.1...v0.18.0
 [0.17.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.16.0...v0.17.1
 [0.16.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.14.1...v0.15.0
