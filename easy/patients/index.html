@@ -45,6 +45,7 @@ class Patient(Item):
         return [
             &#34;extension.valueCodeableConcept.coding&#34;,
             &#34;identifier.type.coding&#34;,
+            &#34;maritalStatus.coding&#34;,
             &#34;meta.tag&#34;,
         ]
 
@@ -54,10 +55,12 @@ class Patient(Item):
             **expand_args,
             &#34;code_columns&#34;: [
                 *expand_args.get(&#34;code_columns&#34;, []),
+                &#34;contained&#34;,
                 &#34;maritalStatus&#34;,
             ],
             &#34;custom_columns&#34;: [
                 *expand_args.get(&#34;custom_columns&#34;, []),
+                Frame.codeable_like_column_expander(&#34;managingOrganization&#34;),
                 (&#34;address&#34;, expand_address_column),
                 (&#34;name&#34;, expand_name_column),
             ],
@@ -106,6 +109,7 @@ from a FSS table</p></div>
         return [
             &#34;extension.valueCodeableConcept.coding&#34;,
             &#34;identifier.type.coding&#34;,
+            &#34;maritalStatus.coding&#34;,
             &#34;meta.tag&#34;,
         ]
 
@@ -115,10 +119,12 @@ from a FSS table</p></div>
             **expand_args,
             &#34;code_columns&#34;: [
                 *expand_args.get(&#34;code_columns&#34;, []),
+                &#34;contained&#34;,
                 &#34;maritalStatus&#34;,
             ],
             &#34;custom_columns&#34;: [
                 *expand_args.get(&#34;custom_columns&#34;, []),
+                Frame.codeable_like_column_expander(&#34;managingOrganization&#34;),
                 (&#34;address&#34;, expand_address_column),
                 (&#34;name&#34;, expand_name_column),
             ],
@@ -150,6 +156,7 @@ def code_keys():
     return [
         &#34;extension.valueCodeableConcept.coding&#34;,
         &#34;identifier.type.coding&#34;,
+        &#34;maritalStatus.coding&#34;,
         &#34;meta.tag&#34;,
     ]</code></pre>
 </details>
@@ -231,10 +238,12 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
         **expand_args,
         &#34;code_columns&#34;: [
             *expand_args.get(&#34;code_columns&#34;, []),
+            &#34;contained&#34;,
             &#34;maritalStatus&#34;,
         ],
         &#34;custom_columns&#34;: [
             *expand_args.get(&#34;custom_columns&#34;, []),
+            Frame.codeable_like_column_expander(&#34;managingOrganization&#34;),
             (&#34;address&#34;, expand_address_column),
             (&#34;name&#34;, expand_name_column),
         ],

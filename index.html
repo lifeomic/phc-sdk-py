@@ -38,7 +38,7 @@
 </ul>
 <h3 id="getting-the-source">Getting the Source</h3>
 <p>This project is <a href="https://github.com/lifeomic/phc-sdk-py">hosted on GitHub</a>. You can clone this project directly using this command:</p>
-<pre><code class="bash">git clone git@github.com:lifeomic/phc-sdk-py.git
+<pre><code class="language-bash">git clone git@github.com:lifeomic/phc-sdk-py.git
 </code></pre>
 <h3 id="development">Development</h3>
 <p>Python environments are managed using <a href="https://virtualenv.pypa.io/en/latest/">virtualenv</a>.
@@ -46,26 +46,26 @@ Be sure to have this installed first <code>pip install virtualenv</code>.
 The makefile will setup the environment for the targets listed below.</p>
 <h4 id="setup">Setup</h4>
 <p>This installs some pre-commit hooks that will format and lint new changes.</p>
-<pre><code class="bash">make setup
+<pre><code class="language-bash">make setup
 </code></pre>
 <h4 id="running-tests">Running tests</h4>
-<pre><code class="bash">make test
+<pre><code class="language-bash">make test
 </code></pre>
 <h4 id="linting">Linting</h4>
-<pre><code class="bash">make lint
+<pre><code class="language-bash">make lint
 </code></pre>
 <h3 id="installation">Installation</h3>
-<pre><code class="bash">pip install phc
+<pre><code class="language-bash">pip install phc
 </code></pre>
 <h3 id="usage">Usage</h3>
 <p>A <code><a title="phc.Session" href="#phc.Session">Session</a></code> needs to be created first that stores the token and account information needed to access the PHC API.
 One can currently using API Key tokens generated from the PHC Account, or OAuth tokens generated using the <a href="https://github.com/lifeomic/cli">CLI</a>.</p>
-<pre><code class="python">from phc import Session
+<pre><code class="language-python">from phc import Session
 
 session = Session(token=&lt;TOKEN VALUE&gt;, account=&quot;myaccount&quot;)
 </code></pre>
 <p>Once a <code><a title="phc.Session" href="#phc.Session">Session</a></code> is created, you can then access the different parts of the platform.</p>
-<pre><code class="python">from phc.services import Accounts
+<pre><code class="language-python">from phc.services import Accounts
 
 accounts = Accounts(session)
 myaccounts = accounts.get_list()
@@ -151,7 +151,7 @@ __pdoc__ = {
 <dd>The nextPageToken for a paged response</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; res = files.get_list(project_id=&quot;1234&quot;)
+<pre><code class="language-python-repl">&gt;&gt;&gt; res = files.get_list(project_id=&quot;1234&quot;)
 &gt;&gt;&gt; print(str(res))
 &gt;&gt;&gt; print(res.nextPageToken)
 </code></pre></div>

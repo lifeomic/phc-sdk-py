@@ -1309,7 +1309,7 @@ class Query:
 and patient_key. See :func:<code>~phc.easy.query.fhir_dsl_query.build_query</code>.</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; import phc.easy as phc
+<pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
 &gt;&gt;&gt; phc.Auth.set({ 'account': '&lt;your-account-name&gt;' })
 &gt;&gt;&gt; phc.Project.set_current('My Project Name')
 &gt;&gt;&gt; phc.Query.execute_composite_aggregations(
@@ -1475,7 +1475,7 @@ file and then returning the completed result from that file.</p>
 and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; import phc.easy as phc
+<pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
 &gt;&gt;&gt; phc.Auth.set({ 'account': '&lt;your-account-name&gt;' })
 &gt;&gt;&gt; phc.Project.set_current('My Project Name')
 &gt;&gt;&gt; phc.Query.execute_fhir_dsl({
@@ -1711,7 +1711,7 @@ def execute_ga4gh(
 <dd>Additional arguments for authentication</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; import phc.easy as phc
+<pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
 &gt;&gt;&gt; phc.Auth.set({ 'account': '&lt;your-account-name&gt;' })
 &gt;&gt;&gt; phc.Project.set_current('My Project Name')
 &gt;&gt;&gt; phc.Query.find_count_of_dsl_query({
@@ -1777,7 +1777,7 @@ def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
 <dd>Arguments to pass to :func:<code>~phc.easy.query.Query.execute_composite_aggregations</code></dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; import phc.easy as phc
+<pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
 &gt;&gt;&gt; phc.Auth.set({ 'account': '&lt;your-account-name&gt;' })
 &gt;&gt;&gt; phc.Project.set_current('My Project Name')
 &gt;&gt;&gt; phc.Query.get_codes(
@@ -1909,7 +1909,7 @@ def get_codes(table_name: str, code_fields: List[str], **kwargs):
 and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; import phc.easy as phc
+<pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
 &gt;&gt;&gt; phc.Auth.set({ 'account': '&lt;your-account-name&gt;' })
 &gt;&gt;&gt; phc.Project.set_current('My Project Name')
 &gt;&gt;&gt; phc.Query.get_count_by_field(

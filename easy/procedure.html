@@ -59,6 +59,8 @@ class Procedure(PatientItem):
                 *expand_args.get(&#34;custom_columns&#34;, []),
                 Frame.codeable_like_column_expander(&#34;subject&#34;),
                 Frame.codeable_like_column_expander(&#34;performedPeriod&#34;),
+                Frame.codeable_like_column_expander(&#34;context&#34;),
+                Frame.codeable_like_column_expander(&#34;managingOrganization&#34;),
             ],
         }
 
@@ -106,6 +108,8 @@ from a FSS table that relates to a patient</p></div>
                 *expand_args.get(&#34;custom_columns&#34;, []),
                 Frame.codeable_like_column_expander(&#34;subject&#34;),
                 Frame.codeable_like_column_expander(&#34;performedPeriod&#34;),
+                Frame.codeable_like_column_expander(&#34;context&#34;),
+                Frame.codeable_like_column_expander(&#34;managingOrganization&#34;),
             ],
         }
 
@@ -230,6 +234,8 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
             *expand_args.get(&#34;custom_columns&#34;, []),
             Frame.codeable_like_column_expander(&#34;subject&#34;),
             Frame.codeable_like_column_expander(&#34;performedPeriod&#34;),
+            Frame.codeable_like_column_expander(&#34;context&#34;),
+            Frame.codeable_like_column_expander(&#34;managingOrganization&#34;),
         ],
     }
 

@@ -46,18 +46,24 @@ class Observation(PatientItem):
             &#34;component.code.coding&#34;,
             &#34;valueCodeableConcept.coding&#34;,
             &#34;category.coding&#34;,
+            &#34;referenceRange.type.coding&#34;,
         ]
 
     @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,
-            &#34;code_columns&#34;: [*expand_args.get(&#34;code_columns&#34;, []), &#34;component&#34;],
+            &#34;code_columns&#34;: [
+                *expand_args.get(&#34;code_columns&#34;, []),
+                &#34;component&#34;,
+                &#34;interpretation&#34;,
+            ],
             &#34;custom_columns&#34;: [
                 *expand_args.get(&#34;custom_columns&#34;, []),
                 Frame.codeable_like_column_expander(&#34;subject&#34;),
                 Frame.codeable_like_column_expander(&#34;related&#34;),
                 Frame.codeable_like_column_expander(&#34;performer&#34;),
+                Frame.codeable_like_column_expander(&#34;context&#34;),
             ],
         }
 
@@ -96,18 +102,24 @@ from a FSS table that relates to a patient</p></div>
             &#34;component.code.coding&#34;,
             &#34;valueCodeableConcept.coding&#34;,
             &#34;category.coding&#34;,
+            &#34;referenceRange.type.coding&#34;,
         ]
 
     @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,
-            &#34;code_columns&#34;: [*expand_args.get(&#34;code_columns&#34;, []), &#34;component&#34;],
+            &#34;code_columns&#34;: [
+                *expand_args.get(&#34;code_columns&#34;, []),
+                &#34;component&#34;,
+                &#34;interpretation&#34;,
+            ],
             &#34;custom_columns&#34;: [
                 *expand_args.get(&#34;custom_columns&#34;, []),
                 Frame.codeable_like_column_expander(&#34;subject&#34;),
                 Frame.codeable_like_column_expander(&#34;related&#34;),
                 Frame.codeable_like_column_expander(&#34;performer&#34;),
+                Frame.codeable_like_column_expander(&#34;context&#34;),
             ],
         }
 
@@ -141,6 +153,7 @@ def code_keys():
         &#34;component.code.coding&#34;,
         &#34;valueCodeableConcept.coding&#34;,
         &#34;category.coding&#34;,
+        &#34;referenceRange.type.coding&#34;,
     ]</code></pre>
 </details>
 </dd>
@@ -229,12 +242,17 @@ def table_name():
 def transform_results(data_frame: pd.DataFrame, **expand_args):
     args = {
         **expand_args,
-        &#34;code_columns&#34;: [*expand_args.get(&#34;code_columns&#34;, []), &#34;component&#34;],
+        &#34;code_columns&#34;: [
+            *expand_args.get(&#34;code_columns&#34;, []),
+            &#34;component&#34;,
+            &#34;interpretation&#34;,
+        ],
         &#34;custom_columns&#34;: [
             *expand_args.get(&#34;custom_columns&#34;, []),
             Frame.codeable_like_column_expander(&#34;subject&#34;),
             Frame.codeable_like_column_expander(&#34;related&#34;),
             Frame.codeable_like_column_expander(&#34;performer&#34;),
+            Frame.codeable_like_column_expander(&#34;context&#34;),
         ],
     }
 

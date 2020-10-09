@@ -46,7 +46,11 @@ class Specimen(PatientItem):
     def transform_results(df: pd.DataFrame, **expand_args):
         return Frame.expand(
             df,
-            code_columns=[*expand_args.get(&#34;code_columns&#34;, []), &#34;collection&#34;],
+            code_columns=[
+                *expand_args.get(&#34;code_columns&#34;, []),
+                &#34;collection&#34;,
+                &#34;type&#34;,
+            ],
             custom_columns=[
                 *expand_args.get(&#34;custom_columns&#34;, []),
                 Frame.codeable_like_column_expander(&#34;subject&#34;),
@@ -86,7 +90,11 @@ from a FSS table that relates to a patient</p></div>
     def transform_results(df: pd.DataFrame, **expand_args):
         return Frame.expand(
             df,
-            code_columns=[*expand_args.get(&#34;code_columns&#34;, []), &#34;collection&#34;],
+            code_columns=[
+                *expand_args.get(&#34;code_columns&#34;, []),
+                &#34;collection&#34;,
+                &#34;type&#34;,
+            ],
             custom_columns=[
                 *expand_args.get(&#34;custom_columns&#34;, []),
                 Frame.codeable_like_column_expander(&#34;subject&#34;),
@@ -203,7 +211,11 @@ def table_name():
 def transform_results(df: pd.DataFrame, **expand_args):
     return Frame.expand(
         df,
-        code_columns=[*expand_args.get(&#34;code_columns&#34;, []), &#34;collection&#34;],
+        code_columns=[
+            *expand_args.get(&#34;code_columns&#34;, []),
+            &#34;collection&#34;,
+            &#34;type&#34;,
+        ],
         custom_columns=[
             *expand_args.get(&#34;custom_columns&#34;, []),
             Frame.codeable_like_column_expander(&#34;subject&#34;),

@@ -629,19 +629,19 @@ __pdoc__ = {
 <dd>The data lake query</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; from phc import Session
+<pre><code class="language-python-repl">&gt;&gt;&gt; from phc import Session
 &gt;&gt;&gt; from phc.services import Analytics
 &gt;&gt;&gt; from phc.util import DataLakeQuery
 </code></pre>
-<pre><code class="python-repl">&gt;&gt;&gt; session = Session()
+<pre><code class="language-python-repl">&gt;&gt;&gt; session = Session()
 &gt;&gt;&gt; client = Analytics(session)
 </code></pre>
-<pre><code class="python-repl">&gt;&gt;&gt; project_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
+<pre><code class="language-python-repl">&gt;&gt;&gt; project_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
 &gt;&gt;&gt; query_string = &quot;SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'&quot;
 &gt;&gt;&gt; output_file_name = 'query-test-notebook'
 &gt;&gt;&gt; query = DataLakeQuery(project_id=project_id, query=query_string, output_file_name=output_file_name)
 </code></pre>
-<pre><code class="python-repl">&gt;&gt;&gt; query_id = client.execute_data_lake_query(query)
+<pre><code class="language-python-repl">&gt;&gt;&gt; query_id = client.execute_data_lake_query(query)
 &gt;&gt;&gt; specific_query = client.get_data_lake_query(query_id)
 &gt;&gt;&gt; paginated_dataset_queries = client.list_data_lake_queries(project_id)
 &gt;&gt;&gt; print(query_id)
@@ -709,19 +709,19 @@ Defaults to the current working directory.</dd>
 <dd>A Future if run_async is True, the data lake query result contained in a Pandas dataframe otherwise.</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; from phc import Session
+<pre><code class="language-python-repl">&gt;&gt;&gt; from phc import Session
 &gt;&gt;&gt; from phc.services import Analytics
 &gt;&gt;&gt; from phc.util import DataLakeQuery
 </code></pre>
-<pre><code class="python-repl">&gt;&gt;&gt; session = Session()
+<pre><code class="language-python-repl">&gt;&gt;&gt; session = Session()
 &gt;&gt;&gt; client = Analytics(session)
 </code></pre>
-<pre><code class="python-repl">&gt;&gt;&gt; project_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
+<pre><code class="language-python-repl">&gt;&gt;&gt; project_id = '19e34782-91c4-4143-aaee-2ba81ed0b206'
 &gt;&gt;&gt; query_string = &quot;SELECT sample_id, gene, impact, amino_acid_change, histology FROM variant WHERE tumor_site='breast'&quot;
 &gt;&gt;&gt; output_file_name = 'query-dataframe-test'
 &gt;&gt;&gt; query = DataLakeQuery(project_id=project_id, query=query_string, output_file_name=output_file_name)
 </code></pre>
-<pre><code class="python-repl">&gt;&gt;&gt; dataframe = client.execute_data_lake_query_to_dataframe(query)
+<pre><code class="language-python-repl">&gt;&gt;&gt; dataframe = client.execute_data_lake_query_to_dataframe(query)
 &gt;&gt;&gt; dataframe.head()
 </code></pre></div>
 <details class="source">
@@ -806,7 +806,7 @@ Defaults to the current working directory.</dd>
 <dd>If no project or cohort ID is provided</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; from phc.services import Analytics
+<pre><code class="language-python-repl">&gt;&gt;&gt; from phc.services import Analytics
 &gt;&gt;&gt; client = Analytics(session)
 &gt;&gt;&gt; res = client.execute_sql(cohort_id='5a07dedb-fa2a-4cb0-b662-95b23a050221', statement='SELECT patients from patient')
 &gt;&gt;&gt; print(f&quot;Found {len(res.get('data').get('patients'))} patients&quot;)
@@ -958,7 +958,7 @@ Defaults to the current working directory.</dd>
 <dd>The list of patients</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; from phc.services import Analytics
+<pre><code class="language-python-repl">&gt;&gt;&gt; from phc.services import Analytics
 &gt;&gt;&gt; from phc.util import PatientFilterQueryBuilder
 &gt;&gt;&gt; client = Analytics(session)
 &gt;&gt;&gt; search = PatientFilterQueryBuilder()
@@ -1748,13 +1748,13 @@ Defaults to the current working directory.</dd>
 <dd>The query response.</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; import pandas as pd
+<pre><code class="language-python-repl">&gt;&gt;&gt; import pandas as pd
 &gt;&gt;&gt; from phc.services import Fhir
 &gt;&gt;&gt; fhir = Fhir(session)
 &gt;&gt;&gt; res = fhir.execute_sql(project_id='19e34782-91c4-4143-aaee-2ba81ed0b206',
                statement='SELECT * from patient LIMIT 0,5000')
 </code></pre>
-<pre><code class="python-repl">&gt;&gt;&gt; resources = list(map(lambda r: r.get(&quot;_source&quot;), res.get(&quot;hits&quot;).get(&quot;hits&quot;)))
+<pre><code class="language-python-repl">&gt;&gt;&gt; resources = list(map(lambda r: r.get(&quot;_source&quot;), res.get(&quot;hits&quot;).get(&quot;hits&quot;)))
 &gt;&gt;&gt; df = pd.DataFrame(resources)
 </code></pre></div>
 <details class="source">
@@ -2212,7 +2212,7 @@ Defaults to the current working directory.</dd>
 Defaults to the current working directory</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; from phc.services import Files
+<pre><code class="language-python-repl">&gt;&gt;&gt; from phc.services import Files
 &gt;&gt;&gt; files = files(session)
 &gt;&gt;&gt; files.download(file_id=&quot;db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3&quot;, dest_dir=&quot;./mydata&quot;)
 </code></pre></div>
@@ -2472,7 +2472,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dd>The upload file response</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; from phc.services import Files
+<pre><code class="language-python-repl">&gt;&gt;&gt; from phc.services import Files
 &gt;&gt;&gt; files = files(session)
 &gt;&gt;&gt; files.upload(project_id=&quot;db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3&quot;, source=&quot;./myfile.txt&quot;, overwrite=True)
 </code></pre></div>
@@ -2729,6 +2729,25 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
                 set_type.value, json=json_body, http_verb=&#34;POST&#34;
             )
 
+    def update_set(self, set_type: SetType, set_id: str, updates: dict) -&gt; ApiResponse:
+        &#34;&#34;&#34;Update a genomic set
+
+        Parameters
+        ----------
+        set_type : SetType
+            The set type
+        set_id : str
+            The set ID
+        updates : dict
+            The updates to apply
+
+        Returns
+        -------
+        ApiResponse
+            The fetch response
+        &#34;&#34;&#34;
+        return self._ga4gh_call(f&#34;{set_type.value}/{set_id}&#34;, json=updates, http_verb=&#34;PATCH&#34;)
+
     def get_set(self, set_type: SetType, set_id: str) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetch a genomic set
 
@@ -2885,7 +2904,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = '86b5cb6b-723a-4e28-a0f2-db82c28b2567', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = '2fce6a1f-8752-48db-908f-3cfcc9228085', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
@@ -3267,6 +3286,49 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
         f&#34;genomics/projects/{project_id}/subjects/{patient_id}/tests&#34;,
         http_verb=&#34;GET&#34;,
     )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Genomics.update_set"><code class="name flex">
+<span>def <span class="ident">update_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, set_id: str, updates: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Update a genomic set</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>set_type</code></strong> :&ensp;<code>SetType</code></dt>
+<dd>The set type</dd>
+<dt><strong><code>set_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The set ID</dd>
+<dt><strong><code>updates</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The updates to apply</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ApiResponse</code></dt>
+<dd>The fetch response</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update_set(self, set_type: SetType, set_id: str, updates: dict) -&gt; ApiResponse:
+    &#34;&#34;&#34;Update a genomic set
+
+    Parameters
+    ----------
+    set_type : SetType
+        The set type
+    set_id : str
+        The set ID
+    updates : dict
+        The updates to apply
+
+    Returns
+    -------
+    ApiResponse
+        The fetch response
+    &#34;&#34;&#34;
+    return self._ga4gh_call(f&#34;{set_type.value}/{set_id}&#34;, json=updates, http_verb=&#34;PATCH&#34;)</code></pre>
 </details>
 </dd>
 </dl>
@@ -3733,6 +3795,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <li><code><a title="phc.services.Genomics.get_set" href="#phc.services.Genomics.get_set">get_set</a></code></li>
 <li><code><a title="phc.services.Genomics.list_sets" href="#phc.services.Genomics.list_sets">list_sets</a></code></li>
 <li><code><a title="phc.services.Genomics.list_tests" href="#phc.services.Genomics.list_tests">list_tests</a></code></li>
+<li><code><a title="phc.services.Genomics.update_set" href="#phc.services.Genomics.update_set">update_set</a></code></li>
 </ul>
 </li>
 <li>
