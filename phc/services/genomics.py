@@ -27,7 +27,7 @@ class Genomics(BaseClient):
         VARIANT = "variantsets"
         STRUCTURAL_VARIANT = "fusionsets"
         RNA = "rnaquantificationsets"
-        READ = "readgroupset"
+        READ = "readgroupsets"
         COPY_NUMBER = "copynumbersets"
 
     class Reference(Enum):
