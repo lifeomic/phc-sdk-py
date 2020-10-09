@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *(NOTE: All examples use fictious data or freely available data sets.)*
 
+## [0.18.1] - 2020-10-09
+
+### Fixed
+
+- Fixed `Genomics.update_set` use of readgroupsets API
+
 ## [0.18.0] - 2020-10-09
 
 ### Added
@@ -322,6 +328,7 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 - Added the `phc.services.Files` submodule that provides actions for files in PHC projects.
 - Added the `phc.services.Cohorts` submodule that provides actions for files in PHC cohorts.
 
+[0.18.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.18.0...v0.18.1
 [0.18.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.17.1...v0.18.0
 [0.17.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.16.0...v0.17.1
 [0.16.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.15.0...v0.16.0
