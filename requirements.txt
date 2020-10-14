@@ -7,3 +7,4 @@ funcy
 lenses
 toolz
 pydantic
+python-pmap
