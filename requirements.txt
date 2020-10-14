@@ -6,3 +6,4 @@ pandas
 funcy
 lenses
 toolz
+python-pmap
