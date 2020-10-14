@@ -1,22 +1,23 @@
-from typing import Any, Callable, List, Union, NamedTuple, Tuple
-import pandas as pd
 import json
+from typing import Any, Callable, List, Tuple, Union, Optional
 
-from phc.services import Fhir
+import pandas as pd
 from phc.base_client import BaseClient
 from phc.easy.auth import Auth
-from phc.easy.query.ga4gh import recursive_execute_ga4gh
-from phc.easy.query.fhir_dsl_query import build_query
+from phc.easy.query.fhir_aggregation import FhirAggregation
 from phc.easy.query.fhir_dsl import (
-    MAX_RESULT_SIZE,
     DEFAULT_SCROLL_SIZE,
-    recursive_execute_fhir_dsl,
+    MAX_RESULT_SIZE,
     execute_single_fhir_dsl,
+    recursive_execute_fhir_dsl,
     tqdm,
     with_progress,
 )
+from phc.easy.query.fhir_dsl_query import build_query
+from phc.easy.query.ga4gh import recursive_execute_ga4gh
+from phc.easy.query.api_paging import recursive_paging_api_call
+from phc.services import Fhir
 from phc.util.api_cache import APICache
-from phc.easy.query.fhir_aggregation import FhirAggregation
 
 
 class Query:
@@ -156,6 +157,76 @@ class Query:
             callback=callback,
             auth_args=auth_args,
             max_pages=max_pages,
+        )
+
+    @staticmethod
+    def execute_paging_api(
+        path: str,
+        params: dict = {},
+        http_verb: str = "GET",
+        all_results: bool = False,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Optional[int] = None,
+        page_size: Optional[int] = None,
+        log: bool = False,
+    ):
+        """Execute a API query that pages through results
+
+        See https://docs.us.lifeomic.com/api/?shell#lifeomic-core-api-genomics
+        for example
+
+        Attributes
+        ----------
+        path : str
+            The API path to hit
+            (Special tokens: `:project_id`)
+
+        params : dict
+            The parameters to include with request
+
+        http_verb : str
+            The HTTP method to use
+
+        all_results : bool = False
+            Retrieve sample of results (25) or entire set of records
+
+        auth_args : Auth, dict
+            Additional arguments for authentication
+
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
+
+        page_size : int
+            The number of records to fetch per page
+
+        log : bool = False
+            Whether to log some diagnostic statements for debugging
+
+        Examples
+        --------
+        >>> import phc.easy as phc
+        >>> phc.Auth.set({ 'account': '<your-account-name>' })
+        >>> phc.Project.set_current('My Project Name')
+        >>> phc.Query.execute_paging_api(
+                "genomics/projects/:project_id/tests",
+                params={
+                    "patientId": "<patient-uuid>"
+                }
+            )
+        """
+        return with_progress(
+            lambda: tqdm(),
+            lambda progress: recursive_paging_api_call(
+                path,
+                params=params,
+                http_verb=http_verb,
+                scroll=all_results,
+                max_pages=max_pages,
+                page_size=page_size,
+                log=log,
+                auth_args=auth_args,
+                progress=progress,
+            ),
         )
 
     @staticmethod
