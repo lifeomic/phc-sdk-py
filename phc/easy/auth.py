@@ -71,7 +71,12 @@ class Auth:
 
     @defaultprop
     def project_id(self):
-        return os.environ.get("PHC_PROJECT_ID")
+        env_project_id = os.environ.get("PHC_PROJECT_ID")
+
+        if env_project_id is None:
+            raise ValueError("No project_id has been selected.")
+
+        return env_project_id
 
     def session(self):
         "Create an API session for use with modules not in the 'easy' namespace"
@@ -84,7 +89,7 @@ class Auth:
     def details(self):
         return {
             "account": self.account,
-            "project_id": self.project_id,
+            "project_id": getattr(self, "_project_id", None),
             "token": self.token,
         }
 

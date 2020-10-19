@@ -8,6 +8,8 @@ from phc.easy.diagnostic_report import DiagnosticReport
 from phc.easy.document_reference import DocumentReference
 from phc.easy.encounter import Encounter
 from phc.easy.frame import Frame
+from phc.easy.genomic_short_variant import GenomicShortVariant
+from phc.easy.genomic_test import GenomicTest
 from phc.easy.goal import Goal
 from phc.easy.imaging_study import ImagingStudy
 from phc.easy.immunization import Immunization
@@ -44,6 +46,8 @@ __all__ = [
     "DocumentReference",
     "Encounter",
     "Frame",
+    "GenomicShortVariant",
+    "GenomicTest",
     "Goal",
     "ImagingStudy",
     "Immunization",
