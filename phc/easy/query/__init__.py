@@ -1,9 +1,11 @@
 import json
-from typing import Any, Callable, List, Tuple, Union, Optional
+import math
+from typing import Any, Callable, List, Optional, Tuple, Union
 
 import pandas as pd
 from phc.base_client import BaseClient
 from phc.easy.auth import Auth
+from phc.easy.query.api_paging import recursive_paging_api_call
 from phc.easy.query.fhir_aggregation import FhirAggregation
 from phc.easy.query.fhir_dsl import (
     DEFAULT_SCROLL_SIZE,
@@ -15,7 +17,7 @@ from phc.easy.query.fhir_dsl import (
 )
 from phc.easy.query.fhir_dsl_query import build_query
 from phc.easy.query.ga4gh import recursive_execute_ga4gh
-from phc.easy.query.api_paging import recursive_paging_api_call
+from phc.easy.util import extract_codes
 from phc.services import Fhir
 from phc.util.api_cache import APICache
 
@@ -53,7 +55,7 @@ class Query:
         fhir = Fhir(auth.session())
 
         response = fhir.execute_es(
-            auth.project_id, build_query(query, page_size=1), scroll="true",
+            auth.project_id, build_query(query, page_size=1), scroll="true"
         )
 
         return response.data["hits"]["total"]["value"]
@@ -289,8 +291,14 @@ class Query:
         return transform(df)
 
     @staticmethod
-    def get_codes(table_name: str, code_fields: List[str], **kwargs):
-        """Find FHIR codes for a given table
+    def get_codes(
+        table_name: str,
+        code_fields: List[str],
+        display_query: Optional[str] = None,
+        sample_size: Optional[int] = None,
+        **kwargs,
+    ):
+        """Find FHIR codes with a display for a given table
 
         Attributes
         ----------
@@ -300,8 +308,16 @@ class Query:
         code_fields : List[str]
             The fields of this table that contain a system, code, and display
 
+        display_query : Optional[str]
+            Part of the code's display to match (will try to extract full code
+            if passed)
+
+        sample_size : Optional[int]
+            Override the search size for finding codes (may miss codes on later
+            records)
+
         kwargs : dict
-            Arguments to pass to :func:`~phc.easy.query.Query.execute_composite_aggregations`
+            Arguments to pass to `phc.easy.query.Query.execute_composite_aggregations`
 
         Examples
         --------
@@ -323,6 +339,24 @@ class Query:
             frame["field"] = prefix
             return frame
 
+        if display_query is not None:
+            kwargs = {
+                **kwargs,
+                "query_overrides": {
+                    "where": {
+                        "type": "elasticsearch",
+                        "query": {
+                            "multi_match": {
+                                "query": display_query,
+                                "fields": [
+                                    f"{key}.display" for key in code_fields
+                                ],
+                            }
+                        },
+                    }
+                },
+            }
+
         results = Query.execute_composite_aggregations(
             table_name=table_name,
             key_sources_pairs=[
@@ -330,19 +364,10 @@ class Query:
                     field,
                     [
                         {
-                            "system": {
-                                "terms": {"field": f"{field}.system.keyword"}
-                            }
-                        },
-                        {"code": {"terms": {"field": f"{field}.code.keyword"}}},
-                        {
                             "display": {
-                                "terms": {
-                                    "field": f"{field}.display.keyword",
-                                    "missing_bucket": True,
-                                }
+                                "terms": {"field": f"{field}.display.keyword"}
                             }
-                        },
+                        }
                     ],
                 )
                 for field in code_fields
@@ -350,12 +375,103 @@ class Query:
             **kwargs,
         )
 
-        return pd.concat(
-            [
-                agg_composite_to_frame(key, value)
-                for key, value in results.items()
-            ]
+        agg_result = (
+            pd.concat(
+                [
+                    agg_composite_to_frame(key, value)
+                    for key, value in results.items()
+                ]
+            )
+            .pipe(
+                lambda df: df
+                if len(df) == 0 or display_query is None
+                # Poor man's way to filter only matching codes (since Elasticsearch
+                # returns records which will include other codes)
+                else df[
+                    df["display"]
+                    .str.lower()
+                    .str.contains(display_query.lower())
+                ]
+            )
+            .pipe(
+                lambda df: pd.DataFrame()
+                if len(df) == 0
+                else df.sort_values("doc_count", ascending=False).reset_index(
+                    drop=True
+                )
+            )
         )
+
+        if display_query is None or len(agg_result) == 0:
+            return agg_result
+
+        min_count = sample_size or agg_result.doc_count.sum()
+        filtered_code_keys = agg_result.field.unique()
+
+        # Shortcut: If one result, we just need to get the other associated
+        # attributes of the code
+        if len(agg_result) == 1:
+            min_count = 1
+
+        code_results = Query.execute_fhir_dsl(
+            {
+                "type": "select",
+                "from": [{"table": table_name}],
+                "columns": [
+                    {
+                        "expr": {
+                            "type": "column_ref",
+                            "column": key.split(".")[0],
+                        }
+                    }
+                    for key in filtered_code_keys
+                ],
+                "where": {
+                    "type": "elasticsearch",
+                    "query": {
+                        "multi_match": {
+                            "query": display_query,
+                            "fields": [
+                                f"{key}.display" for key in filtered_code_keys
+                            ],
+                        }
+                    },
+                },
+            },
+            page_size=min_count % 9000,
+            max_pages=math.ceil(min_count / 9000),
+        )
+
+        codes = extract_codes(
+            map(lambda d: d["_source"], code_results),
+            display_query,
+            code_fields,
+        )
+
+        if len(codes) == 0:
+            return codes
+
+        if len(codes) == codes.display.nunique():
+            # If display values are unique, then the counts from Elasticsearch
+            # are correct. We can therefore join them.
+            codes = (
+                codes.join(
+                    agg_result[["display", "doc_count"]].set_index("display"),
+                    on="display",
+                    how="outer",
+                )
+                .sort_values("doc_count", ascending=False)
+                .reset_index(drop=True)
+            )
+
+            if len(codes[codes.field.isnull()]) > 0:
+                print(
+                    "Records with missing system/code values were not retrieved."
+                )
+
+            return codes
+
+        return codes
 
     @staticmethod
     def execute_composite_aggregations(
@@ -436,9 +552,7 @@ class Query:
             table_name="observation",
             key_sources_pairs=[
                 ("meta.tag", [
-                    {"system": {"terms": {"field": "meta.tag.system.keyword"}}},
                     {"code": {"terms": {"field": "meta.tag.code.keyword"}}},
-                    {"display": {"terms": {"field": "meta.tag.display.keyword"}}},
                 ]),
                 ("code.coding", [
                     {"display": {"terms": {"field": "code.coding.display.keyword"}}}

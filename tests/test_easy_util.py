@@ -1,10 +1,11 @@
 from phc.easy.util import (
+    add_prefixes,
     concat_dicts,
+    defaultprop,
+    extract_codes,
     join_underscore,
     prefix_dict_keys,
     without_keys,
-    defaultprop,
-    add_prefixes,
 )
 
 
@@ -58,6 +59,47 @@ def test_add_prefixes():
         "Patient/b",
         "Patient/c",
     ]
+
+
+# extract codes
+
+
+def test_extract_codes():
+    samples = [
+        {
+            "code": {
+                "coding": [
+                    {
+                        "code": "55233-1",
+                        "system": "http://loinc.org",
+                        "display": "Genetic analysis master panel",
+                    }
+                ]
+            },
+            "meta": {"lastUpdated": "2019-10-11T18:20:35.414Z", "tag": []},
+            "valueCodeableConcept": {
+                "coding": [
+                    {
+                        "code": "unknown",
+                        "system": "http://foundationmedicine.com",
+                        "display": "Foundation - Unknown",
+                    }
+                ]
+            },
+        }
+    ]
+
+    results = extract_codes(
+        samples,
+        "master",
+        ["meta.tag", "code.coding", "valueCodeableConcept.coding"],
+    )
+
+    assert len(results) == 1
+    assert results.iloc[0].to_dict() == {
+        **samples[0]["code"]["coding"][0],
+        "field": "code.coding",
+    }
 
 
 # defaultprop
