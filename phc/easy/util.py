@@ -1,6 +1,9 @@
+import math
 from functools import reduce, wraps
+from typing import Callable, List, Union
+
+import pandas as pd
 from funcy import lmapcat
-from typing import Union, Callable, List
 
 try:
     from tqdm.autonotebook import tqdm
@@ -113,3 +116,62 @@ def add_prefixes(values: List[str], prefixes: List[str]):
         ],
         prefixes,
     )
+
+
+class Hashabledict(dict):
+    """Dictionary that is hashable (useful for creating set of unique dictionaries)"""
+
+    def __hash__(self):
+        return hash(frozenset(self))
+
+
+def get_values_at_codeable_paths(value: dict, keys: List[str]):
+    """Extract values from FHIR records based on keys (useful for extracting codes)"""
+
+    def _get_value_at_codeable_path(
+        value: Union[list, dict], components: List[str], key: str
+    ):
+        if value is None:
+            return []
+
+        if isinstance(value, list):
+            return lmapcat(
+                lambda v: _get_value_at_codeable_path(v, components, key), value
+            )
+
+        if len(components) == 0:
+            return [Hashabledict({"field": key, **value})]
+
+        if not isinstance(value, dict) and not isinstance(value, pd.Series):
+            return []
+
+        return _get_value_at_codeable_path(
+            value.get(components[0], None), components[1:], key
+        )
+
+    def get_value_at_codeable_path(value: dict, key: str):
+        return _get_value_at_codeable_path(value, key.split("."), key)
+
+    return lmapcat(lambda key: get_value_at_codeable_path(value, key), keys)
+
+
+def extract_codes(results: list, display: str, code_keys: List[str]):
+    """Extract code values from a list of dictionaries based on the code keys.
+    Requires a display value to filter results preemptively (instead of
+    filtering afterwards)
+    """
+
+    codes = set()
+
+    for row in results:
+        row_codes = get_values_at_codeable_paths(row, code_keys)
+        for code in row_codes:
+            if (
+                isinstance(code, dict)
+                # Poor man's way to filter only matching codes (since Elasticsearch
+                # returns records which will include other codes)
+                and display.lower() in code.get("display", "").lower()
+            ):
+                codes.add(code)
+
+    return pd.DataFrame(list(codes))

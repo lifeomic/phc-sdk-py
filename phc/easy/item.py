@@ -1,7 +1,6 @@
-from typing import Union, List
+from typing import List, Optional, Union
 
 import pandas as pd
-
 from phc.easy.auth import Auth
 from phc.easy.query import Query
 from phc.easy.util import without_keys
@@ -119,10 +118,16 @@ class Item:
         )
 
     @classmethod
-    def get_codes(cls, exclude_meta_tag=True, **kwargs):
+    def get_codes(
+        cls,
+        display_query: Optional[str] = None,
+        sample_size: Optional[int] = None,
+        exclude_meta_tag=True,
+        **kwargs,
+    ):
         """Find all codes
 
-        See possible argments for :func:`~phc.easy.query.Query.get_codes`
+        See possible argments for `phc.easy.query.Query.get_codes`
 
         Examples
         --------
@@ -142,6 +147,7 @@ class Item:
             ]
 
         return Query.get_codes(
+            display_query=display_query,
             table_name=cls.table_name(),
             code_fields=code_fields,
             **without_keys(kwargs, ["code_fields"]),
