@@ -148,6 +148,7 @@ class Item:
 
         return Query.get_codes(
             display_query=display_query,
+            sample_size=sample_size,
             table_name=cls.table_name(),
             code_fields=code_fields,
             **without_keys(kwargs, ["code_fields"]),
