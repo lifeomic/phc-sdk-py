@@ -1,6 +1,8 @@
-from toolz import pipe, identity, curry, compose
-from typing import List, Union, Callable
+from functools import partial
+from typing import Callable, List, Optional, Union
+
 from lenses import lens
+from toolz import compose, curry, identity, pipe
 
 from phc.easy.util import add_prefixes
 
@@ -31,12 +33,7 @@ def update_limit(query: dict, update: Callable[[int], int]):
 
 @curry
 def and_query_clause_terms(second_query_clause, first_query_clause):
-    return {
-        "bool": {
-            "should": [first_query_clause, second_query_clause],
-            "minimum_should_match": 2,
-        }
-    }
+    return {"bool": {"must": [first_query_clause, second_query_clause]}}
 
 
 def and_query_clause(query: dict, query_clause: dict):
@@ -96,6 +93,13 @@ def _patient_ids_adder(
     )
 
 
+def _term_adder(term: Optional[dict]):
+    if term is None:
+        return identity
+
+    return partial(and_query_clause, query_clause={"term": term})
+
+
 def _limit_adder(page_size: Union[int, None]):
     if page_size is None:
         return identity
@@ -105,11 +109,12 @@ def _limit_adder(page_size: Union[int, None]):
 
 def build_query(
     query: dict,
-    patient_id: Union[str, None] = None,
+    patient_id: Optional[str] = None,
     patient_ids: List[str] = [],
     patient_key: str = "subject.reference",
     patient_id_prefixes: List[str] = ["Patient/"],
-    page_size: Union[int, None] = None,
+    page_size: Optional[int] = None,
+    term: Optional[dict] = None,
 ):
     """Build query with various options
 
@@ -145,5 +150,6 @@ def build_query(
             patient_key=patient_key,
             patient_id_prefixes=patient_id_prefixes,
         ),
+        _term_adder(term),
         _limit_adder(page_size),
     )
