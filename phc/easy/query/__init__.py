@@ -438,8 +438,9 @@ class Query:
                     },
                 },
             },
-            page_size=min_count % 9000,
-            max_pages=math.ceil(min_count / 9000),
+            page_size=int(min_count % 9000),
+            max_pages=int(math.ceil(min_count / 9000)),
+            log=kwargs.get("log", False),
         )
 
         codes = extract_codes(
