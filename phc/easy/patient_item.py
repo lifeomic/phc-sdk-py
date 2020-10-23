@@ -1,11 +1,10 @@
-from typing import Union, List
+from typing import List, Optional, Union
 
 import pandas as pd
 
 from phc.easy.auth import Auth
-from phc.easy.query import Query
 from phc.easy.item import Item
-from phc.easy.util import without_keys
+from phc.easy.query import Query
 
 
 class PatientItem(Item):
@@ -35,6 +34,11 @@ class PatientItem(Item):
         ignore_cache: bool = False,
         expand_args: dict = {},
         log: bool = False,
+        # Codes
+        code: Optional[Union[str, List[str]]] = None,
+        display: Optional[Union[str, List[str]]] = None,
+        system: Optional[Union[str, List[str]]] = None,
+        code_fields: List[str] = [],
     ):
         """Retrieve records
 
@@ -75,6 +79,18 @@ class PatientItem(Item):
         log : bool = False
             Whether to log some diagnostic statements for debugging
 
+        code : str | List[str]
+            Adds where clause for code value(s)
+
+        display : str | List[str]
+            Adds where clause for code display value(s)
+
+        system : str | List[str]
+            Adds where clause for code system value(s)
+
+        code_fields : List[str]
+            A list of paths to find FHIR codes in (default: codes for the given entity)
+
         Examples
         --------
         >>> import phc.easy as phc
@@ -90,6 +106,8 @@ class PatientItem(Item):
             "columns": "*",
             "from": [{"table": cls.table_name()}],
         }
+
+        code_fields = [*cls.code_fields(), *code_fields]
 
         def transform(df: pd.DataFrame):
             return cls.transform_results(df, **expand_args)
@@ -109,6 +127,11 @@ class PatientItem(Item):
             patient_key=cls.patient_key(),
             log=log,
             patient_id_prefixes=cls.patient_id_prefixes(),
+            # Codes
+            code_fields=code_fields,
+            code=code,
+            display=display,
+            system=system,
         )
 
     @classmethod

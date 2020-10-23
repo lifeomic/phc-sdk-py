@@ -10,7 +10,7 @@ class Condition(PatientItem):
         return "condition"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [
             "meta.tag",
             "code.coding",

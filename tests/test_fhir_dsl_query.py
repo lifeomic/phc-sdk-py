@@ -214,7 +214,7 @@ def test_add_single_patient_id_with_prefix():
 
 
 def test_get_limit():
-    assert get_limit({}) == None
+    assert get_limit({}) is None
 
     assert (
         get_limit(
@@ -248,6 +248,78 @@ def test_add_term():
                     "must": [
                         {"terms": {"a.keyword": [1, 2, 3]}},
                         {"term": {"code.coding.code.keyword": "blah"}},
+                    ]
+                }
+            },
+        }
+    }
+
+
+def test_add_code_filters():
+    result = build_query(
+        query={},
+        code_fields=["meta.tag", "code.coding"],
+        code=["1234-5"],
+        display="My Code",
+        system="http://unitsofmeasure.org",
+    )
+
+    assert result == {
+        "where": {
+            "type": "elasticsearch",
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "terms": {
+                                            "meta.tag.code.keyword": ["1234-5"]
+                                        }
+                                    },
+                                    {
+                                        "terms": {
+                                            "code.coding.code.keyword": [
+                                                "1234-5"
+                                            ]
+                                        }
+                                    },
+                                ]
+                            }
+                        },
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "term": {
+                                            "meta.tag.display.keyword": "My Code"
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "code.coding.display.keyword": "My Code"
+                                        }
+                                    },
+                                ]
+                            }
+                        },
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "term": {
+                                            "meta.tag.system.keyword": "http://unitsofmeasure.org"
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "code.coding.system.keyword": "http://unitsofmeasure.org"
+                                        }
+                                    },
+                                ]
+                            }
+                        },
                     ]
                 }
             },

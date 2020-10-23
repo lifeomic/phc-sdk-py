@@ -10,7 +10,7 @@ class MedicationStatement(PatientItem):
         return "medication_statement"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["medicationCodeableConcept.coding", "meta.tag"]
 
     @staticmethod

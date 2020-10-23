@@ -1,6 +1,7 @@
 from typing import List, Optional, Union
 
 import pandas as pd
+
 from phc.easy.auth import Auth
 from phc.easy.query import Query
 from phc.easy.util import without_keys
@@ -17,7 +18,7 @@ class Item:
         raise ValueError("Table name should be implemented by subclass")
 
     @staticmethod
-    def code_keys() -> List[str]:
+    def code_fields() -> List[str]:
         "Returns the code keys (e.g. when searching for codes)"
         return []
 
@@ -51,6 +52,11 @@ class Item:
         ignore_cache: bool = False,
         expand_args: dict = {},
         log: bool = False,
+        # Codes
+        code: Optional[Union[str, List[str]]] = None,
+        display: Optional[Union[str, List[str]]] = None,
+        system: Optional[Union[str, List[str]]] = None,
+        code_fields: List[str] = [],
     ):
         """Retrieve records
 
@@ -85,6 +91,18 @@ class Item:
         log : bool = False
             Whether to log some diagnostic statements for debugging
 
+        code : str | List[str]
+            Adds where clause for code value(s)
+
+        display : str | List[str]
+            Adds where clause for code display value(s)
+
+        system : str | List[str]
+            Adds where clause for code system value(s)
+
+        code_fields : List[str]
+            A list of paths to find FHIR codes in (default: codes for the given entity)
+
         Examples
         --------
         >>> import phc.easy as phc
@@ -101,6 +119,8 @@ class Item:
             "from": [{"table": cls.table_name()}],
         }
 
+        code_fields = [*cls.code_fields(), *code_fields]
+
         def transform(df: pd.DataFrame):
             return cls.transform_results(df, **expand_args)
 
@@ -115,6 +135,11 @@ class Item:
             page_size=page_size,
             max_pages=max_pages,
             log=log,
+            # Codes
+            code_fields=code_fields,
+            code=code,
+            display=display,
+            system=system,
         )
 
     @classmethod
@@ -137,7 +162,7 @@ class Item:
         >>>
         >>> phc.Observation.get_codes(patient_id="<id>", max_pages=3)
         """
-        code_fields = [*cls.code_keys(), *kwargs.get("code_fields", [])]
+        code_fields = [*cls.code_fields(), *kwargs.get("code_fields", [])]
 
         # Meta tag can significantly clutter things up since it's often a date
         # value instead of a real code

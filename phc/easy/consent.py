@@ -14,7 +14,7 @@ class Consent(PatientItem):
         return "patient.reference"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["meta.tag"]
 
     @staticmethod

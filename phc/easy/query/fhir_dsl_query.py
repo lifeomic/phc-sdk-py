@@ -100,6 +100,29 @@ def _term_adder(term: Optional[dict]):
     return partial(and_query_clause, query_clause={"term": term})
 
 
+def _code_adder(
+    attribute: Union[str],
+    code_fields: List[str],
+    value: Optional[Union[str, List[str]]],
+):
+    if len(code_fields) == 0 or value is None:
+        return identity
+
+    term_or_terms = "term" if isinstance(value, str) else "terms"
+
+    return partial(
+        and_query_clause,
+        query_clause={
+            "bool": {
+                "should": [
+                    {term_or_terms: {f"{key}.{attribute}.keyword": value}}
+                    for key in code_fields
+                ]
+            }
+        },
+    )
+
+
 def _limit_adder(page_size: Union[int, None]):
     if page_size is None:
         return identity
@@ -115,6 +138,11 @@ def build_query(
     patient_id_prefixes: List[str] = ["Patient/"],
     page_size: Optional[int] = None,
     term: Optional[dict] = None,
+    # Codes
+    code_fields: List[str] = [],
+    code: Optional[Union[str, List[str]]] = None,
+    display: Optional[Union[str, List[str]]] = None,
+    system: Optional[Union[str, List[str]]] = None,
 ):
     """Build query with various options
 
@@ -138,8 +166,23 @@ def build_query(
         "Patient/0a20d90f-c73c-4149-953d-7614ce7867f" as well as
         "0a20d90f-c73c-4149-953d-7614ce7867f")
 
+    term : dict
+        Add an arbitrary ES term to the query
+
     page_size: int
         The number of records to fetch per page
+
+    code_fields : List[str]
+        A list of paths to find FHIR codes in
+
+    code : str | List[str]
+        Adds where clause for code value(s)
+
+    display : str | List[str]
+        Adds where clause for code display value(s)
+
+    system : str | List[str]
+        Adds where clause for code system value(s)
     """
 
     return pipe(
@@ -151,5 +194,10 @@ def build_query(
             patient_id_prefixes=patient_id_prefixes,
         ),
         _term_adder(term),
+        _code_adder(attribute="code", code_fields=code_fields, value=code),
+        _code_adder(
+            attribute="display", code_fields=code_fields, value=display
+        ),
+        _code_adder(attribute="system", code_fields=code_fields, value=system),
         _limit_adder(page_size),
     )

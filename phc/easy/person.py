@@ -14,7 +14,7 @@ class Person(PatientItem):
         return "link.target.reference"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["meta.tag"]
 
     @staticmethod

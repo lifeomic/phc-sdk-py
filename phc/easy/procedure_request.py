@@ -10,7 +10,7 @@ class ProcedureRequest(PatientItem):
         return "procedure_request"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["code.coding", "meta.tag"]
 
     @staticmethod
