@@ -19,7 +19,7 @@ from phc.easy.query.fhir_dsl_query import build_query
 from phc.easy.query.ga4gh import recursive_execute_ga4gh
 from phc.easy.util import extract_codes
 from phc.services import Fhir
-from phc.util.api_cache import APICache
+from phc.easy.util.api_cache import APICache
 
 
 class Query:
