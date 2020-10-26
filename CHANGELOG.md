@@ -7,6 +7,73 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *(NOTE: All examples use fictious data or freely available data sets.)*
 
+## [0.19.0] - 2020-10-23
+
+### Added
+
+- Added `GenomicTest` and `GenomicShortVariant`
+
+```python
+# Get genomic tests and the associated sets
+set_ids = phc.GenomicTest.get_data_frame(
+    patient_id="8cb82aa0-7f2c-4fdb-bf91-0ed1b315392c",
+    status="ACTIVE",
+    test_type="shortVariant",
+    all_results=True,
+).id.values.tolist()
+
+# Pull first 1000 short variants on chr1
+phc.GenomicShortVariant.get_data_frame(
+    variant_set_ids=set_ids,
+    chromosome=["chr1"],
+    page_size=1000,
+    log=True
+)
+```
+
+- Added filtering by exact code, system, and/or display
+
+```python
+phc.Condition.get_data_frame(code=["25910003", "30156004"], system="http://snomed.info/sct")
+```
+
+### Fixed
+- Sped up finding projects - `phc.Project.set_current()`
+
+### Changed
+
+- Overhauled `get_codes` to make results more accurate and allow searching by display (See [#93](https://github.com/lifeomic/phc-sdk-py/pull/93) for full discussion)
+
+```python
+# 1. Get display values and number of records they occur in
+phc.Observation.get_codes()
+# =>    doc_count                       display                        field
+# => 0      1094.0          Date of Last Contact                  code.coding
+# => ...
+
+# 2. Get full code values that match this text (case-insensitive)
+phc.Observation.get_codes(display_query="date of")
+# ...
+# Retrieved 2332/2394 results
+#
+# =>           field            system     code                      display     doc_count
+# =>  0  code.coding  http://loinc.org  63931-0            Date of Diagnosis       1094.0
+# =>  1  code.coding  http://loinc.org  21975-8         Date of Last Contact       1094.0
+# =>  2  code.coding  http://loinc.org  21981-6  Date of Disease Progression        144.0
+
+# 3. Get full code values but restrict number of records to find the associated system and code
+phc.Observation.get_codes("status", sample_size=10)
+# ...
+# Retrieved 10/3017 results
+# Records with missing system/code values were not retrieved.
+
+# =>           field     code            system                       display     doc_count
+# =>  0  code.coding  85337-4  http://loinc.org      Estrogen Receptor Status        1048.0
+# =>  1  code.coding  85339-0  http://loinc.org  Progesterone Receptor Status        1047.0
+# =>  2          NaN      NaN               NaN      HER2/neu receptor status         919.0
+# =>  3          NaN      NaN               NaN                    TMB Status           3.0
+```
+
 ## [0.18.1] - 2020-10-09
 
 ### Fixed
@@ -328,6 +395,7 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 - Added the `phc.services.Files` submodule that provides actions for files in PHC projects.
 - Added the `phc.services.Cohorts` submodule that provides actions for files in PHC cohorts.
 
+[0.19.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.18.1...v0.19.0
 [0.18.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.18.0...v0.18.1
 [0.18.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.17.1...v0.18.0
 [0.17.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.16.0...v0.17.1

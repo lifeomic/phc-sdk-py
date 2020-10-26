@@ -1,4 +1,4 @@
-from phc.util.api_cache import APICache
+from phc.easy.util.api_cache import APICache
 
 
 def test_filename_for_fhir_dsl_with_simple_statement():
