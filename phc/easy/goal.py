@@ -10,7 +10,7 @@ class Goal(PatientItem):
         return "goal"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["meta.tag", "target.detailQuantity", "target.measure.coding"]
 
     @staticmethod

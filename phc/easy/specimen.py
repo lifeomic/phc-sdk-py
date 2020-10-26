@@ -10,7 +10,7 @@ class Specimen(PatientItem):
         return "specimen"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["type.coding", "meta.tag", "collection.bodySite.coding"]
 
     @staticmethod

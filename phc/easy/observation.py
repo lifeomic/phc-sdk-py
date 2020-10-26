@@ -10,7 +10,7 @@ class Observation(PatientItem):
         return "observation"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [
             "meta.tag",
             "code.coding",

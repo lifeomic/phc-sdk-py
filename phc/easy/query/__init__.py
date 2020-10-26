@@ -406,7 +406,7 @@ class Query:
             return agg_result
 
         min_count = sample_size or agg_result.doc_count.sum()
-        filtered_code_keys = agg_result.field.unique()
+        filtered_code_fields = agg_result.field.unique()
 
         # Shortcut: If one result, we just need to get the other associated
         # attributes of the code
@@ -424,7 +424,7 @@ class Query:
                             "column": key.split(".")[0],
                         }
                     }
-                    for key in filtered_code_keys
+                    for key in filtered_code_fields
                 ],
                 "where": {
                     "type": "elasticsearch",
@@ -432,14 +432,15 @@ class Query:
                         "multi_match": {
                             "query": display_query,
                             "fields": [
-                                f"{key}.display" for key in filtered_code_keys
+                                f"{key}.display" for key in filtered_code_fields
                             ],
                         }
                     },
                 },
             },
-            page_size=min_count % 9000,
-            max_pages=math.ceil(min_count / 9000),
+            page_size=int(min_count % 9000),
+            max_pages=int(math.ceil(min_count / 9000)),
+            log=kwargs.get("log", False),
         )
 
         codes = extract_codes(

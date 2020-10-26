@@ -14,7 +14,7 @@ class AuditEvent(PatientItem):
         return "entity.reference.reference"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["source.type", "entity.lifecycle"]
 
     @staticmethod

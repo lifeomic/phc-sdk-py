@@ -18,7 +18,7 @@ class DiagnosticReport(PatientItem):
         return "subject.reference"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["meta.tag"]
 
     @staticmethod

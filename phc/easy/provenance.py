@@ -15,7 +15,7 @@ class Provenance(PatientItem):
         return "signature.whoReference.reference"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["signature.type", "agent.role.coding", "meta.tag"]
 
     @staticmethod

@@ -155,7 +155,7 @@ def get_values_at_codeable_paths(value: dict, keys: List[str]):
     return lmapcat(lambda key: get_value_at_codeable_path(value, key), keys)
 
 
-def extract_codes(results: list, display: str, code_keys: List[str]):
+def extract_codes(results: list, display: str, code_fields: List[str]):
     """Extract code values from a list of dictionaries based on the code keys.
     Requires a display value to filter results preemptively (instead of
     filtering afterwards)
@@ -164,7 +164,7 @@ def extract_codes(results: list, display: str, code_keys: List[str]):
     codes = set()
 
     for row in results:
-        row_codes = get_values_at_codeable_paths(row, code_keys)
+        row_codes = get_values_at_codeable_paths(row, code_fields)
         for code in row_codes:
             if (
                 isinstance(code, dict)

@@ -1,6 +1,8 @@
-from toolz import pipe, identity, curry, compose
-from typing import List, Union, Callable
+from functools import partial
+from typing import Callable, List, Optional, Union
+
 from lenses import lens
+from toolz import compose, curry, identity, pipe
 
 from phc.easy.util import add_prefixes
 
@@ -31,12 +33,7 @@ def update_limit(query: dict, update: Callable[[int], int]):
 
 @curry
 def and_query_clause_terms(second_query_clause, first_query_clause):
-    return {
-        "bool": {
-            "should": [first_query_clause, second_query_clause],
-            "minimum_should_match": 2,
-        }
-    }
+    return {"bool": {"must": [first_query_clause, second_query_clause]}}
 
 
 def and_query_clause(query: dict, query_clause: dict):
@@ -96,6 +93,36 @@ def _patient_ids_adder(
     )
 
 
+def _term_adder(term: Optional[dict]):
+    if term is None:
+        return identity
+
+    return partial(and_query_clause, query_clause={"term": term})
+
+
+def _code_adder(
+    attribute: Union[str],
+    code_fields: List[str],
+    value: Optional[Union[str, List[str]]],
+):
+    if len(code_fields) == 0 or value is None:
+        return identity
+
+    term_or_terms = "term" if isinstance(value, str) else "terms"
+
+    return partial(
+        and_query_clause,
+        query_clause={
+            "bool": {
+                "should": [
+                    {term_or_terms: {f"{key}.{attribute}.keyword": value}}
+                    for key in code_fields
+                ]
+            }
+        },
+    )
+
+
 def _limit_adder(page_size: Union[int, None]):
     if page_size is None:
         return identity
@@ -105,11 +132,17 @@ def _limit_adder(page_size: Union[int, None]):
 
 def build_query(
     query: dict,
-    patient_id: Union[str, None] = None,
+    patient_id: Optional[str] = None,
     patient_ids: List[str] = [],
     patient_key: str = "subject.reference",
     patient_id_prefixes: List[str] = ["Patient/"],
-    page_size: Union[int, None] = None,
+    page_size: Optional[int] = None,
+    term: Optional[dict] = None,
+    # Codes
+    code_fields: List[str] = [],
+    code: Optional[Union[str, List[str]]] = None,
+    display: Optional[Union[str, List[str]]] = None,
+    system: Optional[Union[str, List[str]]] = None,
 ):
     """Build query with various options
 
@@ -133,8 +166,23 @@ def build_query(
         "Patient/0a20d90f-c73c-4149-953d-7614ce7867f" as well as
         "0a20d90f-c73c-4149-953d-7614ce7867f")
 
+    term : dict
+        Add an arbitrary ES term to the query
+
     page_size: int
         The number of records to fetch per page
+
+    code_fields : List[str]
+        A list of paths to find FHIR codes in
+
+    code : str | List[str]
+        Adds where clause for code value(s)
+
+    display : str | List[str]
+        Adds where clause for code display value(s)
+
+    system : str | List[str]
+        Adds where clause for code system value(s)
     """
 
     return pipe(
@@ -145,5 +193,11 @@ def build_query(
             patient_key=patient_key,
             patient_id_prefixes=patient_id_prefixes,
         ),
+        _term_adder(term),
+        _code_adder(attribute="code", code_fields=code_fields, value=code),
+        _code_adder(
+            attribute="display", code_fields=code_fields, value=display
+        ),
+        _code_adder(attribute="system", code_fields=code_fields, value=system),
         _limit_adder(page_size),
     )

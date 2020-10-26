@@ -12,7 +12,7 @@ class Patient(Item):
         return "patient"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [
             "extension.valueCodeableConcept.coding",
             "identifier.type.coding",
