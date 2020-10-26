@@ -37,6 +37,8 @@ from phc.easy.diagnostic_report import DiagnosticReport
 from phc.easy.document_reference import DocumentReference
 from phc.easy.encounter import Encounter
 from phc.easy.frame import Frame
+from phc.easy.genomic_short_variant import GenomicShortVariant
+from phc.easy.genomic_test import GenomicTest
 from phc.easy.goal import Goal
 from phc.easy.imaging_study import ImagingStudy
 from phc.easy.immunization import Immunization
@@ -73,6 +75,8 @@ __all__ = [
     &#34;DocumentReference&#34;,
     &#34;Encounter&#34;,
     &#34;Frame&#34;,
+    &#34;GenomicShortVariant&#34;,
+    &#34;GenomicTest&#34;,
     &#34;Goal&#34;,
     &#34;ImagingStudy&#34;,
     &#34;Immunization&#34;,
@@ -142,6 +146,14 @@ __all__ = [
 <dd>
 <div class="desc"></div>
 </dd>
+<dt><code class="name"><a title="phc.easy.genomic_short_variant" href="genomic_short_variant.html">phc.easy.genomic_short_variant</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.genomic_test" href="genomic_test.html">phc.easy.genomic_test</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt><code class="name"><a title="phc.easy.goal" href="goal.html">phc.easy.goal</a></code></dt>
 <dd>
 <div class="desc"></div>
@@ -183,6 +195,10 @@ __all__ = [
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="phc.easy.organization" href="organization.html">phc.easy.organization</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.paging_api_item" href="paging_api_item.html">phc.easy.paging_api_item</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -234,7 +250,7 @@ __all__ = [
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="phc.easy.util" href="util.html">phc.easy.util</a></code></dt>
+<dt><code class="name"><a title="phc.easy.util" href="util/index.html">phc.easy.util</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -267,7 +283,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;entity.reference.reference&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;source.type&#34;, &#34;entity.lifecycle&#34;]
 
     @staticmethod
@@ -302,13 +318,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.AuditEvent.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.AuditEvent.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -316,12 +332,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;source.type&#34;, &#34;entity.lifecycle&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.AuditEvent.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -369,7 +385,7 @@ def get_count_by_patient():
 </details>
 </dd>
 <dt id="phc.easy.AuditEvent.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -539,7 +555,12 @@ Defaults to $PHC_ACCESS_TOKEN</p></div>
 
     @defaultprop
     def project_id(self):
-        return os.environ.get(&#34;PHC_PROJECT_ID&#34;)
+        env_project_id = os.environ.get(&#34;PHC_PROJECT_ID&#34;)
+
+        if env_project_id is None:
+            raise ValueError(&#34;No project_id has been selected.&#34;)
+
+        return env_project_id
 
     def session(self):
         &#34;Create an API session for use with modules not in the &#39;easy&#39; namespace&#34;
@@ -552,7 +573,7 @@ Defaults to $PHC_ACCESS_TOKEN</p></div>
     def details(self):
         return {
             &#34;account&#34;: self.account,
-            &#34;project_id&#34;: self.project_id,
+            &#34;project_id&#34;: getattr(self, &#34;_project_id&#34;, None),
             &#34;token&#34;: self.token,
         }
 
@@ -676,7 +697,12 @@ def account(self):
 </summary>
 <pre><code class="python">@defaultprop
 def project_id(self):
-    return os.environ.get(&#34;PHC_PROJECT_ID&#34;)</code></pre>
+    env_project_id = os.environ.get(&#34;PHC_PROJECT_ID&#34;)
+
+    if env_project_id is None:
+        raise ValueError(&#34;No project_id has been selected.&#34;)
+
+    return env_project_id</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Auth.token"><code class="name">var <span class="ident">token</span></code></dt>
@@ -736,7 +762,7 @@ def token(self):
 <pre><code class="python">def details(self):
     return {
         &#34;account&#34;: self.account,
-        &#34;project_id&#34;: self.project_id,
+        &#34;project_id&#34;: getattr(self, &#34;_project_id&#34;, None),
         &#34;token&#34;: self.token,
     }</code></pre>
 </details>
@@ -841,7 +867,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;care_plan&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;meta.tag&#34;, &#34;category.coding&#34;]
 
     @staticmethod
@@ -863,13 +889,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.CarePlan.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.CarePlan.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -877,12 +903,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;meta.tag&#34;, &#34;category.coding&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.CarePlan.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -922,7 +948,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.CarePlan.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1044,7 +1070,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;condition&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [
             &#34;meta.tag&#34;,
             &#34;code.coding&#34;,
@@ -1083,13 +1109,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Condition.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Condition.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -1097,7 +1123,7 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [
         &#34;meta.tag&#34;,
         &#34;code.coding&#34;,
@@ -1107,7 +1133,7 @@ def code_keys():
 </details>
 </dd>
 <dt id="phc.easy.Condition.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1147,7 +1173,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Condition.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1234,7 +1260,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;patient.reference&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;meta.tag&#34;]
 
     @staticmethod
@@ -1257,13 +1283,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Consent.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Consent.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -1271,12 +1297,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Consent.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1316,7 +1342,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Consent.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1410,7 +1436,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;subject.reference&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;meta.tag&#34;]
 
     @staticmethod
@@ -1432,13 +1458,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.DiagnosticReport.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.DiagnosticReport.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -1446,12 +1472,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.DiagnosticReport.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1491,7 +1517,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.DiagnosticReport.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1590,7 +1616,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;document_reference&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;type.coding&#34;, &#34;content.attachment&#34;, &#34;meta.tag&#34;]
 
     @staticmethod
@@ -1618,13 +1644,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.DocumentReference.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.DocumentReference.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -1632,12 +1658,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;type.coding&#34;, &#34;content.attachment&#34;, &#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.DocumentReference.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1677,7 +1703,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.DocumentReference.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1758,7 +1784,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;subject.reference&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [
             &#34;class&#34;,
             &#34;priority.coding&#34;,
@@ -1803,13 +1829,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Encounter.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Encounter.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -1817,7 +1843,7 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [
         &#34;class&#34;,
         &#34;priority.coding&#34;,
@@ -1830,7 +1856,7 @@ def code_keys():
 </details>
 </dd>
 <dt id="phc.easy.Encounter.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1870,7 +1896,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Encounter.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2307,6 +2333,542 @@ def expand(
 </dd>
 </dl>
 </dd>
+<dt id="phc.easy.GenomicShortVariant"><code class="flex name class">
+<span>class <span class="ident">GenomicShortVariant</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GenomicShortVariant(PagingApiItem):
+    @staticmethod
+    def resource_path():
+        return &#34;genomics/variants&#34;
+
+    @staticmethod
+    def params_class():
+        return GenomicShortVariantOptions
+
+    @staticmethod
+    def transform_results(data_frame: pd.DataFrame, **expand_args):
+        args = {
+            **expand_args,
+            &#34;custom_columns&#34;: [
+                *expand_args.get(&#34;custom_columns&#34;, []),
+                *[
+                    Frame.codeable_like_column_expander(k)
+                    for k in [&#34;clinvar&#34;, &#34;cosmic&#34;, &#34;vcf&#34;]
+                ],
+            ],
+        }
+
+        return Frame.expand(data_frame, **args)
+
+    @classmethod
+    def get_data_frame(
+        cls,
+        # Query parameters
+        variant_set_ids: List[str],
+        include: List[GenomicShortVariantInclude] = [&#34;vcf&#34;],
+        gene: List[str] = [],
+        rsid: List[str] = [],
+        chromosome: List[str] = [],
+        clinvar_allele_id: List[str] = [],
+        clinvar_disease: List[str] = [],
+        clinvar_review: List[str] = [],
+        clinvar_significance: List[str] = [],
+        cosmic_id: List[str] = [],
+        cosmic_status: List[str] = [],
+        cosmic_histology: List[str] = [],
+        cosmic_tumor_site: List[str] = [],
+        variant_class: List[str] = [],
+        group: List[str] = [],
+        impact: List[str] = [],
+        transcript_id: List[str] = [],
+        biotype: List[str] = [],
+        amino_acid_change: List[str] = [],
+        sequence_type: List[str] = [],
+        position: List[str] = [],
+        cosmic_sample_count: List[str] = [],
+        min_allele_frequency: List[str] = [],
+        max_allele_frequency: List[str] = [],
+        pop_allele_frequency: List[str] = [],
+        exac_allele_frequency: List[str] = [],
+        exac_homozygous: List[str] = [],
+        dbnsfp_damaging_count: List[str] = [],
+        dbnsfp_damaging_predictor: List[str] = [],
+        dbnsfp_damaging_vote: List[str] = [],
+        dbnsfp_fathmm_rankscore: List[str] = [],
+        dbnsfp_fathmm_pred: List[str] = [],
+        dbnsfp_mean_rankscore: List[str] = [],
+        dbnsfp_mean_rankscore_predictor: List[str] = [],
+        dbnsfp_mutationtaster_rankscore: List[str] = [],
+        dbnsfp_mutationtaster_pred: List[str] = [],
+        dbnsfp_sift_rankscore: List[str] = [],
+        dbnsfp_sift_pred: List[str] = [],
+        zygosity: List[str] = [],
+        genotype: List[str] = [],
+        variant_allele_frequency: List[str] = [],
+        quality: List[str] = [],
+        read_depth: List[str] = [],
+        alt_read_depth: List[str] = [],
+        ref_read_depth: List[str] = [],
+        variant_filter: List[str] = [],
+        drug_associations: Optional[bool] = None,
+        # Execution parameters,
+        all_results: bool = False,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Optional[int] = None,
+        page_size: Optional[int] = None,
+        log: bool = False,
+        **kw_args,
+    ):
+        &#34;&#34;&#34;Execute a request for genomic short variants
+
+        ## Parameters
+
+        Query: `GenomicShortVariantOptions`
+
+        Execution: `phc.easy.query.Query.execute_paging_api`
+
+        Expansion: `phc.easy.frame.Frame.expand`
+
+        NOTE:
+         - `variant_class` is translated to `class` as a parameter
+         - `variant_filter` is translated to `filter` as a parameter
+        &#34;&#34;&#34;
+        return super().get_data_frame(
+            **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.GenomicShortVariant.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>variant_set_ids: List[str], include: List[<a title="phc.easy.genomic_short_variant.GenomicShortVariantInclude" href="genomic_short_variant.html#phc.easy.genomic_short_variant.GenomicShortVariantInclude">GenomicShortVariantInclude</a>] = ['vcf'], gene: List[str] = [], rsid: List[str] = [], chromosome: List[str] = [], clinvar_allele_id: List[str] = [], clinvar_disease: List[str] = [], clinvar_review: List[str] = [], clinvar_significance: List[str] = [], cosmic_id: List[str] = [], cosmic_status: List[str] = [], cosmic_histology: List[str] = [], cosmic_tumor_site: List[str] = [], variant_class: List[str] = [], group: List[str] = [], impact: List[str] = [], transcript_id: List[str] = [], biotype: List[str] = [], amino_acid_change: List[str] = [], sequence_type: List[str] = [], position: List[str] = [], cosmic_sample_count: List[str] = [], min_allele_frequency: List[str] = [], max_allele_frequency: List[str] = [], pop_allele_frequency: List[str] = [], exac_allele_frequency: List[str] = [], exac_homozygous: List[str] = [], dbnsfp_damaging_count: List[str] = [], dbnsfp_damaging_predictor: List[str] = [], dbnsfp_damaging_vote: List[str] = [], dbnsfp_fathmm_rankscore: List[str] = [], dbnsfp_fathmm_pred: List[str] = [], dbnsfp_mean_rankscore: List[str] = [], dbnsfp_mean_rankscore_predictor: List[str] = [], dbnsfp_mutationtaster_rankscore: List[str] = [], dbnsfp_mutationtaster_pred: List[str] = [], dbnsfp_sift_rankscore: List[str] = [], dbnsfp_sift_pred: List[str] = [], zygosity: List[str] = [], genotype: List[str] = [], variant_allele_frequency: List[str] = [], quality: List[str] = [], read_depth: List[str] = [], alt_read_depth: List[str] = [], ref_read_depth: List[str] = [], variant_filter: List[str] = [], drug_associations: Union[bool, NoneType] = None, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Execute a request for genomic short variants</p>
+<h2 id="parameters">Parameters</h2>
+<p>Query: <code>GenomicShortVariantOptions</code></p>
+<p>Execution: <code><a title="phc.easy.query.Query.execute_paging_api" href="query/index.html#phc.easy.query.Query.execute_paging_api">Query.execute_paging_api()</a></code></p>
+<p>Expansion: <code><a title="phc.easy.frame.Frame.expand" href="frame.html#phc.easy.frame.Frame.expand">Frame.expand()</a></code></p>
+<p>NOTE:
+- <code>variant_class</code> is translated to <code>class</code> as a parameter
+- <code>variant_filter</code> is translated to <code>filter</code> as a parameter</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_data_frame(
+    cls,
+    # Query parameters
+    variant_set_ids: List[str],
+    include: List[GenomicShortVariantInclude] = [&#34;vcf&#34;],
+    gene: List[str] = [],
+    rsid: List[str] = [],
+    chromosome: List[str] = [],
+    clinvar_allele_id: List[str] = [],
+    clinvar_disease: List[str] = [],
+    clinvar_review: List[str] = [],
+    clinvar_significance: List[str] = [],
+    cosmic_id: List[str] = [],
+    cosmic_status: List[str] = [],
+    cosmic_histology: List[str] = [],
+    cosmic_tumor_site: List[str] = [],
+    variant_class: List[str] = [],
+    group: List[str] = [],
+    impact: List[str] = [],
+    transcript_id: List[str] = [],
+    biotype: List[str] = [],
+    amino_acid_change: List[str] = [],
+    sequence_type: List[str] = [],
+    position: List[str] = [],
+    cosmic_sample_count: List[str] = [],
+    min_allele_frequency: List[str] = [],
+    max_allele_frequency: List[str] = [],
+    pop_allele_frequency: List[str] = [],
+    exac_allele_frequency: List[str] = [],
+    exac_homozygous: List[str] = [],
+    dbnsfp_damaging_count: List[str] = [],
+    dbnsfp_damaging_predictor: List[str] = [],
+    dbnsfp_damaging_vote: List[str] = [],
+    dbnsfp_fathmm_rankscore: List[str] = [],
+    dbnsfp_fathmm_pred: List[str] = [],
+    dbnsfp_mean_rankscore: List[str] = [],
+    dbnsfp_mean_rankscore_predictor: List[str] = [],
+    dbnsfp_mutationtaster_rankscore: List[str] = [],
+    dbnsfp_mutationtaster_pred: List[str] = [],
+    dbnsfp_sift_rankscore: List[str] = [],
+    dbnsfp_sift_pred: List[str] = [],
+    zygosity: List[str] = [],
+    genotype: List[str] = [],
+    variant_allele_frequency: List[str] = [],
+    quality: List[str] = [],
+    read_depth: List[str] = [],
+    alt_read_depth: List[str] = [],
+    ref_read_depth: List[str] = [],
+    variant_filter: List[str] = [],
+    drug_associations: Optional[bool] = None,
+    # Execution parameters,
+    all_results: bool = False,
+    auth_args: Auth = Auth.shared(),
+    max_pages: Optional[int] = None,
+    page_size: Optional[int] = None,
+    log: bool = False,
+    **kw_args,
+):
+    &#34;&#34;&#34;Execute a request for genomic short variants
+
+    ## Parameters
+
+    Query: `GenomicShortVariantOptions`
+
+    Execution: `phc.easy.query.Query.execute_paging_api`
+
+    Expansion: `phc.easy.frame.Frame.expand`
+
+    NOTE:
+     - `variant_class` is translated to `class` as a parameter
+     - `variant_filter` is translated to `filter` as a parameter
+    &#34;&#34;&#34;
+    return super().get_data_frame(
+        **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.GenomicShortVariant.params_class"><code class="name flex">
+<span>def <span class="ident">params_class</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.paging_api_item.PagingApiItem.params_class" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem.params_class">params_class</a></code>
+</p>
+<div class="desc inherited"><p>Returns a pydantic type that validates and transforms the params with dict()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def params_class():
+    return GenomicShortVariantOptions</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.GenomicShortVariant.process_params"><code class="name flex">
+<span>def <span class="ident">process_params</span></span>(<span>params: dict) ‑> dict</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.paging_api_item.PagingApiItem.process_params" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem.process_params">process_params</a></code>
+</p>
+<div class="desc inherited"><p>Validates and transforms the API query parameters</p></div>
+</dd>
+<dt id="phc.easy.GenomicShortVariant.resource_path"><code class="name flex">
+<span>def <span class="ident">resource_path</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.paging_api_item.PagingApiItem.resource_path" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem.resource_path">resource_path</a></code>
+</p>
+<div class="desc inherited"><p>Returns the API url name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def resource_path():
+    return &#34;genomics/variants&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.GenomicShortVariant.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.paging_api_item.PagingApiItem.transform_results" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(data_frame: pd.DataFrame, **expand_args):
+    args = {
+        **expand_args,
+        &#34;custom_columns&#34;: [
+            *expand_args.get(&#34;custom_columns&#34;, []),
+            *[
+                Frame.codeable_like_column_expander(k)
+                for k in [&#34;clinvar&#34;, &#34;cosmic&#34;, &#34;vcf&#34;]
+            ],
+        ],
+    }
+
+    return Frame.expand(data_frame, **args)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.GenomicTest"><code class="flex name class">
+<span>class <span class="ident">GenomicTest</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GenomicTest(PagingApiItem):
+    @staticmethod
+    def resource_path():
+        return &#34;genomics/projects/:project_id/tests&#34;
+
+    @staticmethod
+    def params_class():
+        return GenomicTestOptions
+
+    @staticmethod
+    def transform_results(data_frame: pd.DataFrame, **expand_args):
+        args = {
+            **expand_args,
+            &#34;code_columns&#34;: [
+                *expand_args.get(&#34;code_columns&#34;, []),
+                &#34;bodySite&#34;,
+                &#34;patient&#34;,
+            ],
+            &#34;custom_columns&#34;: [
+                *expand_args.get(&#34;custom_columns&#34;, []),
+                Frame.codeable_like_column_expander(&#34;sourceFile&#34;),
+            ],
+        }
+
+        return (
+            pd.concat(
+                data_frame.apply(
+                    lambda x: pd.DataFrame(
+                        [{&#34;index&#34;: x.name, **s} for s in x.sets]
+                    ),
+                    axis=1,
+                ).values
+            )
+            .join(
+                Frame.expand(data_frame, **args).drop([&#34;sets&#34;], axis=1),
+                on=&#34;index&#34;,
+                rsuffix=&#34;.test&#34;,
+            )
+            .drop([&#34;index&#34;], axis=1)
+            .reset_index(drop=True)
+        )
+
+    @classmethod
+    def get_data_frame(
+        cls,
+        patient_id: Optional[str] = None,
+        status: Optional[GenomicTestStatus] = None,
+        test_type: Optional[GenomicTestType] = None,
+        all_results: bool = False,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Optional[int] = None,
+        page_size: Optional[int] = None,
+        log: bool = False,
+        **kw_args,
+    ):
+        &#34;&#34;&#34;Execute a request for genomic tests
+
+        ## Parameters
+
+        Query: `GenomicTestOptions`
+
+        Execution: `phc.easy.query.Query.execute_paging_api`
+
+        Expansion: `phc.easy.frame.Frame.expand`
+
+        NOTE: `test_type` is translated to `type` as a parameter
+        &#34;&#34;&#34;
+        df = super().get_data_frame(
+            **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+        )
+
+        if test_type and len(df) &gt; 0:
+            # TODO: Remove when API fixed
+
+            # NOTE: The API does not filter the returned sets because it is a
+            # nested structure. Since it&#39;s not a boatload of information, we opt
+            # to filter client-side for now.
+            return df[
+                df.setType == getattr(test_type, &#34;value&#34;, test_type)
+            ].reset_index(drop=True)
+
+        return df</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.GenomicTest.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>patient_id: Union[str, NoneType] = None, status: Union[<a title="phc.easy.genomic_test.GenomicTestStatus" href="genomic_test.html#phc.easy.genomic_test.GenomicTestStatus">GenomicTestStatus</a>, NoneType] = None, test_type: Union[<a title="phc.easy.genomic_test.GenomicTestType" href="genomic_test.html#phc.easy.genomic_test.GenomicTestType">GenomicTestType</a>, NoneType] = None, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Execute a request for genomic tests</p>
+<h2 id="parameters">Parameters</h2>
+<p>Query: <code>GenomicTestOptions</code></p>
+<p>Execution: <code><a title="phc.easy.query.Query.execute_paging_api" href="query/index.html#phc.easy.query.Query.execute_paging_api">Query.execute_paging_api()</a></code></p>
+<p>Expansion: <code><a title="phc.easy.frame.Frame.expand" href="frame.html#phc.easy.frame.Frame.expand">Frame.expand()</a></code></p>
+<p>NOTE: <code>test_type</code> is translated to <code>type</code> as a parameter</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_data_frame(
+    cls,
+    patient_id: Optional[str] = None,
+    status: Optional[GenomicTestStatus] = None,
+    test_type: Optional[GenomicTestType] = None,
+    all_results: bool = False,
+    auth_args: Auth = Auth.shared(),
+    max_pages: Optional[int] = None,
+    page_size: Optional[int] = None,
+    log: bool = False,
+    **kw_args,
+):
+    &#34;&#34;&#34;Execute a request for genomic tests
+
+    ## Parameters
+
+    Query: `GenomicTestOptions`
+
+    Execution: `phc.easy.query.Query.execute_paging_api`
+
+    Expansion: `phc.easy.frame.Frame.expand`
+
+    NOTE: `test_type` is translated to `type` as a parameter
+    &#34;&#34;&#34;
+    df = super().get_data_frame(
+        **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+    )
+
+    if test_type and len(df) &gt; 0:
+        # TODO: Remove when API fixed
+
+        # NOTE: The API does not filter the returned sets because it is a
+        # nested structure. Since it&#39;s not a boatload of information, we opt
+        # to filter client-side for now.
+        return df[
+            df.setType == getattr(test_type, &#34;value&#34;, test_type)
+        ].reset_index(drop=True)
+
+    return df</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.GenomicTest.params_class"><code class="name flex">
+<span>def <span class="ident">params_class</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.paging_api_item.PagingApiItem.params_class" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem.params_class">params_class</a></code>
+</p>
+<div class="desc inherited"><p>Returns a pydantic type that validates and transforms the params with dict()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def params_class():
+    return GenomicTestOptions</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.GenomicTest.process_params"><code class="name flex">
+<span>def <span class="ident">process_params</span></span>(<span>params: dict) ‑> dict</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.paging_api_item.PagingApiItem.process_params" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem.process_params">process_params</a></code>
+</p>
+<div class="desc inherited"><p>Validates and transforms the API query parameters</p></div>
+</dd>
+<dt id="phc.easy.GenomicTest.resource_path"><code class="name flex">
+<span>def <span class="ident">resource_path</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.paging_api_item.PagingApiItem.resource_path" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem.resource_path">resource_path</a></code>
+</p>
+<div class="desc inherited"><p>Returns the API url name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def resource_path():
+    return &#34;genomics/projects/:project_id/tests&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.GenomicTest.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.paging_api_item.PagingApiItem.transform_results" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(data_frame: pd.DataFrame, **expand_args):
+    args = {
+        **expand_args,
+        &#34;code_columns&#34;: [
+            *expand_args.get(&#34;code_columns&#34;, []),
+            &#34;bodySite&#34;,
+            &#34;patient&#34;,
+        ],
+        &#34;custom_columns&#34;: [
+            *expand_args.get(&#34;custom_columns&#34;, []),
+            Frame.codeable_like_column_expander(&#34;sourceFile&#34;),
+        ],
+    }
+
+    return (
+        pd.concat(
+            data_frame.apply(
+                lambda x: pd.DataFrame(
+                    [{&#34;index&#34;: x.name, **s} for s in x.sets]
+                ),
+                axis=1,
+            ).values
+        )
+        .join(
+            Frame.expand(data_frame, **args).drop([&#34;sets&#34;], axis=1),
+            on=&#34;index&#34;,
+            rsuffix=&#34;.test&#34;,
+        )
+        .drop([&#34;index&#34;], axis=1)
+        .reset_index(drop=True)
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 <dt id="phc.easy.Goal"><code class="flex name class">
 <span>class <span class="ident">Goal</span></span>
 </code></dt>
@@ -2323,7 +2885,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;goal&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;meta.tag&#34;, &#34;target.detailQuantity&#34;, &#34;target.measure.coding&#34;]
 
     @staticmethod
@@ -2346,13 +2908,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Goal.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Goal.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -2360,12 +2922,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;meta.tag&#34;, &#34;target.detailQuantity&#34;, &#34;target.measure.coding&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Goal.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2405,7 +2967,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Goal.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2481,7 +3043,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;patient.reference&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;procedureCode.coding&#34; &#34;meta.tag&#34;]
 
     @staticmethod
@@ -2506,13 +3068,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.ImagingStudy.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.ImagingStudy.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -2520,12 +3082,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;procedureCode.coding&#34; &#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.ImagingStudy.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2565,7 +3127,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.ImagingStudy.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2661,7 +3223,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;patient.reference&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;vaccineCode.coding&#34;, &#34;meta.tag&#34;]
 
     @staticmethod
@@ -2684,13 +3246,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Immunization.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Immunization.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -2698,12 +3260,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;vaccineCode.coding&#34;, &#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Immunization.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2743,7 +3305,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Immunization.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2848,7 +3410,7 @@ from a FSS table</p></div>
         raise ValueError(&#34;Table name should be implemented by subclass&#34;)
 
     @staticmethod
-    def code_keys() -&gt; List[str]:
+    def code_fields() -&gt; List[str]:
         &#34;Returns the code keys (e.g. when searching for codes)&#34;
         return []
 
@@ -2882,6 +3444,11 @@ from a FSS table</p></div>
         ignore_cache: bool = False,
         expand_args: dict = {},
         log: bool = False,
+        # Codes
+        code: Optional[Union[str, List[str]]] = None,
+        display: Optional[Union[str, List[str]]] = None,
+        system: Optional[Union[str, List[str]]] = None,
+        code_fields: List[str] = [],
     ):
         &#34;&#34;&#34;Retrieve records
 
@@ -2916,6 +3483,18 @@ from a FSS table</p></div>
         log : bool = False
             Whether to log some diagnostic statements for debugging
 
+        code : str | List[str]
+            Adds where clause for code value(s)
+
+        display : str | List[str]
+            Adds where clause for code display value(s)
+
+        system : str | List[str]
+            Adds where clause for code system value(s)
+
+        code_fields : List[str]
+            A list of paths to find FHIR codes in (default: codes for the given entity)
+
         Examples
         --------
         &gt;&gt;&gt; import phc.easy as phc
@@ -2932,6 +3511,8 @@ from a FSS table</p></div>
             &#34;from&#34;: [{&#34;table&#34;: cls.table_name()}],
         }
 
+        code_fields = [*cls.code_fields(), *code_fields]
+
         def transform(df: pd.DataFrame):
             return cls.transform_results(df, **expand_args)
 
@@ -2946,13 +3527,24 @@ from a FSS table</p></div>
             page_size=page_size,
             max_pages=max_pages,
             log=log,
+            # Codes
+            code_fields=code_fields,
+            code=code,
+            display=display,
+            system=system,
         )
 
     @classmethod
-    def get_codes(cls, exclude_meta_tag=True, **kwargs):
+    def get_codes(
+        cls,
+        display_query: Optional[str] = None,
+        sample_size: Optional[int] = None,
+        exclude_meta_tag=True,
+        **kwargs,
+    ):
         &#34;&#34;&#34;Find all codes
 
-        See possible argments for :func:`~phc.easy.query.Query.get_codes`
+        See possible argments for `phc.easy.query.Query.get_codes`
 
         Examples
         --------
@@ -2962,7 +3554,7 @@ from a FSS table</p></div>
         &gt;&gt;&gt;
         &gt;&gt;&gt; phc.Observation.get_codes(patient_id=&#34;&lt;id&gt;&#34;, max_pages=3)
         &#34;&#34;&#34;
-        code_fields = [*cls.code_keys(), *kwargs.get(&#34;code_fields&#34;, [])]
+        code_fields = [*cls.code_fields(), *kwargs.get(&#34;code_fields&#34;, [])]
 
         # Meta tag can significantly clutter things up since it&#39;s often a date
         # value instead of a real code
@@ -2972,6 +3564,8 @@ from a FSS table</p></div>
             ]
 
         return Query.get_codes(
+            display_query=display_query,
+            sample_size=sample_size,
             table_name=cls.table_name(),
             code_fields=code_fields,
             **without_keys(kwargs, [&#34;code_fields&#34;]),
@@ -3009,8 +3603,8 @@ from a FSS table</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Item.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>) ‑> List[str]</span>
+<dt id="phc.easy.Item.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>) ‑> List[str]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the code keys (e.g. when searching for codes)</p></div>
@@ -3019,17 +3613,17 @@ from a FSS table</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys() -&gt; List[str]:
+def code_fields() -&gt; List[str]:
     &#34;Returns the code keys (e.g. when searching for codes)&#34;
     return []</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Item.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Find all codes</p>
-<p>See possible argments for :func:<code>~phc.easy.query.Query.get_codes</code></p>
+<p>See possible argments for <code><a title="phc.easy.query.Query.get_codes" href="query/index.html#phc.easy.query.Query.get_codes">Query.get_codes()</a></code></p>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
 &gt;&gt;&gt; phc.Auth.set({'account': '&lt;your-account-name&gt;'})
@@ -3042,10 +3636,16 @@ def code_keys() -&gt; List[str]:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@classmethod
-def get_codes(cls, exclude_meta_tag=True, **kwargs):
+def get_codes(
+    cls,
+    display_query: Optional[str] = None,
+    sample_size: Optional[int] = None,
+    exclude_meta_tag=True,
+    **kwargs,
+):
     &#34;&#34;&#34;Find all codes
 
-    See possible argments for :func:`~phc.easy.query.Query.get_codes`
+    See possible argments for `phc.easy.query.Query.get_codes`
 
     Examples
     --------
@@ -3055,7 +3655,7 @@ def get_codes(cls, exclude_meta_tag=True, **kwargs):
     &gt;&gt;&gt;
     &gt;&gt;&gt; phc.Observation.get_codes(patient_id=&#34;&lt;id&gt;&#34;, max_pages=3)
     &#34;&#34;&#34;
-    code_fields = [*cls.code_keys(), *kwargs.get(&#34;code_fields&#34;, [])]
+    code_fields = [*cls.code_fields(), *kwargs.get(&#34;code_fields&#34;, [])]
 
     # Meta tag can significantly clutter things up since it&#39;s often a date
     # value instead of a real code
@@ -3065,6 +3665,8 @@ def get_codes(cls, exclude_meta_tag=True, **kwargs):
         ]
 
     return Query.get_codes(
+        display_query=display_query,
+        sample_size=sample_size,
         table_name=cls.table_name(),
         code_fields=code_fields,
         **without_keys(kwargs, [&#34;code_fields&#34;]),
@@ -3141,7 +3743,7 @@ def get_count_by_field(cls, field: str, **kwargs):
 </details>
 </dd>
 <dt id="phc.easy.Item.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retrieve records</p>
@@ -3167,6 +3769,14 @@ Caching only occurs when all results are being retrieved.</dd>
 <dd>Additional arguments passed to phc.Frame.expand</dd>
 <dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
 <dd>Whether to log some diagnostic statements for debugging</dd>
+<dt><strong><code>code</code></strong> :&ensp;<code>str | List[str]</code></dt>
+<dd>Adds where clause for code value(s)</dd>
+<dt><strong><code>display</code></strong> :&ensp;<code>str | List[str]</code></dt>
+<dd>Adds where clause for code display value(s)</dd>
+<dt><strong><code>system</code></strong> :&ensp;<code>str | List[str]</code></dt>
+<dd>Adds where clause for code system value(s)</dd>
+<dt><strong><code>code_fields</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>A list of paths to find FHIR codes in (default: codes for the given entity)</dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
@@ -3193,6 +3803,11 @@ def get_data_frame(
     ignore_cache: bool = False,
     expand_args: dict = {},
     log: bool = False,
+    # Codes
+    code: Optional[Union[str, List[str]]] = None,
+    display: Optional[Union[str, List[str]]] = None,
+    system: Optional[Union[str, List[str]]] = None,
+    code_fields: List[str] = [],
 ):
     &#34;&#34;&#34;Retrieve records
 
@@ -3227,6 +3842,18 @@ def get_data_frame(
     log : bool = False
         Whether to log some diagnostic statements for debugging
 
+    code : str | List[str]
+        Adds where clause for code value(s)
+
+    display : str | List[str]
+        Adds where clause for code display value(s)
+
+    system : str | List[str]
+        Adds where clause for code system value(s)
+
+    code_fields : List[str]
+        A list of paths to find FHIR codes in (default: codes for the given entity)
+
     Examples
     --------
     &gt;&gt;&gt; import phc.easy as phc
@@ -3243,6 +3870,8 @@ def get_data_frame(
         &#34;from&#34;: [{&#34;table&#34;: cls.table_name()}],
     }
 
+    code_fields = [*cls.code_fields(), *code_fields]
+
     def transform(df: pd.DataFrame):
         return cls.transform_results(df, **expand_args)
 
@@ -3257,6 +3886,11 @@ def get_data_frame(
         page_size=page_size,
         max_pages=max_pages,
         log=log,
+        # Codes
+        code_fields=code_fields,
+        code=code,
+        display=display,
+        system=system,
     )</code></pre>
 </details>
 </dd>
@@ -3308,7 +3942,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;media&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;bodySite.coding&#34;, &#34;meta.tag&#34;]
 
     @staticmethod
@@ -3337,13 +3971,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Media.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Media.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -3351,12 +3985,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;bodySite.coding&#34;, &#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Media.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -3396,7 +4030,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Media.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -3474,7 +4108,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;medication_administration&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;medicationCodeableConcept.coding&#34;, &#34;dosage.dose&#34;, &#34;meta.tag&#34;]
 
     @staticmethod
@@ -3507,13 +4141,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.MedicationAdministration.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.MedicationAdministration.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -3521,12 +4155,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;medicationCodeableConcept.coding&#34;, &#34;dosage.dose&#34;, &#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.MedicationAdministration.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -3566,7 +4200,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.MedicationAdministration.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -3648,7 +4282,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;medication_dispense&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [
             &#34;quantity&#34;,
             &#34;medicationCodeableConcept.coding&#34;,
@@ -3681,13 +4315,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.MedicationDispense.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.MedicationDispense.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -3695,7 +4329,7 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [
         &#34;quantity&#34;,
         &#34;medicationCodeableConcept.coding&#34;,
@@ -3706,7 +4340,7 @@ def code_keys():
 </details>
 </dd>
 <dt id="phc.easy.MedicationDispense.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -3746,7 +4380,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.MedicationDispense.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -3822,7 +4456,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;medication_request&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;medicationCodeableConcept.coding&#34;, &#34;meta.tag&#34;]
 
     @staticmethod
@@ -3860,13 +4494,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.MedicationRequest.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.MedicationRequest.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -3874,12 +4508,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;medicationCodeableConcept.coding&#34;, &#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.MedicationRequest.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -3919,7 +4553,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.MedicationRequest.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4006,7 +4640,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;medication_statement&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;medicationCodeableConcept.coding&#34;, &#34;meta.tag&#34;]
 
     @staticmethod
@@ -4034,13 +4668,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.MedicationStatement.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.MedicationStatement.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -4048,12 +4682,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;medicationCodeableConcept.coding&#34;, &#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.MedicationStatement.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4093,7 +4727,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.MedicationStatement.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4170,7 +4804,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;observation&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [
             &#34;meta.tag&#34;,
             &#34;code.coding&#34;,
@@ -4207,13 +4841,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Observation.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Observation.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -4221,7 +4855,7 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [
         &#34;meta.tag&#34;,
         &#34;code.coding&#34;,
@@ -4233,7 +4867,7 @@ def code_keys():
 </details>
 </dd>
 <dt id="phc.easy.Observation.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4273,7 +4907,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Observation.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4352,7 +4986,7 @@ from a FSS table</p></div>
         return &#34;organization&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;type.coding&#34;, &#34;meta.tag&#34;]
 
     @staticmethod
@@ -4372,13 +5006,13 @@ from a FSS table</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Organization.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Organization.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.code_keys" href="item.html#phc.easy.item.Item.code_keys">code_keys</a></code>
+<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.code_fields" href="item.html#phc.easy.item.Item.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -4386,12 +5020,12 @@ from a FSS table</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;type.coding&#34;, &#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Organization.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4421,7 +5055,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Organization.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4491,7 +5125,7 @@ from a FSS table</p></div>
         return &#34;patient&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [
             &#34;extension.valueCodeableConcept.coding&#34;,
             &#34;identifier.type.coding&#34;,
@@ -4524,13 +5158,13 @@ from a FSS table</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Patient.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Patient.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.code_keys" href="item.html#phc.easy.item.Item.code_keys">code_keys</a></code>
+<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.code_fields" href="item.html#phc.easy.item.Item.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -4538,7 +5172,7 @@ from a FSS table</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [
         &#34;extension.valueCodeableConcept.coding&#34;,
         &#34;identifier.type.coding&#34;,
@@ -4548,7 +5182,7 @@ def code_keys():
 </details>
 </dd>
 <dt id="phc.easy.Patient.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4578,7 +5212,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Patient.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4677,6 +5311,11 @@ from a FSS table that relates to a patient</p></div>
         ignore_cache: bool = False,
         expand_args: dict = {},
         log: bool = False,
+        # Codes
+        code: Optional[Union[str, List[str]]] = None,
+        display: Optional[Union[str, List[str]]] = None,
+        system: Optional[Union[str, List[str]]] = None,
+        code_fields: List[str] = [],
     ):
         &#34;&#34;&#34;Retrieve records
 
@@ -4717,6 +5356,18 @@ from a FSS table that relates to a patient</p></div>
         log : bool = False
             Whether to log some diagnostic statements for debugging
 
+        code : str | List[str]
+            Adds where clause for code value(s)
+
+        display : str | List[str]
+            Adds where clause for code display value(s)
+
+        system : str | List[str]
+            Adds where clause for code system value(s)
+
+        code_fields : List[str]
+            A list of paths to find FHIR codes in (default: codes for the given entity)
+
         Examples
         --------
         &gt;&gt;&gt; import phc.easy as phc
@@ -4732,6 +5383,8 @@ from a FSS table that relates to a patient</p></div>
             &#34;columns&#34;: &#34;*&#34;,
             &#34;from&#34;: [{&#34;table&#34;: cls.table_name()}],
         }
+
+        code_fields = [*cls.code_fields(), *code_fields]
 
         def transform(df: pd.DataFrame):
             return cls.transform_results(df, **expand_args)
@@ -4751,6 +5404,11 @@ from a FSS table that relates to a patient</p></div>
             patient_key=cls.patient_key(),
             log=log,
             patient_id_prefixes=cls.patient_id_prefixes(),
+            # Codes
+            code_fields=code_fields,
+            code=code,
+            display=display,
+            system=system,
         )
 
     @classmethod
@@ -4810,18 +5468,18 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.PatientItem.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>) ‑> List[str]</span>
+<dt id="phc.easy.PatientItem.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>) ‑> List[str]</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.code_keys" href="item.html#phc.easy.item.Item.code_keys">code_keys</a></code>
+<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.code_fields" href="item.html#phc.easy.item.Item.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 </dd>
 <dt id="phc.easy.PatientItem.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -4894,7 +5552,7 @@ def get_count_by_patient(cls, **kwargs):
 </details>
 </dd>
 <dt id="phc.easy.PatientItem.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retrieve records</p>
@@ -4924,6 +5582,14 @@ Caching only occurs when all results are being retrieved.</dd>
 <dd>Additional arguments passed to phc.Frame.expand</dd>
 <dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
 <dd>Whether to log some diagnostic statements for debugging</dd>
+<dt><strong><code>code</code></strong> :&ensp;<code>str | List[str]</code></dt>
+<dd>Adds where clause for code value(s)</dd>
+<dt><strong><code>display</code></strong> :&ensp;<code>str | List[str]</code></dt>
+<dd>Adds where clause for code display value(s)</dd>
+<dt><strong><code>system</code></strong> :&ensp;<code>str | List[str]</code></dt>
+<dd>Adds where clause for code system value(s)</dd>
+<dt><strong><code>code_fields</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>A list of paths to find FHIR codes in (default: codes for the given entity)</dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
@@ -4952,6 +5618,11 @@ def get_data_frame(
     ignore_cache: bool = False,
     expand_args: dict = {},
     log: bool = False,
+    # Codes
+    code: Optional[Union[str, List[str]]] = None,
+    display: Optional[Union[str, List[str]]] = None,
+    system: Optional[Union[str, List[str]]] = None,
+    code_fields: List[str] = [],
 ):
     &#34;&#34;&#34;Retrieve records
 
@@ -4992,6 +5663,18 @@ def get_data_frame(
     log : bool = False
         Whether to log some diagnostic statements for debugging
 
+    code : str | List[str]
+        Adds where clause for code value(s)
+
+    display : str | List[str]
+        Adds where clause for code display value(s)
+
+    system : str | List[str]
+        Adds where clause for code system value(s)
+
+    code_fields : List[str]
+        A list of paths to find FHIR codes in (default: codes for the given entity)
+
     Examples
     --------
     &gt;&gt;&gt; import phc.easy as phc
@@ -5007,6 +5690,8 @@ def get_data_frame(
         &#34;columns&#34;: &#34;*&#34;,
         &#34;from&#34;: [{&#34;table&#34;: cls.table_name()}],
     }
+
+    code_fields = [*cls.code_fields(), *code_fields]
 
     def transform(df: pd.DataFrame):
         return cls.transform_results(df, **expand_args)
@@ -5026,6 +5711,11 @@ def get_data_frame(
         patient_key=cls.patient_key(),
         log=log,
         patient_id_prefixes=cls.patient_id_prefixes(),
+        # Codes
+        code_fields=code_fields,
+        code=code,
+        display=display,
+        system=system,
     )</code></pre>
 </details>
 </dd>
@@ -5099,7 +5789,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;link.target.reference&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;meta.tag&#34;]
 
     @staticmethod
@@ -5120,13 +5810,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Person.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Person.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -5134,12 +5824,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Person.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5179,7 +5869,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Person.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5263,7 +5953,7 @@ from a FSS table</p></div>
         return &#34;practitioner&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;meta.tag&#34;]
 
     @staticmethod
@@ -5282,13 +5972,13 @@ from a FSS table</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Practitioner.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Practitioner.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.code_keys" href="item.html#phc.easy.item.Item.code_keys">code_keys</a></code>
+<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.code_fields" href="item.html#phc.easy.item.Item.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -5296,12 +5986,12 @@ from a FSS table</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Practitioner.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5331,7 +6021,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Practitioner.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5400,7 +6090,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;procedure&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;meta.tag&#34;, &#34;code.coding&#34;, &#34;category.coding&#34;]
 
     @staticmethod
@@ -5430,13 +6120,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Procedure.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Procedure.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -5444,12 +6134,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;meta.tag&#34;, &#34;code.coding&#34;, &#34;category.coding&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Procedure.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5489,7 +6179,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Procedure.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5568,7 +6258,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;procedure_request&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;code.coding&#34;, &#34;meta.tag&#34;]
 
     @staticmethod
@@ -5598,13 +6288,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.ProcedureRequest.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.ProcedureRequest.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -5612,12 +6302,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;code.coding&#34;, &#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.ProcedureRequest.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5657,7 +6347,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.ProcedureRequest.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5738,24 +6428,27 @@ def transform_results(df: pd.DataFrame, **expand_args):
         Attributes
         ----------
         auth_args : Any
-            The authenication to use for the account and project (defaults to shared)
+            The authentication to use for the account and project (defaults to shared)
         &#34;&#34;&#34;
         auth = Auth(auth_args)
 
-        def list_projects(acc, account):
+        def list_projects(account):
             session = auth.customized({&#34;account&#34;: account[&#34;id&#34;]}).session()
 
             return [
-                *acc,
-                *[
-                    {**project, &#34;account&#34;: account[&#34;id&#34;]}
-                    for project in services.Projects(session)
-                    .get_list()
-                    .data[&#34;items&#34;]
-                ],
+                {**project, &#34;account&#34;: account[&#34;id&#34;]}
+                for project in services.Projects(session)
+                .get_list()
+                .data[&#34;items&#34;]
             ]
 
-        return pd.DataFrame(reduce(list_projects, auth.accounts(), []))
+        return pipe(
+            auth.accounts(),
+            partial(pmap, list_projects),
+            concat,
+            list,
+            pd.DataFrame,
+        )
 
     @staticmethod
     def find(search: str, auth_args: Auth = Auth.shared()):
@@ -5844,7 +6537,7 @@ def find(search: str, auth_args: Auth = Auth.shared()):
 <h2 id="attributes">Attributes</h2>
 <dl>
 <dt><strong><code>auth_args</code></strong> :&ensp;<code>Any</code></dt>
-<dd>The authenication to use for the account and project (defaults to shared)</dd>
+<dd>The authentication to use for the account and project (defaults to shared)</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -5858,24 +6551,27 @@ def get_data_frame(auth_args=Auth.shared()):
     Attributes
     ----------
     auth_args : Any
-        The authenication to use for the account and project (defaults to shared)
+        The authentication to use for the account and project (defaults to shared)
     &#34;&#34;&#34;
     auth = Auth(auth_args)
 
-    def list_projects(acc, account):
+    def list_projects(account):
         session = auth.customized({&#34;account&#34;: account[&#34;id&#34;]}).session()
 
         return [
-            *acc,
-            *[
-                {**project, &#34;account&#34;: account[&#34;id&#34;]}
-                for project in services.Projects(session)
-                .get_list()
-                .data[&#34;items&#34;]
-            ],
+            {**project, &#34;account&#34;: account[&#34;id&#34;]}
+            for project in services.Projects(session)
+            .get_list()
+            .data[&#34;items&#34;]
         ]
 
-    return pd.DataFrame(reduce(list_projects, auth.accounts(), []))</code></pre>
+    return pipe(
+        auth.accounts(),
+        partial(pmap, list_projects),
+        concat,
+        list,
+        pd.DataFrame,
+    )</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Project.set_current"><code class="name flex">
@@ -5945,7 +6641,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;signature.whoReference.reference&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;signature.type&#34;, &#34;agent.role.coding&#34;, &#34;meta.tag&#34;]
 
     @staticmethod
@@ -5971,13 +6667,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Provenance.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Provenance.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -5985,12 +6681,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;signature.type&#34;, &#34;agent.role.coding&#34;, &#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Provenance.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -6030,7 +6726,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Provenance.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -6146,7 +6842,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
         fhir = Fhir(auth.session())
 
         response = fhir.execute_es(
-            auth.project_id, build_query(query, page_size=1), scroll=&#34;true&#34;,
+            auth.project_id, build_query(query, page_size=1), scroll=&#34;true&#34;
         )
 
         return response.data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]
@@ -6253,6 +6949,76 @@ def transform_results(df: pd.DataFrame, **expand_args):
         )
 
     @staticmethod
+    def execute_paging_api(
+        path: str,
+        params: dict = {},
+        http_verb: str = &#34;GET&#34;,
+        all_results: bool = False,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Optional[int] = None,
+        page_size: Optional[int] = None,
+        log: bool = False,
+    ):
+        &#34;&#34;&#34;Execute a API query that pages through results
+
+        See https://docs.us.lifeomic.com/api/?shell#lifeomic-core-api-genomics
+        for example
+
+        Attributes
+        ----------
+        path : str
+            The API path to hit
+            (Special tokens: `:project_id`)
+
+        params : dict
+            The parameters to include with request
+
+        http_verb : str
+            The HTTP method to use
+
+        all_results : bool = False
+            Retrieve sample of results (25) or entire set of records
+
+        auth_args : Auth, dict
+            Additional arguments for authentication
+
+        max_pages : int
+            The number of pages to retrieve (useful if working with tons of records)
+
+        page_size : int
+            The number of records to fetch per page
+
+        log : bool = False
+            Whether to log some diagnostic statements for debugging
+
+        Examples
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt; phc.Query.execute_paging_api(
+                &#34;genomics/projects/:project_id/tests&#34;,
+                params={
+                    &#34;patientId&#34;: &#34;&lt;patient-uuid&gt;&#34;
+                }
+            )
+        &#34;&#34;&#34;
+        return with_progress(
+            lambda: tqdm(),
+            lambda progress: recursive_paging_api_call(
+                path,
+                params=params,
+                http_verb=http_verb,
+                scroll=all_results,
+                max_pages=max_pages,
+                page_size=page_size,
+                log=log,
+                auth_args=auth_args,
+                progress=progress,
+            ),
+        )
+
+    @staticmethod
     def execute_fhir_dsl_with_options(
         query: dict,
         transform: Callable[[pd.DataFrame], pd.DataFrame],
@@ -6312,8 +7078,14 @@ def transform_results(df: pd.DataFrame, **expand_args):
         return transform(df)
 
     @staticmethod
-    def get_codes(table_name: str, code_fields: List[str], **kwargs):
-        &#34;&#34;&#34;Find FHIR codes for a given table
+    def get_codes(
+        table_name: str,
+        code_fields: List[str],
+        display_query: Optional[str] = None,
+        sample_size: Optional[int] = None,
+        **kwargs,
+    ):
+        &#34;&#34;&#34;Find FHIR codes with a display for a given table
 
         Attributes
         ----------
@@ -6323,8 +7095,16 @@ def transform_results(df: pd.DataFrame, **expand_args):
         code_fields : List[str]
             The fields of this table that contain a system, code, and display
 
+        display_query : Optional[str]
+            Part of the code&#39;s display to match (will try to extract full code
+            if passed)
+
+        sample_size : Optional[int]
+            Override the search size for finding codes (may miss codes on later
+            records)
+
         kwargs : dict
-            Arguments to pass to :func:`~phc.easy.query.Query.execute_composite_aggregations`
+            Arguments to pass to `phc.easy.query.Query.execute_composite_aggregations`
 
         Examples
         --------
@@ -6346,6 +7126,24 @@ def transform_results(df: pd.DataFrame, **expand_args):
             frame[&#34;field&#34;] = prefix
             return frame
 
+        if display_query is not None:
+            kwargs = {
+                **kwargs,
+                &#34;query_overrides&#34;: {
+                    &#34;where&#34;: {
+                        &#34;type&#34;: &#34;elasticsearch&#34;,
+                        &#34;query&#34;: {
+                            &#34;multi_match&#34;: {
+                                &#34;query&#34;: display_query,
+                                &#34;fields&#34;: [
+                                    f&#34;{key}.display&#34; for key in code_fields
+                                ],
+                            }
+                        },
+                    }
+                },
+            }
+
         results = Query.execute_composite_aggregations(
             table_name=table_name,
             key_sources_pairs=[
@@ -6353,19 +7151,10 @@ def transform_results(df: pd.DataFrame, **expand_args):
                     field,
                     [
                         {
-                            &#34;system&#34;: {
-                                &#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.system.keyword&#34;}
-                            }
-                        },
-                        {&#34;code&#34;: {&#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.code.keyword&#34;}}},
-                        {
                             &#34;display&#34;: {
-                                &#34;terms&#34;: {
-                                    &#34;field&#34;: f&#34;{field}.display.keyword&#34;,
-                                    &#34;missing_bucket&#34;: True,
-                                }
+                                &#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.display.keyword&#34;}
                             }
-                        },
+                        }
                     ],
                 )
                 for field in code_fields
@@ -6373,12 +7162,104 @@ def transform_results(df: pd.DataFrame, **expand_args):
             **kwargs,
         )
 
-        return pd.concat(
-            [
-                agg_composite_to_frame(key, value)
-                for key, value in results.items()
-            ]
+        agg_result = (
+            pd.concat(
+                [
+                    agg_composite_to_frame(key, value)
+                    for key, value in results.items()
+                ]
+            )
+            .pipe(
+                lambda df: df
+                if len(df) == 0 or display_query is None
+                # Poor man&#39;s way to filter only matching codes (since Elasticsearch
+                # returns records which will include other codes)
+                else df[
+                    df[&#34;display&#34;]
+                    .str.lower()
+                    .str.contains(display_query.lower())
+                ]
+            )
+            .pipe(
+                lambda df: pd.DataFrame()
+                if len(df) == 0
+                else df.sort_values(&#34;doc_count&#34;, ascending=False).reset_index(
+                    drop=True
+                )
+            )
         )
+
+        if display_query is None or len(agg_result) == 0:
+            return agg_result
+
+        min_count = sample_size or agg_result.doc_count.sum()
+        filtered_code_fields = agg_result.field.unique()
+
+        # Shortcut: If one result, we just need to get the other associated
+        # attributes of the code
+        if len(agg_result) == 1:
+            min_count = 1
+
+        code_results = Query.execute_fhir_dsl(
+            {
+                &#34;type&#34;: &#34;select&#34;,
+                &#34;from&#34;: [{&#34;table&#34;: table_name}],
+                &#34;columns&#34;: [
+                    {
+                        &#34;expr&#34;: {
+                            &#34;type&#34;: &#34;column_ref&#34;,
+                            &#34;column&#34;: key.split(&#34;.&#34;)[0],
+                        }
+                    }
+                    for key in filtered_code_fields
+                ],
+                &#34;where&#34;: {
+                    &#34;type&#34;: &#34;elasticsearch&#34;,
+                    &#34;query&#34;: {
+                        &#34;multi_match&#34;: {
+                            &#34;query&#34;: display_query,
+                            &#34;fields&#34;: [
+                                f&#34;{key}.display&#34; for key in filtered_code_fields
+                            ],
+                        }
+                    },
+                },
+            },
+            page_size=int(min_count % 9000),
+            max_pages=int(math.ceil(min_count / 9000)),
+            log=kwargs.get(&#34;log&#34;, False),
+        )
+
+        codes = extract_codes(
+            map(lambda d: d[&#34;_source&#34;], code_results),
+            display_query,
+            code_fields,
+        )
+
+        if len(codes) == 0:
+            return codes
+
+        if len(codes) == codes.display.nunique():
+            # If display values are unique, then the counts from Elasticsearch
+            # are correct. We can therefore join them.
+            codes = (
+                codes.join(
+                    agg_result[[&#34;display&#34;, &#34;doc_count&#34;]].set_index(&#34;display&#34;),
+                    on=&#34;display&#34;,
+                    how=&#34;outer&#34;,
+                )
+                .sort_values(&#34;doc_count&#34;, ascending=False)
+                .reset_index(drop=True)
+            )
+
+            if len(codes[codes.field.isnull()]) &gt; 0:
+                print(
+                    &#34;Records with missing system/code values were not retrieved.&#34;
+                )
+
+            return codes
+
+        return codes
 
     @staticmethod
     def execute_composite_aggregations(
@@ -6459,9 +7340,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
             table_name=&#34;observation&#34;,
             key_sources_pairs=[
                 (&#34;meta.tag&#34;, [
-                    {&#34;system&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.system.keyword&#34;}}},
                     {&#34;code&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.code.keyword&#34;}}},
-                    {&#34;display&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.display.keyword&#34;}}},
                 ]),
                 (&#34;code.coding&#34;, [
                     {&#34;display&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;code.coding.display.keyword&#34;}}}
@@ -6761,9 +7640,7 @@ and patient_key. See :func:<code>~phc.easy.query.fhir_dsl_query.build_query</cod
     table_name=&quot;observation&quot;,
     key_sources_pairs=[
         (&quot;meta.tag&quot;, [
-            {&quot;system&quot;: {&quot;terms&quot;: {&quot;field&quot;: &quot;meta.tag.system.keyword&quot;}}},
             {&quot;code&quot;: {&quot;terms&quot;: {&quot;field&quot;: &quot;meta.tag.code.keyword&quot;}}},
-            {&quot;display&quot;: {&quot;terms&quot;: {&quot;field&quot;: &quot;meta.tag.display.keyword&quot;}}},
         ]),
         (&quot;code.coding&quot;, [
             {&quot;display&quot;: {&quot;terms&quot;: {&quot;field&quot;: &quot;code.coding.display.keyword&quot;}}}
@@ -6854,9 +7731,7 @@ def execute_composite_aggregations(
         table_name=&#34;observation&#34;,
         key_sources_pairs=[
             (&#34;meta.tag&#34;, [
-                {&#34;system&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.system.keyword&#34;}}},
                 {&#34;code&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.code.keyword&#34;}}},
-                {&#34;display&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;meta.tag.display.keyword&#34;}}},
             ]),
             (&#34;code.coding&#34;, [
                 {&#34;display&#34;: {&#34;terms&#34;: {&#34;field&#34;: &#34;code.coding.display.keyword&#34;}}}
@@ -7142,6 +8017,119 @@ def execute_ga4gh(
     )</code></pre>
 </details>
 </dd>
+<dt id="phc.easy.Query.execute_paging_api"><code class="name flex">
+<span>def <span class="ident">execute_paging_api</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Execute a API query that pages through results</p>
+<p>See <a href="https://docs.us.lifeomic.com/api/?shell#lifeomic-core-api-genomics">https://docs.us.lifeomic.com/api/?shell#lifeomic-core-api-genomics</a>
+for example</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
+<dd>The API path to hit
+(Special tokens: <code>:project_id</code>)</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The parameters to include with request</dd>
+<dt><strong><code>http_verb</code></strong> :&ensp;<code>str</code></dt>
+<dd>The HTTP method to use</dd>
+<dt><strong><code>all_results</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>Retrieve sample of results (25) or entire set of records</dd>
+<dt><strong><code>auth_args</code></strong> :&ensp;<code><a title="phc.easy.Auth" href="#phc.easy.Auth">Auth</a>, dict</code></dt>
+<dd>Additional arguments for authentication</dd>
+<dt><strong><code>max_pages</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of pages to retrieve (useful if working with tons of records)</dd>
+<dt><strong><code>page_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of records to fetch per page</dd>
+<dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>Whether to log some diagnostic statements for debugging</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({ 'account': '&lt;your-account-name&gt;' })
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt; phc.Query.execute_paging_api(
+        &quot;genomics/projects/:project_id/tests&quot;,
+        params={
+            &quot;patientId&quot;: &quot;&lt;patient-uuid&gt;&quot;
+        }
+    )
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def execute_paging_api(
+    path: str,
+    params: dict = {},
+    http_verb: str = &#34;GET&#34;,
+    all_results: bool = False,
+    auth_args: Auth = Auth.shared(),
+    max_pages: Optional[int] = None,
+    page_size: Optional[int] = None,
+    log: bool = False,
+):
+    &#34;&#34;&#34;Execute a API query that pages through results
+
+    See https://docs.us.lifeomic.com/api/?shell#lifeomic-core-api-genomics
+    for example
+
+    Attributes
+    ----------
+    path : str
+        The API path to hit
+        (Special tokens: `:project_id`)
+
+    params : dict
+        The parameters to include with request
+
+    http_verb : str
+        The HTTP method to use
+
+    all_results : bool = False
+        Retrieve sample of results (25) or entire set of records
+
+    auth_args : Auth, dict
+        Additional arguments for authentication
+
+    max_pages : int
+        The number of pages to retrieve (useful if working with tons of records)
+
+    page_size : int
+        The number of records to fetch per page
+
+    log : bool = False
+        Whether to log some diagnostic statements for debugging
+
+    Examples
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt; phc.Query.execute_paging_api(
+            &#34;genomics/projects/:project_id/tests&#34;,
+            params={
+                &#34;patientId&#34;: &#34;&lt;patient-uuid&gt;&#34;
+            }
+        )
+    &#34;&#34;&#34;
+    return with_progress(
+        lambda: tqdm(),
+        lambda progress: recursive_paging_api_call(
+            path,
+            params=params,
+            http_verb=http_verb,
+            scroll=all_results,
+            max_pages=max_pages,
+            page_size=page_size,
+            log=log,
+            auth_args=auth_args,
+            progress=progress,
+        ),
+    )</code></pre>
+</details>
+</dd>
 <dt id="phc.easy.Query.find_count_of_dsl_query"><code class="name flex">
 <span>def <span class="ident">find_count_of_dsl_query</span></span>(<span>query: dict, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
 </code></dt>
@@ -7201,25 +8189,31 @@ def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
     fhir = Fhir(auth.session())
 
     response = fhir.execute_es(
-        auth.project_id, build_query(query, page_size=1), scroll=&#34;true&#34;,
+        auth.project_id, build_query(query, page_size=1), scroll=&#34;true&#34;
     )
 
     return response.data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Query.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>table_name: str, code_fields: List[str], **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>table_name: str, code_fields: List[str], display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, **kwargs)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Find FHIR codes for a given table</p>
+<div class="desc"><p>Find FHIR codes with a display for a given table</p>
 <h2 id="attributes">Attributes</h2>
 <dl>
 <dt><strong><code>table_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The FHIR Search Service table to retrieve from</dd>
 <dt><strong><code>code_fields</code></strong> :&ensp;<code>List[str]</code></dt>
 <dd>The fields of this table that contain a system, code, and display</dd>
+<dt><strong><code>display_query</code></strong> :&ensp;<code>Optional[str]</code></dt>
+<dd>Part of the code's display to match (will try to extract full code
+if passed)</dd>
+<dt><strong><code>sample_size</code></strong> :&ensp;<code>Optional[int]</code></dt>
+<dd>Override the search size for finding codes (may miss codes on later
+records)</dd>
 <dt><strong><code>kwargs</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Arguments to pass to :func:<code>~phc.easy.query.Query.execute_composite_aggregations</code></dd>
+<dd>Arguments to pass to <code><a title="phc.easy.query.Query.execute_composite_aggregations" href="query/index.html#phc.easy.query.Query.execute_composite_aggregations">Query.execute_composite_aggregations()</a></code></dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
@@ -7236,8 +8230,14 @@ def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def get_codes(table_name: str, code_fields: List[str], **kwargs):
-    &#34;&#34;&#34;Find FHIR codes for a given table
+def get_codes(
+    table_name: str,
+    code_fields: List[str],
+    display_query: Optional[str] = None,
+    sample_size: Optional[int] = None,
+    **kwargs,
+):
+    &#34;&#34;&#34;Find FHIR codes with a display for a given table
 
     Attributes
     ----------
@@ -7247,8 +8247,16 @@ def get_codes(table_name: str, code_fields: List[str], **kwargs):
     code_fields : List[str]
         The fields of this table that contain a system, code, and display
 
+    display_query : Optional[str]
+        Part of the code&#39;s display to match (will try to extract full code
+        if passed)
+
+    sample_size : Optional[int]
+        Override the search size for finding codes (may miss codes on later
+        records)
+
     kwargs : dict
-        Arguments to pass to :func:`~phc.easy.query.Query.execute_composite_aggregations`
+        Arguments to pass to `phc.easy.query.Query.execute_composite_aggregations`
 
     Examples
     --------
@@ -7270,6 +8278,24 @@ def get_codes(table_name: str, code_fields: List[str], **kwargs):
         frame[&#34;field&#34;] = prefix
         return frame
 
+    if display_query is not None:
+        kwargs = {
+            **kwargs,
+            &#34;query_overrides&#34;: {
+                &#34;where&#34;: {
+                    &#34;type&#34;: &#34;elasticsearch&#34;,
+                    &#34;query&#34;: {
+                        &#34;multi_match&#34;: {
+                            &#34;query&#34;: display_query,
+                            &#34;fields&#34;: [
+                                f&#34;{key}.display&#34; for key in code_fields
+                            ],
+                        }
+                    },
+                }
+            },
+        }
+
     results = Query.execute_composite_aggregations(
         table_name=table_name,
         key_sources_pairs=[
@@ -7277,19 +8303,10 @@ def get_codes(table_name: str, code_fields: List[str], **kwargs):
                 field,
                 [
                     {
-                        &#34;system&#34;: {
-                            &#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.system.keyword&#34;}
-                        }
-                    },
-                    {&#34;code&#34;: {&#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.code.keyword&#34;}}},
-                    {
                         &#34;display&#34;: {
-                            &#34;terms&#34;: {
-                                &#34;field&#34;: f&#34;{field}.display.keyword&#34;,
-                                &#34;missing_bucket&#34;: True,
-                            }
+                            &#34;terms&#34;: {&#34;field&#34;: f&#34;{field}.display.keyword&#34;}
                         }
-                    },
+                    }
                 ],
             )
             for field in code_fields
@@ -7297,12 +8314,104 @@ def get_codes(table_name: str, code_fields: List[str], **kwargs):
         **kwargs,
     )
 
-    return pd.concat(
-        [
-            agg_composite_to_frame(key, value)
-            for key, value in results.items()
-        ]
-    )</code></pre>
+    agg_result = (
+        pd.concat(
+            [
+                agg_composite_to_frame(key, value)
+                for key, value in results.items()
+            ]
+        )
+        .pipe(
+            lambda df: df
+            if len(df) == 0 or display_query is None
+            # Poor man&#39;s way to filter only matching codes (since Elasticsearch
+            # returns records which will include other codes)
+            else df[
+                df[&#34;display&#34;]
+                .str.lower()
+                .str.contains(display_query.lower())
+            ]
+        )
+        .pipe(
+            lambda df: pd.DataFrame()
+            if len(df) == 0
+            else df.sort_values(&#34;doc_count&#34;, ascending=False).reset_index(
+                drop=True
+            )
+        )
+    )
+
+    if display_query is None or len(agg_result) == 0:
+        return agg_result
+
+    min_count = sample_size or agg_result.doc_count.sum()
+    filtered_code_fields = agg_result.field.unique()
+
+    # Shortcut: If one result, we just need to get the other associated
+    # attributes of the code
+    if len(agg_result) == 1:
+        min_count = 1
+
+    code_results = Query.execute_fhir_dsl(
+        {
+            &#34;type&#34;: &#34;select&#34;,
+            &#34;from&#34;: [{&#34;table&#34;: table_name}],
+            &#34;columns&#34;: [
+                {
+                    &#34;expr&#34;: {
+                        &#34;type&#34;: &#34;column_ref&#34;,
+                        &#34;column&#34;: key.split(&#34;.&#34;)[0],
+                    }
+                }
+                for key in filtered_code_fields
+            ],
+            &#34;where&#34;: {
+                &#34;type&#34;: &#34;elasticsearch&#34;,
+                &#34;query&#34;: {
+                    &#34;multi_match&#34;: {
+                        &#34;query&#34;: display_query,
+                        &#34;fields&#34;: [
+                            f&#34;{key}.display&#34; for key in filtered_code_fields
+                        ],
+                    }
+                },
+            },
+        },
+        page_size=int(min_count % 9000),
+        max_pages=int(math.ceil(min_count / 9000)),
+        log=kwargs.get(&#34;log&#34;, False),
+    )
+
+    codes = extract_codes(
+        map(lambda d: d[&#34;_source&#34;], code_results),
+        display_query,
+        code_fields,
+    )
+
+    if len(codes) == 0:
+        return codes
+
+    if len(codes) == codes.display.nunique():
+        # If display values are unique, then the counts from Elasticsearch
+        # are correct. We can therefore join them.
+        codes = (
+            codes.join(
+                agg_result[[&#34;display&#34;, &#34;doc_count&#34;]].set_index(&#34;display&#34;),
+                on=&#34;display&#34;,
+                how=&#34;outer&#34;,
+            )
+            .sort_values(&#34;doc_count&#34;, ascending=False)
+            .reset_index(drop=True)
+        )
+
+        if len(codes[codes.field.isnull()]) &gt; 0:
+            print(
+                &#34;Records with missing system/code values were not retrieved.&#34;
+            )
+
+        return codes
+
+    return codes</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Query.get_count_by_field"><code class="name flex">
@@ -7478,7 +8587,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;referral_request&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;type.coding&#34;, &#34;meta.tag&#34;]
 
     @staticmethod
@@ -7504,13 +8613,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.ReferralRequest.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.ReferralRequest.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -7518,12 +8627,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;type.coding&#34;, &#34;meta.tag&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.ReferralRequest.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7563,7 +8672,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.ReferralRequest.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7666,18 +8775,18 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Sequence.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>) ‑> List[str]</span>
+<dt id="phc.easy.Sequence.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>) ‑> List[str]</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 </dd>
 <dt id="phc.easy.Sequence.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7717,7 +8826,7 @@ from a FSS table that relates to a patient</p></div>
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Sequence.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7808,7 +8917,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;specimen&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;type.coding&#34;, &#34;meta.tag&#34;, &#34;collection.bodySite.coding&#34;]
 
     @staticmethod
@@ -7833,13 +8942,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.Specimen.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.Specimen.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -7847,12 +8956,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;type.coding&#34;, &#34;meta.tag&#34;, &#34;collection.bodySite.coding&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Specimen.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7892,7 +9001,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Specimen.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7981,6 +9090,8 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li><code><a title="phc.easy.document_reference" href="document_reference.html">phc.easy.document_reference</a></code></li>
 <li><code><a title="phc.easy.encounter" href="encounter.html">phc.easy.encounter</a></code></li>
 <li><code><a title="phc.easy.frame" href="frame.html">phc.easy.frame</a></code></li>
+<li><code><a title="phc.easy.genomic_short_variant" href="genomic_short_variant.html">phc.easy.genomic_short_variant</a></code></li>
+<li><code><a title="phc.easy.genomic_test" href="genomic_test.html">phc.easy.genomic_test</a></code></li>
 <li><code><a title="phc.easy.goal" href="goal.html">phc.easy.goal</a></code></li>
 <li><code><a title="phc.easy.imaging_study" href="imaging_study.html">phc.easy.imaging_study</a></code></li>
 <li><code><a title="phc.easy.immunization" href="immunization.html">phc.easy.immunization</a></code></li>
@@ -7992,6 +9103,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li><code><a title="phc.easy.medication_statement" href="medication_statement.html">phc.easy.medication_statement</a></code></li>
 <li><code><a title="phc.easy.observation" href="observation.html">phc.easy.observation</a></code></li>
 <li><code><a title="phc.easy.organization" href="organization.html">phc.easy.organization</a></code></li>
+<li><code><a title="phc.easy.paging_api_item" href="paging_api_item.html">phc.easy.paging_api_item</a></code></li>
 <li><code><a title="phc.easy.patient_item" href="patient_item.html">phc.easy.patient_item</a></code></li>
 <li><code><a title="phc.easy.patients" href="patients/index.html">phc.easy.patients</a></code></li>
 <li><code><a title="phc.easy.person" href="person.html">phc.easy.person</a></code></li>
@@ -8004,7 +9116,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li><code><a title="phc.easy.referral_request" href="referral_request.html">phc.easy.referral_request</a></code></li>
 <li><code><a title="phc.easy.sequence" href="sequence.html">phc.easy.sequence</a></code></li>
 <li><code><a title="phc.easy.specimen" href="specimen.html">phc.easy.specimen</a></code></li>
-<li><code><a title="phc.easy.util" href="util.html">phc.easy.util</a></code></li>
+<li><code><a title="phc.easy.util" href="util/index.html">phc.easy.util</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
@@ -8012,7 +9124,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.AuditEvent" href="#phc.easy.AuditEvent">AuditEvent</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.AuditEvent.code_keys" href="#phc.easy.AuditEvent.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.AuditEvent.code_fields" href="#phc.easy.AuditEvent.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.AuditEvent.get_codes" href="item.html#phc.easy.AuditEvent.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.AuditEvent.get_count" href="item.html#phc.easy.AuditEvent.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.AuditEvent.get_count_by_field" href="item.html#phc.easy.AuditEvent.get_count_by_field">get_count_by_field</a></code></li>
@@ -8039,7 +9151,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.CarePlan" href="#phc.easy.CarePlan">CarePlan</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.CarePlan.code_keys" href="#phc.easy.CarePlan.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.CarePlan.code_fields" href="#phc.easy.CarePlan.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.CarePlan.get_codes" href="item.html#phc.easy.CarePlan.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.CarePlan.get_count" href="item.html#phc.easy.CarePlan.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.CarePlan.get_count_by_field" href="item.html#phc.easy.CarePlan.get_count_by_field">get_count_by_field</a></code></li>
@@ -8058,7 +9170,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Condition" href="#phc.easy.Condition">Condition</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.Condition.code_keys" href="#phc.easy.Condition.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Condition.code_fields" href="#phc.easy.Condition.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Condition.get_codes" href="item.html#phc.easy.Condition.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Condition.get_count" href="item.html#phc.easy.Condition.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Condition.get_count_by_field" href="item.html#phc.easy.Condition.get_count_by_field">get_count_by_field</a></code></li>
@@ -8071,7 +9183,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Consent" href="#phc.easy.Consent">Consent</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.Consent.code_keys" href="#phc.easy.Consent.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Consent.code_fields" href="#phc.easy.Consent.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Consent.get_codes" href="item.html#phc.easy.Consent.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Consent.get_count" href="item.html#phc.easy.Consent.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Consent.get_count_by_field" href="item.html#phc.easy.Consent.get_count_by_field">get_count_by_field</a></code></li>
@@ -8085,7 +9197,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.DiagnosticReport" href="#phc.easy.DiagnosticReport">DiagnosticReport</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.DiagnosticReport.code_keys" href="#phc.easy.DiagnosticReport.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.DiagnosticReport.code_fields" href="#phc.easy.DiagnosticReport.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.DiagnosticReport.get_codes" href="item.html#phc.easy.DiagnosticReport.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.DiagnosticReport.get_count" href="item.html#phc.easy.DiagnosticReport.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.DiagnosticReport.get_count_by_field" href="item.html#phc.easy.DiagnosticReport.get_count_by_field">get_count_by_field</a></code></li>
@@ -8100,7 +9212,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.DocumentReference" href="#phc.easy.DocumentReference">DocumentReference</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.DocumentReference.code_keys" href="#phc.easy.DocumentReference.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.DocumentReference.code_fields" href="#phc.easy.DocumentReference.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.DocumentReference.get_codes" href="item.html#phc.easy.DocumentReference.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.DocumentReference.get_count" href="item.html#phc.easy.DocumentReference.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.DocumentReference.get_count_by_field" href="item.html#phc.easy.DocumentReference.get_count_by_field">get_count_by_field</a></code></li>
@@ -8113,7 +9225,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Encounter" href="#phc.easy.Encounter">Encounter</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.Encounter.code_keys" href="#phc.easy.Encounter.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Encounter.code_fields" href="#phc.easy.Encounter.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Encounter.get_codes" href="item.html#phc.easy.Encounter.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Encounter.get_count" href="item.html#phc.easy.Encounter.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Encounter.get_count_by_field" href="item.html#phc.easy.Encounter.get_count_by_field">get_count_by_field</a></code></li>
@@ -8132,9 +9244,29 @@ def transform_results(df: pd.DataFrame, **expand_args):
 </ul>
 </li>
 <li>
+<h4><code><a title="phc.easy.GenomicShortVariant" href="#phc.easy.GenomicShortVariant">GenomicShortVariant</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.GenomicShortVariant.get_data_frame" href="#phc.easy.GenomicShortVariant.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.GenomicShortVariant.params_class" href="#phc.easy.GenomicShortVariant.params_class">params_class</a></code></li>
+<li><code><a title="phc.easy.GenomicShortVariant.process_params" href="paging_api_item.html#phc.easy.GenomicShortVariant.process_params">process_params</a></code></li>
+<li><code><a title="phc.easy.GenomicShortVariant.resource_path" href="#phc.easy.GenomicShortVariant.resource_path">resource_path</a></code></li>
+<li><code><a title="phc.easy.GenomicShortVariant.transform_results" href="#phc.easy.GenomicShortVariant.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.GenomicTest" href="#phc.easy.GenomicTest">GenomicTest</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.GenomicTest.get_data_frame" href="#phc.easy.GenomicTest.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.GenomicTest.params_class" href="#phc.easy.GenomicTest.params_class">params_class</a></code></li>
+<li><code><a title="phc.easy.GenomicTest.process_params" href="paging_api_item.html#phc.easy.GenomicTest.process_params">process_params</a></code></li>
+<li><code><a title="phc.easy.GenomicTest.resource_path" href="#phc.easy.GenomicTest.resource_path">resource_path</a></code></li>
+<li><code><a title="phc.easy.GenomicTest.transform_results" href="#phc.easy.GenomicTest.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="phc.easy.Goal" href="#phc.easy.Goal">Goal</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.Goal.code_keys" href="#phc.easy.Goal.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Goal.code_fields" href="#phc.easy.Goal.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Goal.get_codes" href="item.html#phc.easy.Goal.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Goal.get_count" href="item.html#phc.easy.Goal.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Goal.get_count_by_field" href="item.html#phc.easy.Goal.get_count_by_field">get_count_by_field</a></code></li>
@@ -8147,7 +9279,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.ImagingStudy" href="#phc.easy.ImagingStudy">ImagingStudy</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.ImagingStudy.code_keys" href="#phc.easy.ImagingStudy.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.ImagingStudy.code_fields" href="#phc.easy.ImagingStudy.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.ImagingStudy.get_codes" href="item.html#phc.easy.ImagingStudy.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.ImagingStudy.get_count" href="item.html#phc.easy.ImagingStudy.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.ImagingStudy.get_count_by_field" href="item.html#phc.easy.ImagingStudy.get_count_by_field">get_count_by_field</a></code></li>
@@ -8161,7 +9293,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Immunization" href="#phc.easy.Immunization">Immunization</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.Immunization.code_keys" href="#phc.easy.Immunization.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Immunization.code_fields" href="#phc.easy.Immunization.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Immunization.get_codes" href="item.html#phc.easy.Immunization.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Immunization.get_count" href="item.html#phc.easy.Immunization.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Immunization.get_count_by_field" href="item.html#phc.easy.Immunization.get_count_by_field">get_count_by_field</a></code></li>
@@ -8176,7 +9308,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Item" href="#phc.easy.Item">Item</a></code></h4>
 <ul class="two-column">
-<li><code><a title="phc.easy.Item.code_keys" href="#phc.easy.Item.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Item.code_fields" href="#phc.easy.Item.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Item.get_codes" href="#phc.easy.Item.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Item.get_count" href="#phc.easy.Item.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Item.get_count_by_field" href="#phc.easy.Item.get_count_by_field">get_count_by_field</a></code></li>
@@ -8188,7 +9320,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Media" href="#phc.easy.Media">Media</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.Media.code_keys" href="#phc.easy.Media.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Media.code_fields" href="#phc.easy.Media.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Media.get_codes" href="item.html#phc.easy.Media.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Media.get_count" href="item.html#phc.easy.Media.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Media.get_count_by_field" href="item.html#phc.easy.Media.get_count_by_field">get_count_by_field</a></code></li>
@@ -8201,7 +9333,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.MedicationAdministration" href="#phc.easy.MedicationAdministration">MedicationAdministration</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.MedicationAdministration.code_keys" href="#phc.easy.MedicationAdministration.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.MedicationAdministration.code_fields" href="#phc.easy.MedicationAdministration.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.MedicationAdministration.get_codes" href="item.html#phc.easy.MedicationAdministration.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.MedicationAdministration.get_count" href="item.html#phc.easy.MedicationAdministration.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.MedicationAdministration.get_count_by_field" href="item.html#phc.easy.MedicationAdministration.get_count_by_field">get_count_by_field</a></code></li>
@@ -8214,7 +9346,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.MedicationDispense" href="#phc.easy.MedicationDispense">MedicationDispense</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.MedicationDispense.code_keys" href="#phc.easy.MedicationDispense.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.MedicationDispense.code_fields" href="#phc.easy.MedicationDispense.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.MedicationDispense.get_codes" href="item.html#phc.easy.MedicationDispense.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.MedicationDispense.get_count" href="item.html#phc.easy.MedicationDispense.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.MedicationDispense.get_count_by_field" href="item.html#phc.easy.MedicationDispense.get_count_by_field">get_count_by_field</a></code></li>
@@ -8227,7 +9359,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.MedicationRequest" href="#phc.easy.MedicationRequest">MedicationRequest</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.MedicationRequest.code_keys" href="#phc.easy.MedicationRequest.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.MedicationRequest.code_fields" href="#phc.easy.MedicationRequest.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.MedicationRequest.get_codes" href="item.html#phc.easy.MedicationRequest.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.MedicationRequest.get_count" href="item.html#phc.easy.MedicationRequest.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.MedicationRequest.get_count_by_field" href="item.html#phc.easy.MedicationRequest.get_count_by_field">get_count_by_field</a></code></li>
@@ -8240,7 +9372,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.MedicationStatement" href="#phc.easy.MedicationStatement">MedicationStatement</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.MedicationStatement.code_keys" href="#phc.easy.MedicationStatement.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.MedicationStatement.code_fields" href="#phc.easy.MedicationStatement.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.MedicationStatement.get_codes" href="item.html#phc.easy.MedicationStatement.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.MedicationStatement.get_count" href="item.html#phc.easy.MedicationStatement.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.MedicationStatement.get_count_by_field" href="item.html#phc.easy.MedicationStatement.get_count_by_field">get_count_by_field</a></code></li>
@@ -8253,7 +9385,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Observation" href="#phc.easy.Observation">Observation</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.Observation.code_keys" href="#phc.easy.Observation.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Observation.code_fields" href="#phc.easy.Observation.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Observation.get_codes" href="item.html#phc.easy.Observation.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Observation.get_count" href="item.html#phc.easy.Observation.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Observation.get_count_by_field" href="item.html#phc.easy.Observation.get_count_by_field">get_count_by_field</a></code></li>
@@ -8266,7 +9398,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Organization" href="#phc.easy.Organization">Organization</a></code></h4>
 <ul class="two-column">
-<li><code><a title="phc.easy.Organization.code_keys" href="#phc.easy.Organization.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Organization.code_fields" href="#phc.easy.Organization.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Organization.get_codes" href="item.html#phc.easy.Organization.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Organization.get_count" href="item.html#phc.easy.Organization.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Organization.get_count_by_field" href="item.html#phc.easy.Organization.get_count_by_field">get_count_by_field</a></code></li>
@@ -8278,7 +9410,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Patient" href="#phc.easy.Patient">Patient</a></code></h4>
 <ul class="two-column">
-<li><code><a title="phc.easy.Patient.code_keys" href="#phc.easy.Patient.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Patient.code_fields" href="#phc.easy.Patient.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Patient.get_codes" href="item.html#phc.easy.Patient.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Patient.get_count" href="item.html#phc.easy.Patient.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Patient.get_count_by_field" href="item.html#phc.easy.Patient.get_count_by_field">get_count_by_field</a></code></li>
@@ -8290,7 +9422,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.PatientItem" href="#phc.easy.PatientItem">PatientItem</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.PatientItem.code_keys" href="item.html#phc.easy.PatientItem.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.PatientItem.code_fields" href="item.html#phc.easy.PatientItem.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.PatientItem.get_codes" href="item.html#phc.easy.PatientItem.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.PatientItem.get_count" href="item.html#phc.easy.PatientItem.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.PatientItem.get_count_by_field" href="item.html#phc.easy.PatientItem.get_count_by_field">get_count_by_field</a></code></li>
@@ -8305,7 +9437,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Person" href="#phc.easy.Person">Person</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.Person.code_keys" href="#phc.easy.Person.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Person.code_fields" href="#phc.easy.Person.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Person.get_codes" href="item.html#phc.easy.Person.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Person.get_count" href="item.html#phc.easy.Person.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Person.get_count_by_field" href="item.html#phc.easy.Person.get_count_by_field">get_count_by_field</a></code></li>
@@ -8319,7 +9451,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Practitioner" href="#phc.easy.Practitioner">Practitioner</a></code></h4>
 <ul class="two-column">
-<li><code><a title="phc.easy.Practitioner.code_keys" href="#phc.easy.Practitioner.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Practitioner.code_fields" href="#phc.easy.Practitioner.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Practitioner.get_codes" href="item.html#phc.easy.Practitioner.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Practitioner.get_count" href="item.html#phc.easy.Practitioner.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Practitioner.get_count_by_field" href="item.html#phc.easy.Practitioner.get_count_by_field">get_count_by_field</a></code></li>
@@ -8331,7 +9463,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Procedure" href="#phc.easy.Procedure">Procedure</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.Procedure.code_keys" href="#phc.easy.Procedure.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Procedure.code_fields" href="#phc.easy.Procedure.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Procedure.get_codes" href="item.html#phc.easy.Procedure.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Procedure.get_count" href="item.html#phc.easy.Procedure.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Procedure.get_count_by_field" href="item.html#phc.easy.Procedure.get_count_by_field">get_count_by_field</a></code></li>
@@ -8344,7 +9476,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.ProcedureRequest" href="#phc.easy.ProcedureRequest">ProcedureRequest</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.ProcedureRequest.code_keys" href="#phc.easy.ProcedureRequest.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.ProcedureRequest.code_fields" href="#phc.easy.ProcedureRequest.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.ProcedureRequest.get_codes" href="item.html#phc.easy.ProcedureRequest.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.ProcedureRequest.get_count" href="item.html#phc.easy.ProcedureRequest.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.ProcedureRequest.get_count_by_field" href="item.html#phc.easy.ProcedureRequest.get_count_by_field">get_count_by_field</a></code></li>
@@ -8365,7 +9497,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Provenance" href="#phc.easy.Provenance">Provenance</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.Provenance.code_keys" href="#phc.easy.Provenance.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Provenance.code_fields" href="#phc.easy.Provenance.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Provenance.get_codes" href="item.html#phc.easy.Provenance.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Provenance.get_count" href="item.html#phc.easy.Provenance.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Provenance.get_count_by_field" href="item.html#phc.easy.Provenance.get_count_by_field">get_count_by_field</a></code></li>
@@ -8383,6 +9515,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li><code><a title="phc.easy.Query.execute_fhir_dsl" href="#phc.easy.Query.execute_fhir_dsl">execute_fhir_dsl</a></code></li>
 <li><code><a title="phc.easy.Query.execute_fhir_dsl_with_options" href="#phc.easy.Query.execute_fhir_dsl_with_options">execute_fhir_dsl_with_options</a></code></li>
 <li><code><a title="phc.easy.Query.execute_ga4gh" href="#phc.easy.Query.execute_ga4gh">execute_ga4gh</a></code></li>
+<li><code><a title="phc.easy.Query.execute_paging_api" href="#phc.easy.Query.execute_paging_api">execute_paging_api</a></code></li>
 <li><code><a title="phc.easy.Query.find_count_of_dsl_query" href="#phc.easy.Query.find_count_of_dsl_query">find_count_of_dsl_query</a></code></li>
 <li><code><a title="phc.easy.Query.get_codes" href="#phc.easy.Query.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Query.get_count_by_field" href="#phc.easy.Query.get_count_by_field">get_count_by_field</a></code></li>
@@ -8391,7 +9524,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.ReferralRequest" href="#phc.easy.ReferralRequest">ReferralRequest</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.ReferralRequest.code_keys" href="#phc.easy.ReferralRequest.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.ReferralRequest.code_fields" href="#phc.easy.ReferralRequest.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.ReferralRequest.get_codes" href="item.html#phc.easy.ReferralRequest.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.ReferralRequest.get_count" href="item.html#phc.easy.ReferralRequest.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.ReferralRequest.get_count_by_field" href="item.html#phc.easy.ReferralRequest.get_count_by_field">get_count_by_field</a></code></li>
@@ -8404,7 +9537,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Sequence" href="#phc.easy.Sequence">Sequence</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.Sequence.code_keys" href="item.html#phc.easy.Sequence.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Sequence.code_fields" href="item.html#phc.easy.Sequence.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Sequence.get_codes" href="item.html#phc.easy.Sequence.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Sequence.get_count" href="item.html#phc.easy.Sequence.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Sequence.get_count_by_field" href="item.html#phc.easy.Sequence.get_count_by_field">get_count_by_field</a></code></li>
@@ -8418,7 +9551,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.Specimen" href="#phc.easy.Specimen">Specimen</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.Specimen.code_keys" href="#phc.easy.Specimen.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.Specimen.code_fields" href="#phc.easy.Specimen.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.Specimen.get_codes" href="item.html#phc.easy.Specimen.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Specimen.get_count" href="item.html#phc.easy.Specimen.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Specimen.get_count_by_field" href="item.html#phc.easy.Specimen.get_count_by_field">get_count_by_field</a></code></li>

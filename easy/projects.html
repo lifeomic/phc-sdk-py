@@ -27,13 +27,15 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from functools import reduce
+<pre><code class="python">from functools import reduce, partial
 
 import pandas as pd
 
 import phc.services as services
 from funcy import memoize
 from phc.easy.auth import Auth
+from pmap import pmap
+from toolz import pipe, concat
 
 SEARCH_COLUMNS = [&#34;name&#34;, &#34;description&#34;, &#34;id&#34;]
 
@@ -51,24 +53,27 @@ class Project:
         Attributes
         ----------
         auth_args : Any
-            The authenication to use for the account and project (defaults to shared)
+            The authentication to use for the account and project (defaults to shared)
         &#34;&#34;&#34;
         auth = Auth(auth_args)
 
-        def list_projects(acc, account):
+        def list_projects(account):
             session = auth.customized({&#34;account&#34;: account[&#34;id&#34;]}).session()
 
             return [
-                *acc,
-                *[
-                    {**project, &#34;account&#34;: account[&#34;id&#34;]}
-                    for project in services.Projects(session)
-                    .get_list()
-                    .data[&#34;items&#34;]
-                ],
+                {**project, &#34;account&#34;: account[&#34;id&#34;]}
+                for project in services.Projects(session)
+                .get_list()
+                .data[&#34;items&#34;]
             ]
 
-        return pd.DataFrame(reduce(list_projects, auth.accounts(), []))
+        return pipe(
+            auth.accounts(),
+            partial(pmap, list_projects),
+            concat,
+            list,
+            pd.DataFrame,
+        )
 
     @staticmethod
     def find(search: str, auth_args: Auth = Auth.shared()):
@@ -157,24 +162,27 @@ class Project:
         Attributes
         ----------
         auth_args : Any
-            The authenication to use for the account and project (defaults to shared)
+            The authentication to use for the account and project (defaults to shared)
         &#34;&#34;&#34;
         auth = Auth(auth_args)
 
-        def list_projects(acc, account):
+        def list_projects(account):
             session = auth.customized({&#34;account&#34;: account[&#34;id&#34;]}).session()
 
             return [
-                *acc,
-                *[
-                    {**project, &#34;account&#34;: account[&#34;id&#34;]}
-                    for project in services.Projects(session)
-                    .get_list()
-                    .data[&#34;items&#34;]
-                ],
+                {**project, &#34;account&#34;: account[&#34;id&#34;]}
+                for project in services.Projects(session)
+                .get_list()
+                .data[&#34;items&#34;]
             ]
 
-        return pd.DataFrame(reduce(list_projects, auth.accounts(), []))
+        return pipe(
+            auth.accounts(),
+            partial(pmap, list_projects),
+            concat,
+            list,
+            pd.DataFrame,
+        )
 
     @staticmethod
     def find(search: str, auth_args: Auth = Auth.shared()):
@@ -263,7 +271,7 @@ def find(search: str, auth_args: Auth = Auth.shared()):
 <h2 id="attributes">Attributes</h2>
 <dl>
 <dt><strong><code>auth_args</code></strong> :&ensp;<code>Any</code></dt>
-<dd>The authenication to use for the account and project (defaults to shared)</dd>
+<dd>The authentication to use for the account and project (defaults to shared)</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -277,24 +285,27 @@ def get_data_frame(auth_args=Auth.shared()):
     Attributes
     ----------
     auth_args : Any
-        The authenication to use for the account and project (defaults to shared)
+        The authentication to use for the account and project (defaults to shared)
     &#34;&#34;&#34;
     auth = Auth(auth_args)
 
-    def list_projects(acc, account):
+    def list_projects(account):
         session = auth.customized({&#34;account&#34;: account[&#34;id&#34;]}).session()
 
         return [
-            *acc,
-            *[
-                {**project, &#34;account&#34;: account[&#34;id&#34;]}
-                for project in services.Projects(session)
-                .get_list()
-                .data[&#34;items&#34;]
-            ],
+            {**project, &#34;account&#34;: account[&#34;id&#34;]}
+            for project in services.Projects(session)
+            .get_list()
+            .data[&#34;items&#34;]
         ]
 
-    return pd.DataFrame(reduce(list_projects, auth.accounts(), []))</code></pre>
+    return pipe(
+        auth.accounts(),
+        partial(pmap, list_projects),
+        concat,
+        list,
+        pd.DataFrame,
+    )</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.projects.Project.set_current"><code class="name flex">

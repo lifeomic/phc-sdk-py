@@ -27,14 +27,13 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from typing import Union, List
+<pre><code class="python">from typing import List, Optional, Union
 
 import pandas as pd
 
 from phc.easy.auth import Auth
-from phc.easy.query import Query
 from phc.easy.item import Item
-from phc.easy.util import without_keys
+from phc.easy.query import Query
 
 
 class PatientItem(Item):
@@ -64,6 +63,11 @@ class PatientItem(Item):
         ignore_cache: bool = False,
         expand_args: dict = {},
         log: bool = False,
+        # Codes
+        code: Optional[Union[str, List[str]]] = None,
+        display: Optional[Union[str, List[str]]] = None,
+        system: Optional[Union[str, List[str]]] = None,
+        code_fields: List[str] = [],
     ):
         &#34;&#34;&#34;Retrieve records
 
@@ -104,6 +108,18 @@ class PatientItem(Item):
         log : bool = False
             Whether to log some diagnostic statements for debugging
 
+        code : str | List[str]
+            Adds where clause for code value(s)
+
+        display : str | List[str]
+            Adds where clause for code display value(s)
+
+        system : str | List[str]
+            Adds where clause for code system value(s)
+
+        code_fields : List[str]
+            A list of paths to find FHIR codes in (default: codes for the given entity)
+
         Examples
         --------
         &gt;&gt;&gt; import phc.easy as phc
@@ -119,6 +135,8 @@ class PatientItem(Item):
             &#34;columns&#34;: &#34;*&#34;,
             &#34;from&#34;: [{&#34;table&#34;: cls.table_name()}],
         }
+
+        code_fields = [*cls.code_fields(), *code_fields]
 
         def transform(df: pd.DataFrame):
             return cls.transform_results(df, **expand_args)
@@ -138,6 +156,11 @@ class PatientItem(Item):
             patient_key=cls.patient_key(),
             log=log,
             patient_id_prefixes=cls.patient_id_prefixes(),
+            # Codes
+            code_fields=code_fields,
+            code=code,
+            display=display,
+            system=system,
         )
 
     @classmethod
@@ -212,6 +235,11 @@ from a FSS table that relates to a patient</p></div>
         ignore_cache: bool = False,
         expand_args: dict = {},
         log: bool = False,
+        # Codes
+        code: Optional[Union[str, List[str]]] = None,
+        display: Optional[Union[str, List[str]]] = None,
+        system: Optional[Union[str, List[str]]] = None,
+        code_fields: List[str] = [],
     ):
         &#34;&#34;&#34;Retrieve records
 
@@ -252,6 +280,18 @@ from a FSS table that relates to a patient</p></div>
         log : bool = False
             Whether to log some diagnostic statements for debugging
 
+        code : str | List[str]
+            Adds where clause for code value(s)
+
+        display : str | List[str]
+            Adds where clause for code display value(s)
+
+        system : str | List[str]
+            Adds where clause for code system value(s)
+
+        code_fields : List[str]
+            A list of paths to find FHIR codes in (default: codes for the given entity)
+
         Examples
         --------
         &gt;&gt;&gt; import phc.easy as phc
@@ -267,6 +307,8 @@ from a FSS table that relates to a patient</p></div>
             &#34;columns&#34;: &#34;*&#34;,
             &#34;from&#34;: [{&#34;table&#34;: cls.table_name()}],
         }
+
+        code_fields = [*cls.code_fields(), *code_fields]
 
         def transform(df: pd.DataFrame):
             return cls.transform_results(df, **expand_args)
@@ -286,6 +328,11 @@ from a FSS table that relates to a patient</p></div>
             patient_key=cls.patient_key(),
             log=log,
             patient_id_prefixes=cls.patient_id_prefixes(),
+            # Codes
+            code_fields=code_fields,
+            code=code,
+            display=display,
+            system=system,
         )
 
     @classmethod
@@ -345,18 +392,18 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.patient_item.PatientItem.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>) ‑> List[str]</span>
+<dt id="phc.easy.patient_item.PatientItem.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>) ‑> List[str]</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.code_keys" href="item.html#phc.easy.item.Item.code_keys">code_keys</a></code>
+<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.code_fields" href="item.html#phc.easy.item.Item.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 </dd>
 <dt id="phc.easy.patient_item.PatientItem.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -429,7 +476,7 @@ def get_count_by_patient(cls, **kwargs):
 </details>
 </dd>
 <dt id="phc.easy.patient_item.PatientItem.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retrieve records</p>
@@ -459,6 +506,14 @@ Caching only occurs when all results are being retrieved.</dd>
 <dd>Additional arguments passed to phc.Frame.expand</dd>
 <dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
 <dd>Whether to log some diagnostic statements for debugging</dd>
+<dt><strong><code>code</code></strong> :&ensp;<code>str | List[str]</code></dt>
+<dd>Adds where clause for code value(s)</dd>
+<dt><strong><code>display</code></strong> :&ensp;<code>str | List[str]</code></dt>
+<dd>Adds where clause for code display value(s)</dd>
+<dt><strong><code>system</code></strong> :&ensp;<code>str | List[str]</code></dt>
+<dd>Adds where clause for code system value(s)</dd>
+<dt><strong><code>code_fields</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>A list of paths to find FHIR codes in (default: codes for the given entity)</dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
@@ -487,6 +542,11 @@ def get_data_frame(
     ignore_cache: bool = False,
     expand_args: dict = {},
     log: bool = False,
+    # Codes
+    code: Optional[Union[str, List[str]]] = None,
+    display: Optional[Union[str, List[str]]] = None,
+    system: Optional[Union[str, List[str]]] = None,
+    code_fields: List[str] = [],
 ):
     &#34;&#34;&#34;Retrieve records
 
@@ -527,6 +587,18 @@ def get_data_frame(
     log : bool = False
         Whether to log some diagnostic statements for debugging
 
+    code : str | List[str]
+        Adds where clause for code value(s)
+
+    display : str | List[str]
+        Adds where clause for code display value(s)
+
+    system : str | List[str]
+        Adds where clause for code system value(s)
+
+    code_fields : List[str]
+        A list of paths to find FHIR codes in (default: codes for the given entity)
+
     Examples
     --------
     &gt;&gt;&gt; import phc.easy as phc
@@ -542,6 +614,8 @@ def get_data_frame(
         &#34;columns&#34;: &#34;*&#34;,
         &#34;from&#34;: [{&#34;table&#34;: cls.table_name()}],
     }
+
+    code_fields = [*cls.code_fields(), *code_fields]
 
     def transform(df: pd.DataFrame):
         return cls.transform_results(df, **expand_args)
@@ -561,6 +635,11 @@ def get_data_frame(
         patient_key=cls.patient_key(),
         log=log,
         patient_id_prefixes=cls.patient_id_prefixes(),
+        # Codes
+        code_fields=code_fields,
+        code=code,
+        display=display,
+        system=system,
     )</code></pre>
 </details>
 </dd>
@@ -638,7 +717,7 @@ def patient_key() -&gt; str:
 <li>
 <h4><code><a title="phc.easy.patient_item.PatientItem" href="#phc.easy.patient_item.PatientItem">PatientItem</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.patient_item.PatientItem.get_codes" href="item.html#phc.easy.patient_item.PatientItem.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.patient_item.PatientItem.get_count" href="item.html#phc.easy.patient_item.PatientItem.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.patient_item.PatientItem.get_count_by_field" href="item.html#phc.easy.patient_item.PatientItem.get_count_by_field">get_count_by_field</a></code></li>

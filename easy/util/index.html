@@ -27,9 +27,12 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from functools import reduce, wraps
+<pre><code class="python">import math
+from functools import reduce, wraps
+from typing import Callable, List, Union
+
+import pandas as pd
 from funcy import lmapcat
-from typing import Union, Callable, List
 
 try:
     from tqdm.autonotebook import tqdm
@@ -141,10 +144,76 @@ def add_prefixes(values: List[str], prefixes: List[str]):
             for value in values
         ],
         prefixes,
-    )</code></pre>
+    )
+
+
+class Hashabledict(dict):
+    &#34;&#34;&#34;Dictionary that is hashable (useful for creating set of unique dictionaries)&#34;&#34;&#34;
+
+    def __hash__(self):
+        return hash(frozenset(self))
+
+
+def get_values_at_codeable_paths(value: dict, keys: List[str]):
+    &#34;&#34;&#34;Extract values from FHIR records based on keys (useful for extracting codes)&#34;&#34;&#34;
+
+    def _get_value_at_codeable_path(
+        value: Union[list, dict], components: List[str], key: str
+    ):
+        if value is None:
+            return []
+
+        if isinstance(value, list):
+            return lmapcat(
+                lambda v: _get_value_at_codeable_path(v, components, key), value
+            )
+
+        if len(components) == 0:
+            return [Hashabledict({&#34;field&#34;: key, **value})]
+
+        if not isinstance(value, dict) and not isinstance(value, pd.Series):
+            return []
+
+        return _get_value_at_codeable_path(
+            value.get(components[0], None), components[1:], key
+        )
+
+    def get_value_at_codeable_path(value: dict, key: str):
+        return _get_value_at_codeable_path(value, key.split(&#34;.&#34;), key)
+
+    return lmapcat(lambda key: get_value_at_codeable_path(value, key), keys)
+
+
+def extract_codes(results: list, display: str, code_fields: List[str]):
+    &#34;&#34;&#34;Extract code values from a list of dictionaries based on the code keys.
+    Requires a display value to filter results preemptively (instead of
+    filtering afterwards)
+    &#34;&#34;&#34;
+
+    codes = set()
+
+    for row in results:
+        row_codes = get_values_at_codeable_paths(row, code_fields)
+        for code in row_codes:
+            if (
+                isinstance(code, dict)
+                # Poor man&#39;s way to filter only matching codes (since Elasticsearch
+                # returns records which will include other codes)
+                and display.lower() in code.get(&#34;display&#34;, &#34;&#34;).lower()
+            ):
+                codes.add(code)
+
+    return pd.DataFrame(list(codes))</code></pre>
 </details>
 </section>
 <section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="phc.easy.util.api_cache" href="api_cache.html">phc.easy.util.api_cache</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 </section>
 <section>
 </section>
@@ -235,6 +304,78 @@ it)</p></div>
         return value
 
     return _defaultprop</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.util.extract_codes"><code class="name flex">
+<span>def <span class="ident">extract_codes</span></span>(<span>results: list, display: str, code_fields: List[str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Extract code values from a list of dictionaries based on the code keys.
+Requires a display value to filter results preemptively (instead of
+filtering afterwards)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def extract_codes(results: list, display: str, code_fields: List[str]):
+    &#34;&#34;&#34;Extract code values from a list of dictionaries based on the code keys.
+    Requires a display value to filter results preemptively (instead of
+    filtering afterwards)
+    &#34;&#34;&#34;
+
+    codes = set()
+
+    for row in results:
+        row_codes = get_values_at_codeable_paths(row, code_fields)
+        for code in row_codes:
+            if (
+                isinstance(code, dict)
+                # Poor man&#39;s way to filter only matching codes (since Elasticsearch
+                # returns records which will include other codes)
+                and display.lower() in code.get(&#34;display&#34;, &#34;&#34;).lower()
+            ):
+                codes.add(code)
+
+    return pd.DataFrame(list(codes))</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.util.get_values_at_codeable_paths"><code class="name flex">
+<span>def <span class="ident">get_values_at_codeable_paths</span></span>(<span>value: dict, keys: List[str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Extract values from FHIR records based on keys (useful for extracting codes)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_values_at_codeable_paths(value: dict, keys: List[str]):
+    &#34;&#34;&#34;Extract values from FHIR records based on keys (useful for extracting codes)&#34;&#34;&#34;
+
+    def _get_value_at_codeable_path(
+        value: Union[list, dict], components: List[str], key: str
+    ):
+        if value is None:
+            return []
+
+        if isinstance(value, list):
+            return lmapcat(
+                lambda v: _get_value_at_codeable_path(v, components, key), value
+            )
+
+        if len(components) == 0:
+            return [Hashabledict({&#34;field&#34;: key, **value})]
+
+        if not isinstance(value, dict) and not isinstance(value, pd.Series):
+            return []
+
+        return _get_value_at_codeable_path(
+            value.get(components[0], None), components[1:], key
+        )
+
+    def get_value_at_codeable_path(value: dict, key: str):
+        return _get_value_at_codeable_path(value, key.split(&#34;.&#34;), key)
+
+    return lmapcat(lambda key: get_value_at_codeable_path(value, key), keys)</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.util.join_underscore"><code class="name flex">
@@ -332,6 +473,30 @@ it)</p></div>
 </dl>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="phc.easy.util.Hashabledict"><code class="flex name class">
+<span>class <span class="ident">Hashabledict</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Dictionary that is hashable (useful for creating set of unique dictionaries)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Hashabledict(dict):
+    &#34;&#34;&#34;Dictionary that is hashable (useful for creating set of unique dictionaries)&#34;&#34;&#34;
+
+    def __hash__(self):
+        return hash(frozenset(self))</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.dict</li>
+</ul>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -347,19 +512,33 @@ it)</p></div>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="phc.easy" href="index.html">phc.easy</a></code></li>
+<li><code><a title="phc.easy" href="../index.html">phc.easy</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="phc.easy.util.api_cache" href="api_cache.html">phc.easy.util.api_cache</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="two-column">
+<ul class="">
 <li><code><a title="phc.easy.util.add_prefixes" href="#phc.easy.util.add_prefixes">add_prefixes</a></code></li>
 <li><code><a title="phc.easy.util.concat_dicts" href="#phc.easy.util.concat_dicts">concat_dicts</a></code></li>
 <li><code><a title="phc.easy.util.defaultprop" href="#phc.easy.util.defaultprop">defaultprop</a></code></li>
+<li><code><a title="phc.easy.util.extract_codes" href="#phc.easy.util.extract_codes">extract_codes</a></code></li>
+<li><code><a title="phc.easy.util.get_values_at_codeable_paths" href="#phc.easy.util.get_values_at_codeable_paths">get_values_at_codeable_paths</a></code></li>
 <li><code><a title="phc.easy.util.join_underscore" href="#phc.easy.util.join_underscore">join_underscore</a></code></li>
 <li><code><a title="phc.easy.util.prefix_dict_keys" href="#phc.easy.util.prefix_dict_keys">prefix_dict_keys</a></code></li>
 <li><code><a title="phc.easy.util.update_progress" href="#phc.easy.util.update_progress">update_progress</a></code></li>
 <li><code><a title="phc.easy.util.with_progress" href="#phc.easy.util.with_progress">with_progress</a></code></li>
 <li><code><a title="phc.easy.util.without_keys" href="#phc.easy.util.without_keys">without_keys</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="phc.easy.util.Hashabledict" href="#phc.easy.util.Hashabledict">Hashabledict</a></code></h4>
+</li>
 </ul>
 </li>
 </ul>

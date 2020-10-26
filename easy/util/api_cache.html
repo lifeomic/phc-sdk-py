@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
-<title>phc.util.api_cache API documentation</title>
+<title>phc.easy.util.api_cache API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -20,7 +20,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>phc.util.api_cache</code></h1>
+<h1 class="title">Module <code>phc.easy.util.api_cache</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -162,7 +162,7 @@ class APICache:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="phc.util.api_cache.APICache"><code class="flex name class">
+<dt id="phc.easy.util.api_cache.APICache"><code class="flex name class">
 <span>class <span class="ident">APICache</span></span>
 </code></dt>
 <dd>
@@ -280,7 +280,7 @@ class APICache:
 </details>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.util.api_cache.APICache.build_cache_fhir_dsl_callback"><code class="name flex">
+<dt id="phc.easy.util.api_cache.APICache.build_cache_fhir_dsl_callback"><code class="name flex">
 <span>def <span class="ident">build_cache_fhir_dsl_callback</span></span>(<span>query: dict, transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame])</span>
 </code></dt>
 <dd>
@@ -315,7 +315,7 @@ def build_cache_fhir_dsl_callback(
     return handle_batch</code></pre>
 </details>
 </dd>
-<dt id="phc.util.api_cache.APICache.does_cache_for_fhir_dsl_exist"><code class="name flex">
+<dt id="phc.easy.util.api_cache.APICache.does_cache_for_fhir_dsl_exist"><code class="name flex">
 <span>def <span class="ident">does_cache_for_fhir_dsl_exist</span></span>(<span>query: dict) ‑> bool</span>
 </code></dt>
 <dd>
@@ -334,7 +334,7 @@ def does_cache_for_fhir_dsl_exist(query: dict) -&gt; bool:
     )</code></pre>
 </details>
 </dd>
-<dt id="phc.util.api_cache.APICache.filename_for_fhir_dsl"><code class="name flex">
+<dt id="phc.easy.util.api_cache.APICache.filename_for_fhir_dsl"><code class="name flex">
 <span>def <span class="ident">filename_for_fhir_dsl</span></span>(<span>query: dict)</span>
 </code></dt>
 <dd>
@@ -377,7 +377,7 @@ def filename_for_fhir_dsl(query: dict):
     return &#34;_&#34;.join([c for c in components if len(c) &gt; 0]) + &#34;.&#34; + extension</code></pre>
 </details>
 </dd>
-<dt id="phc.util.api_cache.APICache.load_cache_for_fhir_dsl"><code class="name flex">
+<dt id="phc.easy.util.api_cache.APICache.load_cache_for_fhir_dsl"><code class="name flex">
 <span>def <span class="ident">load_cache_for_fhir_dsl</span></span>(<span>query: dict) ‑> pandas.core.frame.DataFrame</span>
 </code></dt>
 <dd>
@@ -402,7 +402,7 @@ def load_cache_for_fhir_dsl(query: dict) -&gt; pd.DataFrame:
     return APICache.read_csv(filename)</code></pre>
 </details>
 </dd>
-<dt id="phc.util.api_cache.APICache.read_csv"><code class="name flex">
+<dt id="phc.easy.util.api_cache.APICache.read_csv"><code class="name flex">
 <span>def <span class="ident">read_csv</span></span>(<span>filename: str) ‑> pandas.core.frame.DataFrame</span>
 </code></dt>
 <dd>
@@ -425,8 +425,8 @@ def read_csv(filename: str) -&gt; pd.DataFrame:
     return df</code></pre>
 </details>
 </dd>
-<dt id="phc.util.api_cache.APICache.write_agg"><code class="name flex">
-<span>def <span class="ident">write_agg</span></span>(<span>query: dict, agg: <a title="phc.easy.query.fhir_aggregation.FhirAggregation" href="../easy/query/fhir_aggregation.html#phc.easy.query.fhir_aggregation.FhirAggregation">FhirAggregation</a>)</span>
+<dt id="phc.easy.util.api_cache.APICache.write_agg"><code class="name flex">
+<span>def <span class="ident">write_agg</span></span>(<span>query: dict, agg: <a title="phc.easy.query.fhir_aggregation.FhirAggregation" href="../query/fhir_aggregation.html#phc.easy.query.fhir_aggregation.FhirAggregation">FhirAggregation</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -464,20 +464,20 @@ def write_agg(query: dict, agg: FhirAggregation):
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="phc.util" href="index.html">phc.util</a></code></li>
+<li><code><a title="phc.easy.util" href="index.html">phc.easy.util</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="phc.util.api_cache.APICache" href="#phc.util.api_cache.APICache">APICache</a></code></h4>
+<h4><code><a title="phc.easy.util.api_cache.APICache" href="#phc.easy.util.api_cache.APICache">APICache</a></code></h4>
 <ul class="">
-<li><code><a title="phc.util.api_cache.APICache.build_cache_fhir_dsl_callback" href="#phc.util.api_cache.APICache.build_cache_fhir_dsl_callback">build_cache_fhir_dsl_callback</a></code></li>
-<li><code><a title="phc.util.api_cache.APICache.does_cache_for_fhir_dsl_exist" href="#phc.util.api_cache.APICache.does_cache_for_fhir_dsl_exist">does_cache_for_fhir_dsl_exist</a></code></li>
-<li><code><a title="phc.util.api_cache.APICache.filename_for_fhir_dsl" href="#phc.util.api_cache.APICache.filename_for_fhir_dsl">filename_for_fhir_dsl</a></code></li>
-<li><code><a title="phc.util.api_cache.APICache.load_cache_for_fhir_dsl" href="#phc.util.api_cache.APICache.load_cache_for_fhir_dsl">load_cache_for_fhir_dsl</a></code></li>
-<li><code><a title="phc.util.api_cache.APICache.read_csv" href="#phc.util.api_cache.APICache.read_csv">read_csv</a></code></li>
-<li><code><a title="phc.util.api_cache.APICache.write_agg" href="#phc.util.api_cache.APICache.write_agg">write_agg</a></code></li>
+<li><code><a title="phc.easy.util.api_cache.APICache.build_cache_fhir_dsl_callback" href="#phc.easy.util.api_cache.APICache.build_cache_fhir_dsl_callback">build_cache_fhir_dsl_callback</a></code></li>
+<li><code><a title="phc.easy.util.api_cache.APICache.does_cache_for_fhir_dsl_exist" href="#phc.easy.util.api_cache.APICache.does_cache_for_fhir_dsl_exist">does_cache_for_fhir_dsl_exist</a></code></li>
+<li><code><a title="phc.easy.util.api_cache.APICache.filename_for_fhir_dsl" href="#phc.easy.util.api_cache.APICache.filename_for_fhir_dsl">filename_for_fhir_dsl</a></code></li>
+<li><code><a title="phc.easy.util.api_cache.APICache.load_cache_for_fhir_dsl" href="#phc.easy.util.api_cache.APICache.load_cache_for_fhir_dsl">load_cache_for_fhir_dsl</a></code></li>
+<li><code><a title="phc.easy.util.api_cache.APICache.read_csv" href="#phc.easy.util.api_cache.APICache.read_csv">read_csv</a></code></li>
+<li><code><a title="phc.easy.util.api_cache.APICache.write_agg" href="#phc.easy.util.api_cache.APICache.write_agg">write_agg</a></code></li>
 </ul>
 </li>
 </ul>

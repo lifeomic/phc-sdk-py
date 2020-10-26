@@ -100,7 +100,12 @@ class Auth:
 
     @defaultprop
     def project_id(self):
-        return os.environ.get(&#34;PHC_PROJECT_ID&#34;)
+        env_project_id = os.environ.get(&#34;PHC_PROJECT_ID&#34;)
+
+        if env_project_id is None:
+            raise ValueError(&#34;No project_id has been selected.&#34;)
+
+        return env_project_id
 
     def session(self):
         &#34;Create an API session for use with modules not in the &#39;easy&#39; namespace&#34;
@@ -113,7 +118,7 @@ class Auth:
     def details(self):
         return {
             &#34;account&#34;: self.account,
-            &#34;project_id&#34;: self.project_id,
+            &#34;project_id&#34;: getattr(self, &#34;_project_id&#34;, None),
             &#34;token&#34;: self.token,
         }
 
@@ -262,7 +267,12 @@ Defaults to $PHC_ACCESS_TOKEN</p></div>
 
     @defaultprop
     def project_id(self):
-        return os.environ.get(&#34;PHC_PROJECT_ID&#34;)
+        env_project_id = os.environ.get(&#34;PHC_PROJECT_ID&#34;)
+
+        if env_project_id is None:
+            raise ValueError(&#34;No project_id has been selected.&#34;)
+
+        return env_project_id
 
     def session(self):
         &#34;Create an API session for use with modules not in the &#39;easy&#39; namespace&#34;
@@ -275,7 +285,7 @@ Defaults to $PHC_ACCESS_TOKEN</p></div>
     def details(self):
         return {
             &#34;account&#34;: self.account,
-            &#34;project_id&#34;: self.project_id,
+            &#34;project_id&#34;: getattr(self, &#34;_project_id&#34;, None),
             &#34;token&#34;: self.token,
         }
 
@@ -399,7 +409,12 @@ def account(self):
 </summary>
 <pre><code class="python">@defaultprop
 def project_id(self):
-    return os.environ.get(&#34;PHC_PROJECT_ID&#34;)</code></pre>
+    env_project_id = os.environ.get(&#34;PHC_PROJECT_ID&#34;)
+
+    if env_project_id is None:
+        raise ValueError(&#34;No project_id has been selected.&#34;)
+
+    return env_project_id</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.auth.Auth.token"><code class="name">var <span class="ident">token</span></code></dt>
@@ -459,7 +474,7 @@ def token(self):
 <pre><code class="python">def details(self):
     return {
         &#34;account&#34;: self.account,
-        &#34;project_id&#34;: self.project_id,
+        &#34;project_id&#34;: getattr(self, &#34;_project_id&#34;, None),
         &#34;token&#34;: self.token,
     }</code></pre>
 </details>

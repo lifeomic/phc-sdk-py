@@ -39,7 +39,7 @@ class Specimen(PatientItem):
         return &#34;specimen&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;type.coding&#34;, &#34;meta.tag&#34;, &#34;collection.bodySite.coding&#34;]
 
     @staticmethod
@@ -83,7 +83,7 @@ from a FSS table that relates to a patient</p></div>
         return &#34;specimen&#34;
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [&#34;type.coding&#34;, &#34;meta.tag&#34;, &#34;collection.bodySite.coding&#34;]
 
     @staticmethod
@@ -108,13 +108,13 @@ from a FSS table that relates to a patient</p></div>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.specimen.Specimen.code_keys"><code class="name flex">
-<span>def <span class="ident">code_keys</span></span>(<span>)</span>
+<dt id="phc.easy.specimen.Specimen.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_keys" href="item.html#phc.easy.patient_item.PatientItem.code_keys">code_keys</a></code>
+<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -122,12 +122,12 @@ from a FSS table that relates to a patient</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def code_keys():
+def code_fields():
     return [&#34;type.coding&#34;, &#34;meta.tag&#34;, &#34;collection.bodySite.coding&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.specimen.Specimen.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -167,7 +167,7 @@ def code_keys():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.specimen.Specimen.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -249,7 +249,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li>
 <h4><code><a title="phc.easy.specimen.Specimen" href="#phc.easy.specimen.Specimen">Specimen</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.specimen.Specimen.code_keys" href="#phc.easy.specimen.Specimen.code_keys">code_keys</a></code></li>
+<li><code><a title="phc.easy.specimen.Specimen.code_fields" href="#phc.easy.specimen.Specimen.code_fields">code_fields</a></code></li>
 <li><code><a title="phc.easy.specimen.Specimen.get_codes" href="item.html#phc.easy.specimen.Specimen.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.specimen.Specimen.get_count" href="item.html#phc.easy.specimen.Specimen.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.specimen.Specimen.get_count_by_field" href="item.html#phc.easy.specimen.Specimen.get_count_by_field">get_count_by_field</a></code></li>
