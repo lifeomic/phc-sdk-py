@@ -10,7 +10,7 @@ class DocumentReference(PatientItem):
         return "document_reference"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["type.coding", "content.attachment", "meta.tag"]
 
     @staticmethod

@@ -10,14 +10,18 @@ class Specimen(PatientItem):
         return "specimen"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["type.coding", "meta.tag", "collection.bodySite.coding"]
 
     @staticmethod
     def transform_results(df: pd.DataFrame, **expand_args):
         return Frame.expand(
             df,
-            code_columns=[*expand_args.get("code_columns", []), "collection"],
+            code_columns=[
+                *expand_args.get("code_columns", []),
+                "collection",
+                "type",
+            ],
             custom_columns=[
                 *expand_args.get("custom_columns", []),
                 Frame.codeable_like_column_expander("subject"),

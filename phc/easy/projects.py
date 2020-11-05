@@ -1,10 +1,12 @@
-from functools import reduce
+from functools import reduce, partial
 
 import pandas as pd
 
 import phc.services as services
 from funcy import memoize
 from phc.easy.auth import Auth
+from pmap import pmap
+from toolz import pipe, concat
 
 SEARCH_COLUMNS = ["name", "description", "id"]
 
@@ -22,24 +24,27 @@ class Project:
         Attributes
         ----------
         auth_args : Any
-            The authenication to use for the account and project (defaults to shared)
+            The authentication to use for the account and project (defaults to shared)
         """
         auth = Auth(auth_args)
 
-        def list_projects(acc, account):
+        def list_projects(account):
             session = auth.customized({"account": account["id"]}).session()
 
             return [
-                *acc,
-                *[
-                    {**project, "account": account["id"]}
-                    for project in services.Projects(session)
-                    .get_list()
-                    .data["items"]
-                ],
+                {**project, "account": account["id"]}
+                for project in services.Projects(session)
+                .get_list()
+                .data["items"]
             ]
 
-        return pd.DataFrame(reduce(list_projects, auth.accounts(), []))
+        return pipe(
+            auth.accounts(),
+            partial(pmap, list_projects),
+            concat,
+            list,
+            pd.DataFrame,
+        )
 
     @staticmethod
     def find(search: str, auth_args: Auth = Auth.shared()):

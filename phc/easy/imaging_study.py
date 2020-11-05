@@ -14,7 +14,7 @@ class ImagingStudy(PatientItem):
         return "patient.reference"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["procedureCode.coding" "meta.tag"]
 
     @staticmethod

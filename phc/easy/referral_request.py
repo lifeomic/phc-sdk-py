@@ -10,7 +10,7 @@ class ReferralRequest(PatientItem):
         return "referral_request"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["type.coding", "meta.tag"]
 
     @staticmethod

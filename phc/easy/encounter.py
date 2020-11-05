@@ -14,7 +14,7 @@ class Encounter(PatientItem):
         return "subject.reference"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [
             "class",
             "priority.coding",

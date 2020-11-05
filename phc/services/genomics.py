@@ -27,7 +27,7 @@ class Genomics(BaseClient):
         VARIANT = "variantsets"
         STRUCTURAL_VARIANT = "fusionsets"
         RNA = "rnaquantificationsets"
-        READ = "readgroupset"
+        READ = "readgroupsets"
         COPY_NUMBER = "copynumbersets"
 
     class Reference(Enum):
@@ -132,6 +132,25 @@ class Genomics(BaseClient):
             return self._ga4gh_call(
                 set_type.value, json=json_body, http_verb="POST"
             )
+
+    def update_set(self, set_type: SetType, set_id: str, updates: dict) -> ApiResponse:
+        """Update a genomic set
+
+        Parameters
+        ----------
+        set_type : SetType
+            The set type
+        set_id : str
+            The set ID
+        updates : dict
+            The updates to apply
+
+        Returns
+        -------
+        ApiResponse
+            The fetch response
+        """
+        return self._ga4gh_call(f"{set_type.value}/{set_id}", json=updates, http_verb="PATCH")
 
     def get_set(self, set_type: SetType, set_id: str) -> ApiResponse:
         """Fetch a genomic set

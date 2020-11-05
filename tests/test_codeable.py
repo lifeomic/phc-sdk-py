@@ -5,8 +5,8 @@ from phc.easy.codeable import generic_codeable_to_dict, Codeable
 
 def test_parsing_lat_long_extension():
     expected = {
-        "hl7_org_fhir_StructureDefinition_geolocation__latitude__valueDecimal": -71.058706,
-        "hl7_org_fhir_StructureDefinition_geolocation__longitude__valueDecimal": 42.42938,
+        "url__hl7.org/fhir/StructureDefinition/geolocation__extension_url__latitude__valueDecimal": -71.058706,
+        "url__hl7.org/fhir/StructureDefinition/geolocation__extension_url__longitude__valueDecimal": 42.42938,
     }
 
     assert (
@@ -52,11 +52,11 @@ def test_parsing_simple_meta_value():
 
     assert generic_codeable_to_dict(input_dict) == {
         "tag_lastUpdated": "2019-08-13T17:47:18.957Z",
-        "tag_lifeomic_com_fhir_group__code": "group-code-id",
-        "tag_lifeomic_com_fhir_dataset__code": "dataset-code-id",
-        "tag_lifeomic_com_fhir_dataset__code_1": "dataset-second-code-id",
-        "tag_lifeomic_com_fhir_source__code": "LifeOmic Consent",
-        "tag_lifeomic_com_fhir_questionnaire-type__code": "consent-form",
+        "tag_system__lifeomic.com/fhir/group__code": "group-code-id",
+        "tag_system__lifeomic.com/fhir/dataset__code": "dataset-code-id",
+        "tag_system__lifeomic.com/fhir/dataset__code_1": "dataset-second-code-id",
+        "tag_system__lifeomic.com/fhir/source__code": "LifeOmic Consent",
+        "tag_system__lifeomic.com/fhir/questionnaire-type__code": "consent-form",
     }
 
 
@@ -68,7 +68,7 @@ def test_parsing_system_value():
         },
         prefix="extension",
     ) == {
-        "extension_lifeomic_com_fhir_consent-form-id__value": "default-project-consent-form"
+        "extension_system__lifeomic.com/fhir/consent-form-id__value": "default-project-consent-form"
     }
 
 
@@ -103,12 +103,27 @@ def test_parsing_extension_with_race():
     ]
 
     assert generic_codeable_to_dict(input_dict) == {
-        "hl7_org_fhir_StructureDefinition_us-core-race__hl7_org_fhir_v3_Race__text": "race",
-        "hl7_org_fhir_StructureDefinition_us-core-race__hl7_org_fhir_v3_Race__code": "2106-3",
-        "hl7_org_fhir_StructureDefinition_us-core-race__hl7_org_fhir_v3_Race__display": "white",
-        "hl7_org_fhir_StructureDefinition_us-core-ethnicity__hl7_org_fhir_v3_Ethnicity__text": "ethnicity",
-        "hl7_org_fhir_StructureDefinition_us-core-ethnicity__hl7_org_fhir_v3_Ethnicity__code": "2186-5",
-        "hl7_org_fhir_StructureDefinition_us-core-ethnicity__hl7_org_fhir_v3_Ethnicity__display": "not hispanic or latino",
+        "url__hl7.org/fhir/StructureDefinition/us-core-race__valueCodeableConcept_text": "race",
+        "url__hl7.org/fhir/StructureDefinition/us-core-race__valueCodeableConcept_coding_system__hl7.org/fhir/v3/Race__code": "2106-3",
+        "url__hl7.org/fhir/StructureDefinition/us-core-race__valueCodeableConcept_coding_system__hl7.org/fhir/v3/Race__display": "white",
+        "url__hl7.org/fhir/StructureDefinition/us-core-ethnicity__valueCodeableConcept_text": "ethnicity",
+        "url__hl7.org/fhir/StructureDefinition/us-core-ethnicity__valueCodeableConcept_coding_system__hl7.org/fhir/v3/Ethnicity__code": "2186-5",
+        "url__hl7.org/fhir/StructureDefinition/us-core-ethnicity__valueCodeableConcept_coding_system__hl7.org/fhir/v3/Ethnicity__display": "not hispanic or latino",
+    }
+
+
+def test_parsing_extension_without_coding():
+    input_dict = [
+        {
+            "url": "http://hl7.org/fhir/StructureDefinition/us-core-race",
+            "valueCodeableConcept": {
+                "text": "American Indian or Alaska Native"
+            },
+        }
+    ]
+
+    assert generic_codeable_to_dict(input_dict) == {
+        "url__hl7.org/fhir/StructureDefinition/us-core-race__valueCodeableConcept_text": "American Indian or Alaska Native"
     }
 
 
@@ -124,9 +139,12 @@ def test_parsing_anonymous_identifier():
         }
     ]
 
+    # NOTE: There's not much we can do to show the underlying structure since
+    # type is really being applied to the value. So, when in conflict, we'll opt
+    # to make more readable columns.
     assert generic_codeable_to_dict(input_dict) == {
-        "hl7_org_fhir_v2_0203__code": "ANON",
-        "hl7_org_fhir_v2_0203__value": "LO-AR-A251",
+        "type_coding_system__hl7.org/fhir/v2/0203__code": "ANON",
+        "type_coding_system__hl7.org/fhir/v2/0203__value": "LO-AR-A251",
     }
 
 
@@ -141,7 +159,7 @@ def test_parsing_basic_meta_value():
     }
 
     assert generic_codeable_to_dict(input_dict) == {
-        "tag_lifeomic_com_fhir_dataset__code": "dataset-code"
+        "tag_system__lifeomic.com/fhir/dataset__code": "dataset-code"
     }
 
 

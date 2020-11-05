@@ -10,7 +10,7 @@ class Condition(PatientItem):
         return "condition"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [
             "meta.tag",
             "code.coding",
@@ -38,5 +38,6 @@ class Condition(PatientItem):
                 *expand_args.get("custom_columns", []),
                 Frame.codeable_like_column_expander("subject"),
                 Frame.codeable_like_column_expander("onsetPeriod"),
+                Frame.codeable_like_column_expander("context"),
             ],
         )

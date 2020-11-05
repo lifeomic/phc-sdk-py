@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import List, Optional, Union
 
 import pandas as pd
 
@@ -18,7 +18,7 @@ class Item:
         raise ValueError("Table name should be implemented by subclass")
 
     @staticmethod
-    def code_keys() -> List[str]:
+    def code_fields() -> List[str]:
         "Returns the code keys (e.g. when searching for codes)"
         return []
 
@@ -45,12 +45,18 @@ class Item:
         cls,
         all_results: bool = False,
         raw: bool = False,
+        page_size: Union[int, None] = None,
         max_pages: Union[int, None] = None,
         query_overrides: dict = {},
         auth_args=Auth.shared(),
         ignore_cache: bool = False,
         expand_args: dict = {},
         log: bool = False,
+        # Codes
+        code: Optional[Union[str, List[str]]] = None,
+        display: Optional[Union[str, List[str]]] = None,
+        system: Optional[Union[str, List[str]]] = None,
+        code_fields: List[str] = [],
     ):
         """Retrieve records
 
@@ -62,6 +68,9 @@ class Item:
         raw : bool = False
             If raw, then values will not be expanded (useful for manual
             inspection if something goes wrong)
+
+        page_size : int
+            The number of records to fetch per page
 
         max_pages : int
             The number of pages to retrieve (useful if working with tons of records)
@@ -82,6 +91,18 @@ class Item:
         log : bool = False
             Whether to log some diagnostic statements for debugging
 
+        code : str | List[str]
+            Adds where clause for code value(s)
+
+        display : str | List[str]
+            Adds where clause for code display value(s)
+
+        system : str | List[str]
+            Adds where clause for code system value(s)
+
+        code_fields : List[str]
+            A list of paths to find FHIR codes in (default: codes for the given entity)
+
         Examples
         --------
         >>> import phc.easy as phc
@@ -98,6 +119,8 @@ class Item:
             "from": [{"table": cls.table_name()}],
         }
 
+        code_fields = [*cls.code_fields(), *code_fields]
+
         def transform(df: pd.DataFrame):
             return cls.transform_results(df, **expand_args)
 
@@ -109,15 +132,27 @@ class Item:
             query_overrides,
             auth_args,
             ignore_cache,
+            page_size=page_size,
             max_pages=max_pages,
             log=log,
+            # Codes
+            code_fields=code_fields,
+            code=code,
+            display=display,
+            system=system,
         )
 
     @classmethod
-    def get_codes(cls, exclude_meta_tag=True, **kwargs):
+    def get_codes(
+        cls,
+        display_query: Optional[str] = None,
+        sample_size: Optional[int] = None,
+        exclude_meta_tag=True,
+        **kwargs,
+    ):
         """Find all codes
 
-        See possible argments for :func:`~phc.easy.query.Query.get_codes`
+        See possible argments for `phc.easy.query.Query.get_codes`
 
         Examples
         --------
@@ -127,7 +162,7 @@ class Item:
         >>>
         >>> phc.Observation.get_codes(patient_id="<id>", max_pages=3)
         """
-        code_fields = [*cls.code_keys(), *kwargs.get("code_fields", [])]
+        code_fields = [*cls.code_fields(), *kwargs.get("code_fields", [])]
 
         # Meta tag can significantly clutter things up since it's often a date
         # value instead of a real code
@@ -137,6 +172,8 @@ class Item:
             ]
 
         return Query.get_codes(
+            display_query=display_query,
+            sample_size=sample_size,
             table_name=cls.table_name(),
             code_fields=code_fields,
             **without_keys(kwargs, ["code_fields"]),

@@ -12,10 +12,11 @@ class Patient(Item):
         return "patient"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [
             "extension.valueCodeableConcept.coding",
             "identifier.type.coding",
+            "maritalStatus.coding",
             "meta.tag",
         ]
 
@@ -23,8 +24,14 @@ class Patient(Item):
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
             **expand_args,
+            "code_columns": [
+                *expand_args.get("code_columns", []),
+                "contained",
+                "maritalStatus",
+            ],
             "custom_columns": [
                 *expand_args.get("custom_columns", []),
+                Frame.codeable_like_column_expander("managingOrganization"),
                 ("address", expand_address_column),
                 ("name", expand_name_column),
             ],

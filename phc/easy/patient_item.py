@@ -1,11 +1,10 @@
-from typing import Union, List
+from typing import List, Optional, Union
 
 import pandas as pd
 
 from phc.easy.auth import Auth
-from phc.easy.query import Query
 from phc.easy.item import Item
-from phc.easy.util import without_keys
+from phc.easy.query import Query
 
 
 class PatientItem(Item):
@@ -28,12 +27,18 @@ class PatientItem(Item):
         raw: bool = False,
         patient_id: Union[None, str] = None,
         patient_ids: List[str] = [],
+        page_size: Union[int, None] = None,
         max_pages: Union[int, None] = None,
         query_overrides: dict = {},
         auth_args=Auth.shared(),
         ignore_cache: bool = False,
         expand_args: dict = {},
         log: bool = False,
+        # Codes
+        code: Optional[Union[str, List[str]]] = None,
+        display: Optional[Union[str, List[str]]] = None,
+        system: Optional[Union[str, List[str]]] = None,
+        code_fields: List[str] = [],
     ):
         """Retrieve records
 
@@ -51,6 +56,9 @@ class PatientItem(Item):
 
         patient_ids : List[str]
             Find records for given patient_ids
+
+        page_size : int
+            The number of records to fetch per page
 
         max_pages : int
             The number of pages to retrieve (useful if working with tons of records)
@@ -71,6 +79,18 @@ class PatientItem(Item):
         log : bool = False
             Whether to log some diagnostic statements for debugging
 
+        code : str | List[str]
+            Adds where clause for code value(s)
+
+        display : str | List[str]
+            Adds where clause for code display value(s)
+
+        system : str | List[str]
+            Adds where clause for code system value(s)
+
+        code_fields : List[str]
+            A list of paths to find FHIR codes in (default: codes for the given entity)
+
         Examples
         --------
         >>> import phc.easy as phc
@@ -87,6 +107,8 @@ class PatientItem(Item):
             "from": [{"table": cls.table_name()}],
         }
 
+        code_fields = [*cls.code_fields(), *code_fields]
+
         def transform(df: pd.DataFrame):
             return cls.transform_results(df, **expand_args)
 
@@ -100,10 +122,16 @@ class PatientItem(Item):
             ignore_cache,
             patient_id=patient_id,
             patient_ids=patient_ids,
+            page_size=page_size,
             max_pages=max_pages,
             patient_key=cls.patient_key(),
             log=log,
             patient_id_prefixes=cls.patient_id_prefixes(),
+            # Codes
+            code_fields=code_fields,
+            code=code,
+            display=display,
+            system=system,
         )
 
     @classmethod

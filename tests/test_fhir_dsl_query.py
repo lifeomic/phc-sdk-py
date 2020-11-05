@@ -1,5 +1,34 @@
+import math
+
 from nose.tools import raises
-from phc.easy.query.fhir_dsl_query import build_query
+
+from phc.easy.query.fhir_dsl_query import build_query, get_limit, update_limit
+
+
+def test_update_limit_with_base_query():
+    example = {}
+    assert update_limit(example, lambda x: x / 1000) == {
+        "limit": [
+            {"type": "number", "value": 0},
+            {"type": "number", "value": 9},
+        ]
+    }
+
+
+def test_update_limit_with_existing_limit():
+    example = {
+        "limit": [
+            {"type": "number", "value": 0},
+            {"type": "number", "value": 100},
+        ]
+    }
+
+    assert update_limit(example, math.sqrt) == {
+        "limit": [
+            {"type": "number", "value": 0},
+            {"type": "number", "value": 10},
+        ]
+    }
 
 
 def test_no_modification():
@@ -29,7 +58,7 @@ def test_add_patient_ids_with_no_where_clause():
     }
 
 
-def test_add_patient_id_with_query_term():
+def test_add_patient_id_and_limit_with_query_term():
     result = build_query(
         {
             "where": {
@@ -38,6 +67,7 @@ def test_add_patient_id_with_query_term():
             }
         },
         patient_ids=["a", "b"],
+        page_size=100,
     )
 
     assert result == {
@@ -45,7 +75,7 @@ def test_add_patient_id_with_query_term():
             "type": "elasticsearch",
             "query": {
                 "bool": {
-                    "should": [
+                    "must": [
                         {"term": {"test.field.keyword": "blah"}},
                         {
                             "terms": {
@@ -57,11 +87,33 @@ def test_add_patient_id_with_query_term():
                                 ]
                             }
                         },
-                    ],
-                    "minimum_should_match": 2,
+                    ]
                 }
             },
-        }
+        },
+        "limit": [
+            {"type": "number", "value": 0},
+            {"type": "number", "value": 100},
+        ],
+    }
+
+
+def test_replace_limit():
+    result = build_query(
+        {
+            "limit": [
+                {"type": "number", "value": 0},
+                {"type": "number", "value": 100},
+            ]
+        },
+        page_size=1000,
+    )
+
+    assert result == {
+        "limit": [
+            {"type": "number", "value": 0},
+            {"type": "number", "value": 1000},
+        ]
     }
 
 
@@ -87,7 +139,7 @@ def test_add_patient_id_with_bool_must_query():
                     "must": [
                         {"term": {"gender.keyword": "male"}},
                         {"terms": {"id.keyword": ["Patient/a", "a"]}},
-                    ],
+                    ]
                 }
             },
         }
@@ -113,17 +165,14 @@ def test_add_patient_id_with_bool_should_query():
             "type": "elasticsearch",
             "query": {
                 "bool": {
-                    "should": [
+                    "must": [
                         {
                             "bool": {
-                                "should": [
-                                    {"term": {"gender.keyword": "male"}}
-                                ],
+                                "should": [{"term": {"gender.keyword": "male"}}]
                             }
                         },
                         {"terms": {"id.keyword": ["Patient/a", "a"]}},
-                    ],
-                    "minimum_should_match": 2,
+                    ]
                 }
             },
         }
@@ -157,6 +206,120 @@ def test_add_single_patient_id_with_prefix():
                         "Patient/a",
                         "urn:uuid:a",
                         "a",
+                    ]
+                }
+            },
+        }
+    }
+
+
+def test_get_limit():
+    assert get_limit({}) is None
+
+    assert (
+        get_limit(
+            {
+                "limit": [
+                    {"type": "number", "value": 0},
+                    {"type": "number", "value": 100},
+                ]
+            }
+        )
+        == 100
+    )
+
+
+def test_add_term():
+    result = build_query(
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {"terms": {"a.keyword": [1, 2, 3]}},
+            }
+        },
+        term={"code.coding.code.keyword": "blah"},
+    )
+
+    assert result == {
+        "where": {
+            "type": "elasticsearch",
+            "query": {
+                "bool": {
+                    "must": [
+                        {"terms": {"a.keyword": [1, 2, 3]}},
+                        {"term": {"code.coding.code.keyword": "blah"}},
+                    ]
+                }
+            },
+        }
+    }
+
+
+def test_add_code_filters():
+    result = build_query(
+        query={},
+        code_fields=["meta.tag", "code.coding"],
+        code=["1234-5"],
+        display="My Code",
+        system="http://unitsofmeasure.org",
+    )
+
+    assert result == {
+        "where": {
+            "type": "elasticsearch",
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "terms": {
+                                            "meta.tag.code.keyword": ["1234-5"]
+                                        }
+                                    },
+                                    {
+                                        "terms": {
+                                            "code.coding.code.keyword": [
+                                                "1234-5"
+                                            ]
+                                        }
+                                    },
+                                ]
+                            }
+                        },
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "term": {
+                                            "meta.tag.display.keyword": "My Code"
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "code.coding.display.keyword": "My Code"
+                                        }
+                                    },
+                                ]
+                            }
+                        },
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "term": {
+                                            "meta.tag.system.keyword": "http://unitsofmeasure.org"
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "code.coding.system.keyword": "http://unitsofmeasure.org"
+                                        }
+                                    },
+                                ]
+                            }
+                        },
                     ]
                 }
             },

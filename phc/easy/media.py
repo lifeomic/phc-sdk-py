@@ -10,7 +10,7 @@ class Media(PatientItem):
         return "media"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["bodySite.coding", "meta.tag"]
 
     @staticmethod

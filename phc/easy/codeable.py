@@ -14,8 +14,7 @@ from phc.easy.util import (
 
 def system_to_column(system):
     "Convert system name (potentially URL) to a readable column name"
-    (new_string, _) = re.subn(r"https?:\/\/", "", system)
-    return new_string.replace(".", "_").replace("/", "_")
+    return re.subn(r"https?:\/\/", "", system)[0]
 
 
 def value_string_to_dict(codeable):
@@ -23,12 +22,30 @@ def value_string_to_dict(codeable):
     return {system_to_column(codeable["url"]): codeable["valueString"]}
 
 
+def merge_codeable_and_prefix(codeable, prefix):
+    if isinstance(codeable, dict):
+        return prefix_dict_keys(codeable, prefix)
+    else:
+        return concat_dicts(codeable, prefix)
+
+
 def get_value_codeable_concept_items(concept):
     "Extracts dictionaries in a valueCodeableConcept"
     base_concept = without_keys(concept, ["coding"])
 
+    if "coding" not in concept:
+        return [base_concept]
+
     return [
-        {**base_concept, **coding_value} for coding_value in concept["coding"]
+        {
+            **base_concept,
+            **(
+                merge_codeable_and_prefix(
+                    *flatten_and_find_prefix(coding_value, "coding")
+                )
+            ),
+        }
+        for coding_value in concept["coding"]
     ]
 
 
@@ -46,7 +63,14 @@ def flatten_nested_dicts(codeable_dict):
             return [
                 *acc,
                 *[
-                    {**base_dict, **result}
+                    {
+                        **base_dict,
+                        **(
+                            merge_codeable_and_prefix(
+                                *flatten_and_find_prefix(result, key)
+                            )
+                        ),
+                    }
                     for result in func(codeable_dict[key])
                 ],
             ]
@@ -77,7 +101,7 @@ def flatten_and_find_prefix(codeable_dict, prefix):
         return (
             flatten_nested_dicts(without_keys(codeable_dict, ["url"])),
             join_underscore(
-                [prefix, system_to_column(codeable_dict["url"]) + "_"]
+                [prefix, "url_", system_to_column(codeable_dict["url"]) + "_"]
             ),
         )
 
@@ -85,7 +109,11 @@ def flatten_and_find_prefix(codeable_dict, prefix):
         return (
             without_keys(codeable_dict, ["system"]),
             join_underscore(
-                [prefix, system_to_column(codeable_dict["system"]) + "_"]
+                [
+                    prefix,
+                    "system_",
+                    system_to_column(codeable_dict["system"]) + "_",
+                ]
             ),
         )
 
@@ -93,7 +121,7 @@ def flatten_and_find_prefix(codeable_dict, prefix):
         types = codeable_dict["type"]["coding"]
         return (
             [{**t, **without_keys(codeable_dict, ["type"])} for t in types],
-            prefix,
+            join_underscore(["type", "coding", prefix]),
         )
 
     return (codeable_dict, prefix)
@@ -130,11 +158,13 @@ def generic_codeable_to_dict(codeable, prefix=""):
     # if len(keys) == 1 and 'url' in codeable:
     #     return prefixer({key: system_to_column(codeable[key]) + '+'})
 
-    return prefixer(
+    result = prefixer(
         concat_dicts(
             [generic_codeable_to_dict(v, k) for k, v in codeable.items()]
         )
     )
+
+    return result
 
 
 class Codeable:

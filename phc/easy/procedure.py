@@ -14,7 +14,7 @@ class Procedure(PatientItem):
         return "procedure"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["meta.tag", "code.coding", "category.coding"]
 
     @staticmethod
@@ -30,6 +30,8 @@ class Procedure(PatientItem):
                 *expand_args.get("custom_columns", []),
                 Frame.codeable_like_column_expander("subject"),
                 Frame.codeable_like_column_expander("performedPeriod"),
+                Frame.codeable_like_column_expander("context"),
+                Frame.codeable_like_column_expander("managingOrganization"),
             ],
         }
 

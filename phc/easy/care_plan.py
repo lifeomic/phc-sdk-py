@@ -10,7 +10,7 @@ class CarePlan(PatientItem):
         return "care_plan"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return ["meta.tag", "category.coding"]
 
     @staticmethod

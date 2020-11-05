@@ -10,7 +10,7 @@ class MedicationDispense(PatientItem):
         return "medication_dispense"
 
     @staticmethod
-    def code_keys():
+    def code_fields():
         return [
             "quantity",
             "medicationCodeableConcept.coding",

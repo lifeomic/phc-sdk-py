@@ -7,7 +7,7 @@ import pandas as pd
 from phc.easy.codeable import Codeable
 from phc.easy.util import tqdm, update_progress
 
-TZ_REGEX = re.compile(r"-\d{2}:?\d{2}Z?$")
+TZ_REGEX = re.compile(r"[-+]\d{2}:?\d{2}Z?$")
 
 CODE_COLUMNS = [
     "meta",
