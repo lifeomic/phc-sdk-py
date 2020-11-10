@@ -8,8 +8,6 @@ from phc.easy.diagnostic_report import DiagnosticReport
 from phc.easy.document_reference import DocumentReference
 from phc.easy.encounter import Encounter
 from phc.easy.frame import Frame
-from phc.easy.genomic_short_variant import GenomicShortVariant
-from phc.easy.genomic_test import GenomicTest
 from phc.easy.goal import Goal
 from phc.easy.imaging_study import ImagingStudy
 from phc.easy.immunization import Immunization
@@ -20,6 +18,8 @@ from phc.easy.medication_dispense import MedicationDispense
 from phc.easy.medication_request import MedicationRequest
 from phc.easy.medication_statement import MedicationStatement
 from phc.easy.observation import Observation
+from phc.easy.omics.genomic_short_variant import GenomicShortVariant
+from phc.easy.omics.genomic_test import GenomicTest
 from phc.easy.organization import Organization
 from phc.easy.patient_item import PatientItem
 from phc.easy.patients import Patient
@@ -33,7 +33,6 @@ from phc.easy.query import Query
 from phc.easy.referral_request import ReferralRequest
 from phc.easy.sequence import Sequence
 from phc.easy.specimen import Specimen
-
 
 __all__ = [
     "AuditEvent",
