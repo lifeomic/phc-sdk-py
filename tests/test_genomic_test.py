@@ -152,8 +152,6 @@ def test_get_data_frame(execute_paging_api):
         transform=ANY,
     )
 
-    print(frame.columns)
-
     assert frame.columns.tolist() == [
         "status",
         "setType",
