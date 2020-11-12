@@ -5,7 +5,7 @@ from typing import Any, Callable, List, Optional, Tuple, Union
 import pandas as pd
 from phc.base_client import BaseClient
 from phc.easy.auth import Auth
-from phc.easy.query.api_paging import recursive_paging_api_call
+from phc.easy.query.api_paging import clean_params, recursive_paging_api_call
 from phc.easy.query.fhir_aggregation import FhirAggregation
 from phc.easy.query.fhir_dsl import (
     DEFAULT_SCROLL_SIZE,
@@ -18,8 +18,9 @@ from phc.easy.query.fhir_dsl import (
 from phc.easy.query.fhir_dsl_query import build_query
 from phc.easy.query.ga4gh import recursive_execute_ga4gh
 from phc.easy.util import extract_codes
+from phc.easy.util.api_cache import FHIR_DSL, APICache
 from phc.services import Fhir
-from phc.easy.util.api_cache import APICache
+from toolz import identity
 
 
 class Query:
@@ -166,11 +167,14 @@ class Query:
         path: str,
         params: dict = {},
         http_verb: str = "GET",
+        transform: Callable[[pd.DataFrame], pd.DataFrame] = identity,
         all_results: bool = False,
         auth_args: Auth = Auth.shared(),
         max_pages: Optional[int] = None,
         page_size: Optional[int] = None,
         log: bool = False,
+        raw: bool = False,
+        ignore_cache: bool = False,
     ):
         """Execute a API query that pages through results
 
@@ -216,13 +220,44 @@ class Query:
                 }
             )
         """
-        return with_progress(
+
+        auth = Auth(auth_args)
+
+        params = clean_params(params)
+        path = path.replace(":project_id", auth.project_id)
+        query = {"path": path, "method": http_verb, "params": params}
+
+        if all_results and page_size is None:
+            # Default to 100 if not provided but getting all results
+            page_size = 100
+
+        if log:
+            print(json.dumps(query, indent=4))
+
+        use_cache = (
+            (not ignore_cache)
+            and (not raw)
+            and all_results
+            and (max_pages is None)
+        )
+
+        if use_cache and APICache.does_cache_for_query_exist(query):
+            return APICache.load_cache_for_fhir_dsl(query)
+
+        callback = (
+            APICache.build_cache_callback(query, transform, nested_key=None)
+            if use_cache
+            else None
+        )
+
+        results = with_progress(
             lambda: tqdm(),
             lambda progress: recursive_paging_api_call(
                 path,
                 params=params,
                 http_verb=http_verb,
-                scroll=all_results,
+                callback=callback,
+                scroll=all_results or max_pages,
                 max_pages=max_pages,
                 page_size=page_size,
                 log=log,
@@ -230,6 +265,13 @@ class Query:
                 progress=progress,
             ),
         )
+
+        df = pd.DataFrame(results)
+
+        if raw:
+            return df
+
+        return transform(df)
 
     @staticmethod
     def execute_fhir_dsl_with_options(
@@ -256,11 +298,13 @@ class Query:
             and (max_pages is None)
         )
 
-        if use_cache and APICache.does_cache_for_fhir_dsl_exist(query):
-            return APICache.load_cache_for_fhir_dsl(query)
+        if use_cache and APICache.does_cache_for_query_exist(
+            query, namespace=FHIR_DSL
+        ):
+            return APICache.load_cache_for_fhir_dsl(query, namespace=FHIR_DSL)
 
         callback = (
-            APICache.build_cache_fhir_dsl_callback(query, transform)
+            APICache.build_cache_callback(query, transform, namespace=FHIR_DSL)
             if use_cache
             else None
         )

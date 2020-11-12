@@ -1,20 +1,29 @@
-from phc.easy.util.api_cache import APICache
+from phc.easy.util.api_cache import APICache, FHIR_DSL
 
 
-def test_filename_for_fhir_dsl_with_simple_statement():
-    filename = APICache.filename_for_fhir_dsl(
+def test_filename_for_genomics_api_call():
+    filename = APICache.filename_for_query(
+        {"path": "genomics/projects/dfkjkjsa-dkj2kd1-kjdkj-1dkj2/tests"}
+    )
+
+    assert filename == "genomics_projects_tests_04b0739f.csv"
+
+
+def test_filename_for_query_with_simple_statement():
+    filename = APICache.filename_for_query(
         {
             "type": "select",
             "columns": "*",
             "from": [{"table": "patient"}, {"table": "observation"}],
-        }
+        },
+        namespace=FHIR_DSL,
     )
 
     assert filename == "fhir_dsl_patient_observation_c57bdb78.csv"
 
 
-def test_filename_for_fhir_dsl_with_complex_statement():
-    filename = APICache.filename_for_fhir_dsl(
+def test_filename_for_query_with_complex_statement():
+    filename = APICache.filename_for_query(
         {
             "type": "select",
             "columns": [
@@ -41,14 +50,15 @@ def test_filename_for_fhir_dsl_with_complex_statement():
                     }
                 },
             },
-        }
+        },
+        namespace=FHIR_DSL,
     )
 
     assert filename == "fhir_dsl_goal_1col_where_08c25b4c.csv"
 
 
-def test_filename_for_fhir_dsl_with_aggregation():
-    filename = APICache.filename_for_fhir_dsl(
+def test_filename_for_query_with_aggregation():
+    filename = APICache.filename_for_query(
         {
             "type": "select",
             "columns": [
@@ -82,7 +92,8 @@ def test_filename_for_fhir_dsl_with_aggregation():
                     }
                 },
             },
-        }
+        },
+        namespace=FHIR_DSL,
     )
 
     assert filename == "fhir_dsl_goal_agg_where_58a8bb32.json"

@@ -82,11 +82,14 @@ class PagingApiItem:
             split_args.get("execute", {}),
         )
 
-        df = Query.execute_paging_api(
-            cls.resource_path(), params, **execute_options
-        )
+        def transform(df: pd.DataFrame):
+            if len(df) == 0:
+                return df
 
-        if len(df) > 0:
-            return cls.transform_results(df, **expand_args)
+            return cls.transform_results(df, params=params, **expand_args)
+
+        df = Query.execute_paging_api(
+            cls.resource_path(), params, **execute_options, transform=transform
+        )
 
         return df

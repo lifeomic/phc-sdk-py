@@ -39,7 +39,7 @@ class GenomicShortVariant(PagingApiItem):
                 *expand_args.get("custom_columns", []),
                 *[
                     Frame.codeable_like_column_expander(k)
-                    for k in ["clinvar", "cosmic", "vcf"]
+                    for k in ["clinvar", "cosmic", "vcf", "ensemblCanon"]
                 ],
                 ("id", expand_id),
             ],

@@ -1,8 +1,6 @@
-import json
-import pandas as pd
-from urllib.parse import urljoin
+from typing import Any, Callable, List, Optional, Union
+
 from phc.base_client import BaseClient
-from typing import List, Union, Optional
 from phc.easy.auth import Auth
 from phc.easy.util import tqdm
 
@@ -24,6 +22,7 @@ def recursive_paging_api_call(
     scroll: bool = False,
     progress: Optional[tqdm] = None,
     auth_args: Optional[Auth] = Auth.shared(),
+    callback: Union[Callable[[Any, bool], None], None] = None,
     max_pages: Optional[int] = None,
     page_size: Optional[int] = None,
     log: bool = False,
@@ -45,14 +44,10 @@ def recursive_paging_api_call(
     if scroll is False:
         max_pages = 1
 
-    params = clean_params(params)
-
-    actual_path = path.replace(":project_id", auth.project_id)
-
     # Compute count and add to progress
     if _count is None and len(_prev_results) == 0:
         count_response = client._api_call(
-            actual_path,
+            path,
             http_verb=http_verb,
             # Use minimum pageSize in case this endpoint doesn't support count
             params={**params, "include": "count", "pageSize": 1},
@@ -67,22 +62,9 @@ def recursive_paging_api_call(
         if _count and (progress is not None):
             progress.reset(_count)
 
-    if log:
-        print(
-            json.dumps(
-                {
-                    "url": urljoin(client.session.api_url, actual_path),
-                    "method": http_verb,
-                    "params": params,
-                },
-                indent=4,
-            )
-        )
-
-    response = client._api_call(actual_path, http_verb=http_verb, params=params)
+    response = client._api_call(path, http_verb=http_verb, params=params)
 
     current_results = response.data.get("items", [])
-    results = [*_prev_results, *current_results]
 
     if progress is not None:
         progress.update(len(current_results))
@@ -94,15 +76,20 @@ def recursive_paging_api_call(
         # next page exists
         or (response.data.get("links", {}).get("next") is None)
     )
+    results = [] if callback else [*_prev_results, *current_results]
 
-    if is_last_batch:
+    if callback and not is_last_batch:
+        callback(current_results, False)
+    elif callback and is_last_batch:
+        return callback(current_results, True)
+    elif is_last_batch:
         if progress is not None:
             progress.close()
 
         print(
             f"Retrieved {len(results)}{f'/{_count}' if _count else ''} results"
         )
-        return pd.DataFrame(results)
+        return results
 
     return recursive_paging_api_call(
         path,
@@ -110,6 +97,7 @@ def recursive_paging_api_call(
         http_verb=http_verb,
         progress=progress,
         auth_args=auth_args,
+        callback=callback,
         max_pages=max_pages,
         page_size=page_size,
         log=log,
