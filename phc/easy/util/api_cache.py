@@ -2,11 +2,10 @@ import hashlib
 import json
 import os
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Optional
 
 import numpy as np
 import pandas as pd
-
 from phc.easy.query.fhir_aggregation import FhirAggregation
 from phc.util.csv_writer import CSVWriter
 
@@ -15,10 +14,12 @@ DATE_FORMAT_REGEX = (
     r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([-+]\d{4}|Z)"
 )
 
+FHIR_DSL = "fhir_dsl"
+
 
 class APICache:
     @staticmethod
-    def filename_for_fhir_dsl(query: dict):
+    def filename_for_query(query: dict, namespace: Optional[str] = None):
         "Descriptive filename with hash of query for easy retrieval"
         is_aggregation = FhirAggregation.is_aggregation_query(query)
 
@@ -36,9 +37,13 @@ class APICache:
             json.dumps(query).encode("utf-8")
         ).hexdigest()[0:8]
 
+        path_name = [
+            c for c in query.get("path", "").split("/") if "-" not in c
+        ]
+
         components = [
-            "fhir",
-            "dsl",
+            namespace or "",
+            *path_name,
             *[d.get("table", "") for d in query.get("from", [])],
             agg_description,
             column_description,
@@ -51,20 +56,24 @@ class APICache:
         return "_".join([c for c in components if len(c) > 0]) + "." + extension
 
     @staticmethod
-    def does_cache_for_fhir_dsl_exist(query: dict) -> bool:
+    def does_cache_for_query_exist(
+        query: dict, namespace: Optional[str] = None
+    ) -> bool:
         return (
             Path(DIR)
             .expanduser()
-            .joinpath(APICache.filename_for_fhir_dsl(query))
+            .joinpath(APICache.filename_for_query(query, namespace))
             .exists()
         )
 
     @staticmethod
-    def load_cache_for_fhir_dsl(query: dict) -> pd.DataFrame:
+    def load_cache_for_fhir_dsl(
+        query: dict, namespace: Optional[str] = None
+    ) -> pd.DataFrame:
         filename = str(
             Path(DIR)
             .expanduser()
-            .joinpath(APICache.filename_for_fhir_dsl(query))
+            .joinpath(APICache.filename_for_query(query, namespace))
         )
         print(f'[CACHE] Loading from "{filename}"')
 
@@ -75,14 +84,19 @@ class APICache:
         return APICache.read_csv(filename)
 
     @staticmethod
-    def build_cache_fhir_dsl_callback(
-        query: dict, transform: Callable[[pd.DataFrame], pd.DataFrame]
+    def build_cache_callback(
+        query: dict,
+        transform: Callable[[pd.DataFrame], pd.DataFrame],
+        nested_key: Optional[str] = "_source",
+        namespace: Optional[str] = None,
     ):
         "Build a CSV callback (not used for aggregations)"
         folder = Path(DIR).expanduser()
         folder.mkdir(parents=True, exist_ok=True)
 
-        filename = str(folder.joinpath(APICache.filename_for_fhir_dsl(query)))
+        filename = str(
+            folder.joinpath(APICache.filename_for_query(query, namespace))
+        )
 
         writer = CSVWriter(filename)
 
@@ -94,17 +108,27 @@ class APICache:
                 print(f'Loading data frame from "{filename}"')
                 return APICache.read_csv(filename)
 
-            df = pd.DataFrame(map(lambda r: r["_source"], batch))
+            batch = (
+                batch
+                if nested_key is None
+                else map(lambda r: r[nested_key], batch)
+            )
+
+            df = pd.DataFrame(batch)
             writer.write(transform(df))
 
         return handle_batch
 
     @staticmethod
-    def write_agg(query: dict, agg: FhirAggregation):
+    def write_agg(
+        query: dict, agg: FhirAggregation, namespace: Optional[str] = None
+    ):
         folder = Path(DIR).expanduser()
         folder.mkdir(parents=True, exist_ok=True)
 
-        filename = str(folder.joinpath(APICache.filename_for_fhir_dsl(query)))
+        filename = str(
+            folder.joinpath(APICache.filename_for_query(query, namespace))
+        )
 
         print(f'Writing aggregation to "{filename}"')
         with open(filename, "w") as file:

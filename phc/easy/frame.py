@@ -5,7 +5,6 @@ import re
 import pandas as pd
 
 from phc.easy.codeable import Codeable
-from phc.easy.util import tqdm, update_progress
 
 TZ_REGEX = re.compile(r"[-+]\d{2}:?\d{2}Z?$")
 
@@ -103,38 +102,15 @@ class Frame:
             key for key, _func in custom_columns if key in frame.columns
         ]
 
-        progress = (
-            tqdm(
-                total=(
-                    len(codeable_column_names)
-                    + len(all_date_columns)
-                    + len(custom_names)
-                ),
-                # If doing many batches, we don't want to pollute with boatloads
-                # of progress indicators around.
-                leave=False,
-            )
-            if tqdm
-            else None
-        )
-
         code_frames = [
-            (
-                update_progress(progress, 1, col_name)
-                and Codeable.expand_column(frame[col_name]).add_prefix(
-                    f"{col_name}."
-                )
-            )
+            (Codeable.expand_column(frame[col_name]).add_prefix(f"{col_name}."))
             for col_name in codeable_column_names
         ]
 
         columns = [
             frame.drop([*codeable_column_names, *custom_names], axis=1),
             *[
-                (
-                    update_progress(progress, 1, key)
-                    and column_to_frame(frame, key, func)
-                )
+                (column_to_frame(frame, key, func))
                 for key, func in custom_columns
             ],
             *code_frames,
@@ -146,16 +122,8 @@ class Frame:
             filter(lambda k: k in combined.columns, all_date_columns)
         )
 
-        # Jump past date_columns not in expanded column
-        update_progress(
-            progress,
-            len(all_date_columns) - len(date_column_names),
-            "Parsing dates...",
-        )
-
         # Mutate data frame to parse date columns
         for column_key in date_column_names:
-            update_progress(progress, 1, column_key)
             local_key = f"{column_key}.local"
             tz_key = f"{column_key}.tz"
 
@@ -184,11 +152,6 @@ class Frame:
 
             combined[tz_key] = (localized - utc).dt.total_seconds() / 3600
             combined[local_key] = localized
-
-        update_progress(progress, 0, "Finishing expansion...")
-
-        if progress:
-            progress.close()
 
         # Sort columns by original order (where possible)
         return combined.reindex(
