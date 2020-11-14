@@ -1,12 +1,12 @@
 import pandas as pd
 
 from phc.easy.frame import Frame
-from phc.easy.item import Item
+from phc.easy.abstract.fhir_service_item import FhirServiceItem
 from phc.easy.patients.address import expand_address_column
 from phc.easy.patients.name import expand_name_column
 
 
-class Patient(Item):
+class Patient(FhirServiceItem):
     @staticmethod
     def table_name():
         return "patient"

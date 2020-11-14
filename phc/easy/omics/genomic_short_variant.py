@@ -9,7 +9,7 @@ from phc.easy.omics.options.genomic_short_variant import (
     GenomicShortVariantInclude,
     GenomicShortVariantOptions,
 )
-from phc.easy.paging_api_item import PagingApiItem
+from phc.easy.abstract.paging_api_item import PagingApiItem
 from phc.easy.util import tqdm
 from phc.easy.util.batch import batch_get_frame
 

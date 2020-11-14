@@ -4,11 +4,11 @@ import pandas as pd
 
 from phc.easy.auth import Auth
 from phc.easy.frame import Frame
-from phc.easy.patient_item import PatientItem
+from phc.easy.abstract.fhir_service_patient_item import FhirServicePatientItem
 from phc.easy.query import Query
 
 
-class Procedure(PatientItem):
+class Procedure(FhirServicePatientItem):
     @staticmethod
     def table_name():
         return "procedure"

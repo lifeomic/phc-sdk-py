@@ -1,10 +1,10 @@
 import pandas as pd
 
 from phc.easy.frame import Frame
-from phc.easy.patient_item import PatientItem
+from phc.easy.abstract.fhir_service_patient_item import FhirServicePatientItem
 
 
-class MedicationRequest(PatientItem):
+class MedicationRequest(FhirServicePatientItem):
     @staticmethod
     def table_name():
         return "medication_request"

@@ -3,11 +3,11 @@ from typing import List, Optional, Union
 import pandas as pd
 
 from phc.easy.auth import Auth
-from phc.easy.item import Item
+from phc.easy.abstract.fhir_service_item import FhirServiceItem
 from phc.easy.query import Query
 
 
-class PatientItem(Item):
+class FhirServicePatientItem(FhirServiceItem):
     """Provides an abstract class and/or static methods for retrieving items
     from a FSS table that relates to a patient
     """

@@ -1,10 +1,10 @@
 import pandas as pd
 
 from phc.easy.frame import Frame
-from phc.easy.item import Item
+from phc.easy.abstract.fhir_service_item import FhirServiceItem
 
 
-class Organization(Item):
+class Organization(FhirServiceItem):
     @staticmethod
     def table_name():
         return "organization"
