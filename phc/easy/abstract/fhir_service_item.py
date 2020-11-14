@@ -36,7 +36,7 @@ class FhirServiceItem:
         )
 
     @staticmethod
-    def transform_results(data_frame: pd.DataFrame, **expand_args):
+    def transform_results(data_frame: pd.DataFrame, **_expand_args):
         "Transform data frame batch"
         return data_frame
 

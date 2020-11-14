@@ -6,6 +6,7 @@ from phc.easy.util import (
     join_underscore,
     prefix_dict_keys,
     without_keys,
+    split_by,
 )
 
 
@@ -100,6 +101,13 @@ def test_extract_codes():
         **samples[0]["code"]["coding"][0],
         "field": "code.coding",
     }
+
+
+def test_split_by():
+    set_a, set_b = split_by({"a": 1, "b": 2, "c": 3, "d": 4}, ["a", "c"])
+
+    assert list(set_a.keys()) == ["a", "c"]
+    assert list(set_b.keys()) == ["b", "d"]
 
 
 # defaultprop

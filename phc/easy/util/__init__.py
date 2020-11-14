@@ -1,6 +1,7 @@
 import math
 from functools import reduce, wraps
 from typing import Callable, List, Union
+from toolz import groupby
 
 import pandas as pd
 from funcy import lmapcat
@@ -162,3 +163,15 @@ def extract_codes(results: list, display: str, code_fields: List[str]):
                 codes.add(code)
 
     return pd.DataFrame(list(codes))
+
+
+def split_by(args: dict, left_keys: List[str]):
+    """Split into two dictionaries (left is whitelist and right is remaining)"""
+    result = {
+        k: dict(v)
+        for k, v in groupby(
+            lambda pair: pair[0] in left_keys, args.items()
+        ).items()
+    }
+
+    return (result.get(True, {}), result.get(False, {}))

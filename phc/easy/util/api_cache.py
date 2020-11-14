@@ -108,7 +108,8 @@ class APICache:
             )
 
             df = pd.DataFrame(batch)
-            writer.write(transform(df))
+            if len(df) != 0:
+                writer.write(transform(df))
 
             if is_finished and not os.path.exists(filename):
                 return pd.DataFrame()

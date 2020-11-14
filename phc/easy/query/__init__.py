@@ -261,7 +261,7 @@ class Query:
                 params=params,
                 http_verb=http_verb,
                 callback=callback,
-                scroll=all_results or max_pages,
+                scroll=all_results or (max_pages is not None),
                 max_pages=max_pages,
                 page_size=page_size,
                 log=log,
