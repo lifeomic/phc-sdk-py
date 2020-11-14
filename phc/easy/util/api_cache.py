@@ -67,7 +67,7 @@ class APICache:
         )
 
     @staticmethod
-    def load_cache_for_fhir_dsl(
+    def load_cache_for_query(
         query: dict, namespace: Optional[str] = None
     ) -> pd.DataFrame:
         filename = str(

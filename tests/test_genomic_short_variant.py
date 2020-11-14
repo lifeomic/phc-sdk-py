@@ -1,5 +1,9 @@
 import pandas as pd
+from nose.tools import assert_equals
+from unittest import mock
+from unittest.mock import ANY
 from phc.easy.omics.genomic_short_variant import GenomicShortVariant
+from uuid import uuid4
 
 
 def test_parse_id():
@@ -26,3 +30,25 @@ def test_parse_id():
     ]
 
     assert "FASN" in frame.gene.values.tolist()
+
+
+@mock.patch("phc.easy.query.Query.execute_paging_api")
+def test_batches_of_variant_set_ids(execute_paging_api):
+    def get_variant_set_ids(index: int):
+        return execute_paging_api.call_args_list[index][0][1][
+            "variantSetIds"
+        ].split(",")
+
+    execute_paging_api.return_value = pd.DataFrame(
+        {"id": [], "variant_set_id": []}
+    )
+
+    variant_set_ids = [str(uuid4()) for _ in range(250)]
+
+    GenomicShortVariant.get_data_frame(variant_set_ids, all_results=True)
+
+    assert_equals(execute_paging_api.call_count, 3)
+
+    assert_equals(len(get_variant_set_ids(0)), 100)
+    assert_equals(len(get_variant_set_ids(1)), 100)
+    assert_equals(len(get_variant_set_ids(2)), 50)

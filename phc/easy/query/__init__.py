@@ -175,6 +175,7 @@ class Query:
         log: bool = False,
         raw: bool = False,
         ignore_cache: bool = False,
+        progress: Optional[tqdm] = None,
     ):
         """Execute a API query that pages through results
 
@@ -207,6 +208,9 @@ class Query:
 
         log : bool = False
             Whether to log some diagnostic statements for debugging
+
+        progress : Optional[tqdm] = None
+            Override the given progress indicator
 
         Examples
         --------
@@ -242,7 +246,7 @@ class Query:
         )
 
         if use_cache and APICache.does_cache_for_query_exist(query):
-            return APICache.load_cache_for_fhir_dsl(query)
+            return APICache.load_cache_for_query(query)
 
         callback = (
             APICache.build_cache_callback(query, transform, nested_key=None)
@@ -251,7 +255,7 @@ class Query:
         )
 
         results = with_progress(
-            lambda: tqdm(),
+            lambda: progress if progress is not None else tqdm(),
             lambda progress: recursive_paging_api_call(
                 path,
                 params=params,
@@ -301,7 +305,7 @@ class Query:
         if use_cache and APICache.does_cache_for_query_exist(
             query, namespace=FHIR_DSL
         ):
-            return APICache.load_cache_for_fhir_dsl(query, namespace=FHIR_DSL)
+            return APICache.load_cache_for_query(query, namespace=FHIR_DSL)
 
         callback = (
             APICache.build_cache_callback(query, transform, namespace=FHIR_DSL)

@@ -153,10 +153,15 @@ class Frame:
             combined[tz_key] = (localized - utc).dt.total_seconds() / 3600
             combined[local_key] = localized
 
+        # Drop duplicate columns (nicety for same transform applied to cache)
         # Sort columns by original order (where possible)
-        return combined.reindex(
+        return combined.loc[:, ~combined.columns.duplicated()].reindex(
             sorted(
-                [c for c in combined.columns if c not in date_column_names],
+                [
+                    c
+                    for c in combined.columns.unique()
+                    if c not in date_column_names
+                ],
                 key=Frame._find_index_of_similar(frame.columns),
             ),
             axis="columns",

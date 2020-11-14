@@ -4,11 +4,16 @@ from typing import List, Optional
 import pandas as pd
 from phc.easy.auth import Auth
 from phc.easy.frame import Frame
+from phc.easy.omics.genomic_test import GenomicTestStatus, GenomicTestType
 from phc.easy.omics.options.genomic_short_variant import (
     GenomicShortVariantInclude,
     GenomicShortVariantOptions,
 )
 from phc.easy.paging_api_item import PagingApiItem
+from phc.easy.util import tqdm
+from phc.easy.util.batch import batch_get_frame
+
+MAX_VARIANT_SET_IDS = 100
 
 
 class GenomicShortVariant(PagingApiItem):
@@ -21,7 +26,7 @@ class GenomicShortVariant(PagingApiItem):
         return GenomicShortVariantOptions
 
     @staticmethod
-    def transform_results(data_frame: pd.DataFrame, **expand_args):
+    def transform_results(data_frame: pd.DataFrame, params={}, **expand_args):
         def expand_id(id_column: pd.Series):
             return pd.concat(
                 [
@@ -120,6 +125,45 @@ class GenomicShortVariant(PagingApiItem):
          - `variant_class` is translated to `class` as a parameter
          - `variant_filter` is translated to `filter` as a parameter
         """
-        return super().get_data_frame(
-            **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+        args = cls._get_current_args(inspect.currentframe(), locals())
+
+        if len(variant_set_ids) > MAX_VARIANT_SET_IDS and (
+            max_pages or (not all_results and page_size)
+        ):
+            print(
+                "[WARNING]: All result limit paramters are approximate when performing genomic data retrieval."
+            )
+
+        get_data_frame = super().get_data_frame
+
+        def perform_batch(ids: List[str], total_thus_far: int):
+            # Determine whether to skip this batch
+            if (
+                # Implement approximation of max_pages
+                not all_results
+                and max_pages
+                and (total_thus_far >= max_pages * (page_size or 100))
+            ) or (
+                # Use 25 or page_size for a sample (when no max_pages)
+                not all_results
+                and not max_pages
+                and total_thus_far >= (page_size or 25)
+            ):
+                return pd.DataFrame()
+
+            has_multiple_batches = len(ids) != len(variant_set_ids)
+
+            return get_data_frame(
+                **kw_args,
+                **{
+                    **args,
+                    "variant_set_ids": list(ids),
+                    "all_results": all_results
+                    # Scroll through full batches and then honor the max_pages param
+                    or (has_multiple_batches and max_pages),
+                },
+            )
+
+        return batch_get_frame(
+            variant_set_ids, MAX_VARIANT_SET_IDS, perform_batch
         )
