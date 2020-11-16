@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Optional
 
-from phc.easy.paging_api_item import PagingApiOptions
+from phc.easy.abstract.paging_api_item import PagingApiOptions
 from pydantic import Field
 
 MAPPINGS = {

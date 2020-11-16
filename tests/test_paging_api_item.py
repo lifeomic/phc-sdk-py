@@ -1,4 +1,4 @@
-from phc.easy.paging_api_item import split_kw_args
+from phc.easy.abstract.paging_api_item import split_kw_args
 
 
 def test_split_kw_args():

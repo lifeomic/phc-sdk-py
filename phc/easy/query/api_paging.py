@@ -76,7 +76,21 @@ def recursive_paging_api_call(
         # next page exists
         or (response.data.get("links", {}).get("next") is None)
     )
+
     results = [] if callback else [*_prev_results, *current_results]
+
+    # Sometimes the count doesn't match the results. We make it sync up if the
+    # count doesn't match but we got all results.
+    # TODO: Remove this when API fixed
+    if (
+        (progress is not None)
+        and scroll
+        and is_last_batch
+        and (progress.total != progress.n)
+    ):
+        count = progress.n
+        progress.reset(count)
+        progress.update(count)
 
     if callback and not is_last_batch:
         callback(current_results, False)
@@ -86,9 +100,11 @@ def recursive_paging_api_call(
         if progress is not None:
             progress.close()
 
-        print(
-            f"Retrieved {len(results)}{f'/{_count}' if _count else ''} results"
-        )
+        # Because count is often wrong, we'll skip the logging here
+        # TODO: Uncomment this when API fixed
+        # print(
+        #     f"Retrieved {len(results)}{f'/{_count}' if _count else ''} results"
+        # )
         return results
 
     return recursive_paging_api_call(

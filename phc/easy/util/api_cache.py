@@ -67,7 +67,7 @@ class APICache:
         )
 
     @staticmethod
-    def load_cache_for_fhir_dsl(
+    def load_cache_for_query(
         query: dict, namespace: Optional[str] = None
     ) -> pd.DataFrame:
         filename = str(
@@ -101,13 +101,6 @@ class APICache:
         writer = CSVWriter(filename)
 
         def handle_batch(batch, is_finished):
-            if is_finished and not os.path.exists(filename):
-                return pd.DataFrame()
-
-            if is_finished:
-                print(f'Loading data frame from "{filename}"')
-                return APICache.read_csv(filename)
-
             batch = (
                 batch
                 if nested_key is None
@@ -116,6 +109,13 @@ class APICache:
 
             df = pd.DataFrame(batch)
             writer.write(transform(df))
+
+            if is_finished and not os.path.exists(filename):
+                return pd.DataFrame()
+
+            if is_finished:
+                print(f'Loading data frame from "{filename}"')
+                return APICache.read_csv(filename)
 
         return handle_batch
 

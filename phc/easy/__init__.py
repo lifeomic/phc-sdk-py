@@ -1,3 +1,5 @@
+from phc.easy.abstract.fhir_service_patient_item import FhirServicePatientItem
+from phc.easy.abstract.fhir_service_item import FhirServiceItem
 from phc.easy.audit_event import AuditEvent
 from phc.easy.auth import Auth
 from phc.easy.care_plan import CarePlan
@@ -11,7 +13,6 @@ from phc.easy.frame import Frame
 from phc.easy.goal import Goal
 from phc.easy.imaging_study import ImagingStudy
 from phc.easy.immunization import Immunization
-from phc.easy.item import Item
 from phc.easy.media import Media
 from phc.easy.medication_administration import MedicationAdministration
 from phc.easy.medication_dispense import MedicationDispense
@@ -21,7 +22,6 @@ from phc.easy.observation import Observation
 from phc.easy.omics.genomic_short_variant import GenomicShortVariant
 from phc.easy.omics.genomic_test import GenomicTest
 from phc.easy.organization import Organization
-from phc.easy.patient_item import PatientItem
 from phc.easy.patients import Patient
 from phc.easy.person import Person
 from phc.easy.practitioner import Practitioner
@@ -50,7 +50,7 @@ __all__ = [
     "Goal",
     "ImagingStudy",
     "Immunization",
-    "Item",
+    "FhirServiceItem",
     "Media",
     "MedicationAdministration",
     "MedicationDispense",
@@ -58,7 +58,7 @@ __all__ = [
     "MedicationStatement",
     "Observation",
     "Organization",
-    "PatientItem",
+    "FhirServicePatientItem",
     "Patient",
     "Person",
     "Practitioner",

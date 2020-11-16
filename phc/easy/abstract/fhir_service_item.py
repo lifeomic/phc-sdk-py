@@ -7,7 +7,7 @@ from phc.easy.query import Query
 from phc.easy.util import without_keys
 
 
-class Item:
+class FhirServiceItem:
     """Provides an abstract class and/or static methods for retrieving items
     from a FSS table
     """

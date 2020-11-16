@@ -5,7 +5,7 @@ from typing import Optional
 import pandas as pd
 from phc.easy.auth import Auth
 from phc.easy.frame import Frame
-from phc.easy.paging_api_item import PagingApiItem, PagingApiOptions
+from phc.easy.abstract.paging_api_item import PagingApiItem, PagingApiOptions
 
 
 class GenomicTestType(str, Enum):
