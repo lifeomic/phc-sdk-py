@@ -1,16 +1,21 @@
 import inspect
+import math
 from typing import List, Optional
 
 import pandas as pd
 from phc.easy.auth import Auth
 from phc.easy.frame import Frame
-from phc.easy.omics.genomic_test import GenomicTestStatus, GenomicTestType
+from phc.easy.omics.genomic_test import (
+    GenomicTest,
+    GenomicTestStatus,
+    GenomicTestType,
+)
 from phc.easy.omics.options.genomic_short_variant import (
     GenomicShortVariantInclude,
     GenomicShortVariantOptions,
 )
 from phc.easy.abstract.paging_api_item import PagingApiItem
-from phc.easy.util import tqdm
+from phc.easy.util import tqdm, split_by
 from phc.easy.util.batch import batch_get_frame
 
 MAX_VARIANT_SET_IDS = 100
@@ -52,11 +57,52 @@ class GenomicShortVariant(PagingApiItem):
 
         return Frame.expand(data_frame, **args)
 
+    @staticmethod
+    def _get_genomic_tests(
+        variant_set_ids: List[str],
+        max_pages: Optional[int],
+        all_results: bool,
+        auth_args: Auth,
+        log: bool,
+        **test_args,
+    ):
+        test_df = pd.DataFrame()
+        args = {}
+
+        if (
+            len(variant_set_ids) == 0
+            and max_pages is None
+            and all_results is False
+        ):
+            print("Using sample of 25 tests")
+            args = {
+                **test_args,
+                "page_size": 25,
+                "max_pages": 1,
+                "log": log,
+                "auth_args": auth_args,
+            }
+        elif len(variant_set_ids) == 0:
+            args = {
+                **test_args,
+                "page_size": 100,
+                "all_results": True,
+                "log": log,
+                "auth_args": auth_args,
+            }
+        test_df = GenomicTest.get_data_frame(**args)
+
+        if len(test_df) == 0:
+            # Force id to exist as a column
+            test_df["id"] = variant_set_ids
+
+        return test_df
+
     @classmethod
     def get_data_frame(
         cls,
         # Query parameters
-        variant_set_ids: List[str],
+        variant_set_ids: List[str] = [],
         include: List[GenomicShortVariantInclude] = ["vcf"],
         gene: List[str] = [],
         rsid: List[str] = [],
@@ -103,6 +149,9 @@ class GenomicShortVariant(PagingApiItem):
         ref_read_depth: List[str] = [],
         variant_filter: List[str] = [],
         drug_associations: Optional[bool] = None,
+        # Test parameters
+        patient_id: Optional[str] = None,
+        status: Optional[GenomicTestStatus] = GenomicTestStatus.ACTIVE,
         # Execution parameters,
         all_results: bool = False,
         auth_args: Auth = Auth.shared(),
@@ -125,6 +174,25 @@ class GenomicShortVariant(PagingApiItem):
          - `variant_class` is translated to `class` as a parameter
          - `variant_filter` is translated to `filter` as a parameter
         """
+        TEST_PARAMS = ["patient_id", "status"]
+
+        test_args, args = split_by(
+            cls._get_current_args(inspect.currentframe(), locals()),
+            left_keys=TEST_PARAMS,
+        )
+
+        test_df = cls._get_genomic_tests(
+            variant_set_ids=variant_set_ids,
+            all_results=all_results,
+            test_type=GenomicTestType.SHORT_VARIANT,
+            page_size=page_size,
+            max_pages=max_pages,
+            log=log,
+            auth_args=auth_args,
+            **test_args,
+        )
+        variant_set_ids = list(test_df.id)
+
         args = cls._get_current_args(inspect.currentframe(), locals())
 
         if len(variant_set_ids) > MAX_VARIANT_SET_IDS and (
@@ -164,6 +232,11 @@ class GenomicShortVariant(PagingApiItem):
                 },
             )
 
-        return batch_get_frame(
+        variants = batch_get_frame(
             variant_set_ids, MAX_VARIANT_SET_IDS, perform_batch
         )
+
+        if len(variants) == 0:
+            variants["variant_set_id"] = math.nan
+
+        return variants.join(test_df.set_index("id"), on="variant_set_id")

@@ -32,16 +32,16 @@ def test_parse_id():
     assert "FASN" in frame.gene.values.tolist()
 
 
+@mock.patch("phc.easy.omics.genomic_test.GenomicTest.get_data_frame")
 @mock.patch("phc.easy.query.Query.execute_paging_api")
-def test_batches_of_variant_set_ids(execute_paging_api):
+def test_batches_of_variant_set_ids(execute_paging_api, test_get_data_frame):
     def get_variant_set_ids(index: int):
         return execute_paging_api.call_args_list[index][0][1][
             "variantSetIds"
         ].split(",")
 
-    execute_paging_api.return_value = pd.DataFrame(
-        {"id": [], "variant_set_id": []}
-    )
+    execute_paging_api.return_value = pd.DataFrame()
+    test_get_data_frame.return_value = pd.DataFrame()
 
     variant_set_ids = [str(uuid4()) for _ in range(250)]
 

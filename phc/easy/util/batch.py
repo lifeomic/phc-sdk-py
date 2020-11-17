@@ -14,6 +14,9 @@ def batch_get_frame(
     max_batch_size: int,
     map_t: Callable[[List[str]], pd.DataFrame],
 ):
+    if len(ids) == 0:
+        return pd.DataFrame()
+
     chunked_ids = list(chunk(max_batch_size, ids))
 
     if len(chunked_ids) > 1 and tqdm is not None:

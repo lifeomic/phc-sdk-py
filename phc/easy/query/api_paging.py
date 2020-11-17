@@ -76,7 +76,6 @@ def recursive_paging_api_call(
         # next page exists
         or (response.data.get("links", {}).get("next") is None)
     )
-
     results = [] if callback else [*_prev_results, *current_results]
 
     # Sometimes the count doesn't match the results. We make it sync up if the
