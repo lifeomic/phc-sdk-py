@@ -22,6 +22,7 @@ from phc.easy.observation import Observation
 from phc.easy.omics.genomic_short_variant import GenomicShortVariant
 from phc.easy.omics.genomic_copy_number_variant import GenomicCopyNumberVariant
 from phc.easy.omics.genomic_test import GenomicTest
+from phc.easy.omics.genomic_expression import GenomicExpression
 from phc.easy.organization import Organization
 from phc.easy.patients import Patient
 from phc.easy.person import Person
