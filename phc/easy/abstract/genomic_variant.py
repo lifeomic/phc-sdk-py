@@ -75,17 +75,14 @@ class GenomicVariant(PagingApiItem):
         log: bool = False,
         **kw_args,
     ):
-        """Execute a request for genomic short variants
+        """Execute a request for genomic variants
 
         ## Parameters
-
-        Query: `phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions`
 
         Execution: `phc.easy.query.Query.execute_paging_api`
 
         Expansion: `phc.easy.frame.Frame.expand`
         """
-        # TODO: What happened to our friend `raw`?
         test_params = ["patient_id", "status"]
 
         test_args, args = split_by(
@@ -93,7 +90,6 @@ class GenomicVariant(PagingApiItem):
             left_keys=test_params,
         )
 
-        print(args)
         test_df = cls._get_genomic_tests(
             variant_set_ids=variant_set_ids,
             all_results=all_results,
@@ -104,8 +100,7 @@ class GenomicVariant(PagingApiItem):
             auth_args=auth_args,
             **test_args,
         )
-        variant_set_ids = list(test_df.id)
-        # TODO: Args has mismatched variant_set_ids sometimes
+        args["variant_set_ids"] = variant_set_ids = list(test_df.id)
 
         if len(variant_set_ids) > MAX_VARIANT_SET_IDS and (
             max_pages or (not all_results and page_size)
@@ -151,4 +146,6 @@ class GenomicVariant(PagingApiItem):
         if len(variants) == 0:
             variants["variant_set_id"] = math.nan
 
-        return variants.join(test_df.set_index("id"), on="variant_set_id")
+        return variants.join(
+            test_df.set_index("id"), on="variant_set_id", rsuffix=".set"
+        )

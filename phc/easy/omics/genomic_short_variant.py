@@ -134,5 +134,5 @@ class GenomicShortVariant(GenomicVariant):
         args = cls._get_current_args(inspect.currentframe(), locals())
 
         return super().get_data_frame(
-            test_type=GenomicTestType.SHORT_VARIANT, **args
+            test_type=GenomicTestType.SHORT_VARIANT, **{**kw_args, **args}
         )

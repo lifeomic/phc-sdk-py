@@ -64,7 +64,7 @@ class GenomicCopyNumberVariant(GenomicVariant):
         log: bool = False,
         **kw_args,
     ):
-        """Execute a request for genomic short variants
+        """Execute a request for genomic copy number variants
 
         ## Parameters
 
@@ -78,5 +78,5 @@ class GenomicCopyNumberVariant(GenomicVariant):
         args = cls._get_current_args(inspect.currentframe(), locals())
 
         return super().get_data_frame(
-            test_type=GenomicTestType.COPY_NUMBER_VARIANT, **args
+            test_type=GenomicTestType.COPY_NUMBER_VARIANT, **{**kw_args, **args}
         )
