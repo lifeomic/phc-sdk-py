@@ -6,6 +6,7 @@ import pandas as pd
 from phc.easy.auth import Auth
 from phc.easy.frame import Frame
 from phc.easy.omics.options.coding_effect import CodingEffect
+from phc.easy.omics.options.chromosome import Chromosome
 from phc.easy.omics.options.genomic_test import (
     GenomicTestStatus,
     GenomicTestType,
@@ -69,7 +70,7 @@ class GenomicShortVariant(GenomicVariant):
         include: List[GenomicVariantInclude] = ["vcf"],
         gene: List[str] = [],
         rsid: List[str] = [],
-        chromosome: List[str] = [],
+        chromosome: List[Chromosome] = [],
         clinvar_allele_id: List[str] = [],
         clinvar_disease: List[str] = [],
         clinvar_review: List[str] = [],
@@ -83,7 +84,7 @@ class GenomicShortVariant(GenomicVariant):
         impact: List[str] = [],
         transcript_id: List[str] = [],
         biotype: List[str] = [],
-        amino_acid_change: List[str] = [],
+        protein_changes: List[str] = [],
         sequence_type: List[str] = [],
         position: List[str] = [],
         cosmic_sample_count: List[str] = [],

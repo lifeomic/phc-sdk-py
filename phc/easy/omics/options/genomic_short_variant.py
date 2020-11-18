@@ -2,6 +2,7 @@ from enum import Enum
 from typing import List, Optional
 
 from phc.easy.omics.options.coding_effect import CodingEffect
+from phc.easy.omics.options.chromosome import Chromosome
 from phc.easy.omics.options.common import GenomicVariantInclude
 from phc.easy.abstract.paging_api_item import PagingApiOptions
 from pydantic import Field
@@ -19,7 +20,7 @@ MAPPINGS = {
     "coding_effect": "group",
     "variant_class": "class",
     "transcript_id": "transcriptId",
-    "amino_acid_change": "aminoAcidChange",
+    "protein_changes": "aminoAcidChange",
     "sequence_type": "sequenceType",
     "cosmic_sample_count": "cosmicSampleCount",
     "min_allele_frequency": "minAlleleFrequency",
@@ -57,7 +58,7 @@ class GenomicShortVariantOptions(PagingApiOptions):
     include: List[GenomicVariantInclude] = ["vcf"]
     gene: List[str] = []
     rsid: List[str] = []
-    chromosome: List[str] = []
+    chromosome: List[Chromosome] = []
     clinvar_allele_id: List[str] = []
     clinvar_disease: List[str] = []
     clinvar_review: List[str] = []
@@ -71,7 +72,7 @@ class GenomicShortVariantOptions(PagingApiOptions):
     impact: List[str] = []
     transcript_id: List[str] = []
     biotype: List[str] = []
-    amino_acid_change: List[str] = []
+    protein_changes: List[str] = []
     sequence_type: List[str] = []
     position: List[str] = []
     cosmic_sample_count: List[str] = []
