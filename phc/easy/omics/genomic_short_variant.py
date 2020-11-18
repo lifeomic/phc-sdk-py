@@ -69,7 +69,7 @@ class GenomicShortVariant(GenomicVariant):
         variant_set_ids: List[str] = [],
         include: List[GenomicVariantInclude] = ["vcf"],
         gene: List[str] = [],
-        rsid: List[str] = [],
+        rs_id: List[str] = [],
         chromosome: List[Chromosome] = [],
         clinvar_allele_id: List[str] = [],
         clinvar_disease: List[str] = [],

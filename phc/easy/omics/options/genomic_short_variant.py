@@ -9,6 +9,7 @@ from pydantic import Field, constr
 
 MAPPINGS = {
     "variant_set_ids": "variantSetIds",
+    "rs_id": "rsid",
     "clinvar_allele_id": "clinvarAlleleId",
     "clinvar_disease": "clinvarDisease",
     "clinvar_review": "clinvarReview",
@@ -58,7 +59,7 @@ class GenomicShortVariantOptions(PagingApiOptions):
     variant_set_ids: List[str] = Field(..., min_items=1)
     include: List[GenomicVariantInclude] = ["vcf"]
     gene: List[str] = []
-    rsid: List[str] = []
+    rs_id: List[constr(regex=r"^rs(\d+)$")] = []
     chromosome: List[Chromosome] = []
     clinvar_allele_id: List[str] = []
     clinvar_disease: List[str] = []
