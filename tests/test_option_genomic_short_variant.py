@@ -19,3 +19,16 @@ def test_transforms_in_ckb_to_string():
         GenomicShortVariantOptions.transform("in_ckb", True),
         ("drugAssociations", "true"),
     )
+
+
+def test_transforms_cosmic_min_count():
+    assert_equals(
+        GenomicShortVariantOptions.transform("cosmic_min_count", 3),
+        ("cosmicSampleCount", "3:gte"),
+    )
+
+    # None values get trimmed out downstream
+    assert_equals(
+        GenomicShortVariantOptions.transform("cosmic_min_count", None),
+        ("cosmic_min_count", None),
+    )

@@ -1,6 +1,6 @@
 import inspect
 import math
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import pandas as pd
 from phc.easy.auth import Auth
@@ -86,8 +86,8 @@ class GenomicShortVariant(GenomicVariant):
         biotype: List[str] = [],
         protein_changes: List[str] = [],
         sequence_type: List[str] = [],
-        position: List[str] = [],
-        cosmic_sample_count: List[str] = [],
+        position: List[Union[str, int]] = [],
+        cosmic_min_count: Optional[int] = None,
         min_allele_frequency: List[str] = [],
         max_allele_frequency: List[str] = [],
         pop_allele_frequency: List[str] = [],

@@ -1,11 +1,11 @@
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from phc.easy.omics.options.coding_effect import CodingEffect
 from phc.easy.omics.options.chromosome import Chromosome
 from phc.easy.omics.options.common import GenomicVariantInclude
 from phc.easy.abstract.paging_api_item import PagingApiOptions
-from pydantic import Field
+from pydantic import Field, constr
 
 MAPPINGS = {
     "variant_set_ids": "variantSetIds",
@@ -22,7 +22,8 @@ MAPPINGS = {
     "transcript_id": "transcriptId",
     "protein_changes": "aminoAcidChange",
     "sequence_type": "sequenceType",
-    "cosmic_sample_count": "cosmicSampleCount",
+    # Used cosmic_min_count instead to match PHC interface
+    # "cosmic_sample_count": "cosmicSampleCount",
     "min_allele_frequency": "minAlleleFrequency",
     "max_allele_frequency": "maxAlleleFrequency",
     "pop_allele_frequency": "popAlleleFrequency",
@@ -74,8 +75,8 @@ class GenomicShortVariantOptions(PagingApiOptions):
     biotype: List[str] = []
     protein_changes: List[str] = []
     sequence_type: List[str] = []
-    position: List[str] = []
-    cosmic_sample_count: List[str] = []
+    position: List[Union[int, constr(regex=r"^(\d+\-\d+|\d+)$")]] = [],
+    cosmic_min_count: Optional[int] = None,
     min_allele_frequency: List[str] = []
     max_allele_frequency: List[str] = []
     pop_allele_frequency: List[str] = []
@@ -105,8 +106,13 @@ class GenomicShortVariantOptions(PagingApiOptions):
     @staticmethod
     def transform(key, value):
         if isinstance(value, list):
-            value = ",".join(value)
+            value = ",".join(
+                [elem if isinstance(elem, str) else str(elem) for elem in value]
+            )
         elif isinstance(value, bool):
             value = "true" if value else None
+
+        if key == "cosmic_min_count" and value is not None:
+            return ("cosmicSampleCount", f"{value}:gte")
 
         return (MAPPINGS.get(key, key), value)
