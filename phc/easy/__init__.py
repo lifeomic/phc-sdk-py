@@ -20,6 +20,7 @@ from phc.easy.medication_request import MedicationRequest
 from phc.easy.medication_statement import MedicationStatement
 from phc.easy.observation import Observation
 from phc.easy.omics.genomic_short_variant import GenomicShortVariant
+from phc.easy.omics.genomic_copy_number_variant import GenomicCopyNumberVariant
 from phc.easy.omics.genomic_test import GenomicTest
 from phc.easy.organization import Organization
 from phc.easy.patients import Patient

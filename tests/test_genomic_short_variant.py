@@ -2,6 +2,7 @@ import pandas as pd
 from nose.tools import assert_equals
 from unittest import mock
 from unittest.mock import ANY
+from phc.easy.auth import Auth
 from phc.easy.omics.genomic_short_variant import GenomicShortVariant
 from uuid import uuid4
 
@@ -52,3 +53,23 @@ def test_batches_of_variant_set_ids(execute_paging_api, test_get_data_frame):
     assert_equals(len(get_variant_set_ids(0)), 100)
     assert_equals(len(get_variant_set_ids(1)), 100)
     assert_equals(len(get_variant_set_ids(2)), 50)
+
+    # GenomicTest should not be retrieved
+    assert_equals(test_get_data_frame.call_count, 0)
+
+
+@mock.patch("phc.easy.query.Query.execute_paging_api")
+def test_passing_options_through_to_paging_api(execute_paging_api):
+    execute_paging_api.return_value = pd.DataFrame()
+
+    auth = Auth()
+
+    GenomicShortVariant.get_data_frame(
+        [str(uuid4())], raw=True, log=True, auth_args=auth
+    )
+
+    kwargs = execute_paging_api.call_args[1]
+
+    assert_equals(kwargs.get("auth_args"), auth)
+    assert_equals(kwargs.get("log"), True)
+    assert_equals(kwargs.get("raw"), True)

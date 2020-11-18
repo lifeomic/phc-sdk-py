@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import List, Optional
 
+from phc.easy.omics.options.common import GenomicVariantInclude
 from phc.easy.abstract.paging_api_item import PagingApiOptions
 from pydantic import Field
 
@@ -44,12 +45,6 @@ MAPPINGS = {
 }
 
 
-class GenomicShortVariantInclude(str, Enum):
-    ENSEMBL = "ensembl"
-    VCF = "vcf"
-    DRUG_ASSOCIATIONS = "drugAssociations"
-
-
 class GenomicShortVariantOptions(PagingApiOptions):
     """Options to pass to `/v1/genomics/variants`
 
@@ -57,7 +52,7 @@ class GenomicShortVariantOptions(PagingApiOptions):
     """
 
     variant_set_ids: List[str] = Field(..., min_items=1)
-    include: List[GenomicShortVariantInclude] = ["vcf"]
+    include: List[GenomicVariantInclude] = ["vcf"]
     gene: List[str] = []
     rsid: List[str] = []
     chromosome: List[str] = []

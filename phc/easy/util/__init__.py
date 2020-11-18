@@ -15,6 +15,11 @@ else:
     _has_tqdm = True
 
 
+def rename_keys(dictionary: dict, mapping: dict):
+    "Rename keys in a dictionary"
+    return {mapping.get(k, k): v for k, v in dictionary.items()}
+
+
 def join_underscore(values):
     return "_".join(
         [
