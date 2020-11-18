@@ -1,5 +1,6 @@
 from phc.easy.omics.options.coding_effect import CodingEffect
 from phc.easy.omics.options.chromosome import Chromosome
+from phc.easy.omics.options.clinvar_significance import ClinVarSignificance
 from phc.easy.omics.options.common import GenomicVariantInclude
 from phc.easy.omics.options.genomic_copy_number_variant import (
     GenomicCopyNumberVariantOptions,
@@ -23,3 +24,4 @@ class Option:
     GenomicTestStatus = GenomicTestStatus
     CodingEffect = CodingEffect
     Chromosome = Chromosome
+    ClinVarSignificance = ClinVarSignificance
