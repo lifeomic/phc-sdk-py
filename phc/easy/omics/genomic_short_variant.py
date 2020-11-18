@@ -47,7 +47,13 @@ class GenomicShortVariant(GenomicVariant):
                 *expand_args.get("custom_columns", []),
                 *[
                     Frame.codeable_like_column_expander(k)
-                    for k in ["clinvar", "cosmic", "vcf", "ensemblCanon"]
+                    for k in [
+                        "clinvar",
+                        "cosmic",
+                        "vcf",
+                        "ensemblCanon",
+                        "dbnsfp",
+                    ]
                 ],
                 ("id", expand_id),
             ],
