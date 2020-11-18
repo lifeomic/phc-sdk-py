@@ -8,6 +8,7 @@ from phc.easy.frame import Frame
 from phc.easy.omics.options.coding_effect import CodingEffect
 from phc.easy.omics.options.chromosome import Chromosome
 from phc.easy.omics.options.clinvar_significance import ClinVarSignificance
+from phc.easy.omics.options.clinvar_review import ClinVarReview
 from phc.easy.omics.options.genomic_test import (
     GenomicTestStatus,
     GenomicTestType,
@@ -74,7 +75,7 @@ class GenomicShortVariant(GenomicVariant):
         chromosome: List[Chromosome] = [],
         clinvar_allele_id: List[str] = [],
         clinvar_disease: List[str] = [],
-        clinvar_review: List[str] = [],
+        clinvar_review: List[ClinVarReview] = [],
         clinvar_significance: List[ClinVarSignificance] = [],
         cosmic_id: List[str] = [],
         cosmic_status: List[str] = [],
