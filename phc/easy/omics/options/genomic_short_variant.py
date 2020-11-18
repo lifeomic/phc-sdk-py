@@ -41,7 +41,7 @@ MAPPINGS = {
     "alt_read_depth": "altReadDepth",
     "ref_read_depth": "refReadDepth",
     "variant_filter": "filter",
-    "drug_associations": "drugAssociations",
+    "in_ckb": "drugAssociations",
 }
 
 
@@ -97,11 +97,13 @@ class GenomicShortVariantOptions(PagingApiOptions):
     alt_read_depth: List[str] = []
     ref_read_depth: List[str] = []
     variant_filter: List[str] = []
-    drug_associations: Optional[bool]
+    in_ckb: Optional[bool]
 
     @staticmethod
     def transform(key, value):
-        if key not in ["drug_associations"]:
+        if isinstance(value, list):
             value = ",".join(value)
+        elif isinstance(value, bool):
+            value = "true" if value else None
 
         return (MAPPINGS.get(key, key), value)

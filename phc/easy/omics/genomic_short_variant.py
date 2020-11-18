@@ -104,7 +104,7 @@ class GenomicShortVariant(GenomicVariant):
         alt_read_depth: List[str] = [],
         ref_read_depth: List[str] = [],
         variant_filter: List[str] = [],
-        drug_associations: Optional[bool] = None,
+        in_ckb: Optional[bool] = None,
         # Test parameters
         patient_id: Optional[str] = None,
         test_status: Optional[GenomicTestStatus] = GenomicTestStatus.ACTIVE,
