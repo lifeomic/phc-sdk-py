@@ -45,7 +45,7 @@ def recursive_paging_api_call(
         max_pages = 1
 
     # Compute count and add to progress
-    if _count is None and len(_prev_results) == 0 and False:
+    if _count is None and len(_prev_results) == 0:
         count_response = client._api_call(
             path,
             http_verb=http_verb,
