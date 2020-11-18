@@ -9,6 +9,9 @@ from phc.easy.omics.options.common import GenomicVariantInclude
 from phc.easy.abstract.paging_api_item import PagingApiOptions
 from pydantic import Field, constr
 
+NUM_DECIMAL_RANGE = constr(regex=r"^\d+(\.\d+)?\-\d+(\.\d+)?$")
+NUM_RANGE = constr(regex=r"^(\d+\-\d+|\d+)$")
+
 MAPPINGS = {
     "variant_set_ids": "variantSetIds",
     "rs_id": "rsid",
@@ -78,12 +81,12 @@ class GenomicShortVariantOptions(PagingApiOptions):
     biotype: List[str] = []
     protein_changes: List[str] = []
     sequence_type: List[str] = []
-    position: List[Union[int, constr(regex=r"^(\d+\-\d+|\d+)$")]] = [],
-    cosmic_min_count: Optional[int] = None,
-    min_allele_frequency: List[str] = []
-    max_allele_frequency: List[str] = []
-    pop_allele_frequency: List[str] = []
-    exac_allele_frequency: List[str] = []
+    position: List[Union[int, NUM_RANGE]] = []
+    cosmic_min_count: Optional[int] = None
+    min_allele_frequency: Optional[NUM_DECIMAL_RANGE] = None
+    max_allele_frequency: Optional[NUM_DECIMAL_RANGE] = None
+    pop_allele_frequency: Optional[NUM_DECIMAL_RANGE] = None
+    exac_allele_frequency: Optional[NUM_DECIMAL_RANGE] = None
     exac_homozygous: List[str] = []
     dbnsfp_damaging_count: List[str] = []
     dbnsfp_damaging_predictor: List[str] = []
