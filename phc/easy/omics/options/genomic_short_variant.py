@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import List, Optional
 
+from phc.easy.omics.options.coding_effect import CodingEffect
 from phc.easy.omics.options.common import GenomicVariantInclude
 from phc.easy.abstract.paging_api_item import PagingApiOptions
 from pydantic import Field
@@ -15,6 +16,7 @@ MAPPINGS = {
     "cosmic_status": "cosmicStatus",
     "cosmic_histology": "cosmicHistology",
     "cosmic_tumor_site": "cosmicTumorSite",
+    "coding_effect": "group",
     "variant_class": "class",
     "transcript_id": "transcriptId",
     "amino_acid_change": "aminoAcidChange",
@@ -65,7 +67,7 @@ class GenomicShortVariantOptions(PagingApiOptions):
     cosmic_histology: List[str] = []
     cosmic_tumor_site: List[str] = []
     variant_class: List[str] = []  # Renamed from 'class'
-    group: List[str] = []
+    coding_effect: List[CodingEffect] = []
     impact: List[str] = []
     transcript_id: List[str] = []
     biotype: List[str] = []

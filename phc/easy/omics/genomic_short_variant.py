@@ -5,6 +5,7 @@ from typing import List, Optional
 import pandas as pd
 from phc.easy.auth import Auth
 from phc.easy.frame import Frame
+from phc.easy.omics.options.coding_effect import CodingEffect
 from phc.easy.omics.options.genomic_test import (
     GenomicTestStatus,
     GenomicTestType,
@@ -72,7 +73,7 @@ class GenomicShortVariant(GenomicVariant):
         cosmic_histology: List[str] = [],
         cosmic_tumor_site: List[str] = [],
         variant_class: List[str] = [],
-        group: List[str] = [],
+        coding_effect: List[CodingEffect] = [],
         impact: List[str] = [],
         transcript_id: List[str] = [],
         biotype: List[str] = [],
