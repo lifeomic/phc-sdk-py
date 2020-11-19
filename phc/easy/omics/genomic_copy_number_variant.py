@@ -5,6 +5,7 @@ import pandas as pd
 from phc.easy.auth import Auth
 from phc.easy.frame import Frame
 from phc.easy.omics.options.common import GenomicVariantInclude
+from phc.easy.omics.options.copy_number_status import CopyNumberStatus
 from phc.easy.omics.genomic_test import GenomicTestStatus, GenomicTestType
 from phc.easy.omics.options.genomic_copy_number_variant import (
     GenomicCopyNumberVariantOptions,
@@ -52,7 +53,8 @@ class GenomicCopyNumberVariant(GenomicVariant):
         include: List[GenomicVariantInclude] = [],
         gene: List[str] = [],
         interpretation: List[str] = [],
-        status: List[str] = [],
+        effect: List[CopyNumberStatus] = [],
+        in_ckb: Optional[bool] = None,
         # Test parameters
         patient_id: Optional[str] = None,
         test_status: Optional[GenomicTestStatus] = GenomicTestStatus.ACTIVE,

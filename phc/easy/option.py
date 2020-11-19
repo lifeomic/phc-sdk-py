@@ -5,6 +5,7 @@ from phc.easy.omics.options.clinvar_review import ClinVarReview
 from phc.easy.omics.options.gene_class import GeneClass
 from phc.easy.omics.options.zygosity import Zygosity
 from phc.easy.omics.options.common import GenomicVariantInclude
+from phc.easy.omics.options.copy_number_status import CopyNumberStatus
 from phc.easy.omics.options.genomic_copy_number_variant import (
     GenomicCopyNumberVariantOptions,
 )
@@ -31,3 +32,4 @@ class Option:
     ClinVarReview = ClinVarReview
     GeneClass = GeneClass
     Zygosity = Zygosity
+    CopyNumberStatus = CopyNumberStatus
