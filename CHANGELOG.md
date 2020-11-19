@@ -7,6 +7,101 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *(NOTE: All examples use fictious data or freely available data sets.)*
 
+## [0.20.0] - 2020-11-19
+
+### Added
+
+- Auto-retrieve GenomicTests for each type of variant (short, copy number,
+  structural, and expression) if no `variant_set_ids` passed
+
+```python
+# Specify the specific sets within a test
+phc.GenomicShortVariant.get_data_frame(variant_set_ids)
+
+# ...or have it auto-fetch the relevant tests (uses a sample if executed with
+# no arguments)
+phc.GenomicShortVariant.get_data_frame()
+```
+- Added `GenomicExpression`
+
+```python
+phc.GenomicExpression.get_data_frame(
+    expression=">=4000",
+    gene=["B2M", "MIR663B", "MT-CYB"],
+    order_by="expression:desc",
+    in_ckb=True,
+    all_results=True,
+    log=True
+)
+```
+
+- Added `GenomicCopyNumberVariant`
+
+```python
+phc.GenomicCopyNumberVariant.get_data_frame(
+    effect=[phc.Option.CopyNumberStatus.AMPLIFICATION],
+    in_ckb=True
+)
+```
+
+- Added `GenomicStructuralVariant`
+
+```python
+phc.GenomicStructuralVariant.get_data_frame(
+    patient_id="2c8660b4-1e63-403e-b52b-55c290072a66",
+    effect=[phc.Option.StructuralType.TRANSLOCATION],
+    gene=["TNRC6B", "CTD-2616J11.4"],
+    max_pages=2,
+    page_size=100
+)
+```
+
+- Added `Gene` and `GeneClass` from the knowledge APIs
+
+```python
+phc.Gene.get_data_frame()
+phc.GeneSet.get_data_frame()
+```
+
+
+- Added abstract class `GenomicVariant` from which these specific classes
+  inherit
+
+- Added a whole host of options for these variant/expression classes
+
+  - phc.Option.Chromosome
+  - phc.Option.ClinVarReview
+  - phc.Option.ClinvarSignificance
+  - phc.Option.CodingEffect
+  - phc.Option.Common
+  - phc.Option.CopyNumberStatus
+  - phc.Option.GeneClass
+  - phc.Option.Zygosity
+
+- Added run-time validation of variant/expression options using these classes
+
+  - phc.easy.omics.option.genomic_copy_number_variant.GenomicCopyNumberVariant
+  - phc.easy.omics.option.genomic_expression.GenomicExpression
+  - phc.easy.omics.option.genomic_short_variant.GenomicShortVariant
+  - phc.easy.omics.option.genomic_structural_variant.GenomicStructuralVariant
+  - phc.easy.omics.option.genomic_test.GenomicTest
+
+### Changed
+
+- Updated options for `GenomicShortVariant`
+
+```python
+phc.GenomicShortVariant.get_data_frame(
+    patient_id="2c8660b4-1e63-403e-b52b-55c290072a66",
+    chromosome=[phc.Option.Chromosome.CHR_19],
+    gene_class=[phc.Option.GeneClass.PROTEIN_CODING],
+    zygosity=[phc.Option.Zygosity.HETEROZYGOUS],
+    rs_id=["rs11324363", "rs36247", "rs77134098"],
+    min_allele_frequency="0.2-1",
+    log=True,
+    all_results=True
+)
+```
 ## [0.19.0] - 2020-10-23
 
 ### Added
@@ -395,6 +490,7 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 - Added the `phc.services.Files` submodule that provides actions for files in PHC projects.
 - Added the `phc.services.Cohorts` submodule that provides actions for files in PHC cohorts.
 
+[0.20.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.19.0...v0.20.0
 [0.19.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.18.1...v0.19.0
 [0.18.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.18.0...v0.18.1
 [0.18.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.17.1...v0.18.0
