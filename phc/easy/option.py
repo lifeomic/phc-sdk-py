@@ -6,6 +6,8 @@ from phc.easy.omics.options.gene_class import GeneClass
 from phc.easy.omics.options.zygosity import Zygosity
 from phc.easy.omics.options.common import GenomicVariantInclude
 from phc.easy.omics.options.copy_number_status import CopyNumberStatus
+from phc.easy.omics.options.in_frame import InFrame
+from phc.easy.omics.options.structural_type import StructuralType
 from phc.easy.omics.options.genomic_copy_number_variant import (
     GenomicCopyNumberVariantOptions,
 )
@@ -33,3 +35,5 @@ class Option:
     GeneClass = GeneClass
     Zygosity = Zygosity
     CopyNumberStatus = CopyNumberStatus
+    InFrame = InFrame
+    StructuralType = StructuralType

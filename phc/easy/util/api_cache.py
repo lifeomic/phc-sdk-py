@@ -38,7 +38,10 @@ class APICache:
         ).hexdigest()[0:8]
 
         path_name = [
-            c for c in query.get("path", "").split("/") if "-" not in c
+            # Exclude UUIDs but not paths with dashes
+            c.replace("-", "_")
+            for c in query.get("path", "").split("/")
+            if "-" not in c or len(c) != 36
         ]
 
         components = [
