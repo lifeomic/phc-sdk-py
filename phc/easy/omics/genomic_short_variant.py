@@ -1,10 +1,16 @@
 import inspect
 import math
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import pandas as pd
 from phc.easy.auth import Auth
 from phc.easy.frame import Frame
+from phc.easy.omics.options.coding_effect import CodingEffect
+from phc.easy.omics.options.chromosome import Chromosome
+from phc.easy.omics.options.clinvar_significance import ClinVarSignificance
+from phc.easy.omics.options.clinvar_review import ClinVarReview
+from phc.easy.omics.options.gene_class import GeneClass
+from phc.easy.omics.options.zygosity import Zygosity
 from phc.easy.omics.options.genomic_test import (
     GenomicTestStatus,
     GenomicTestType,
@@ -46,7 +52,13 @@ class GenomicShortVariant(GenomicVariant):
                 *expand_args.get("custom_columns", []),
                 *[
                     Frame.codeable_like_column_expander(k)
-                    for k in ["clinvar", "cosmic", "vcf", "ensemblCanon"]
+                    for k in [
+                        "clinvar",
+                        "cosmic",
+                        "vcf",
+                        "ensemblCanon",
+                        "dbnsfp",
+                    ]
                 ],
                 ("id", expand_id),
             ],
@@ -61,29 +73,29 @@ class GenomicShortVariant(GenomicVariant):
         variant_set_ids: List[str] = [],
         include: List[GenomicVariantInclude] = ["vcf"],
         gene: List[str] = [],
-        rsid: List[str] = [],
-        chromosome: List[str] = [],
+        rs_id: List[str] = [],
+        chromosome: List[Chromosome] = [],
         clinvar_allele_id: List[str] = [],
         clinvar_disease: List[str] = [],
-        clinvar_review: List[str] = [],
-        clinvar_significance: List[str] = [],
+        clinvar_review: List[ClinVarReview] = [],
+        clinvar_significance: List[ClinVarSignificance] = [],
         cosmic_id: List[str] = [],
         cosmic_status: List[str] = [],
         cosmic_histology: List[str] = [],
         cosmic_tumor_site: List[str] = [],
         variant_class: List[str] = [],
-        group: List[str] = [],
+        coding_effect: List[CodingEffect] = [],
         impact: List[str] = [],
         transcript_id: List[str] = [],
-        biotype: List[str] = [],
-        amino_acid_change: List[str] = [],
+        gene_class: List[GeneClass] = [],
+        protein_changes: List[str] = [],
         sequence_type: List[str] = [],
-        position: List[str] = [],
-        cosmic_sample_count: List[str] = [],
-        min_allele_frequency: List[str] = [],
-        max_allele_frequency: List[str] = [],
-        pop_allele_frequency: List[str] = [],
-        exac_allele_frequency: List[str] = [],
+        position: List[Union[str, int]] = [],
+        cosmic_min_count: Optional[int] = None,
+        min_allele_frequency: Optional[str] = None,
+        max_allele_frequency: Optional[str] = None,
+        pop_allele_frequency: Optional[str] = None,
+        exac_allele_frequency: Optional[str] = None,
         exac_homozygous: List[str] = [],
         dbnsfp_damaging_count: List[str] = [],
         dbnsfp_damaging_predictor: List[str] = [],
@@ -96,7 +108,7 @@ class GenomicShortVariant(GenomicVariant):
         dbnsfp_mutationtaster_pred: List[str] = [],
         dbnsfp_sift_rankscore: List[str] = [],
         dbnsfp_sift_pred: List[str] = [],
-        zygosity: List[str] = [],
+        zygosity: List[Zygosity] = [],
         genotype: List[str] = [],
         variant_allele_frequency: List[str] = [],
         quality: List[str] = [],
@@ -104,7 +116,7 @@ class GenomicShortVariant(GenomicVariant):
         alt_read_depth: List[str] = [],
         ref_read_depth: List[str] = [],
         variant_filter: List[str] = [],
-        drug_associations: Optional[bool] = None,
+        in_ckb: Optional[bool] = None,
         # Test parameters
         patient_id: Optional[str] = None,
         test_status: Optional[GenomicTestStatus] = GenomicTestStatus.ACTIVE,

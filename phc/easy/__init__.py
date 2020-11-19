@@ -19,10 +19,13 @@ from phc.easy.medication_dispense import MedicationDispense
 from phc.easy.medication_request import MedicationRequest
 from phc.easy.medication_statement import MedicationStatement
 from phc.easy.observation import Observation
+from phc.easy.omics.gene import Gene
+from phc.easy.omics.gene_set import GeneSet
 from phc.easy.omics.genomic_short_variant import GenomicShortVariant
 from phc.easy.omics.genomic_copy_number_variant import GenomicCopyNumberVariant
 from phc.easy.omics.genomic_test import GenomicTest
 from phc.easy.omics.genomic_expression import GenomicExpression
+from phc.easy.option import Option
 from phc.easy.organization import Organization
 from phc.easy.patients import Patient
 from phc.easy.person import Person
@@ -47,6 +50,8 @@ __all__ = [
     "DocumentReference",
     "Encounter",
     "Frame",
+    "Gene",
+    "GeneSet",
     "GenomicShortVariant",
     "GenomicTest",
     "Goal",
@@ -59,6 +64,7 @@ __all__ = [
     "MedicationRequest",
     "MedicationStatement",
     "Observation",
+    "Option",
     "Organization",
     "FhirServicePatientItem",
     "Patient",

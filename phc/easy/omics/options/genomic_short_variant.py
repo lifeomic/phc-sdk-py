@@ -1,12 +1,23 @@
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Union
 
+from phc.easy.omics.options.coding_effect import CodingEffect
+from phc.easy.omics.options.chromosome import Chromosome
+from phc.easy.omics.options.clinvar_significance import ClinVarSignificance
+from phc.easy.omics.options.clinvar_review import ClinVarReview
+from phc.easy.omics.options.gene_class import GeneClass
+from phc.easy.omics.options.zygosity import Zygosity
 from phc.easy.omics.options.common import GenomicVariantInclude
 from phc.easy.abstract.paging_api_item import PagingApiOptions
-from pydantic import Field
+from pydantic import Field, constr
+
+RS_ID = r"^rs(\d+)$"
+NUM_DECIMAL_RANGE = constr(regex=r"^\d+(\.\d+)?\-\d+(\.\d+)?$")
+NUM_RANGE = constr(regex=r"^(\d+\-\d+|\d+)$")
 
 MAPPINGS = {
     "variant_set_ids": "variantSetIds",
+    "rs_id": "rsid",
     "clinvar_allele_id": "clinvarAlleleId",
     "clinvar_disease": "clinvarDisease",
     "clinvar_review": "clinvarReview",
@@ -15,11 +26,14 @@ MAPPINGS = {
     "cosmic_status": "cosmicStatus",
     "cosmic_histology": "cosmicHistology",
     "cosmic_tumor_site": "cosmicTumorSite",
+    "coding_effect": "group",
     "variant_class": "class",
     "transcript_id": "transcriptId",
-    "amino_acid_change": "aminoAcidChange",
+    "gene_class": "biotype",
+    "protein_changes": "aminoAcidChange",
     "sequence_type": "sequenceType",
-    "cosmic_sample_count": "cosmicSampleCount",
+    # Used cosmic_min_count instead to match PHC interface
+    # "cosmic_sample_count": "cosmicSampleCount",
     "min_allele_frequency": "minAlleleFrequency",
     "max_allele_frequency": "maxAlleleFrequency",
     "pop_allele_frequency": "popAlleleFrequency",
@@ -41,7 +55,7 @@ MAPPINGS = {
     "alt_read_depth": "altReadDepth",
     "ref_read_depth": "refReadDepth",
     "variant_filter": "filter",
-    "drug_associations": "drugAssociations",
+    "in_ckb": "drugAssociations",
 }
 
 
@@ -51,32 +65,38 @@ class GenomicShortVariantOptions(PagingApiOptions):
     See https://docs.us.lifeomic.com/api/#query-short-variant-data
     """
 
+    # TODO: Add remaining options from Omics Explorer in PHC
+    # - Variant Quality
+    # - Variant Allele Freq
+    # - Combined In Silico Prediction
+    # - Individual In Silico Predictors
+
     variant_set_ids: List[str] = Field(..., min_items=1)
     include: List[GenomicVariantInclude] = ["vcf"]
     gene: List[str] = []
-    rsid: List[str] = []
-    chromosome: List[str] = []
+    rs_id: List[constr(regex=RS_ID)] = []
+    chromosome: List[Chromosome] = []
     clinvar_allele_id: List[str] = []
     clinvar_disease: List[str] = []
-    clinvar_review: List[str] = []
-    clinvar_significance: List[str] = []
+    clinvar_review: List[ClinVarReview] = []
+    clinvar_significance: List[ClinVarSignificance] = []
     cosmic_id: List[str] = []
     cosmic_status: List[str] = []
     cosmic_histology: List[str] = []
     cosmic_tumor_site: List[str] = []
     variant_class: List[str] = []  # Renamed from 'class'
-    group: List[str] = []
+    coding_effect: List[CodingEffect] = []
     impact: List[str] = []
     transcript_id: List[str] = []
-    biotype: List[str] = []
-    amino_acid_change: List[str] = []
+    gene_class: List[GeneClass] = []
+    protein_changes: List[str] = []
     sequence_type: List[str] = []
-    position: List[str] = []
-    cosmic_sample_count: List[str] = []
-    min_allele_frequency: List[str] = []
-    max_allele_frequency: List[str] = []
-    pop_allele_frequency: List[str] = []
-    exac_allele_frequency: List[str] = []
+    position: List[Union[int, NUM_RANGE]] = []
+    cosmic_min_count: Optional[int] = None
+    min_allele_frequency: Optional[NUM_DECIMAL_RANGE] = None
+    max_allele_frequency: Optional[NUM_DECIMAL_RANGE] = None
+    pop_allele_frequency: Optional[NUM_DECIMAL_RANGE] = None
+    exac_allele_frequency: Optional[NUM_DECIMAL_RANGE] = None
     exac_homozygous: List[str] = []
     dbnsfp_damaging_count: List[str] = []
     dbnsfp_damaging_predictor: List[str] = []
@@ -89,7 +109,7 @@ class GenomicShortVariantOptions(PagingApiOptions):
     dbnsfp_mutationtaster_pred: List[str] = []
     dbnsfp_sift_rankscore: List[str] = []
     dbnsfp_sift_pred: List[str] = []
-    zygosity: List[str] = []
+    zygosity: List[Zygosity] = []
     genotype: List[str] = []
     variant_allele_frequency: List[str] = []
     quality: List[str] = []
@@ -97,11 +117,18 @@ class GenomicShortVariantOptions(PagingApiOptions):
     alt_read_depth: List[str] = []
     ref_read_depth: List[str] = []
     variant_filter: List[str] = []
-    drug_associations: Optional[bool]
+    in_ckb: Optional[bool]
 
     @staticmethod
     def transform(key, value):
-        if key not in ["drug_associations"]:
-            value = ",".join(value)
+        if isinstance(value, list):
+            value = ",".join(
+                [elem if isinstance(elem, str) else str(elem) for elem in value]
+            )
+        elif isinstance(value, bool):
+            value = "true" if value else None
+
+        if key == "cosmic_min_count" and value is not None:
+            return ("cosmicSampleCount", f"{value}:gte")
 
         return (MAPPINGS.get(key, key), value)
