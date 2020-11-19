@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
-<title>phc.easy.item API documentation</title>
+<title>phc.easy.abstract.fhir_service_item API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -20,7 +20,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>phc.easy.item</code></h1>
+<h1 class="title">Module <code>phc.easy.abstract.fhir_service_item</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -36,7 +36,7 @@ from phc.easy.query import Query
 from phc.easy.util import without_keys
 
 
-class Item:
+class FhirServiceItem:
     &#34;&#34;&#34;Provides an abstract class and/or static methods for retrieving items
     from a FSS table
     &#34;&#34;&#34;
@@ -65,7 +65,7 @@ class Item:
         )
 
     @staticmethod
-    def transform_results(data_frame: pd.DataFrame, **expand_args):
+    def transform_results(data_frame: pd.DataFrame, **_expand_args):
         &#34;Transform data frame batch&#34;
         return data_frame
 
@@ -241,8 +241,8 @@ class Item:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="phc.easy.item.Item"><code class="flex name class">
-<span>class <span class="ident">Item</span></span>
+<dt id="phc.easy.abstract.fhir_service_item.FhirServiceItem"><code class="flex name class">
+<span>class <span class="ident">FhirServiceItem</span></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Provides an abstract class and/or static methods for retrieving items
@@ -251,7 +251,7 @@ from a FSS table</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Item:
+<pre><code class="python">class FhirServiceItem:
     &#34;&#34;&#34;Provides an abstract class and/or static methods for retrieving items
     from a FSS table
     &#34;&#34;&#34;
@@ -280,7 +280,7 @@ from a FSS table</p></div>
         )
 
     @staticmethod
-    def transform_results(data_frame: pd.DataFrame, **expand_args):
+    def transform_results(data_frame: pd.DataFrame, **_expand_args):
         &#34;Transform data frame batch&#34;
         return data_frame
 
@@ -448,14 +448,14 @@ from a FSS table</p></div>
 </details>
 <h3>Subclasses</h3>
 <ul class="hlist">
-<li><a title="phc.easy.organization.Organization" href="organization.html#phc.easy.organization.Organization">Organization</a></li>
-<li><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></li>
-<li><a title="phc.easy.patients.Patient" href="patients/index.html#phc.easy.patients.Patient">Patient</a></li>
-<li><a title="phc.easy.practitioner.Practitioner" href="practitioner.html#phc.easy.practitioner.Practitioner">Practitioner</a></li>
+<li><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></li>
+<li><a title="phc.easy.organization.Organization" href="../organization.html#phc.easy.organization.Organization">Organization</a></li>
+<li><a title="phc.easy.patients.Patient" href="../patients/index.html#phc.easy.patients.Patient">Patient</a></li>
+<li><a title="phc.easy.practitioner.Practitioner" href="../practitioner.html#phc.easy.practitioner.Practitioner">Practitioner</a></li>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.item.Item.code_fields"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_item.FhirServiceItem.code_fields"><code class="name flex">
 <span>def <span class="ident">code_fields</span></span>(<span>) ‑> List[str]</span>
 </code></dt>
 <dd>
@@ -470,12 +470,12 @@ def code_fields() -&gt; List[str]:
     return []</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.item.Item.get_codes"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_codes"><code class="name flex">
 <span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Find all codes</p>
-<p>See possible argments for <code><a title="phc.easy.query.Query.get_codes" href="query/index.html#phc.easy.query.Query.get_codes">Query.get_codes()</a></code></p>
+<p>See possible argments for <code><a title="phc.easy.query.Query.get_codes" href="../query/index.html#phc.easy.query.Query.get_codes">Query.get_codes()</a></code></p>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
 &gt;&gt;&gt; phc.Auth.set({'account': '&lt;your-account-name&gt;'})
@@ -525,7 +525,7 @@ def get_codes(
     )</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.item.Item.get_count"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count"><code class="name flex">
 <span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
 </code></dt>
 <dd>
@@ -548,7 +548,7 @@ def get_count(cls, query_overrides: dict = {}, auth_args=Auth.shared()):
     )</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.item.Item.get_count_by_field"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count_by_field"><code class="name flex">
 <span>def <span class="ident">get_count_by_field</span></span>(<span>field: str, **kwargs)</span>
 </code></dt>
 <dd>
@@ -594,7 +594,7 @@ def get_count_by_field(cls, field: str, **kwargs):
     )</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.item.Item.get_data_frame"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_data_frame"><code class="name flex">
 <span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
@@ -746,7 +746,7 @@ def get_data_frame(
     )</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.item.Item.table_name"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_item.FhirServiceItem.table_name"><code class="name flex">
 <span>def <span class="ident">table_name</span></span>(<span>) ‑> str</span>
 </code></dt>
 <dd>
@@ -761,8 +761,8 @@ def table_name() -&gt; str:
     raise ValueError(&#34;Table name should be implemented by subclass&#34;)</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.item.Item.transform_results"><code class="name flex">
-<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+<dt id="phc.easy.abstract.fhir_service_item.FhirServiceItem.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **_expand_args)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Transform data frame batch</p></div>
@@ -771,7 +771,7 @@ def table_name() -&gt; str:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def transform_results(data_frame: pd.DataFrame, **expand_args):
+def transform_results(data_frame: pd.DataFrame, **_expand_args):
     &#34;Transform data frame batch&#34;
     return data_frame</code></pre>
 </details>
@@ -794,21 +794,21 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="phc.easy" href="index.html">phc.easy</a></code></li>
+<li><code><a title="phc.easy.abstract" href="index.html">phc.easy.abstract</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="phc.easy.item.Item" href="#phc.easy.item.Item">Item</a></code></h4>
+<h4><code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code></h4>
 <ul class="two-column">
-<li><code><a title="phc.easy.item.Item.code_fields" href="#phc.easy.item.Item.code_fields">code_fields</a></code></li>
-<li><code><a title="phc.easy.item.Item.get_codes" href="#phc.easy.item.Item.get_codes">get_codes</a></code></li>
-<li><code><a title="phc.easy.item.Item.get_count" href="#phc.easy.item.Item.get_count">get_count</a></code></li>
-<li><code><a title="phc.easy.item.Item.get_count_by_field" href="#phc.easy.item.Item.get_count_by_field">get_count_by_field</a></code></li>
-<li><code><a title="phc.easy.item.Item.get_data_frame" href="#phc.easy.item.Item.get_data_frame">get_data_frame</a></code></li>
-<li><code><a title="phc.easy.item.Item.table_name" href="#phc.easy.item.Item.table_name">table_name</a></code></li>
-<li><code><a title="phc.easy.item.Item.transform_results" href="#phc.easy.item.Item.transform_results">transform_results</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.code_fields" href="#phc.easy.abstract.fhir_service_item.FhirServiceItem.code_fields">code_fields</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_codes" href="#phc.easy.abstract.fhir_service_item.FhirServiceItem.get_codes">get_codes</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count" href="#phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count_by_field" href="#phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count_by_field">get_count_by_field</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_data_frame" href="#phc.easy.abstract.fhir_service_item.FhirServiceItem.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.table_name" href="#phc.easy.abstract.fhir_service_item.FhirServiceItem.table_name">table_name</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.transform_results" href="#phc.easy.abstract.fhir_service_item.FhirServiceItem.transform_results">transform_results</a></code></li>
 </ul>
 </li>
 </ul>

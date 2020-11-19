@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
-<title>phc.easy.genomic_test API documentation</title>
+<title>phc.easy.omics.genomic_test API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -20,7 +20,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>phc.easy.genomic_test</code></h1>
+<h1 class="title">Module <code>phc.easy.omics.genomic_test</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -28,27 +28,17 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import inspect
-import pandas as pd
+from enum import Enum
 from typing import Optional
+
+import pandas as pd
 from phc.easy.auth import Auth
 from phc.easy.frame import Frame
-from phc.easy.paging_api_item import PagingApiItem, PagingApiOptions
-
-from enum import Enum
-
-
-class GenomicTestType(str, Enum):
-    SHORT_VARIANT = &#34;shortVariant&#34;
-    EXPRESSION = &#34;expression&#34;
-    STRUCTURAL_VARIANT = &#34;structuralVariant&#34;
-    COPY_NUMBER_VARIANT = &#34;copyNumberVariant&#34;
-    READ = &#34;read&#34;
-
-
-class GenomicTestStatus(str, Enum):
-    ACTIVE = &#34;ACTIVE&#34;
-    INDEXING = &#34;INDEXING&#34;
-    FAILED = &#34;FAILED&#34;
+from phc.easy.omics.options.genomic_test import (
+    GenomicTestStatus,
+    GenomicTestType,
+)
+from phc.easy.abstract.paging_api_item import PagingApiItem, PagingApiOptions
 
 
 class GenomicTestOptions(PagingApiOptions):
@@ -78,7 +68,9 @@ class GenomicTest(PagingApiItem):
         return GenomicTestOptions
 
     @staticmethod
-    def transform_results(data_frame: pd.DataFrame, **expand_args):
+    def transform_results(
+        data_frame: pd.DataFrame, params: dict, **expand_args
+    ):
         args = {
             **expand_args,
             &#34;code_columns&#34;: [
@@ -91,43 +83,54 @@ class GenomicTest(PagingApiItem):
                 Frame.codeable_like_column_expander(&#34;sourceFile&#34;),
             ],
         }
+        df = Frame.expand(data_frame, **args)
 
-        return (
-            pd.concat(
-                data_frame.apply(
-                    lambda x: pd.DataFrame(
-                        [{&#34;index&#34;: x.name, **s} for s in x.sets]
-                    ),
-                    axis=1,
-                ).values
+        if &#34;sets&#34; in df.columns:
+            df = (
+                pd.concat(
+                    data_frame.apply(
+                        lambda x: pd.DataFrame(
+                            [{&#34;index&#34;: x.name, **s} for s in x.sets]
+                        ),
+                        axis=1,
+                    ).values
+                )
+                .join(df.drop([&#34;sets&#34;], axis=1), on=&#34;index&#34;, rsuffix=&#34;.test&#34;)
+                .drop([&#34;index&#34;], axis=1)
+                .reset_index(drop=True)
             )
-            .join(
-                Frame.expand(data_frame, **args).drop([&#34;sets&#34;], axis=1),
-                on=&#34;index&#34;,
-                rsuffix=&#34;.test&#34;,
-            )
-            .drop([&#34;index&#34;], axis=1)
-            .reset_index(drop=True)
-        )
+
+        test_type = params.get(&#34;type&#34;, None)
+
+        if test_type and len(df) &gt; 0:
+            # TODO: Remove when API fixed
+
+            # NOTE: The API does not filter the returned sets because it is a
+            # nested structure. Since it&#39;s not a boatload of information, we opt
+            # to filter client-side for now.
+            return df[df.setType == test_type].reset_index(drop=True)
+
+        return df
 
     @classmethod
     def get_data_frame(
         cls,
         patient_id: Optional[str] = None,
-        status: Optional[GenomicTestStatus] = None,
+        status: Optional[GenomicTestStatus] = GenomicTestStatus.ACTIVE,
         test_type: Optional[GenomicTestType] = None,
         all_results: bool = False,
         auth_args: Auth = Auth.shared(),
         max_pages: Optional[int] = None,
         page_size: Optional[int] = None,
         log: bool = False,
+        ignore_cache: bool = False,
         **kw_args,
     ):
         &#34;&#34;&#34;Execute a request for genomic tests
 
         ## Parameters
 
-        Query: `GenomicTestOptions`
+        Query: `phc.easy.omics.options.genomic_test.GenomicTestOptions`
 
         Execution: `phc.easy.query.Query.execute_paging_api`
 
@@ -138,16 +141,6 @@ class GenomicTest(PagingApiItem):
         df = super().get_data_frame(
             **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
         )
-
-        if test_type and len(df) &gt; 0:
-            # TODO: Remove when API fixed
-
-            # NOTE: The API does not filter the returned sets because it is a
-            # nested structure. Since it&#39;s not a boatload of information, we opt
-            # to filter client-side for now.
-            return df[
-                df.setType == getattr(test_type, &#34;value&#34;, test_type)
-            ].reset_index(drop=True)
 
         return df</code></pre>
 </details>
@@ -161,7 +154,7 @@ class GenomicTest(PagingApiItem):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="phc.easy.genomic_test.GenomicTest"><code class="flex name class">
+<dt id="phc.easy.omics.genomic_test.GenomicTest"><code class="flex name class">
 <span>class <span class="ident">GenomicTest</span></span>
 </code></dt>
 <dd>
@@ -180,7 +173,9 @@ class GenomicTest(PagingApiItem):
         return GenomicTestOptions
 
     @staticmethod
-    def transform_results(data_frame: pd.DataFrame, **expand_args):
+    def transform_results(
+        data_frame: pd.DataFrame, params: dict, **expand_args
+    ):
         args = {
             **expand_args,
             &#34;code_columns&#34;: [
@@ -193,43 +188,54 @@ class GenomicTest(PagingApiItem):
                 Frame.codeable_like_column_expander(&#34;sourceFile&#34;),
             ],
         }
+        df = Frame.expand(data_frame, **args)
 
-        return (
-            pd.concat(
-                data_frame.apply(
-                    lambda x: pd.DataFrame(
-                        [{&#34;index&#34;: x.name, **s} for s in x.sets]
-                    ),
-                    axis=1,
-                ).values
+        if &#34;sets&#34; in df.columns:
+            df = (
+                pd.concat(
+                    data_frame.apply(
+                        lambda x: pd.DataFrame(
+                            [{&#34;index&#34;: x.name, **s} for s in x.sets]
+                        ),
+                        axis=1,
+                    ).values
+                )
+                .join(df.drop([&#34;sets&#34;], axis=1), on=&#34;index&#34;, rsuffix=&#34;.test&#34;)
+                .drop([&#34;index&#34;], axis=1)
+                .reset_index(drop=True)
             )
-            .join(
-                Frame.expand(data_frame, **args).drop([&#34;sets&#34;], axis=1),
-                on=&#34;index&#34;,
-                rsuffix=&#34;.test&#34;,
-            )
-            .drop([&#34;index&#34;], axis=1)
-            .reset_index(drop=True)
-        )
+
+        test_type = params.get(&#34;type&#34;, None)
+
+        if test_type and len(df) &gt; 0:
+            # TODO: Remove when API fixed
+
+            # NOTE: The API does not filter the returned sets because it is a
+            # nested structure. Since it&#39;s not a boatload of information, we opt
+            # to filter client-side for now.
+            return df[df.setType == test_type].reset_index(drop=True)
+
+        return df
 
     @classmethod
     def get_data_frame(
         cls,
         patient_id: Optional[str] = None,
-        status: Optional[GenomicTestStatus] = None,
+        status: Optional[GenomicTestStatus] = GenomicTestStatus.ACTIVE,
         test_type: Optional[GenomicTestType] = None,
         all_results: bool = False,
         auth_args: Auth = Auth.shared(),
         max_pages: Optional[int] = None,
         page_size: Optional[int] = None,
         log: bool = False,
+        ignore_cache: bool = False,
         **kw_args,
     ):
         &#34;&#34;&#34;Execute a request for genomic tests
 
         ## Parameters
 
-        Query: `GenomicTestOptions`
+        Query: `phc.easy.omics.options.genomic_test.GenomicTestOptions`
 
         Execution: `phc.easy.query.Query.execute_paging_api`
 
@@ -241,33 +247,23 @@ class GenomicTest(PagingApiItem):
             **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
         )
 
-        if test_type and len(df) &gt; 0:
-            # TODO: Remove when API fixed
-
-            # NOTE: The API does not filter the returned sets because it is a
-            # nested structure. Since it&#39;s not a boatload of information, we opt
-            # to filter client-side for now.
-            return df[
-                df.setType == getattr(test_type, &#34;value&#34;, test_type)
-            ].reset_index(drop=True)
-
         return df</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></li>
+<li><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></li>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.genomic_test.GenomicTest.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>patient_id: Union[str, NoneType] = None, status: Union[<a title="phc.easy.genomic_test.GenomicTestStatus" href="#phc.easy.genomic_test.GenomicTestStatus">GenomicTestStatus</a>, NoneType] = None, test_type: Union[<a title="phc.easy.genomic_test.GenomicTestType" href="#phc.easy.genomic_test.GenomicTestType">GenomicTestType</a>, NoneType] = None, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+<dt id="phc.easy.omics.genomic_test.GenomicTest.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>patient_id: Union[str, NoneType] = None, status: Union[<a title="phc.easy.omics.options.genomic_test.GenomicTestStatus" href="options/genomic_test.html#phc.easy.omics.options.genomic_test.GenomicTestStatus">GenomicTestStatus</a>, NoneType] = GenomicTestStatus.ACTIVE, test_type: Union[<a title="phc.easy.omics.options.genomic_test.GenomicTestType" href="options/genomic_test.html#phc.easy.omics.options.genomic_test.GenomicTestType">GenomicTestType</a>, NoneType] = None, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, ignore_cache: bool = False, **kw_args)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a request for genomic tests</p>
 <h2 id="parameters">Parameters</h2>
-<p>Query: <code><a title="phc.easy.genomic_test.GenomicTestOptions" href="#phc.easy.genomic_test.GenomicTestOptions">GenomicTestOptions</a></code></p>
-<p>Execution: <code><a title="phc.easy.query.Query.execute_paging_api" href="query/index.html#phc.easy.query.Query.execute_paging_api">Query.execute_paging_api()</a></code></p>
-<p>Expansion: <code><a title="phc.easy.frame.Frame.expand" href="frame.html#phc.easy.frame.Frame.expand">Frame.expand()</a></code></p>
+<p>Query: <code>phc.easy.omics.options.genomic_test.GenomicTestOptions</code></p>
+<p>Execution: <code><a title="phc.easy.query.Query.execute_paging_api" href="../query/index.html#phc.easy.query.Query.execute_paging_api">Query.execute_paging_api()</a></code></p>
+<p>Expansion: <code><a title="phc.easy.frame.Frame.expand" href="../frame.html#phc.easy.frame.Frame.expand">Frame.expand()</a></code></p>
 <p>NOTE: <code>test_type</code> is translated to <code>type</code> as a parameter</p></div>
 <details class="source">
 <summary>
@@ -277,20 +273,21 @@ class GenomicTest(PagingApiItem):
 def get_data_frame(
     cls,
     patient_id: Optional[str] = None,
-    status: Optional[GenomicTestStatus] = None,
+    status: Optional[GenomicTestStatus] = GenomicTestStatus.ACTIVE,
     test_type: Optional[GenomicTestType] = None,
     all_results: bool = False,
     auth_args: Auth = Auth.shared(),
     max_pages: Optional[int] = None,
     page_size: Optional[int] = None,
     log: bool = False,
+    ignore_cache: bool = False,
     **kw_args,
 ):
     &#34;&#34;&#34;Execute a request for genomic tests
 
     ## Parameters
 
-    Query: `GenomicTestOptions`
+    Query: `phc.easy.omics.options.genomic_test.GenomicTestOptions`
 
     Execution: `phc.easy.query.Query.execute_paging_api`
 
@@ -302,26 +299,16 @@ def get_data_frame(
         **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
     )
 
-    if test_type and len(df) &gt; 0:
-        # TODO: Remove when API fixed
-
-        # NOTE: The API does not filter the returned sets because it is a
-        # nested structure. Since it&#39;s not a boatload of information, we opt
-        # to filter client-side for now.
-        return df[
-            df.setType == getattr(test_type, &#34;value&#34;, test_type)
-        ].reset_index(drop=True)
-
     return df</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.genomic_test.GenomicTest.params_class"><code class="name flex">
+<dt id="phc.easy.omics.genomic_test.GenomicTest.params_class"><code class="name flex">
 <span>def <span class="ident">params_class</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.paging_api_item.PagingApiItem.params_class" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem.params_class">params_class</a></code>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.params_class" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.params_class">params_class</a></code>
 </p>
 <div class="desc inherited"><p>Returns a pydantic type that validates and transforms the params with dict()</p></div>
 <details class="source">
@@ -333,23 +320,23 @@ def params_class():
     return GenomicTestOptions</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.genomic_test.GenomicTest.process_params"><code class="name flex">
+<dt id="phc.easy.omics.genomic_test.GenomicTest.process_params"><code class="name flex">
 <span>def <span class="ident">process_params</span></span>(<span>params: dict) ‑> dict</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.paging_api_item.PagingApiItem.process_params" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem.process_params">process_params</a></code>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.process_params" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.process_params">process_params</a></code>
 </p>
 <div class="desc inherited"><p>Validates and transforms the API query parameters</p></div>
 </dd>
-<dt id="phc.easy.genomic_test.GenomicTest.resource_path"><code class="name flex">
+<dt id="phc.easy.omics.genomic_test.GenomicTest.resource_path"><code class="name flex">
 <span>def <span class="ident">resource_path</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.paging_api_item.PagingApiItem.resource_path" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem.resource_path">resource_path</a></code>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.resource_path" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.resource_path">resource_path</a></code>
 </p>
 <div class="desc inherited"><p>Returns the API url name for retrieval</p></div>
 <details class="source">
@@ -361,13 +348,13 @@ def resource_path():
     return &#34;genomics/projects/:project_id/tests&#34;</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.genomic_test.GenomicTest.transform_results"><code class="name flex">
-<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+<dt id="phc.easy.omics.genomic_test.GenomicTest.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, params: dict, **expand_args)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.paging_api_item.PagingApiItem" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.paging_api_item.PagingApiItem.transform_results" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiItem.transform_results">transform_results</a></code>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.transform_results" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.transform_results">transform_results</a></code>
 </p>
 <div class="desc inherited"><p>Transform data frame batch</p></div>
 <details class="source">
@@ -375,7 +362,9 @@ def resource_path():
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def transform_results(data_frame: pd.DataFrame, **expand_args):
+def transform_results(
+    data_frame: pd.DataFrame, params: dict, **expand_args
+):
     args = {
         **expand_args,
         &#34;code_columns&#34;: [
@@ -388,29 +377,39 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
             Frame.codeable_like_column_expander(&#34;sourceFile&#34;),
         ],
     }
+    df = Frame.expand(data_frame, **args)
 
-    return (
-        pd.concat(
-            data_frame.apply(
-                lambda x: pd.DataFrame(
-                    [{&#34;index&#34;: x.name, **s} for s in x.sets]
-                ),
-                axis=1,
-            ).values
+    if &#34;sets&#34; in df.columns:
+        df = (
+            pd.concat(
+                data_frame.apply(
+                    lambda x: pd.DataFrame(
+                        [{&#34;index&#34;: x.name, **s} for s in x.sets]
+                    ),
+                    axis=1,
+                ).values
+            )
+            .join(df.drop([&#34;sets&#34;], axis=1), on=&#34;index&#34;, rsuffix=&#34;.test&#34;)
+            .drop([&#34;index&#34;], axis=1)
+            .reset_index(drop=True)
         )
-        .join(
-            Frame.expand(data_frame, **args).drop([&#34;sets&#34;], axis=1),
-            on=&#34;index&#34;,
-            rsuffix=&#34;.test&#34;,
-        )
-        .drop([&#34;index&#34;], axis=1)
-        .reset_index(drop=True)
-    )</code></pre>
+
+    test_type = params.get(&#34;type&#34;, None)
+
+    if test_type and len(df) &gt; 0:
+        # TODO: Remove when API fixed
+
+        # NOTE: The API does not filter the returned sets because it is a
+        # nested structure. Since it&#39;s not a boatload of information, we opt
+        # to filter client-side for now.
+        return df[df.setType == test_type].reset_index(drop=True)
+
+    return df</code></pre>
 </details>
 </dd>
 </dl>
 </dd>
-<dt id="phc.easy.genomic_test.GenomicTestOptions"><code class="flex name class">
+<dt id="phc.easy.omics.genomic_test.GenomicTestOptions"><code class="flex name class">
 <span>class <span class="ident">GenomicTestOptions</span></span>
 <span>(</span><span>**data: Any)</span>
 </code></dt>
@@ -441,28 +440,28 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="phc.easy.paging_api_item.PagingApiOptions" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiOptions">PagingApiOptions</a></li>
+<li><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></li>
 <li>pydantic.main.BaseModel</li>
 <li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="phc.easy.genomic_test.GenomicTestOptions.patient_id"><code class="name">var <span class="ident">patient_id</span> : Union[str, NoneType]</code></dt>
+<dt id="phc.easy.omics.genomic_test.GenomicTestOptions.patient_id"><code class="name">var <span class="ident">patient_id</span> : Union[str, NoneType]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="phc.easy.genomic_test.GenomicTestOptions.status"><code class="name">var <span class="ident">status</span> : Union[<a title="phc.easy.genomic_test.GenomicTestStatus" href="#phc.easy.genomic_test.GenomicTestStatus">GenomicTestStatus</a>, NoneType]</code></dt>
+<dt id="phc.easy.omics.genomic_test.GenomicTestOptions.status"><code class="name">var <span class="ident">status</span> : Union[<a title="phc.easy.omics.options.genomic_test.GenomicTestStatus" href="options/genomic_test.html#phc.easy.omics.options.genomic_test.GenomicTestStatus">GenomicTestStatus</a>, NoneType]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="phc.easy.genomic_test.GenomicTestOptions.test_type"><code class="name">var <span class="ident">test_type</span> : Union[<a title="phc.easy.genomic_test.GenomicTestType" href="#phc.easy.genomic_test.GenomicTestType">GenomicTestType</a>, NoneType]</code></dt>
+<dt id="phc.easy.omics.genomic_test.GenomicTestOptions.test_type"><code class="name">var <span class="ident">test_type</span> : Union[<a title="phc.easy.omics.options.genomic_test.GenomicTestType" href="options/genomic_test.html#phc.easy.omics.options.genomic_test.GenomicTestType">GenomicTestType</a>, NoneType]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 </dl>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.genomic_test.GenomicTestOptions.transform"><code class="name flex">
+<dt id="phc.easy.omics.genomic_test.GenomicTestOptions.transform"><code class="name flex">
 <span>def <span class="ident">transform</span></span>(<span>key, value)</span>
 </code></dt>
 <dd>
@@ -481,97 +480,15 @@ def transform(key, value):
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="phc.easy.genomic_test.GenomicTestOptions.dict"><code class="name flex">
+<dt id="phc.easy.omics.genomic_test.GenomicTestOptions.dict"><code class="name flex">
 <span>def <span class="ident">dict</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.paging_api_item.PagingApiOptions" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiOptions">PagingApiOptions</a></code>.<code><a title="phc.easy.paging_api_item.PagingApiOptions.dict" href="paging_api_item.html#phc.easy.paging_api_item.PagingApiOptions.dict">dict</a></code>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions.dict" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions.dict">dict</a></code>
 </p>
 <div class="desc inherited"><p>Generate a dictionary representation of the model, optionally specifying which fields to include or exclude.</p></div>
-</dd>
-</dl>
-</dd>
-<dt id="phc.easy.genomic_test.GenomicTestStatus"><code class="flex name class">
-<span>class <span class="ident">GenomicTestStatus</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>An enumeration.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class GenomicTestStatus(str, Enum):
-    ACTIVE = &#34;ACTIVE&#34;
-    INDEXING = &#34;INDEXING&#34;
-    FAILED = &#34;FAILED&#34;</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>builtins.str</li>
-<li>enum.Enum</li>
-</ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="phc.easy.genomic_test.GenomicTestStatus.ACTIVE"><code class="name">var <span class="ident">ACTIVE</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.genomic_test.GenomicTestStatus.FAILED"><code class="name">var <span class="ident">FAILED</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.genomic_test.GenomicTestStatus.INDEXING"><code class="name">var <span class="ident">INDEXING</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
-</dd>
-<dt id="phc.easy.genomic_test.GenomicTestType"><code class="flex name class">
-<span>class <span class="ident">GenomicTestType</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>An enumeration.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class GenomicTestType(str, Enum):
-    SHORT_VARIANT = &#34;shortVariant&#34;
-    EXPRESSION = &#34;expression&#34;
-    STRUCTURAL_VARIANT = &#34;structuralVariant&#34;
-    COPY_NUMBER_VARIANT = &#34;copyNumberVariant&#34;
-    READ = &#34;read&#34;</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>builtins.str</li>
-<li>enum.Enum</li>
-</ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="phc.easy.genomic_test.GenomicTestType.COPY_NUMBER_VARIANT"><code class="name">var <span class="ident">COPY_NUMBER_VARIANT</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.genomic_test.GenomicTestType.EXPRESSION"><code class="name">var <span class="ident">EXPRESSION</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.genomic_test.GenomicTestType.READ"><code class="name">var <span class="ident">READ</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.genomic_test.GenomicTestType.SHORT_VARIANT"><code class="name">var <span class="ident">SHORT_VARIANT</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.genomic_test.GenomicTestType.STRUCTURAL_VARIANT"><code class="name">var <span class="ident">STRUCTURAL_VARIANT</span></code></dt>
-<dd>
-<div class="desc"></div>
 </dd>
 </dl>
 </dd>
@@ -591,33 +508,27 @@ def transform(key, value):
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="phc.easy" href="index.html">phc.easy</a></code></li>
+<li><code><a title="phc.easy.omics" href="index.html">phc.easy.omics</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="phc.easy.genomic_test.GenomicTest" href="#phc.easy.genomic_test.GenomicTest">GenomicTest</a></code></h4>
+<h4><code><a title="phc.easy.omics.genomic_test.GenomicTest" href="#phc.easy.omics.genomic_test.GenomicTest">GenomicTest</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.genomic_test.GenomicTest.get_data_frame" href="#phc.easy.genomic_test.GenomicTest.get_data_frame">get_data_frame</a></code></li>
-<li><code><a title="phc.easy.genomic_test.GenomicTest.params_class" href="#phc.easy.genomic_test.GenomicTest.params_class">params_class</a></code></li>
-<li><code><a title="phc.easy.genomic_test.GenomicTest.process_params" href="paging_api_item.html#phc.easy.genomic_test.GenomicTest.process_params">process_params</a></code></li>
-<li><code><a title="phc.easy.genomic_test.GenomicTest.resource_path" href="#phc.easy.genomic_test.GenomicTest.resource_path">resource_path</a></code></li>
-<li><code><a title="phc.easy.genomic_test.GenomicTest.transform_results" href="#phc.easy.genomic_test.GenomicTest.transform_results">transform_results</a></code></li>
+<li><code><a title="phc.easy.omics.genomic_test.GenomicTest.get_data_frame" href="#phc.easy.omics.genomic_test.GenomicTest.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.omics.genomic_test.GenomicTest.params_class" href="#phc.easy.omics.genomic_test.GenomicTest.params_class">params_class</a></code></li>
+<li><code><a title="phc.easy.omics.genomic_test.GenomicTest.process_params" href="../abstract/paging_api_item.html#phc.easy.omics.genomic_test.GenomicTest.process_params">process_params</a></code></li>
+<li><code><a title="phc.easy.omics.genomic_test.GenomicTest.resource_path" href="#phc.easy.omics.genomic_test.GenomicTest.resource_path">resource_path</a></code></li>
+<li><code><a title="phc.easy.omics.genomic_test.GenomicTest.transform_results" href="#phc.easy.omics.genomic_test.GenomicTest.transform_results">transform_results</a></code></li>
 </ul>
 </li>
 <li>
-<h4><code><a title="phc.easy.genomic_test.GenomicTestOptions" href="#phc.easy.genomic_test.GenomicTestOptions">GenomicTestOptions</a></code></h4>
+<h4><code><a title="phc.easy.omics.genomic_test.GenomicTestOptions" href="#phc.easy.omics.genomic_test.GenomicTestOptions">GenomicTestOptions</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.genomic_test.GenomicTestOptions.dict" href="paging_api_item.html#phc.easy.genomic_test.GenomicTestOptions.dict">dict</a></code></li>
-<li><code><a title="phc.easy.genomic_test.GenomicTestOptions.transform" href="#phc.easy.genomic_test.GenomicTestOptions.transform">transform</a></code></li>
+<li><code><a title="phc.easy.omics.genomic_test.GenomicTestOptions.dict" href="../abstract/paging_api_item.html#phc.easy.omics.genomic_test.GenomicTestOptions.dict">dict</a></code></li>
+<li><code><a title="phc.easy.omics.genomic_test.GenomicTestOptions.transform" href="#phc.easy.omics.genomic_test.GenomicTestOptions.transform">transform</a></code></li>
 </ul>
-</li>
-<li>
-<h4><code><a title="phc.easy.genomic_test.GenomicTestStatus" href="#phc.easy.genomic_test.GenomicTestStatus">GenomicTestStatus</a></code></h4>
-</li>
-<li>
-<h4><code><a title="phc.easy.genomic_test.GenomicTestType" href="#phc.easy.genomic_test.GenomicTestType">GenomicTestType</a></code></h4>
 </li>
 </ul>
 </li>

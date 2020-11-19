@@ -30,10 +30,10 @@
 <pre><code class="python">import pandas as pd
 
 from phc.easy.frame import Frame
-from phc.easy.patient_item import PatientItem
+from phc.easy.abstract.fhir_service_patient_item import FhirServicePatientItem
 
 
-class DiagnosticReport(PatientItem):
+class DiagnosticReport(FhirServicePatientItem):
     @staticmethod
     def table_name():
         return &#34;diagnostic_report&#34;
@@ -82,7 +82,7 @@ from a FSS table that relates to a patient</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class DiagnosticReport(PatientItem):
+<pre><code class="python">class DiagnosticReport(FhirServicePatientItem):
     @staticmethod
     def table_name():
         return &#34;diagnostic_report&#34;
@@ -113,8 +113,8 @@ from a FSS table that relates to a patient</p></div>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></li>
-<li><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></li>
+<li><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></li>
+<li><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></li>
 </ul>
 <h3>Static methods</h3>
 <dl>
@@ -124,7 +124,7 @@ from a FSS table that relates to a patient</p></div>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.code_fields" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -142,7 +142,7 @@ def code_fields():
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_codes" href="item.html#phc.easy.patient_item.PatientItem.get_codes">get_codes</a></code>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_codes" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_codes">get_codes</a></code>
 </p>
 <div class="desc inherited"><p>Find all codes …</p></div>
 </dd>
@@ -152,7 +152,7 @@ def code_fields():
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_count" href="item.html#phc.easy.patient_item.PatientItem.get_count">get_count</a></code>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count">get_count</a></code>
 </p>
 <div class="desc inherited"><p>Get the count for a given FSS query</p></div>
 </dd>
@@ -162,7 +162,7 @@ def code_fields():
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_count_by_field" href="item.html#phc.easy.patient_item.PatientItem.get_count_by_field">get_count_by_field</a></code>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_field" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_field">get_count_by_field</a></code>
 </p>
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
@@ -172,7 +172,7 @@ def code_fields():
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_count_by_patient" href="patient_item.html#phc.easy.patient_item.PatientItem.get_count_by_patient">get_count_by_patient</a></code>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_patient" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_patient">get_count_by_patient</a></code>
 </p>
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
@@ -182,7 +182,7 @@ def code_fields():
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.get_data_frame" href="patient_item.html#phc.easy.patient_item.PatientItem.get_data_frame">get_data_frame</a></code>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_data_frame" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_data_frame">get_data_frame</a></code>
 </p>
 <div class="desc inherited"><p>Retrieve records …</p></div>
 </dd>
@@ -220,7 +220,7 @@ def patient_key():
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.table_name" href="item.html#phc.easy.patient_item.PatientItem.table_name">table_name</a></code>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.table_name" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.table_name">table_name</a></code>
 </p>
 <div class="desc inherited"><p>Returns the FSS table name for retrieval</p></div>
 <details class="source">
@@ -238,7 +238,7 @@ def table_name():
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.patient_item.PatientItem" href="patient_item.html#phc.easy.patient_item.PatientItem">PatientItem</a></code>.<code><a title="phc.easy.patient_item.PatientItem.transform_results" href="item.html#phc.easy.patient_item.PatientItem.transform_results">transform_results</a></code>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.transform_results" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.transform_results">transform_results</a></code>
 </p>
 <div class="desc inherited"><p>Transform data frame batch</p></div>
 <details class="source">
@@ -285,11 +285,11 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <h4><code><a title="phc.easy.diagnostic_report.DiagnosticReport" href="#phc.easy.diagnostic_report.DiagnosticReport">DiagnosticReport</a></code></h4>
 <ul class="">
 <li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.code_fields" href="#phc.easy.diagnostic_report.DiagnosticReport.code_fields">code_fields</a></code></li>
-<li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.get_codes" href="item.html#phc.easy.diagnostic_report.DiagnosticReport.get_codes">get_codes</a></code></li>
-<li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.get_count" href="item.html#phc.easy.diagnostic_report.DiagnosticReport.get_count">get_count</a></code></li>
-<li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.get_count_by_field" href="item.html#phc.easy.diagnostic_report.DiagnosticReport.get_count_by_field">get_count_by_field</a></code></li>
-<li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.get_count_by_patient" href="patient_item.html#phc.easy.diagnostic_report.DiagnosticReport.get_count_by_patient">get_count_by_patient</a></code></li>
-<li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.get_data_frame" href="patient_item.html#phc.easy.diagnostic_report.DiagnosticReport.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.get_codes" href="abstract/fhir_service_item.html#phc.easy.diagnostic_report.DiagnosticReport.get_codes">get_codes</a></code></li>
+<li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.get_count" href="abstract/fhir_service_item.html#phc.easy.diagnostic_report.DiagnosticReport.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.get_count_by_field" href="abstract/fhir_service_item.html#phc.easy.diagnostic_report.DiagnosticReport.get_count_by_field">get_count_by_field</a></code></li>
+<li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.get_count_by_patient" href="abstract/fhir_service_patient_item.html#phc.easy.diagnostic_report.DiagnosticReport.get_count_by_patient">get_count_by_patient</a></code></li>
+<li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.get_data_frame" href="abstract/fhir_service_patient_item.html#phc.easy.diagnostic_report.DiagnosticReport.get_data_frame">get_data_frame</a></code></li>
 <li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.patient_id_prefixes" href="#phc.easy.diagnostic_report.DiagnosticReport.patient_id_prefixes">patient_id_prefixes</a></code></li>
 <li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.patient_key" href="#phc.easy.diagnostic_report.DiagnosticReport.patient_key">patient_key</a></code></li>
 <li><code><a title="phc.easy.diagnostic_report.DiagnosticReport.table_name" href="#phc.easy.diagnostic_report.DiagnosticReport.table_name">table_name</a></code></li>

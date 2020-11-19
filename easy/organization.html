@@ -30,10 +30,10 @@
 <pre><code class="python">import pandas as pd
 
 from phc.easy.frame import Frame
-from phc.easy.item import Item
+from phc.easy.abstract.fhir_service_item import FhirServiceItem
 
 
-class Organization(Item):
+class Organization(FhirServiceItem):
     @staticmethod
     def table_name():
         return &#34;organization&#34;
@@ -73,7 +73,7 @@ from a FSS table</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Organization(Item):
+<pre><code class="python">class Organization(FhirServiceItem):
     @staticmethod
     def table_name():
         return &#34;organization&#34;
@@ -95,7 +95,7 @@ from a FSS table</p></div>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></li>
+<li><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></li>
 </ul>
 <h3>Static methods</h3>
 <dl>
@@ -105,7 +105,7 @@ from a FSS table</p></div>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.code_fields" href="item.html#phc.easy.item.Item.code_fields">code_fields</a></code>
+<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.code_fields" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 <details class="source">
@@ -123,7 +123,7 @@ def code_fields():
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.get_codes" href="item.html#phc.easy.item.Item.get_codes">get_codes</a></code>
+<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_codes" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem.get_codes">get_codes</a></code>
 </p>
 <div class="desc inherited"><p>Find all codes …</p></div>
 </dd>
@@ -133,7 +133,7 @@ def code_fields():
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.get_count" href="item.html#phc.easy.item.Item.get_count">get_count</a></code>
+<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count">get_count</a></code>
 </p>
 <div class="desc inherited"><p>Get the count for a given FSS query</p></div>
 </dd>
@@ -143,7 +143,7 @@ def code_fields():
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.get_count_by_field" href="item.html#phc.easy.item.Item.get_count_by_field">get_count_by_field</a></code>
+<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count_by_field" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count_by_field">get_count_by_field</a></code>
 </p>
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
@@ -153,7 +153,7 @@ def code_fields():
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.get_data_frame" href="item.html#phc.easy.item.Item.get_data_frame">get_data_frame</a></code>
+<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_data_frame" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem.get_data_frame">get_data_frame</a></code>
 </p>
 <div class="desc inherited"><p>Retrieve records …</p></div>
 </dd>
@@ -163,7 +163,7 @@ def code_fields():
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.table_name" href="item.html#phc.easy.item.Item.table_name">table_name</a></code>
+<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.table_name" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem.table_name">table_name</a></code>
 </p>
 <div class="desc inherited"><p>Returns the FSS table name for retrieval</p></div>
 <details class="source">
@@ -181,7 +181,7 @@ def table_name():
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.transform_results" href="item.html#phc.easy.item.Item.transform_results">transform_results</a></code>
+<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.transform_results" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem.transform_results">transform_results</a></code>
 </p>
 <div class="desc inherited"><p>Transform data frame batch</p></div>
 <details class="source">
@@ -227,10 +227,10 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <h4><code><a title="phc.easy.organization.Organization" href="#phc.easy.organization.Organization">Organization</a></code></h4>
 <ul class="two-column">
 <li><code><a title="phc.easy.organization.Organization.code_fields" href="#phc.easy.organization.Organization.code_fields">code_fields</a></code></li>
-<li><code><a title="phc.easy.organization.Organization.get_codes" href="item.html#phc.easy.organization.Organization.get_codes">get_codes</a></code></li>
-<li><code><a title="phc.easy.organization.Organization.get_count" href="item.html#phc.easy.organization.Organization.get_count">get_count</a></code></li>
-<li><code><a title="phc.easy.organization.Organization.get_count_by_field" href="item.html#phc.easy.organization.Organization.get_count_by_field">get_count_by_field</a></code></li>
-<li><code><a title="phc.easy.organization.Organization.get_data_frame" href="item.html#phc.easy.organization.Organization.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.organization.Organization.get_codes" href="abstract/fhir_service_item.html#phc.easy.organization.Organization.get_codes">get_codes</a></code></li>
+<li><code><a title="phc.easy.organization.Organization.get_count" href="abstract/fhir_service_item.html#phc.easy.organization.Organization.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.organization.Organization.get_count_by_field" href="abstract/fhir_service_item.html#phc.easy.organization.Organization.get_count_by_field">get_count_by_field</a></code></li>
+<li><code><a title="phc.easy.organization.Organization.get_data_frame" href="abstract/fhir_service_item.html#phc.easy.organization.Organization.get_data_frame">get_data_frame</a></code></li>
 <li><code><a title="phc.easy.organization.Organization.table_name" href="#phc.easy.organization.Organization.table_name">table_name</a></code></li>
 <li><code><a title="phc.easy.organization.Organization.transform_results" href="#phc.easy.organization.Organization.transform_results">transform_results</a></code></li>
 </ul>

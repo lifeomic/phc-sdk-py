@@ -30,6 +30,7 @@
 <pre><code class="python">import math
 from functools import reduce, wraps
 from typing import Callable, List, Union
+from toolz import groupby
 
 import pandas as pd
 from funcy import lmapcat
@@ -41,6 +42,11 @@ except ImportError:
     tqdm = None
 else:
     _has_tqdm = True
+
+
+def rename_keys(dictionary: dict, mapping: dict):
+    &#34;Rename keys in a dictionary&#34;
+    return {mapping.get(k, k): v for k, v in dictionary.items()}
 
 
 def join_underscore(values):
@@ -120,19 +126,6 @@ def with_progress(
     return func(None)
 
 
-def update_progress(progress: tqdm, n: int, description: str = &#34;&#34;):
-    &#34;&#34;&#34;Update progress if available (Returns True to allow `and` chaining):
-
-        update_progress(None, 0, &#34;hey&#34;) and my_return_value
-    &#34;&#34;&#34;
-    if not progress:
-        return True
-
-    progress.set_description(description, refresh=False)
-    progress.update(n)
-    return True
-
-
 def add_prefixes(values: List[str], prefixes: List[str]):
     &#34;&#34;&#34;Add prefix to each value if not already present&#34;&#34;&#34;
     if len(prefixes) == 0:
@@ -203,13 +196,29 @@ def extract_codes(results: list, display: str, code_fields: List[str]):
             ):
                 codes.add(code)
 
-    return pd.DataFrame(list(codes))</code></pre>
+    return pd.DataFrame(list(codes))
+
+
+def split_by(args: dict, left_keys: List[str]):
+    &#34;&#34;&#34;Split into two dictionaries (left is whitelist and right is remaining)&#34;&#34;&#34;
+    result = {
+        k: dict(v)
+        for k, v in groupby(
+            lambda pair: pair[0] in left_keys, args.items()
+        ).items()
+    }
+
+    return (result.get(True, {}), result.get(False, {}))</code></pre>
 </details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
 <dt><code class="name"><a title="phc.easy.util.api_cache" href="api_cache.html">phc.easy.util.api_cache</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.util.batch" href="batch.html">phc.easy.util.batch</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -413,27 +422,39 @@ filtering afterwards)</p></div>
     return {f&#34;{prefix}_{key}&#34;: value for key, value in dictionary.items()}</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.util.update_progress"><code class="name flex">
-<span>def <span class="ident">update_progress</span></span>(<span>progress: tqdm.std.tqdm, n: int, description: str = '')</span>
+<dt id="phc.easy.util.rename_keys"><code class="name flex">
+<span>def <span class="ident">rename_keys</span></span>(<span>dictionary: dict, mapping: dict)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Update progress if available (Returns True to allow <code>and</code> chaining):</p>
-<p>update_progress(None, 0, "hey") and my_return_value</p></div>
+<div class="desc"><p>Rename keys in a dictionary</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def update_progress(progress: tqdm, n: int, description: str = &#34;&#34;):
-    &#34;&#34;&#34;Update progress if available (Returns True to allow `and` chaining):
+<pre><code class="python">def rename_keys(dictionary: dict, mapping: dict):
+    &#34;Rename keys in a dictionary&#34;
+    return {mapping.get(k, k): v for k, v in dictionary.items()}</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.util.split_by"><code class="name flex">
+<span>def <span class="ident">split_by</span></span>(<span>args: dict, left_keys: List[str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Split into two dictionaries (left is whitelist and right is remaining)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_by(args: dict, left_keys: List[str]):
+    &#34;&#34;&#34;Split into two dictionaries (left is whitelist and right is remaining)&#34;&#34;&#34;
+    result = {
+        k: dict(v)
+        for k, v in groupby(
+            lambda pair: pair[0] in left_keys, args.items()
+        ).items()
+    }
 
-        update_progress(None, 0, &#34;hey&#34;) and my_return_value
-    &#34;&#34;&#34;
-    if not progress:
-        return True
-
-    progress.set_description(description, refresh=False)
-    progress.update(n)
-    return True</code></pre>
+    return (result.get(True, {}), result.get(False, {}))</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.util.with_progress"><code class="name flex">
@@ -518,6 +539,7 @@ filtering afterwards)</p></div>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
 <li><code><a title="phc.easy.util.api_cache" href="api_cache.html">phc.easy.util.api_cache</a></code></li>
+<li><code><a title="phc.easy.util.batch" href="batch.html">phc.easy.util.batch</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
@@ -529,7 +551,8 @@ filtering afterwards)</p></div>
 <li><code><a title="phc.easy.util.get_values_at_codeable_paths" href="#phc.easy.util.get_values_at_codeable_paths">get_values_at_codeable_paths</a></code></li>
 <li><code><a title="phc.easy.util.join_underscore" href="#phc.easy.util.join_underscore">join_underscore</a></code></li>
 <li><code><a title="phc.easy.util.prefix_dict_keys" href="#phc.easy.util.prefix_dict_keys">prefix_dict_keys</a></code></li>
-<li><code><a title="phc.easy.util.update_progress" href="#phc.easy.util.update_progress">update_progress</a></code></li>
+<li><code><a title="phc.easy.util.rename_keys" href="#phc.easy.util.rename_keys">rename_keys</a></code></li>
+<li><code><a title="phc.easy.util.split_by" href="#phc.easy.util.split_by">split_by</a></code></li>
 <li><code><a title="phc.easy.util.with_progress" href="#phc.easy.util.with_progress">with_progress</a></code></li>
 <li><code><a title="phc.easy.util.without_keys" href="#phc.easy.util.without_keys">without_keys</a></code></li>
 </ul>

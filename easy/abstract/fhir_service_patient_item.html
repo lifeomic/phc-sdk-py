@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
-<title>phc.easy.patient_item API documentation</title>
+<title>phc.easy.abstract.fhir_service_patient_item API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -20,7 +20,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>phc.easy.patient_item</code></h1>
+<h1 class="title">Module <code>phc.easy.abstract.fhir_service_patient_item</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -32,11 +32,11 @@
 import pandas as pd
 
 from phc.easy.auth import Auth
-from phc.easy.item import Item
+from phc.easy.abstract.fhir_service_item import FhirServiceItem
 from phc.easy.query import Query
 
 
-class PatientItem(Item):
+class FhirServicePatientItem(FhirServiceItem):
     &#34;&#34;&#34;Provides an abstract class and/or static methods for retrieving items
     from a FSS table that relates to a patient
     &#34;&#34;&#34;
@@ -198,8 +198,8 @@ class PatientItem(Item):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="phc.easy.patient_item.PatientItem"><code class="flex name class">
-<span>class <span class="ident">PatientItem</span></span>
+<dt id="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem"><code class="flex name class">
+<span>class <span class="ident">FhirServicePatientItem</span></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Provides an abstract class and/or static methods for retrieving items
@@ -208,7 +208,7 @@ from a FSS table that relates to a patient</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class PatientItem(Item):
+<pre><code class="python">class FhirServicePatientItem(FhirServiceItem):
     &#34;&#34;&#34;Provides an abstract class and/or static methods for retrieving items
     from a FSS table that relates to a patient
     &#34;&#34;&#34;
@@ -362,77 +362,77 @@ from a FSS table that relates to a patient</p></div>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></li>
+<li><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></li>
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
-<li><a title="phc.easy.audit_event.AuditEvent" href="audit_event.html#phc.easy.audit_event.AuditEvent">AuditEvent</a></li>
-<li><a title="phc.easy.care_plan.CarePlan" href="care_plan.html#phc.easy.care_plan.CarePlan">CarePlan</a></li>
-<li><a title="phc.easy.condition.Condition" href="condition.html#phc.easy.condition.Condition">Condition</a></li>
-<li><a title="phc.easy.consent.Consent" href="consent.html#phc.easy.consent.Consent">Consent</a></li>
-<li><a title="phc.easy.diagnostic_report.DiagnosticReport" href="diagnostic_report.html#phc.easy.diagnostic_report.DiagnosticReport">DiagnosticReport</a></li>
-<li><a title="phc.easy.document_reference.DocumentReference" href="document_reference.html#phc.easy.document_reference.DocumentReference">DocumentReference</a></li>
-<li><a title="phc.easy.encounter.Encounter" href="encounter.html#phc.easy.encounter.Encounter">Encounter</a></li>
-<li><a title="phc.easy.goal.Goal" href="goal.html#phc.easy.goal.Goal">Goal</a></li>
-<li><a title="phc.easy.imaging_study.ImagingStudy" href="imaging_study.html#phc.easy.imaging_study.ImagingStudy">ImagingStudy</a></li>
-<li><a title="phc.easy.immunization.Immunization" href="immunization.html#phc.easy.immunization.Immunization">Immunization</a></li>
-<li><a title="phc.easy.media.Media" href="media.html#phc.easy.media.Media">Media</a></li>
-<li><a title="phc.easy.medication_administration.MedicationAdministration" href="medication_administration.html#phc.easy.medication_administration.MedicationAdministration">MedicationAdministration</a></li>
-<li><a title="phc.easy.medication_dispense.MedicationDispense" href="medication_dispense.html#phc.easy.medication_dispense.MedicationDispense">MedicationDispense</a></li>
-<li><a title="phc.easy.medication_request.MedicationRequest" href="medication_request.html#phc.easy.medication_request.MedicationRequest">MedicationRequest</a></li>
-<li><a title="phc.easy.medication_statement.MedicationStatement" href="medication_statement.html#phc.easy.medication_statement.MedicationStatement">MedicationStatement</a></li>
-<li><a title="phc.easy.observation.Observation" href="observation.html#phc.easy.observation.Observation">Observation</a></li>
-<li><a title="phc.easy.person.Person" href="person.html#phc.easy.person.Person">Person</a></li>
-<li><a title="phc.easy.procedure.Procedure" href="procedure.html#phc.easy.procedure.Procedure">Procedure</a></li>
-<li><a title="phc.easy.procedure_request.ProcedureRequest" href="procedure_request.html#phc.easy.procedure_request.ProcedureRequest">ProcedureRequest</a></li>
-<li><a title="phc.easy.provenance.Provenance" href="provenance.html#phc.easy.provenance.Provenance">Provenance</a></li>
-<li><a title="phc.easy.referral_request.ReferralRequest" href="referral_request.html#phc.easy.referral_request.ReferralRequest">ReferralRequest</a></li>
-<li><a title="phc.easy.sequence.Sequence" href="sequence.html#phc.easy.sequence.Sequence">Sequence</a></li>
-<li><a title="phc.easy.specimen.Specimen" href="specimen.html#phc.easy.specimen.Specimen">Specimen</a></li>
+<li><a title="phc.easy.audit_event.AuditEvent" href="../audit_event.html#phc.easy.audit_event.AuditEvent">AuditEvent</a></li>
+<li><a title="phc.easy.care_plan.CarePlan" href="../care_plan.html#phc.easy.care_plan.CarePlan">CarePlan</a></li>
+<li><a title="phc.easy.condition.Condition" href="../condition.html#phc.easy.condition.Condition">Condition</a></li>
+<li><a title="phc.easy.consent.Consent" href="../consent.html#phc.easy.consent.Consent">Consent</a></li>
+<li><a title="phc.easy.diagnostic_report.DiagnosticReport" href="../diagnostic_report.html#phc.easy.diagnostic_report.DiagnosticReport">DiagnosticReport</a></li>
+<li><a title="phc.easy.document_reference.DocumentReference" href="../document_reference.html#phc.easy.document_reference.DocumentReference">DocumentReference</a></li>
+<li><a title="phc.easy.encounter.Encounter" href="../encounter.html#phc.easy.encounter.Encounter">Encounter</a></li>
+<li><a title="phc.easy.goal.Goal" href="../goal.html#phc.easy.goal.Goal">Goal</a></li>
+<li><a title="phc.easy.imaging_study.ImagingStudy" href="../imaging_study.html#phc.easy.imaging_study.ImagingStudy">ImagingStudy</a></li>
+<li><a title="phc.easy.immunization.Immunization" href="../immunization.html#phc.easy.immunization.Immunization">Immunization</a></li>
+<li><a title="phc.easy.media.Media" href="../media.html#phc.easy.media.Media">Media</a></li>
+<li><a title="phc.easy.medication_administration.MedicationAdministration" href="../medication_administration.html#phc.easy.medication_administration.MedicationAdministration">MedicationAdministration</a></li>
+<li><a title="phc.easy.medication_dispense.MedicationDispense" href="../medication_dispense.html#phc.easy.medication_dispense.MedicationDispense">MedicationDispense</a></li>
+<li><a title="phc.easy.medication_request.MedicationRequest" href="../medication_request.html#phc.easy.medication_request.MedicationRequest">MedicationRequest</a></li>
+<li><a title="phc.easy.medication_statement.MedicationStatement" href="../medication_statement.html#phc.easy.medication_statement.MedicationStatement">MedicationStatement</a></li>
+<li><a title="phc.easy.observation.Observation" href="../observation.html#phc.easy.observation.Observation">Observation</a></li>
+<li><a title="phc.easy.person.Person" href="../person.html#phc.easy.person.Person">Person</a></li>
+<li><a title="phc.easy.procedure.Procedure" href="../procedure.html#phc.easy.procedure.Procedure">Procedure</a></li>
+<li><a title="phc.easy.procedure_request.ProcedureRequest" href="../procedure_request.html#phc.easy.procedure_request.ProcedureRequest">ProcedureRequest</a></li>
+<li><a title="phc.easy.provenance.Provenance" href="../provenance.html#phc.easy.provenance.Provenance">Provenance</a></li>
+<li><a title="phc.easy.referral_request.ReferralRequest" href="../referral_request.html#phc.easy.referral_request.ReferralRequest">ReferralRequest</a></li>
+<li><a title="phc.easy.sequence.Sequence" href="../sequence.html#phc.easy.sequence.Sequence">Sequence</a></li>
+<li><a title="phc.easy.specimen.Specimen" href="../specimen.html#phc.easy.specimen.Specimen">Specimen</a></li>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="phc.easy.patient_item.PatientItem.code_fields"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.code_fields"><code class="name flex">
 <span>def <span class="ident">code_fields</span></span>(<span>) ‑> List[str]</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.code_fields" href="item.html#phc.easy.item.Item.code_fields">code_fields</a></code>
+<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.code_fields" href="fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem.code_fields">code_fields</a></code>
 </p>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 </dd>
-<dt id="phc.easy.patient_item.PatientItem.get_codes"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_codes"><code class="name flex">
 <span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.get_codes" href="item.html#phc.easy.item.Item.get_codes">get_codes</a></code>
+<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_codes" href="fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem.get_codes">get_codes</a></code>
 </p>
 <div class="desc inherited"><p>Find all codes …</p></div>
 </dd>
-<dt id="phc.easy.patient_item.PatientItem.get_count"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count"><code class="name flex">
 <span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.get_count" href="item.html#phc.easy.item.Item.get_count">get_count</a></code>
+<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count" href="fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count">get_count</a></code>
 </p>
 <div class="desc inherited"><p>Get the count for a given FSS query</p></div>
 </dd>
-<dt id="phc.easy.patient_item.PatientItem.get_count_by_field"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_field"><code class="name flex">
 <span>def <span class="ident">get_count_by_field</span></span>(<span>field: str, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.get_count_by_field" href="item.html#phc.easy.item.Item.get_count_by_field">get_count_by_field</a></code>
+<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count_by_field" href="fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem.get_count_by_field">get_count_by_field</a></code>
 </p>
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
-<dt id="phc.easy.patient_item.PatientItem.get_count_by_patient"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_patient"><code class="name flex">
 <span>def <span class="ident">get_count_by_patient</span></span>(<span>**kwargs)</span>
 </code></dt>
 <dd>
@@ -475,7 +475,7 @@ def get_count_by_patient(cls, **kwargs):
     return df.groupby(patient_key).sum()</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.patient_item.PatientItem.get_data_frame"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_data_frame"><code class="name flex">
 <span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
@@ -643,7 +643,7 @@ def get_data_frame(
     )</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.patient_item.PatientItem.patient_id_prefixes"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.patient_id_prefixes"><code class="name flex">
 <span>def <span class="ident">patient_id_prefixes</span></span>(<span>) ‑> List[str]</span>
 </code></dt>
 <dd>
@@ -657,7 +657,7 @@ def patient_id_prefixes() -&gt; List[str]:
     return [&#34;Patient/&#34;]</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.patient_item.PatientItem.patient_key"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.patient_key"><code class="name flex">
 <span>def <span class="ident">patient_key</span></span>(<span>) ‑> str</span>
 </code></dt>
 <dd>
@@ -671,23 +671,23 @@ def patient_key() -&gt; str:
     return &#34;subject.reference&#34;</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.patient_item.PatientItem.table_name"><code class="name flex">
+<dt id="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.table_name"><code class="name flex">
 <span>def <span class="ident">table_name</span></span>(<span>) ‑> str</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.table_name" href="item.html#phc.easy.item.Item.table_name">table_name</a></code>
+<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.table_name" href="fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem.table_name">table_name</a></code>
 </p>
 <div class="desc inherited"><p>Returns the FSS table name for retrieval</p></div>
 </dd>
-<dt id="phc.easy.patient_item.PatientItem.transform_results"><code class="name flex">
-<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+<dt id="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **_expand_args)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.item.Item" href="item.html#phc.easy.item.Item">Item</a></code>.<code><a title="phc.easy.item.Item.transform_results" href="item.html#phc.easy.item.Item.transform_results">transform_results</a></code>
+<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem.transform_results" href="fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem.transform_results">transform_results</a></code>
 </p>
 <div class="desc inherited"><p>Transform data frame batch</p></div>
 </dd>
@@ -709,24 +709,24 @@ def patient_key() -&gt; str:
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="phc.easy" href="index.html">phc.easy</a></code></li>
+<li><code><a title="phc.easy.abstract" href="index.html">phc.easy.abstract</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="phc.easy.patient_item.PatientItem" href="#phc.easy.patient_item.PatientItem">PatientItem</a></code></h4>
+<h4><code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.patient_item.PatientItem.code_fields" href="item.html#phc.easy.patient_item.PatientItem.code_fields">code_fields</a></code></li>
-<li><code><a title="phc.easy.patient_item.PatientItem.get_codes" href="item.html#phc.easy.patient_item.PatientItem.get_codes">get_codes</a></code></li>
-<li><code><a title="phc.easy.patient_item.PatientItem.get_count" href="item.html#phc.easy.patient_item.PatientItem.get_count">get_count</a></code></li>
-<li><code><a title="phc.easy.patient_item.PatientItem.get_count_by_field" href="item.html#phc.easy.patient_item.PatientItem.get_count_by_field">get_count_by_field</a></code></li>
-<li><code><a title="phc.easy.patient_item.PatientItem.get_count_by_patient" href="#phc.easy.patient_item.PatientItem.get_count_by_patient">get_count_by_patient</a></code></li>
-<li><code><a title="phc.easy.patient_item.PatientItem.get_data_frame" href="#phc.easy.patient_item.PatientItem.get_data_frame">get_data_frame</a></code></li>
-<li><code><a title="phc.easy.patient_item.PatientItem.patient_id_prefixes" href="#phc.easy.patient_item.PatientItem.patient_id_prefixes">patient_id_prefixes</a></code></li>
-<li><code><a title="phc.easy.patient_item.PatientItem.patient_key" href="#phc.easy.patient_item.PatientItem.patient_key">patient_key</a></code></li>
-<li><code><a title="phc.easy.patient_item.PatientItem.table_name" href="item.html#phc.easy.patient_item.PatientItem.table_name">table_name</a></code></li>
-<li><code><a title="phc.easy.patient_item.PatientItem.transform_results" href="item.html#phc.easy.patient_item.PatientItem.transform_results">transform_results</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.code_fields" href="fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.code_fields">code_fields</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_codes" href="fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_codes">get_codes</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count" href="fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_field" href="fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_field">get_count_by_field</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_patient" href="#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_patient">get_count_by_patient</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_data_frame" href="#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.patient_id_prefixes" href="#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.patient_id_prefixes">patient_id_prefixes</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.patient_key" href="#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.patient_key">patient_key</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.table_name" href="fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.table_name">table_name</a></code></li>
+<li><code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.transform_results" href="fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.transform_results">transform_results</a></code></li>
 </ul>
 </li>
 </ul>
