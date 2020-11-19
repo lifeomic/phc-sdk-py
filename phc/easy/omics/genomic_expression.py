@@ -56,6 +56,7 @@ class GenomicExpression(GenomicVariant):
         expression: Optional[str] = None,
         outlier_std_dev: str = None,
         in_ckb: Optional[bool] = None,
+        order_by: Optional[str] = None,
         # Execution parameters,
         all_results: bool = False,
         auth_args: Auth = Auth.shared(),

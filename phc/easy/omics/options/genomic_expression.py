@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Union
 from pydantic import Field, constr
 
 from phc.easy.abstract.paging_api_item import PagingApiOptions
@@ -9,10 +9,13 @@ EXPRESSION = constr(
     regex=r"^(\d+(\.\d+)?\-\d+(\.\d+)?|[\>\<]\=\s?\d+(\.\d+)?|\d+(\.\d+)?:(lte|gte))$"
 )
 
+ORDER_BY = constr(regex=r"^expression(:desc)?$")
+
 MAPPINGS = {
     "variant_set_ids": "rnaQuantificationSetIds",
     "outlier_std_dev": "outlierStdDev",
     "in_ckb": "drugAssociations",
+    "order_by": "orderBy",
 }
 
 
@@ -26,8 +29,10 @@ class GenomicExpressionOptions(PagingApiOptions):
     include: List[GenomicVariantInclude] = []
     gene: List[str] = []
     expression: Optional[EXPRESSION] = None
-    outlier_std_dev: Optional[str] = None
+    order_by: Optional[ORDER_BY] = None
     in_ckb: Optional[bool] = None
+    # TODO: Fill out allowed options for this parameter
+    outlier_std_dev: Optional[str] = None
 
     @staticmethod
     def transform(key, value):
