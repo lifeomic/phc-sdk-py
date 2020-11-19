@@ -106,7 +106,7 @@ class GenomicVariant(PagingApiItem):
             max_pages or (not all_results and page_size)
         ):
             print(
-                "[WARNING]: All result limit paramters are approximate when performing genomic data retrieval."
+                "[WARNING]: All result limit parameters are approximate when performing genomic data retrieval."
             )
 
         get_data_frame = super().get_data_frame
