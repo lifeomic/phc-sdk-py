@@ -1,12 +1,23 @@
+from nose.tools import assert_equals
 from phc.easy.util.api_cache import APICache, FHIR_DSL
 
 
 def test_filename_for_genomics_api_call():
     filename = APICache.filename_for_query(
-        {"path": "genomics/projects/dfkjkjsa-dkj2kd1-kjdkj-1dkj2/tests"}
+        {
+            "path": f"genomics/projects/0dbe33af-022a-4416-aca9-d468e99648ee/tests"
+        }
     )
 
-    assert filename == "genomics_projects_tests_04b0739f.csv"
+    assert_equals(filename, "genomics_projects_tests_2f4d9e60.csv")
+
+
+def test_filename_for_structural_variant_call():
+    filename = APICache.filename_for_query(
+        {"path": "genomics/structural-variants"}
+    )
+
+    assert_equals(filename, "genomics_structural_variants_769987ca.csv")
 
 
 def test_filename_for_query_with_simple_statement():
