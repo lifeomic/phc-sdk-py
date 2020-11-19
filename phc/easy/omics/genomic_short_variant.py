@@ -10,6 +10,7 @@ from phc.easy.omics.options.chromosome import Chromosome
 from phc.easy.omics.options.clinvar_significance import ClinVarSignificance
 from phc.easy.omics.options.clinvar_review import ClinVarReview
 from phc.easy.omics.options.gene_class import GeneClass
+from phc.easy.omics.options.zygosity import Zygosity
 from phc.easy.omics.options.genomic_test import (
     GenomicTestStatus,
     GenomicTestType,
@@ -107,7 +108,7 @@ class GenomicShortVariant(GenomicVariant):
         dbnsfp_mutationtaster_pred: List[str] = [],
         dbnsfp_sift_rankscore: List[str] = [],
         dbnsfp_sift_pred: List[str] = [],
-        zygosity: List[str] = [],
+        zygosity: List[Zygosity] = [],
         genotype: List[str] = [],
         variant_allele_frequency: List[str] = [],
         quality: List[str] = [],

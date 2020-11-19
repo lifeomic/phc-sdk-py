@@ -3,6 +3,7 @@ from phc.easy.omics.options.chromosome import Chromosome
 from phc.easy.omics.options.clinvar_significance import ClinVarSignificance
 from phc.easy.omics.options.clinvar_review import ClinVarReview
 from phc.easy.omics.options.gene_class import GeneClass
+from phc.easy.omics.options.zygosity import Zygosity
 from phc.easy.omics.options.common import GenomicVariantInclude
 from phc.easy.omics.options.genomic_copy_number_variant import (
     GenomicCopyNumberVariantOptions,
@@ -29,3 +30,4 @@ class Option:
     ClinVarSignificance = ClinVarSignificance
     ClinVarReview = ClinVarReview
     GeneClass = GeneClass
+    Zygosity = Zygosity

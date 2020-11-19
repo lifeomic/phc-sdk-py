@@ -6,10 +6,12 @@ from phc.easy.omics.options.chromosome import Chromosome
 from phc.easy.omics.options.clinvar_significance import ClinVarSignificance
 from phc.easy.omics.options.clinvar_review import ClinVarReview
 from phc.easy.omics.options.gene_class import GeneClass
+from phc.easy.omics.options.zygosity import Zygosity
 from phc.easy.omics.options.common import GenomicVariantInclude
 from phc.easy.abstract.paging_api_item import PagingApiOptions
 from pydantic import Field, constr
 
+RS_ID = r"^rs(\d+)$"
 NUM_DECIMAL_RANGE = constr(regex=r"^\d+(\.\d+)?\-\d+(\.\d+)?$")
 NUM_RANGE = constr(regex=r"^(\d+\-\d+|\d+)$")
 
@@ -63,10 +65,16 @@ class GenomicShortVariantOptions(PagingApiOptions):
     See https://docs.us.lifeomic.com/api/#query-short-variant-data
     """
 
+    # TODO: Add remaining options from Omics Explorer in PHC
+    # - Variant Quality
+    # - Variant Allele Freq
+    # - Combined In Silico Prediction
+    # - Individual In Silico Predictors
+
     variant_set_ids: List[str] = Field(..., min_items=1)
     include: List[GenomicVariantInclude] = ["vcf"]
     gene: List[str] = []
-    rs_id: List[constr(regex=r"^rs(\d+)$")] = []
+    rs_id: List[constr(regex=RS_ID)] = []
     chromosome: List[Chromosome] = []
     clinvar_allele_id: List[str] = []
     clinvar_disease: List[str] = []
@@ -101,7 +109,7 @@ class GenomicShortVariantOptions(PagingApiOptions):
     dbnsfp_mutationtaster_pred: List[str] = []
     dbnsfp_sift_rankscore: List[str] = []
     dbnsfp_sift_pred: List[str] = []
-    zygosity: List[str] = []
+    zygosity: List[Zygosity] = []
     genotype: List[str] = []
     variant_allele_frequency: List[str] = []
     quality: List[str] = []
