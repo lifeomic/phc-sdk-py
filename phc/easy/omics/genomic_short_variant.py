@@ -9,6 +9,7 @@ from phc.easy.omics.options.coding_effect import CodingEffect
 from phc.easy.omics.options.chromosome import Chromosome
 from phc.easy.omics.options.clinvar_significance import ClinVarSignificance
 from phc.easy.omics.options.clinvar_review import ClinVarReview
+from phc.easy.omics.options.gene_class import GeneClass
 from phc.easy.omics.options.genomic_test import (
     GenomicTestStatus,
     GenomicTestType,
@@ -85,7 +86,7 @@ class GenomicShortVariant(GenomicVariant):
         coding_effect: List[CodingEffect] = [],
         impact: List[str] = [],
         transcript_id: List[str] = [],
-        biotype: List[str] = [],
+        gene_class: List[GeneClass] = [],
         protein_changes: List[str] = [],
         sequence_type: List[str] = [],
         position: List[Union[str, int]] = [],

@@ -5,6 +5,7 @@ from phc.easy.omics.options.coding_effect import CodingEffect
 from phc.easy.omics.options.chromosome import Chromosome
 from phc.easy.omics.options.clinvar_significance import ClinVarSignificance
 from phc.easy.omics.options.clinvar_review import ClinVarReview
+from phc.easy.omics.options.gene_class import GeneClass
 from phc.easy.omics.options.common import GenomicVariantInclude
 from phc.easy.abstract.paging_api_item import PagingApiOptions
 from pydantic import Field, constr
@@ -26,6 +27,7 @@ MAPPINGS = {
     "coding_effect": "group",
     "variant_class": "class",
     "transcript_id": "transcriptId",
+    "gene_class": "biotype",
     "protein_changes": "aminoAcidChange",
     "sequence_type": "sequenceType",
     # Used cosmic_min_count instead to match PHC interface
@@ -78,7 +80,7 @@ class GenomicShortVariantOptions(PagingApiOptions):
     coding_effect: List[CodingEffect] = []
     impact: List[str] = []
     transcript_id: List[str] = []
-    biotype: List[str] = []
+    gene_class: List[GeneClass] = []
     protein_changes: List[str] = []
     sequence_type: List[str] = []
     position: List[Union[int, NUM_RANGE]] = []
