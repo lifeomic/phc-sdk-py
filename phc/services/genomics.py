@@ -259,6 +259,26 @@ class Genomics(BaseClient):
             http_verb="GET",
         )
 
+    def get_test(self, project_id: str, test_id: str) -> ApiResponse:
+        """Get test by project and test id
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID
+        test_id : str
+            The Test ID
+
+        Returns
+        -------
+        ApiResponse
+            The get test response
+        """
+        return self._api_call(
+            f"genomics/projects/{project_id}/tests/{test_id}",
+            http_verb="GET",
+        )
+
     def delete_test(self, project_id: str, test_id: str) -> bool:
         """Delete a genomic test
 

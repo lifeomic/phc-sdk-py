@@ -392,7 +392,7 @@ class Analytics(BaseClient):
                 f"Timed out waiting for result file {query_id} to become available"
             )
 
-        download_path = files_client.download(query_id)
+        download_path = files_client.download(query_id, dest_dir=dest_dir)
         return _pd.read_csv(download_path)
 
     def __data_lake_query_predicate(self, analytics_client, query_id):
