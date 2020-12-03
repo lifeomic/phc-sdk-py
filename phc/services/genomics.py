@@ -272,7 +272,7 @@ class Genomics(BaseClient):
         Returns
         -------
         ApiResponse
-            The list tests response
+            The get test response
         """
         return self._api_call(
             f"genomics/projects/{project_id}/tests/{test_id}",
