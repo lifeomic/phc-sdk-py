@@ -52,6 +52,8 @@ class FhirServiceItem:
         ignore_cache: bool = False,
         expand_args: dict = {},
         log: bool = False,
+        id: Optional[str] = None,
+        ids: List[str] = [],
         # Codes
         code: Optional[Union[str, List[str]]] = None,
         display: Optional[Union[str, List[str]]] = None,
@@ -90,6 +92,12 @@ class FhirServiceItem:
 
         log : bool = False
             Whether to log some diagnostic statements for debugging
+
+        id : None or str = None
+            Find records for a given id
+
+        ids : List[str]
+            Find records for given ids
 
         code : str | List[str]
             Adds where clause for code value(s)
@@ -140,6 +148,8 @@ class FhirServiceItem:
             code=code,
             display=display,
             system=system,
+            id=id,
+            ids=ids,
         )
 
     @classmethod

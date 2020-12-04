@@ -69,6 +69,15 @@ def and_query_clause(query: dict, query_clause: dict):
     raise ValueError("Could not add clause to query", query_clause, query)
 
 
+def _ids_adder(id: Union[str, None] = None, ids: List[str] = []):
+    ids = [*ids, *([id] if id else [])]
+
+    if len(ids) == 0:
+        return identity
+
+    return lambda query: and_query_clause(query, {"terms": {"id.keyword": ids}})
+
+
 def _patient_ids_adder(
     patient_id: Union[str, None] = None,
     patient_ids: List[str] = [],
@@ -132,6 +141,8 @@ def _limit_adder(page_size: Union[int, None]):
 
 def build_query(
     query: dict,
+    id: Optional[str] = None,
+    ids: List[str] = [],
     patient_id: Optional[str] = None,
     patient_ids: List[str] = [],
     patient_key: str = "subject.reference",
@@ -150,6 +161,13 @@ def build_query(
     ----------
     query : dict
         The base FSS query
+
+    id : str
+        Adds where clause for a single id (will be merged with
+        ids if both supplied)
+
+    ids : List[str]
+        Adds where clause for multiple ids
 
     patient_id : str
         Adds where clause for a single patient (will be merged with
@@ -187,6 +205,7 @@ def build_query(
 
     return pipe(
         query,
+        _ids_adder(id=id, ids=ids),
         _patient_ids_adder(
             patient_id=patient_id,
             patient_ids=patient_ids,
