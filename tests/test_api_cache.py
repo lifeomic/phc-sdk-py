@@ -1,3 +1,4 @@
+from io import StringIO
 from nose.tools import assert_equals
 from phc.easy.util.api_cache import APICache, FHIR_DSL
 
@@ -108,3 +109,22 @@ def test_filename_for_query_with_aggregation():
     )
 
     assert filename == "fhir_dsl_goal_agg_where_58a8bb32.json"
+
+
+def test_reading_cache_file_with_invalid_date_does_not_raise():
+    sample_file = StringIO()
+    sample_file.write(
+        "\n".join(
+            [
+                "date,name",
+                "2020-01-01T00:00:00Z,A",
+                "2020-01-02T00:00:00Z,B",
+                "2020-01-03T00:00:00Z,C",
+                "2020-01-04T00:00:00Z,D",
+                "217-06-07T00:00:00Z,E",
+            ]
+        )
+    )
+    sample_file.seek(0)
+
+    APICache.read_csv(sample_file)
