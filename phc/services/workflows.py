@@ -1,8 +1,9 @@
-"""A Python Module for Files"""
+"""A Python Module for Workflows"""
 
 import os
 import math
 import backoff
+from typing import Optional
 from phc.base_client import BaseClient
 from phc import ApiResponse
 from urllib.parse import urlencode
@@ -30,9 +31,9 @@ class Workflows(BaseClient):
         project_id: str,
         name: str,
         tool: str,
-        workflow_inputs: str = None,
-        workflow_inputs_file_id: str = None,
-        output_project_folder: str = None,
+        workflow_inputs: Optional[str] = None,
+        workflow_inputs_file_id: Optional[str] = None,
+        output_project_folder: Optional[str] = None,
     ) -> ApiResponse:
         """Create a tool.
 
@@ -110,26 +111,43 @@ class Workflows(BaseClient):
             http_verb="GET",
         )
 
-    def get_list(self, project_id: str) -> ApiResponse:
+    def get_list(
+        self,
+        project_id: str,
+        page_size: Optional[int] = 100,
+        next_page_token: Optional[str] = None,
+    ) -> ApiResponse:
         """Fetch a list of workflows run in the specified project
 
         Parameters
         ----------
         project_id: str
             The project ID
+        page_size : int, optional
+            The page size, by default 100
+        next_page_token : str, optional
+            The next page token, by default None
 
         Returns
         -------
         phc.ApiResponse
             The list workflow run response
         """
+        query_dict = {
+            "datasetId": project_id,
+        }
+        if page_size:
+            query_dict["pageSize"] = page_size
+        if next_page_token:
+            query_dict["nextPageToken"] = next_page_token
+
         return self._api_call(
-            f"/v1/workflows/ga4gh/wes/runs?datasetId={project_id}",
+            f"/v1/workflows/ga4gh/wes/runs?{urlencode(query_dict)}",
             http_verb="GET",
         )
 
     def describe(self, project_id: str, tool: str) -> ApiResponse:
-        """Fetch a list of workflows run in the specified project
+        """Returns a description of the inputs the workflow engine requires for the given tool
 
         Parameters
         ----------

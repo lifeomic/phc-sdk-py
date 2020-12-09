@@ -1,13 +1,37 @@
-"""A Python Module for Files"""
+"""A Python Module for Tools"""
 
 import os
 import math
 import backoff
+from enum import Enum
+
+from typing import List, Optional
 from phc.base_client import BaseClient
 from phc import ApiResponse
 from urllib.parse import urlencode
 from urllib.request import urlretrieve
 from phc.errors import ApiError
+
+
+class ToolClass(str, Enum):
+    Workflow = "Workflow"
+    Notebook = "Notebook"
+
+
+class ToolAccess(str, Enum):
+    PRIVATE = "PRIVATE"
+    ACCOUNT = "ACCOUNT"
+    PHC = "PHC"
+    PUBLIC = "PUBLIC"
+
+
+ToolClassIdMappings = {ToolClass.Workflow: "1", ToolClass.Notebook: "10"}
+
+
+DescriptorTypeMappings = {
+    ToolClass.Workflow: "CWL",
+    ToolClass.Notebook: "NOTEBOOK",
+}
 
 
 class Tools(BaseClient):
@@ -29,11 +53,11 @@ class Tools(BaseClient):
         self,
         name: str,
         description: str,
-        access: str,
+        access: ToolAccess,
         version: str,
-        tool_class: str,
+        tool_class: ToolClass,
         source: str,
-        labels: str = None,
+        labels: Optional[List[str]] = None,
     ) -> ApiResponse:
         """Create a tool.
 
@@ -43,16 +67,16 @@ class Tools(BaseClient):
             The name to give to the tool
         description: str
             A description of the tool
-        access: str
+        access: ToolAccess
             The access level given to the tool [PRIVATE, ACCOUNT, PHC, PUBLIC]
         version: str
             The initial version of the tool
-        tool_class: str
+        tool_class: ToolClass
             The class of the tool [Workflow, Notebook]
         source: str
             The path of the tool to upload
-        labels: str, optional
-            A comma delimted list of labels to apply to the tool, i.e. 'bam,samtools'
+        labels: List[str], optional
+            A list of labels to apply to the tool, i.e. ["bam","samtools"]
 
         Returns
         -------
@@ -64,18 +88,28 @@ class Tools(BaseClient):
         >>> from phc.services import Tools
         >>> tools = Tools(session)
         >>> tools.create(name="Read Depth Notebook", description="Generates a chart of positional read depth from a bam file",
-              access="PHC", version="1.0.0", tool_class="Notebook", source="./mynotebook.ipynb", labels="bam,samtools")
+              access="PHC", version="1.0.0", tool_class="Notebook", source="./mynotebook.ipynb", labels=["bam","samtools]")
         """
+        if not hasattr(ToolClass, tool_class):
+            raise ValueError(
+                f"{tool_class} is not a valid Tool Class value {[e.value for e in ToolClass]}"
+            )
+
+        if not hasattr(ToolAccess, access):
+            raise ValueError(
+                f"{access} is not a valid Tool Class value {[e.value for e in ToolAccess]}"
+            )
+
         create_request = {
             "version": version,
             "access": access,
             "name": name,
-            "toolClassId": "1" if tool_class == "Workflow" else "10",
-            "descriptorType": "CWL" if tool_class == "Workflow" else "NOTEBOOK",
+            "toolClassId": ToolClassIdMappings[tool_class],
+            "descriptorType": DescriptorTypeMappings[tool_class],
             "description": description,
         }
         if labels:
-            create_request["labels"] = labels.split(",")
+            create_request["labels"] = labels
 
         res = self._api_call(
             "/v1/trs/v2/tools", json=create_request, http_verb="POST"
@@ -109,7 +143,10 @@ class Tools(BaseClient):
         backoff.expo, OSError, max_tries=6, jitter=backoff.full_jitter
     )
     def download(
-        self, tool_id: str, version: str = None, dest_dir: str = os.getcwd()
+        self,
+        tool_id: str,
+        version: Optional[str] = None,
+        dest_dir: Optional[str] = os.getcwd(),
     ) -> None:
         """Download a tool
 
@@ -139,7 +176,7 @@ class Tools(BaseClient):
         urlretrieve(res.get("downloadUrl"), file_path)
         return file_path
 
-    def get(self, tool_id: str, version: str = None) -> ApiResponse:
+    def get(self, tool_id: str, version: Optional[str] = None) -> ApiResponse:
         """Fetch a tool by id
 
         Parameters
@@ -158,7 +195,11 @@ class Tools(BaseClient):
         return self._api_call(f"/v1/trs/v2/tools/{id}", http_verb="GET")
 
     def add_version(
-        self, tool_id: str, version: str, source: str, is_default: bool = False
+        self,
+        tool_id: str,
+        version: str,
+        source: str,
+        is_default: Optional[bool] = False,
     ) -> ApiResponse:
         """Adds a new version to a tool.
 
@@ -212,7 +253,7 @@ class Tools(BaseClient):
         )
         return res
 
-    def delete(self, tool_id: str, version: str = None) -> bool:
+    def delete(self, tool_id: str, version: Optional[str] = None) -> bool:
         """Deletes a tool
 
         Parameters
@@ -237,11 +278,13 @@ class Tools(BaseClient):
 
     def get_list(
         self,
-        tool_class: str = None,
-        organization: str = None,
-        tool_name: str = None,
-        author: str = None,
-        labels: str = None,
+        tool_class: Optional[ToolClass] = None,
+        organization: Optional[str] = None,
+        tool_name: Optional[str] = None,
+        author: Optional[str] = None,
+        labels: Optional[List[str]] = None,
+        page_size: Optional[int] = 1000,
+        page_count: Optional[int] = 0,
     ) -> ApiResponse:
         """Fetch a list of tools from the registry
 
@@ -255,16 +298,27 @@ class Tools(BaseClient):
             The name of the tool, by default None
         author: str, optional
             The creator of the tool, by default None
-        label: str, optional
-            A comma delimted list of labels describing the tool, by default None
+        labels: List[str], optional
+            A list of labels describing the tool, by default None
+        page_size: int, optional
+            The count of tools to return in a single request, by default 1000
+        page_count: int, optional
+            The page count to return, by default 0
 
         Returns
         -------
         phc.ApiResponse
             The list files response
         """
-        query_dict = {}
+        query_dict = {
+            "limit": page_size,
+            "offset": page_count,
+        }
         if tool_class:
+            if not hasattr(ToolClass, tool_class):
+                raise ValueError(
+                    f"{tool_class} is not a valid Tool Class value {[e.value for e in ToolClass]}"
+                )
             query_dict["toolClass"] = tool_class
         if organization:
             query_dict["organization"] = organization
@@ -273,7 +327,7 @@ class Tools(BaseClient):
         if author:
             query_dict["author"] = author
         if labels:
-            query_dict["label"] = labels
+            query_dict["label"] = ",".join(labels)
 
         return self._api_call(
             f"/v1/trs/v2/tools?{urlencode(query_dict)}",
