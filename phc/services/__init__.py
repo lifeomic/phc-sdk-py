@@ -9,6 +9,8 @@ from phc.services.projects import Projects
 from phc.services.files import Files
 from phc.services.cohorts import Cohorts
 from phc.services.genomics import Genomics
+from phc.services.tools import Tools
+from phc.services.workflows import Workflows
 
 
 __all__ = [
@@ -19,6 +21,8 @@ __all__ = [
     "Files",
     "Cohorts",
     "Genomics",
+    "Tools",
+    "Workflows",
 ]
 
 __pdoc__ = {
@@ -29,4 +33,6 @@ __pdoc__ = {
     "files": False,
     "cohorts": False,
     "genomics": False,
+    "tools": False,
+    "workflows": False,
 }
