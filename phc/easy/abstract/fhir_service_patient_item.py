@@ -25,6 +25,8 @@ class FhirServicePatientItem(FhirServiceItem):
         cls,
         all_results: bool = False,
         raw: bool = False,
+        id: Optional[str] = None,
+        ids: List[str] = [],
         patient_id: Union[None, str] = None,
         patient_ids: List[str] = [],
         page_size: Union[int, None] = None,
@@ -50,6 +52,12 @@ class FhirServicePatientItem(FhirServiceItem):
         raw : bool = False
             If raw, then values will not be expanded (useful for manual
             inspection if something goes wrong)
+
+        id : None or str = None
+            Find records for a given id
+
+        ids : List[str]
+            Find records for given ids
 
         patient_id : None or str = None
             Find records for a given patient_id
@@ -120,6 +128,8 @@ class FhirServicePatientItem(FhirServiceItem):
             query_overrides,
             auth_args,
             ignore_cache,
+            id=id,
+            ids=ids,
             patient_id=patient_id,
             patient_ids=patient_ids,
             page_size=page_size,

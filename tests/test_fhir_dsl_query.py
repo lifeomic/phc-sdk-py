@@ -1,6 +1,6 @@
 import math
 
-from nose.tools import raises
+from nose.tools import raises, assert_equals
 
 from phc.easy.query.fhir_dsl_query import build_query, get_limit, update_limit
 
@@ -177,6 +177,24 @@ def test_add_patient_id_with_bool_should_query():
             },
         }
     }
+    
+def test_add_ids_to_query():
+    result = build_query({}, ids=["a", "b"], id="c")
+    
+    assert_equals(result, {
+        "where": {
+            "type": "elasticsearch",
+            "query": {
+                "terms": {
+                    "id.keyword": [
+                        "a",
+                        "b",
+                        "c"
+                    ]
+                }
+            }
+        }
+    })
 
 
 def test_add_single_patient_id_to_query():
