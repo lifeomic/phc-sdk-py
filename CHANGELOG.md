@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *(NOTE: All examples use fictious data or freely available data sets.)*
 
+## [0.21.0] - 2020-12-10
+
+### Added
+
+- `Tools` - A service to manager resources in the tool registry service
+  - `tools.create` - Adds a tool to the registry
+  - `tools.download` - Downloads a tool
+  - `tools.get` - Gets the default verson or a specific version of a tool
+  - `tools.add_version` - Adds a verson to an existing tool
+  - `tools.delete` - Deletes the tool or a specific version of a tool
+  - `tools.get_list` - Returns tools from the registry and allows for optional filters
+
+- `Workflows` - A service to manager workflows
+  - `workflows.run` - Runs a workflow using a provided tool from the registry
+  - `workflows.get` - Gets a workflow run
+  - `workflows.get_list` - Returns all workflows for a project
+  - `workflows.describe` - Returns a list of the inputs and types the workflow requires to run a tool
+
+- Added filtering by id for all `phc.easy` modules
+
+```python
+# By single ID
+phc.Patient.get_data_frame(id="<value>")
+
+# Or by multiple IDs
+phc.Observation.get_data_frame(ids=["<value1>", "<value2>"])
+```
+
+- Added getting all pages of results for `phc.Project`
+
+### Fixed
+
+- Genomics modules (`phc.easy`) now handle an out of range date via a warning (and auto-conversion to `NaT`)
+- Setting and retrieving projects now works properly again (Previously, projects were inaccurate or sometimes missing.)
+
 ## [0.20.0] - 2020-11-19
 
 ### Added
@@ -102,6 +137,7 @@ phc.GenomicShortVariant.get_data_frame(
     all_results=True
 )
 ```
+
 ## [0.19.0] - 2020-10-23
 
 ### Added
@@ -490,6 +526,7 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 - Added the `phc.services.Files` submodule that provides actions for files in PHC projects.
 - Added the `phc.services.Cohorts` submodule that provides actions for files in PHC cohorts.
 
+[0.21.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.20.0...v0.21.0
 [0.20.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.19.0...v0.20.0
 [0.19.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.18.1...v0.19.0
 [0.18.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.18.0...v0.18.1
