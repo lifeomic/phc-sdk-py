@@ -1,12 +1,16 @@
 from functools import reduce, partial
+from typing import Optional
 
 import pandas as pd
 
-import phc.services as services
+import inspect
 from funcy import memoize
 from phc.easy.auth import Auth
+from phc.easy.util import without_keys
 from pmap import pmap
 from toolz import pipe, concat
+
+from phc.easy.abstract.paging_api_item import PagingApiItem, PagingApiOptions
 
 SEARCH_COLUMNS = ["name", "description", "id"]
 
@@ -15,36 +19,66 @@ def join_strings(row):
     return " ".join([value for value in row if type(value) == str]).lower()
 
 
-class Project:
-    @staticmethod
-    @memoize
-    def get_data_frame(auth_args=Auth.shared()):
-        """Retrieve a list of projects from the authenticated account
+class ProjectListOptions(PagingApiOptions):
+    name: Optional[str]
 
-        Attributes
-        ----------
-        auth_args : Any
-            The authentication to use for the account and project (defaults to shared)
+
+class Project(PagingApiItem):
+    @staticmethod
+    def resource_path():
+        return "projects"
+
+    @staticmethod
+    def params_class():
+        return ProjectListOptions
+
+    @classmethod
+    @memoize
+    def get_data_frame(
+        cls,
+        name: Optional[str] = None,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Optional[int] = None,
+        page_size: Optional[int] = None,
+        log: bool = False,
+        show_progress: bool = False,
+    ):
+        """Execute a request for projects
+
+        ## Parameters
+
+        Query: `phc.easy.projects.ProjectListOptions`
+
+        Execution: `phc.easy.query.Query.execute_paging_api`
         """
+
+        if page_size is None:
+            # Projects do not have much data so use a higher page size
+            page_size = 100
+
+        get_data_frame = super().get_data_frame
+
         auth = Auth(auth_args)
 
-        def list_projects(account):
-            session = auth.customized({"account": account["id"]}).session()
-
-            return [
-                {**project, "account": account["id"]}
-                for project in services.Projects(session)
-                .get_list()
-                .data["items"]
-            ]
-
-        return pipe(
-            auth.accounts(),
-            partial(pmap, list_projects),
-            concat,
-            list,
-            pd.DataFrame,
+        get_data_frame_args = without_keys(
+            cls._get_current_args(inspect.currentframe(), locals()),
+            ["auth_args", "account", "show_progress"],
         )
+
+        def get_projects_for_account(account: dict):
+            df = get_data_frame(
+                ignore_cache=True,
+                all_results=max_pages is None,
+                auth_args=auth.customized({"account": account["id"]}),
+                show_progress=show_progress,
+                **get_data_frame_args,
+            )
+            df["account"] = account["id"]
+            return df
+
+        frame = pd.concat(list(pmap(get_projects_for_account, auth.accounts())))
+
+        return frame.reset_index(drop=True)
 
     @staticmethod
     def find(search: str, auth_args: Auth = Auth.shared()):
@@ -58,8 +92,7 @@ class Project:
         auth_args : Any
             The authenication to use for the account and project (defaults to shared)
         """
-        auth = Auth(auth_args)
-        projects = Project.get_data_frame(auth)
+        projects = Project.get_data_frame(auth_args=auth_args)
         text = projects[SEARCH_COLUMNS].agg(join_strings, axis=1)
         return projects[text.str.contains(search.lower())]
 

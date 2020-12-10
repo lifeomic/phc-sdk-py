@@ -1,6 +1,6 @@
 import math
 from functools import reduce, wraps
-from typing import Callable, List, Union
+from typing import Callable, List, Union, Optional
 from toolz import groupby
 
 import pandas as pd
@@ -86,12 +86,14 @@ def defaultprop(fn):
 
 
 def with_progress(
-    init_progress: Callable[[], tqdm], func: Callable[[Union[None, tqdm]], None]
+    init_progress: Callable[[], Optional[tqdm]],
+    func: Callable[[Union[None, tqdm]], None],
 ):
     if _has_tqdm:
         progress = init_progress()
         result = func(progress)
-        progress.close()
+        if progress:
+            progress.close()
         return result
 
     return func(None)
