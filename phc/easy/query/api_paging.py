@@ -4,6 +4,9 @@ from phc.base_client import BaseClient
 from phc.easy.auth import Auth
 from phc.easy.util import tqdm
 
+from funcy import nth
+from urllib.parse import urlparse, parse_qs
+
 MAX_RESULT_SIZE = 999
 
 
@@ -13,6 +16,11 @@ def clean_params(params: dict):
         for k, v in params.items()
         if ((v is not None) and (not isinstance(v, str) or len(v) > 0))
     }
+
+
+def get_next_page_token(next_url: str):
+    "Parse next url and retrieve nextPageToken (or None)"
+    return nth(0, parse_qs(urlparse(next_url).query).get("nextPageToken", []))
 
 
 def recursive_paging_api_call(
@@ -119,6 +127,8 @@ def recursive_paging_api_call(
         scroll=scroll,
         _current_page=_current_page + 1,
         _prev_results=results,
-        _next_page_token=response.data.get("nextPageToken"),
+        _next_page_token=get_next_page_token(
+            response.data.get("links", {}).get("next", "")
+        ),
         _count=_count,
     )

@@ -175,6 +175,7 @@ class Query:
         log: bool = False,
         raw: bool = False,
         ignore_cache: bool = False,
+        show_progress: bool = True,
         progress: Optional[tqdm] = None,
     ):
         """Execute a API query that pages through results
@@ -228,7 +229,11 @@ class Query:
         auth = Auth(auth_args)
 
         params = clean_params(params)
-        path = path.replace(":project_id", auth.project_id)
+
+        # Do not pull project_id if not in URL (which throws error if project not selected)
+        if "project_id" in path:
+            path = path.replace(":project_id", auth.project_id)
+
         query = {"path": path, "method": http_verb, "params": params}
 
         if all_results and page_size is None:
@@ -255,7 +260,9 @@ class Query:
         )
 
         results = with_progress(
-            lambda: progress if progress is not None else tqdm(),
+            lambda: (progress if progress is not None else tqdm())
+            if show_progress
+            else None,
             lambda progress: recursive_paging_api_call(
                 path,
                 params=params,
