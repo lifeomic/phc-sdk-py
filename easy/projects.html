@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.9.2" />
 <title>phc.easy.projects API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -28,14 +28,18 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from functools import reduce, partial
+from typing import Optional
 
 import pandas as pd
 
-import phc.services as services
+import inspect
 from funcy import memoize
 from phc.easy.auth import Auth
+from phc.easy.util import without_keys
 from pmap import pmap
 from toolz import pipe, concat
+
+from phc.easy.abstract.paging_api_item import PagingApiItem, PagingApiOptions
 
 SEARCH_COLUMNS = [&#34;name&#34;, &#34;description&#34;, &#34;id&#34;]
 
@@ -44,36 +48,66 @@ def join_strings(row):
     return &#34; &#34;.join([value for value in row if type(value) == str]).lower()
 
 
-class Project:
-    @staticmethod
-    @memoize
-    def get_data_frame(auth_args=Auth.shared()):
-        &#34;&#34;&#34;Retrieve a list of projects from the authenticated account
+class ProjectListOptions(PagingApiOptions):
+    name: Optional[str]
 
-        Attributes
-        ----------
-        auth_args : Any
-            The authentication to use for the account and project (defaults to shared)
+
+class Project(PagingApiItem):
+    @staticmethod
+    def resource_path():
+        return &#34;projects&#34;
+
+    @staticmethod
+    def params_class():
+        return ProjectListOptions
+
+    @classmethod
+    @memoize
+    def get_data_frame(
+        cls,
+        name: Optional[str] = None,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Optional[int] = None,
+        page_size: Optional[int] = None,
+        log: bool = False,
+        show_progress: bool = False,
+    ):
+        &#34;&#34;&#34;Execute a request for projects
+
+        ## Parameters
+
+        Query: `phc.easy.projects.ProjectListOptions`
+
+        Execution: `phc.easy.query.Query.execute_paging_api`
         &#34;&#34;&#34;
+
+        if page_size is None:
+            # Projects do not have much data so use a higher page size
+            page_size = 100
+
+        get_data_frame = super().get_data_frame
+
         auth = Auth(auth_args)
 
-        def list_projects(account):
-            session = auth.customized({&#34;account&#34;: account[&#34;id&#34;]}).session()
-
-            return [
-                {**project, &#34;account&#34;: account[&#34;id&#34;]}
-                for project in services.Projects(session)
-                .get_list()
-                .data[&#34;items&#34;]
-            ]
-
-        return pipe(
-            auth.accounts(),
-            partial(pmap, list_projects),
-            concat,
-            list,
-            pd.DataFrame,
+        get_data_frame_args = without_keys(
+            cls._get_current_args(inspect.currentframe(), locals()),
+            [&#34;auth_args&#34;, &#34;account&#34;, &#34;show_progress&#34;],
         )
+
+        def get_projects_for_account(account: dict):
+            df = get_data_frame(
+                ignore_cache=True,
+                all_results=max_pages is None,
+                auth_args=auth.customized({&#34;account&#34;: account[&#34;id&#34;]}),
+                show_progress=show_progress,
+                **get_data_frame_args,
+            )
+            df[&#34;account&#34;] = account[&#34;id&#34;]
+            return df
+
+        frame = pd.concat(list(pmap(get_projects_for_account, auth.accounts())))
+
+        return frame.reset_index(drop=True)
 
     @staticmethod
     def find(search: str, auth_args: Auth = Auth.shared()):
@@ -87,8 +121,7 @@ class Project:
         auth_args : Any
             The authenication to use for the account and project (defaults to shared)
         &#34;&#34;&#34;
-        auth = Auth(auth_args)
-        projects = Project.get_data_frame(auth)
+        projects = Project.get_data_frame(auth_args=auth_args)
         text = projects[SEARCH_COLUMNS].agg(join_strings, axis=1)
         return projects[text.str.contains(search.lower())]
 
@@ -153,36 +186,62 @@ class Project:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Project:
+<pre><code class="python">class Project(PagingApiItem):
     @staticmethod
-    @memoize
-    def get_data_frame(auth_args=Auth.shared()):
-        &#34;&#34;&#34;Retrieve a list of projects from the authenticated account
+    def resource_path():
+        return &#34;projects&#34;
 
-        Attributes
-        ----------
-        auth_args : Any
-            The authentication to use for the account and project (defaults to shared)
+    @staticmethod
+    def params_class():
+        return ProjectListOptions
+
+    @classmethod
+    @memoize
+    def get_data_frame(
+        cls,
+        name: Optional[str] = None,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Optional[int] = None,
+        page_size: Optional[int] = None,
+        log: bool = False,
+        show_progress: bool = False,
+    ):
+        &#34;&#34;&#34;Execute a request for projects
+
+        ## Parameters
+
+        Query: `phc.easy.projects.ProjectListOptions`
+
+        Execution: `phc.easy.query.Query.execute_paging_api`
         &#34;&#34;&#34;
+
+        if page_size is None:
+            # Projects do not have much data so use a higher page size
+            page_size = 100
+
+        get_data_frame = super().get_data_frame
+
         auth = Auth(auth_args)
 
-        def list_projects(account):
-            session = auth.customized({&#34;account&#34;: account[&#34;id&#34;]}).session()
-
-            return [
-                {**project, &#34;account&#34;: account[&#34;id&#34;]}
-                for project in services.Projects(session)
-                .get_list()
-                .data[&#34;items&#34;]
-            ]
-
-        return pipe(
-            auth.accounts(),
-            partial(pmap, list_projects),
-            concat,
-            list,
-            pd.DataFrame,
+        get_data_frame_args = without_keys(
+            cls._get_current_args(inspect.currentframe(), locals()),
+            [&#34;auth_args&#34;, &#34;account&#34;, &#34;show_progress&#34;],
         )
+
+        def get_projects_for_account(account: dict):
+            df = get_data_frame(
+                ignore_cache=True,
+                all_results=max_pages is None,
+                auth_args=auth.customized({&#34;account&#34;: account[&#34;id&#34;]}),
+                show_progress=show_progress,
+                **get_data_frame_args,
+            )
+            df[&#34;account&#34;] = account[&#34;id&#34;]
+            return df
+
+        frame = pd.concat(list(pmap(get_projects_for_account, auth.accounts())))
+
+        return frame.reset_index(drop=True)
 
     @staticmethod
     def find(search: str, auth_args: Auth = Auth.shared()):
@@ -196,8 +255,7 @@ class Project:
         auth_args : Any
             The authenication to use for the account and project (defaults to shared)
         &#34;&#34;&#34;
-        auth = Auth(auth_args)
-        projects = Project.get_data_frame(auth)
+        projects = Project.get_data_frame(auth_args=auth_args)
         text = projects[SEARCH_COLUMNS].agg(join_strings, axis=1)
         return projects[text.str.contains(search.lower())]
 
@@ -227,6 +285,10 @@ class Project:
 
         return matches</code></pre>
 </details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></li>
+</ul>
 <h3>Static methods</h3>
 <dl>
 <dt id="phc.easy.projects.Project.find"><code class="name flex">
@@ -257,55 +319,116 @@ def find(search: str, auth_args: Auth = Auth.shared()):
     auth_args : Any
         The authenication to use for the account and project (defaults to shared)
     &#34;&#34;&#34;
-    auth = Auth(auth_args)
-    projects = Project.get_data_frame(auth)
+    projects = Project.get_data_frame(auth_args=auth_args)
     text = projects[SEARCH_COLUMNS].agg(join_strings, axis=1)
     return projects[text.str.contains(search.lower())]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.projects.Project.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>cls, name: Union[str, NoneType] = None, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, show_progress: bool = False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Retrieve a list of projects from the authenticated account</p>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>auth_args</code></strong> :&ensp;<code>Any</code></dt>
-<dd>The authentication to use for the account and project (defaults to shared)</dd>
-</dl></div>
+<div class="desc"><p>Execute a request for projects</p>
+<h2 id="parameters">Parameters</h2>
+<p>Query: <code><a title="phc.easy.projects.ProjectListOptions" href="#phc.easy.projects.ProjectListOptions">ProjectListOptions</a></code></p>
+<p>Execution: <code><a title="phc.easy.query.Query.execute_paging_api" href="query/index.html#phc.easy.query.Query.execute_paging_api">Query.execute_paging_api()</a></code></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+@memoize
+def get_data_frame(
+    cls,
+    name: Optional[str] = None,
+    auth_args: Auth = Auth.shared(),
+    max_pages: Optional[int] = None,
+    page_size: Optional[int] = None,
+    log: bool = False,
+    show_progress: bool = False,
+):
+    &#34;&#34;&#34;Execute a request for projects
+
+    ## Parameters
+
+    Query: `phc.easy.projects.ProjectListOptions`
+
+    Execution: `phc.easy.query.Query.execute_paging_api`
+    &#34;&#34;&#34;
+
+    if page_size is None:
+        # Projects do not have much data so use a higher page size
+        page_size = 100
+
+    get_data_frame = super().get_data_frame
+
+    auth = Auth(auth_args)
+
+    get_data_frame_args = without_keys(
+        cls._get_current_args(inspect.currentframe(), locals()),
+        [&#34;auth_args&#34;, &#34;account&#34;, &#34;show_progress&#34;],
+    )
+
+    def get_projects_for_account(account: dict):
+        df = get_data_frame(
+            ignore_cache=True,
+            all_results=max_pages is None,
+            auth_args=auth.customized({&#34;account&#34;: account[&#34;id&#34;]}),
+            show_progress=show_progress,
+            **get_data_frame_args,
+        )
+        df[&#34;account&#34;] = account[&#34;id&#34;]
+        return df
+
+    frame = pd.concat(list(pmap(get_projects_for_account, auth.accounts())))
+
+    return frame.reset_index(drop=True)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.projects.Project.params_class"><code class="name flex">
+<span>def <span class="ident">params_class</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.params_class" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.params_class">params_class</a></code>
+</p>
+<div class="desc inherited"><p>Returns a pydantic type that validates and transforms the params with dict()</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-@memoize
-def get_data_frame(auth_args=Auth.shared()):
-    &#34;&#34;&#34;Retrieve a list of projects from the authenticated account
-
-    Attributes
-    ----------
-    auth_args : Any
-        The authentication to use for the account and project (defaults to shared)
-    &#34;&#34;&#34;
-    auth = Auth(auth_args)
-
-    def list_projects(account):
-        session = auth.customized({&#34;account&#34;: account[&#34;id&#34;]}).session()
-
-        return [
-            {**project, &#34;account&#34;: account[&#34;id&#34;]}
-            for project in services.Projects(session)
-            .get_list()
-            .data[&#34;items&#34;]
-        ]
-
-    return pipe(
-        auth.accounts(),
-        partial(pmap, list_projects),
-        concat,
-        list,
-        pd.DataFrame,
-    )</code></pre>
+def params_class():
+    return ProjectListOptions</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.projects.Project.process_params"><code class="name flex">
+<span>def <span class="ident">process_params</span></span>(<span>params: dict) ‑> dict</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.process_params" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.process_params">process_params</a></code>
+</p>
+<div class="desc inherited"><p>Validates and transforms the API query parameters</p></div>
+</dd>
+<dt id="phc.easy.projects.Project.resource_path"><code class="name flex">
+<span>def <span class="ident">resource_path</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.resource_path" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.resource_path">resource_path</a></code>
+</p>
+<div class="desc inherited"><p>Returns the API url name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def resource_path():
+    return &#34;projects&#34;</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.projects.Project.set_current"><code class="name flex">
@@ -352,6 +475,57 @@ def set_current(search: str, auth: Auth = Auth.shared()):
     return matches</code></pre>
 </details>
 </dd>
+<dt id="phc.easy.projects.Project.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.transform_results" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.projects.ProjectListOptions"><code class="flex name class">
+<span>class <span class="ident">ProjectListOptions</span></span>
+<span>(</span><span>**data: Any)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ProjectListOptions(PagingApiOptions):
+    name: Optional[str]</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></li>
+<li>pydantic.main.BaseModel</li>
+<li>pydantic.utils.Representation</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="phc.easy.projects.ProjectListOptions.name"><code class="name">var <span class="ident">name</span> : Union[str, NoneType]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.easy.projects.ProjectListOptions.dict"><code class="name flex">
+<span>def <span class="ident">dict</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions.dict" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions.dict">dict</a></code>
+</p>
+<div class="desc inherited"><p>Generate a dictionary representation of the model, optionally specifying which fields to include or exclude.</p></div>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -382,10 +556,20 @@ def set_current(search: str, auth: Auth = Auth.shared()):
 <ul>
 <li>
 <h4><code><a title="phc.easy.projects.Project" href="#phc.easy.projects.Project">Project</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="phc.easy.projects.Project.find" href="#phc.easy.projects.Project.find">find</a></code></li>
 <li><code><a title="phc.easy.projects.Project.get_data_frame" href="#phc.easy.projects.Project.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.projects.Project.params_class" href="#phc.easy.projects.Project.params_class">params_class</a></code></li>
+<li><code><a title="phc.easy.projects.Project.process_params" href="abstract/paging_api_item.html#phc.easy.projects.Project.process_params">process_params</a></code></li>
+<li><code><a title="phc.easy.projects.Project.resource_path" href="#phc.easy.projects.Project.resource_path">resource_path</a></code></li>
 <li><code><a title="phc.easy.projects.Project.set_current" href="#phc.easy.projects.Project.set_current">set_current</a></code></li>
+<li><code><a title="phc.easy.projects.Project.transform_results" href="abstract/paging_api_item.html#phc.easy.projects.Project.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.projects.ProjectListOptions" href="#phc.easy.projects.ProjectListOptions">ProjectListOptions</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.projects.ProjectListOptions.dict" href="abstract/paging_api_item.html#phc.easy.projects.ProjectListOptions.dict">dict</a></code></li>
 </ul>
 </li>
 </ul>
@@ -394,7 +578,7 @@ def set_current(search: str, auth: Auth = Auth.shared()):
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
 </footer>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.9.2" />
 <title>phc.easy.query API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -204,6 +204,7 @@ class Query:
         log: bool = False,
         raw: bool = False,
         ignore_cache: bool = False,
+        show_progress: bool = True,
         progress: Optional[tqdm] = None,
     ):
         &#34;&#34;&#34;Execute a API query that pages through results
@@ -257,7 +258,11 @@ class Query:
         auth = Auth(auth_args)
 
         params = clean_params(params)
-        path = path.replace(&#34;:project_id&#34;, auth.project_id)
+
+        # Do not pull project_id if not in URL (which throws error if project not selected)
+        if &#34;project_id&#34; in path:
+            path = path.replace(&#34;:project_id&#34;, auth.project_id)
+
         query = {&#34;path&#34;: path, &#34;method&#34;: http_verb, &#34;params&#34;: params}
 
         if all_results and page_size is None:
@@ -284,7 +289,9 @@ class Query:
         )
 
         results = with_progress(
-            lambda: progress if progress is not None else tqdm(),
+            lambda: (progress if progress is not None else tqdm())
+            if show_progress
+            else None,
             lambda progress: recursive_paging_api_call(
                 path,
                 params=params,
@@ -1058,6 +1065,7 @@ class Query:
         log: bool = False,
         raw: bool = False,
         ignore_cache: bool = False,
+        show_progress: bool = True,
         progress: Optional[tqdm] = None,
     ):
         &#34;&#34;&#34;Execute a API query that pages through results
@@ -1111,7 +1119,11 @@ class Query:
         auth = Auth(auth_args)
 
         params = clean_params(params)
-        path = path.replace(&#34;:project_id&#34;, auth.project_id)
+
+        # Do not pull project_id if not in URL (which throws error if project not selected)
+        if &#34;project_id&#34; in path:
+            path = path.replace(&#34;:project_id&#34;, auth.project_id)
+
         query = {&#34;path&#34;: path, &#34;method&#34;: http_verb, &#34;params&#34;: params}
 
         if all_results and page_size is None:
@@ -1138,7 +1150,9 @@ class Query:
         )
 
         results = with_progress(
-            lambda: progress if progress is not None else tqdm(),
+            lambda: (progress if progress is not None else tqdm())
+            if show_progress
+            else None,
             lambda progress: recursive_paging_api_call(
                 path,
                 params=params,
@@ -2164,7 +2178,7 @@ def execute_ga4gh(
 </details>
 </dd>
 <dt id="phc.easy.query.Query.execute_paging_api"><code class="name flex">
-<span>def <span class="ident">execute_paging_api</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame] = &lt;function identity&gt;, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, raw: bool = False, ignore_cache: bool = False, progress: Union[tqdm.std.tqdm, NoneType] = None)</span>
+<span>def <span class="ident">execute_paging_api</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame] = &lt;function identity&gt;, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, raw: bool = False, ignore_cache: bool = False, show_progress: bool = True, progress: Union[tqdm.std.tqdm, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a API query that pages through results</p>
@@ -2220,6 +2234,7 @@ def execute_paging_api(
     log: bool = False,
     raw: bool = False,
     ignore_cache: bool = False,
+    show_progress: bool = True,
     progress: Optional[tqdm] = None,
 ):
     &#34;&#34;&#34;Execute a API query that pages through results
@@ -2273,7 +2288,11 @@ def execute_paging_api(
     auth = Auth(auth_args)
 
     params = clean_params(params)
-    path = path.replace(&#34;:project_id&#34;, auth.project_id)
+
+    # Do not pull project_id if not in URL (which throws error if project not selected)
+    if &#34;project_id&#34; in path:
+        path = path.replace(&#34;:project_id&#34;, auth.project_id)
+
     query = {&#34;path&#34;: path, &#34;method&#34;: http_verb, &#34;params&#34;: params}
 
     if all_results and page_size is None:
@@ -2300,7 +2319,9 @@ def execute_paging_api(
     )
 
     results = with_progress(
-        lambda: progress if progress is not None else tqdm(),
+        lambda: (progress if progress is not None else tqdm())
+        if show_progress
+        else None,
         lambda progress: recursive_paging_api_call(
             path,
             params=params,
@@ -2813,7 +2834,7 @@ def get_count_by_field(
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
 </footer>
 </body>
 </html>

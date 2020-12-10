@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.9.2" />
 <title>phc.services API documentation</title>
 <meta name="description" content="Contains services for accessing different parts of the PHC platform." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -39,6 +39,8 @@ from phc.services.projects import Projects
 from phc.services.files import Files
 from phc.services.cohorts import Cohorts
 from phc.services.genomics import Genomics
+from phc.services.tools import Tools
+from phc.services.workflows import Workflows
 
 
 __all__ = [
@@ -49,6 +51,8 @@ __all__ = [
     &#34;Files&#34;,
     &#34;Cohorts&#34;,
     &#34;Genomics&#34;,
+    &#34;Tools&#34;,
+    &#34;Workflows&#34;,
 ]
 
 __pdoc__ = {
@@ -59,6 +63,8 @@ __pdoc__ = {
     &#34;files&#34;: False,
     &#34;cohorts&#34;: False,
     &#34;genomics&#34;: False,
+    &#34;tools&#34;: False,
+    &#34;workflows&#34;: False,
 }</code></pre>
 </details>
 </section>
@@ -549,7 +555,7 @@ __pdoc__ = {
                 f&#34;Timed out waiting for result file {query_id} to become available&#34;
             )
 
-        download_path = files_client.download(query_id)
+        download_path = files_client.download(query_id, dest_dir=dest_dir)
         return _pd.read_csv(download_path)
 
     def __data_lake_query_predicate(self, analytics_client, query_id):
@@ -2855,6 +2861,26 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
             http_verb=&#34;GET&#34;,
         )
 
+    def get_test(self, project_id: str, test_id: str) -&gt; ApiResponse:
+        &#34;&#34;&#34;Get test by project and test id
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID
+        test_id : str
+            The Test ID
+
+        Returns
+        -------
+        ApiResponse
+            The get test response
+        &#34;&#34;&#34;
+        return self._api_call(
+            f&#34;genomics/projects/{project_id}/tests/{test_id}&#34;,
+            http_verb=&#34;GET&#34;,
+        )
+
     def delete_test(self, project_id: str, test_id: str) -&gt; bool:
         &#34;&#34;&#34;Delete a genomic test
 
@@ -2904,7 +2930,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = 'd328a056-65bd-4580-801f-4c6a7cd6a5eb', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = '20fc153a-740f-4d74-977d-df9cda6670c7', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
@@ -3164,6 +3190,48 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
         The fetch response
     &#34;&#34;&#34;
     return self._ga4gh_call(f&#34;{set_type.value}/{set_id}&#34;, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Genomics.get_test"><code class="name flex">
+<span>def <span class="ident">get_test</span></span>(<span>self, project_id: str, test_id: str) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get test by project and test id</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>test_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The Test ID</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ApiResponse</code></dt>
+<dd>The get test response</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_test(self, project_id: str, test_id: str) -&gt; ApiResponse:
+    &#34;&#34;&#34;Get test by project and test id
+
+    Parameters
+    ----------
+    project_id : str
+        The project ID
+    test_id : str
+        The Test ID
+
+    Returns
+    -------
+    ApiResponse
+        The get test response
+    &#34;&#34;&#34;
+    return self._api_call(
+        f&#34;genomics/projects/{project_id}/tests/{test_id}&#34;,
+        http_verb=&#34;GET&#34;,
+    )</code></pre>
 </details>
 </dd>
 <dt id="phc.services.Genomics.list_sets"><code class="name flex">
@@ -3715,6 +3783,1227 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </dd>
 </dl>
 </dd>
+<dt id="phc.services.Tools"><code class="flex name class">
+<span>class <span class="ident">Tools</span></span>
+<span>(</span><span>session: phc.session.Session, run_async: bool = False, timeout: int = 30, trust_env: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provides acccess to PHC tools registry</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<code><a title="phc.Session" href="../index.html#phc.Session">Session</a></code></dt>
+<dd>The PHC session</dd>
+<dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True to return promises, False to return results (default is False)</dd>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
+<dd>Operation timeout (default is 30)</dd>
+<dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Tools(BaseClient):
+    &#34;&#34;&#34;Provides acccess to PHC tools registry
+
+    Parameters
+    ----------
+    session: phc.Session
+        The PHC session
+    run_async: bool
+        True to return promises, False to return results (default is False)
+    timeout: int
+        Operation timeout (default is 30)
+    trust_env: bool
+        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
+    &#34;&#34;&#34;
+
+    def create(
+        self,
+        name: str,
+        description: str,
+        access: ToolAccess,
+        version: str,
+        tool_class: ToolClass,
+        source: str,
+        labels: Optional[List[str]] = None,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Create a tool.
+
+        Parameters
+        ----------
+        name: str
+            The name to give to the tool
+        description: str
+            A description of the tool
+        access: ToolAccess
+            The access level given to the tool [PRIVATE, ACCOUNT, PHC, PUBLIC]
+        version: str
+            The initial version of the tool
+        tool_class: ToolClass
+            The class of the tool [Workflow, Notebook]
+        source: str
+            The path of the tool to upload
+        labels: List[str], optional
+            A list of labels to apply to the tool, i.e. [&#34;bam&#34;,&#34;samtools&#34;]
+
+        Returns
+        -------
+        ApiResponse
+            The create tool response
+
+        Examples
+        --------
+        &gt;&gt;&gt; from phc.services import Tools
+        &gt;&gt;&gt; tools = Tools(session)
+        &gt;&gt;&gt; tools.create(name=&#34;Read Depth Notebook&#34;, description=&#34;Generates a chart of positional read depth from a bam file&#34;,
+              access=&#34;PHC&#34;, version=&#34;1.0.0&#34;, tool_class=&#34;Notebook&#34;, source=&#34;./mynotebook.ipynb&#34;, labels=[&#34;bam&#34;,&#34;samtools]&#34;)
+        &#34;&#34;&#34;
+        if not hasattr(ToolClass, tool_class):
+            raise ValueError(
+                f&#34;{tool_class} is not a valid Tool Class value {[e.value for e in ToolClass]}&#34;
+            )
+
+        if not hasattr(ToolAccess, access):
+            raise ValueError(
+                f&#34;{access} is not a valid Tool Class value {[e.value for e in ToolAccess]}&#34;
+            )
+
+        create_request = {
+            &#34;version&#34;: version,
+            &#34;access&#34;: access,
+            &#34;name&#34;: name,
+            &#34;toolClassId&#34;: ToolClassIdMappings[tool_class],
+            &#34;descriptorType&#34;: DescriptorTypeMappings[tool_class],
+            &#34;description&#34;: description,
+        }
+        if labels:
+            create_request[&#34;labels&#34;] = labels
+
+        res = self._api_call(
+            &#34;/v1/trs/v2/tools&#34;, json=create_request, http_verb=&#34;POST&#34;
+        )
+
+        upload_request = {
+            &#34;fileName&#34;: source.split(&#34;/&#34;).pop(),
+            &#34;toolId&#34;: res[&#34;id&#34;],
+            &#34;version&#34;: res[&#34;meta_version&#34;],
+        }
+
+        upload_response = self._api_call(
+            &#34;/v1/trs/files&#34;, json=upload_request, http_verb=&#34;POST&#34;
+        )
+        file_size = os.path.getsize(source)
+        self._api_call_impl(
+            http_verb=&#34;PUT&#34;,
+            url=upload_response[&#34;uploadUrl&#34;],
+            api_path=None,
+            upload_file=source,
+            headers={
+                &#34;Content-Length&#34;: str(file_size),
+                &#34;Authorization&#34;: None,
+                &#34;LifeOmic-Account&#34;: None,
+                &#34;Content-Type&#34;: None,
+            },
+        )
+        return res
+
+    @backoff.on_exception(
+        backoff.expo, OSError, max_tries=6, jitter=backoff.full_jitter
+    )
+    def download(
+        self,
+        tool_id: str,
+        version: Optional[str] = None,
+        dest_dir: Optional[str] = os.getcwd(),
+    ) -&gt; None:
+        &#34;&#34;&#34;Download a tool
+
+        Parameters
+        ----------
+        tool_id : str
+            The tool ID
+        version : str, optional
+            The version.
+        dest_dir : str, optional
+            The local directory to save the tool.  Defaults to the current working directory
+
+        Examples
+        --------
+        &gt;&gt;&gt; from phc.services import Tools
+        &gt;&gt;&gt; tools = Tools(session)
+        &gt;&gt;&gt; tools.download(tool_id=&#34;db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3&#34;, dest_dir=&#34;./mydata&#34;)
+        &#34;&#34;&#34;
+        id = f&#34;{tool_id}:{version}&#34; if version else tool_id
+        res = self._api_call(f&#34;/v1/trs/files/{id}/download&#34;, http_verb=&#34;GET&#34;)
+
+        file_path = os.path.join(dest_dir, res.get(&#34;fileName&#34;))
+        target_dir = os.path.dirname(file_path)
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir)
+
+        urlretrieve(res.get(&#34;downloadUrl&#34;), file_path)
+        return file_path
+
+    def get(self, tool_id: str, version: Optional[str] = None) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetch a tool by id
+
+        Parameters
+        ----------
+        tool_id : str
+            The tool ID.
+        version : str, optional
+            The version.
+
+        Returns
+        -------
+        phc.ApiResponse
+            The get tool response
+        &#34;&#34;&#34;
+        id = f&#34;{tool_id}:{version}&#34; if version else tool_id
+        return self._api_call(f&#34;/v1/trs/v2/tools/{id}&#34;, http_verb=&#34;GET&#34;)
+
+    def add_version(
+        self,
+        tool_id: str,
+        version: str,
+        source: str,
+        is_default: Optional[bool] = False,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Adds a new version to a tool.
+
+        Parameters
+        ----------
+        tool_id : str
+            The tool ID to add the version to.
+        version : str
+            The new version for the tool.
+        source: str
+            The path of the version to upload.
+        is_default: bool = False
+            Updates default setting for the tool.
+
+        Returns
+        -------
+        phc.ApiResponse
+            The updated tool response
+        &#34;&#34;&#34;
+        version_request = {
+            &#34;version&#34;: version,
+            &#34;isDefault&#34;: is_default,
+        }
+
+        res = self._api_call(
+            f&#34;/v1/trs/v2/tools/{tool_id}/versions&#34;,
+            json=version_request,
+            http_verb=&#34;POST&#34;,
+        )
+        upload_request = {
+            &#34;fileName&#34;: source.split(&#34;/&#34;).pop(),
+            &#34;toolId&#34;: res[&#34;id&#34;],
+            &#34;version&#34;: res[&#34;meta_version&#34;],
+        }
+
+        upload_response = self._api_call(
+            &#34;/v1/trs/files&#34;, json=upload_request, http_verb=&#34;POST&#34;
+        )
+        file_size = os.path.getsize(source)
+        self._api_call_impl(
+            http_verb=&#34;PUT&#34;,
+            url=upload_response[&#34;uploadUrl&#34;],
+            api_path=None,
+            upload_file=source,
+            headers={
+                &#34;Content-Length&#34;: str(file_size),
+                &#34;Authorization&#34;: None,
+                &#34;LifeOmic-Account&#34;: None,
+                &#34;Content-Type&#34;: None,
+            },
+        )
+        return res
+
+    def delete(self, tool_id: str, version: Optional[str] = None) -&gt; bool:
+        &#34;&#34;&#34;Deletes a tool
+
+        Parameters
+        ----------
+        tool_id : str
+            The tool ID.
+        version : str, optional
+            The version.
+
+        Returns
+        -------
+        bool
+            True if the delete succeeeds, otherwise False
+        &#34;&#34;&#34;
+        id = f&#34;{tool_id}:{version}&#34; if version else tool_id
+        return (
+            self._api_call(
+                f&#34;/v1/trs/v2/tools/{id}&#34;, http_verb=&#34;DELETE&#34;
+            ).status_code
+            == 200
+        )
+
+    def get_list(
+        self,
+        tool_class: Optional[ToolClass] = None,
+        organization: Optional[str] = None,
+        tool_name: Optional[str] = None,
+        author: Optional[str] = None,
+        labels: Optional[List[str]] = None,
+        page_size: Optional[int] = 1000,
+        page_count: Optional[int] = 0,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetch a list of tools from the registry
+
+        Parameters
+        ----------
+        tool_class: str, optional
+            The class of the tool, by default None
+        organization: str, optional
+            The organization that owns the tool, by default None
+        tool_name: str, optional
+            The name of the tool, by default None
+        author: str, optional
+            The creator of the tool, by default None
+        labels: List[str], optional
+            A list of labels describing the tool, by default None
+        page_size: int, optional
+            The count of tools to return in a single request, by default 1000
+        page_count: int, optional
+            The page count to return, by default 0
+
+        Returns
+        -------
+        phc.ApiResponse
+            The list files response
+        &#34;&#34;&#34;
+        query_dict = {
+            &#34;limit&#34;: page_size,
+            &#34;offset&#34;: page_count,
+        }
+        if tool_class:
+            if not hasattr(ToolClass, tool_class):
+                raise ValueError(
+                    f&#34;{tool_class} is not a valid Tool Class value {[e.value for e in ToolClass]}&#34;
+                )
+            query_dict[&#34;toolClass&#34;] = tool_class
+        if organization:
+            query_dict[&#34;organization&#34;] = organization
+        if tool_name:
+            query_dict[&#34;toolname&#34;] = tool_name
+        if author:
+            query_dict[&#34;author&#34;] = author
+        if labels:
+            query_dict[&#34;label&#34;] = &#34;,&#34;.join(labels)
+
+        return self._api_call(
+            f&#34;/v1/trs/v2/tools?{urlencode(query_dict)}&#34;,
+            http_verb=&#34;GET&#34;,
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.services.Tools.add_version"><code class="name flex">
+<span>def <span class="ident">add_version</span></span>(<span>self, tool_id: str, version: str, source: str, is_default: Union[bool, NoneType] = False) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds a new version to a tool.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>tool_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The tool ID to add the version to.</dd>
+<dt><strong><code>version</code></strong> :&ensp;<code>str</code></dt>
+<dd>The new version for the tool.</dd>
+<dt><strong><code>source</code></strong> :&ensp;<code>str</code></dt>
+<dd>The path of the version to upload.</dd>
+<dt><strong><code>is_default</code></strong> :&ensp;<code>bool = False</code></dt>
+<dd>Updates default setting for the tool.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
+<dd>The updated tool response</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_version(
+    self,
+    tool_id: str,
+    version: str,
+    source: str,
+    is_default: Optional[bool] = False,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Adds a new version to a tool.
+
+    Parameters
+    ----------
+    tool_id : str
+        The tool ID to add the version to.
+    version : str
+        The new version for the tool.
+    source: str
+        The path of the version to upload.
+    is_default: bool = False
+        Updates default setting for the tool.
+
+    Returns
+    -------
+    phc.ApiResponse
+        The updated tool response
+    &#34;&#34;&#34;
+    version_request = {
+        &#34;version&#34;: version,
+        &#34;isDefault&#34;: is_default,
+    }
+
+    res = self._api_call(
+        f&#34;/v1/trs/v2/tools/{tool_id}/versions&#34;,
+        json=version_request,
+        http_verb=&#34;POST&#34;,
+    )
+    upload_request = {
+        &#34;fileName&#34;: source.split(&#34;/&#34;).pop(),
+        &#34;toolId&#34;: res[&#34;id&#34;],
+        &#34;version&#34;: res[&#34;meta_version&#34;],
+    }
+
+    upload_response = self._api_call(
+        &#34;/v1/trs/files&#34;, json=upload_request, http_verb=&#34;POST&#34;
+    )
+    file_size = os.path.getsize(source)
+    self._api_call_impl(
+        http_verb=&#34;PUT&#34;,
+        url=upload_response[&#34;uploadUrl&#34;],
+        api_path=None,
+        upload_file=source,
+        headers={
+            &#34;Content-Length&#34;: str(file_size),
+            &#34;Authorization&#34;: None,
+            &#34;LifeOmic-Account&#34;: None,
+            &#34;Content-Type&#34;: None,
+        },
+    )
+    return res</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Tools.create"><code class="name flex">
+<span>def <span class="ident">create</span></span>(<span>self, name: str, description: str, access: phc.services.tools.ToolAccess, version: str, tool_class: phc.services.tools.ToolClass, source: str, labels: Union[List[str], NoneType] = None) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a tool.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The name to give to the tool</dd>
+<dt><strong><code>description</code></strong> :&ensp;<code>str</code></dt>
+<dd>A description of the tool</dd>
+<dt><strong><code>access</code></strong> :&ensp;<code>ToolAccess</code></dt>
+<dd>The access level given to the tool [PRIVATE, ACCOUNT, PHC, PUBLIC]</dd>
+<dt><strong><code>version</code></strong> :&ensp;<code>str</code></dt>
+<dd>The initial version of the tool</dd>
+<dt><strong><code>tool_class</code></strong> :&ensp;<code>ToolClass</code></dt>
+<dd>The class of the tool [Workflow, Notebook]</dd>
+<dt><strong><code>source</code></strong> :&ensp;<code>str</code></dt>
+<dd>The path of the tool to upload</dd>
+<dt><strong><code>labels</code></strong> :&ensp;<code>List[str]</code>, optional</dt>
+<dd>A list of labels to apply to the tool, i.e. ["bam","samtools"]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ApiResponse</code></dt>
+<dd>The create tool response</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from phc.services import Tools
+&gt;&gt;&gt; tools = Tools(session)
+&gt;&gt;&gt; tools.create(name=&quot;Read Depth Notebook&quot;, description=&quot;Generates a chart of positional read depth from a bam file&quot;,
+      access=&quot;PHC&quot;, version=&quot;1.0.0&quot;, tool_class=&quot;Notebook&quot;, source=&quot;./mynotebook.ipynb&quot;, labels=[&quot;bam&quot;,&quot;samtools]&quot;)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create(
+    self,
+    name: str,
+    description: str,
+    access: ToolAccess,
+    version: str,
+    tool_class: ToolClass,
+    source: str,
+    labels: Optional[List[str]] = None,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Create a tool.
+
+    Parameters
+    ----------
+    name: str
+        The name to give to the tool
+    description: str
+        A description of the tool
+    access: ToolAccess
+        The access level given to the tool [PRIVATE, ACCOUNT, PHC, PUBLIC]
+    version: str
+        The initial version of the tool
+    tool_class: ToolClass
+        The class of the tool [Workflow, Notebook]
+    source: str
+        The path of the tool to upload
+    labels: List[str], optional
+        A list of labels to apply to the tool, i.e. [&#34;bam&#34;,&#34;samtools&#34;]
+
+    Returns
+    -------
+    ApiResponse
+        The create tool response
+
+    Examples
+    --------
+    &gt;&gt;&gt; from phc.services import Tools
+    &gt;&gt;&gt; tools = Tools(session)
+    &gt;&gt;&gt; tools.create(name=&#34;Read Depth Notebook&#34;, description=&#34;Generates a chart of positional read depth from a bam file&#34;,
+          access=&#34;PHC&#34;, version=&#34;1.0.0&#34;, tool_class=&#34;Notebook&#34;, source=&#34;./mynotebook.ipynb&#34;, labels=[&#34;bam&#34;,&#34;samtools]&#34;)
+    &#34;&#34;&#34;
+    if not hasattr(ToolClass, tool_class):
+        raise ValueError(
+            f&#34;{tool_class} is not a valid Tool Class value {[e.value for e in ToolClass]}&#34;
+        )
+
+    if not hasattr(ToolAccess, access):
+        raise ValueError(
+            f&#34;{access} is not a valid Tool Class value {[e.value for e in ToolAccess]}&#34;
+        )
+
+    create_request = {
+        &#34;version&#34;: version,
+        &#34;access&#34;: access,
+        &#34;name&#34;: name,
+        &#34;toolClassId&#34;: ToolClassIdMappings[tool_class],
+        &#34;descriptorType&#34;: DescriptorTypeMappings[tool_class],
+        &#34;description&#34;: description,
+    }
+    if labels:
+        create_request[&#34;labels&#34;] = labels
+
+    res = self._api_call(
+        &#34;/v1/trs/v2/tools&#34;, json=create_request, http_verb=&#34;POST&#34;
+    )
+
+    upload_request = {
+        &#34;fileName&#34;: source.split(&#34;/&#34;).pop(),
+        &#34;toolId&#34;: res[&#34;id&#34;],
+        &#34;version&#34;: res[&#34;meta_version&#34;],
+    }
+
+    upload_response = self._api_call(
+        &#34;/v1/trs/files&#34;, json=upload_request, http_verb=&#34;POST&#34;
+    )
+    file_size = os.path.getsize(source)
+    self._api_call_impl(
+        http_verb=&#34;PUT&#34;,
+        url=upload_response[&#34;uploadUrl&#34;],
+        api_path=None,
+        upload_file=source,
+        headers={
+            &#34;Content-Length&#34;: str(file_size),
+            &#34;Authorization&#34;: None,
+            &#34;LifeOmic-Account&#34;: None,
+            &#34;Content-Type&#34;: None,
+        },
+    )
+    return res</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Tools.delete"><code class="name flex">
+<span>def <span class="ident">delete</span></span>(<span>self, tool_id: str, version: Union[str, NoneType] = None) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Deletes a tool</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>tool_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The tool ID.</dd>
+<dt><strong><code>version</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The version.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the delete succeeeds, otherwise False</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete(self, tool_id: str, version: Optional[str] = None) -&gt; bool:
+    &#34;&#34;&#34;Deletes a tool
+
+    Parameters
+    ----------
+    tool_id : str
+        The tool ID.
+    version : str, optional
+        The version.
+
+    Returns
+    -------
+    bool
+        True if the delete succeeeds, otherwise False
+    &#34;&#34;&#34;
+    id = f&#34;{tool_id}:{version}&#34; if version else tool_id
+    return (
+        self._api_call(
+            f&#34;/v1/trs/v2/tools/{id}&#34;, http_verb=&#34;DELETE&#34;
+        ).status_code
+        == 200
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Tools.download"><code class="name flex">
+<span>def <span class="ident">download</span></span>(<span>self, tool_id: str, version: Union[str, NoneType] = None, dest_dir: Union[str, NoneType] = '/home/runner/work/phc-sdk-py/phc-sdk-py') ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Download a tool</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>tool_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The tool ID</dd>
+<dt><strong><code>version</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The version.</dd>
+<dt><strong><code>dest_dir</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The local directory to save the tool.
+Defaults to the current working directory</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from phc.services import Tools
+&gt;&gt;&gt; tools = Tools(session)
+&gt;&gt;&gt; tools.download(tool_id=&quot;db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3&quot;, dest_dir=&quot;./mydata&quot;)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@backoff.on_exception(
+    backoff.expo, OSError, max_tries=6, jitter=backoff.full_jitter
+)
+def download(
+    self,
+    tool_id: str,
+    version: Optional[str] = None,
+    dest_dir: Optional[str] = os.getcwd(),
+) -&gt; None:
+    &#34;&#34;&#34;Download a tool
+
+    Parameters
+    ----------
+    tool_id : str
+        The tool ID
+    version : str, optional
+        The version.
+    dest_dir : str, optional
+        The local directory to save the tool.  Defaults to the current working directory
+
+    Examples
+    --------
+    &gt;&gt;&gt; from phc.services import Tools
+    &gt;&gt;&gt; tools = Tools(session)
+    &gt;&gt;&gt; tools.download(tool_id=&#34;db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3&#34;, dest_dir=&#34;./mydata&#34;)
+    &#34;&#34;&#34;
+    id = f&#34;{tool_id}:{version}&#34; if version else tool_id
+    res = self._api_call(f&#34;/v1/trs/files/{id}/download&#34;, http_verb=&#34;GET&#34;)
+
+    file_path = os.path.join(dest_dir, res.get(&#34;fileName&#34;))
+    target_dir = os.path.dirname(file_path)
+    if not os.path.exists(target_dir):
+        os.makedirs(target_dir)
+
+    urlretrieve(res.get(&#34;downloadUrl&#34;), file_path)
+    return file_path</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Tools.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, tool_id: str, version: Union[str, NoneType] = None) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetch a tool by id</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>tool_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The tool ID.</dd>
+<dt><strong><code>version</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The version.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
+<dd>The get tool response</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(self, tool_id: str, version: Optional[str] = None) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetch a tool by id
+
+    Parameters
+    ----------
+    tool_id : str
+        The tool ID.
+    version : str, optional
+        The version.
+
+    Returns
+    -------
+    phc.ApiResponse
+        The get tool response
+    &#34;&#34;&#34;
+    id = f&#34;{tool_id}:{version}&#34; if version else tool_id
+    return self._api_call(f&#34;/v1/trs/v2/tools/{id}&#34;, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Tools.get_list"><code class="name flex">
+<span>def <span class="ident">get_list</span></span>(<span>self, tool_class: Union[phc.services.tools.ToolClass, NoneType] = None, organization: Union[str, NoneType] = None, tool_name: Union[str, NoneType] = None, author: Union[str, NoneType] = None, labels: Union[List[str], NoneType] = None, page_size: Union[int, NoneType] = 1000, page_count: Union[int, NoneType] = 0) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetch a list of tools from the registry</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>tool_class</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The class of the tool, by default None</dd>
+<dt><strong><code>organization</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The organization that owns the tool, by default None</dd>
+<dt><strong><code>tool_name</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The name of the tool, by default None</dd>
+<dt><strong><code>author</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The creator of the tool, by default None</dd>
+<dt><strong><code>labels</code></strong> :&ensp;<code>List[str]</code>, optional</dt>
+<dd>A list of labels describing the tool, by default None</dd>
+<dt><strong><code>page_size</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The count of tools to return in a single request, by default 1000</dd>
+<dt><strong><code>page_count</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The page count to return, by default 0</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
+<dd>The list files response</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_list(
+    self,
+    tool_class: Optional[ToolClass] = None,
+    organization: Optional[str] = None,
+    tool_name: Optional[str] = None,
+    author: Optional[str] = None,
+    labels: Optional[List[str]] = None,
+    page_size: Optional[int] = 1000,
+    page_count: Optional[int] = 0,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetch a list of tools from the registry
+
+    Parameters
+    ----------
+    tool_class: str, optional
+        The class of the tool, by default None
+    organization: str, optional
+        The organization that owns the tool, by default None
+    tool_name: str, optional
+        The name of the tool, by default None
+    author: str, optional
+        The creator of the tool, by default None
+    labels: List[str], optional
+        A list of labels describing the tool, by default None
+    page_size: int, optional
+        The count of tools to return in a single request, by default 1000
+    page_count: int, optional
+        The page count to return, by default 0
+
+    Returns
+    -------
+    phc.ApiResponse
+        The list files response
+    &#34;&#34;&#34;
+    query_dict = {
+        &#34;limit&#34;: page_size,
+        &#34;offset&#34;: page_count,
+    }
+    if tool_class:
+        if not hasattr(ToolClass, tool_class):
+            raise ValueError(
+                f&#34;{tool_class} is not a valid Tool Class value {[e.value for e in ToolClass]}&#34;
+            )
+        query_dict[&#34;toolClass&#34;] = tool_class
+    if organization:
+        query_dict[&#34;organization&#34;] = organization
+    if tool_name:
+        query_dict[&#34;toolname&#34;] = tool_name
+    if author:
+        query_dict[&#34;author&#34;] = author
+    if labels:
+        query_dict[&#34;label&#34;] = &#34;,&#34;.join(labels)
+
+    return self._api_call(
+        f&#34;/v1/trs/v2/tools?{urlencode(query_dict)}&#34;,
+        http_verb=&#34;GET&#34;,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.services.Workflows"><code class="flex name class">
+<span>class <span class="ident">Workflows</span></span>
+<span>(</span><span>session: phc.session.Session, run_async: bool = False, timeout: int = 30, trust_env: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provides acccess to PHC Workflows</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<code><a title="phc.Session" href="../index.html#phc.Session">Session</a></code></dt>
+<dd>The PHC session</dd>
+<dt><strong><code>run_async</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True to return promises, False to return results (default is False)</dd>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
+<dd>Operation timeout (default is 30)</dd>
+<dt><strong><code>trust_env</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Workflows(BaseClient):
+    &#34;&#34;&#34;Provides acccess to PHC Workflows
+
+    Parameters
+    ----------
+    session: phc.Session
+        The PHC session
+    run_async: bool
+        True to return promises, False to return results (default is False)
+    timeout: int
+        Operation timeout (default is 30)
+    trust_env: bool
+        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
+    &#34;&#34;&#34;
+
+    def run(
+        self,
+        project_id: str,
+        name: str,
+        tool: str,
+        workflow_inputs: Optional[str] = None,
+        workflow_inputs_file_id: Optional[str] = None,
+        output_project_folder: Optional[str] = None,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Create a tool.
+
+        Parameters
+        ----------
+        project_id: str
+            The project ID
+        name: str
+            The name to give to this run of a tool
+        tool: str
+            The tool id or organization/name of the tool to run
+        workflow_inputs: str, optional
+            The inputs required by the workflow as a json string, either this or workflow_inputs_file_id are required
+        workflow_inputs_file_id: str, optional
+            The inputs required by the workflow as provided in a file in PHC, either this or workflow_inputs are required
+        output_project_folder: str, optional
+            The destination output folder in PHC for the workflow run outputs
+
+        Returns
+        -------
+        ApiResponse
+            The workflow run response
+
+        Examples
+        --------
+        &gt;&gt;&gt; from phc.services import Workflows
+        &gt;&gt;&gt; workflows = Workflows(session)
+        &gt;&gt;&gt; workflows.run(project_id=&#34;d2876f48-724f-4987-9cf0-92c7ef99a9fa&#34;,
+              name=&#34;Ashion ingest subj: 2405&#34;,
+              tool=&#34;lifeomic/ashion-ingest-workflow&#34;,
+              workflow_inputs=&#34;{&#39;reference&#39;: &#39;GRCh37&#39;,&#39;tarFile&#39;: {&#39;class&#39;: &#39;File&#39;,&#39;fileId&#39;: &#39;28235c74-9731-4496-bb3c-41c361f106f3&#39;}, &#39;source&#39;: &#39;incoming/ashion_C043_9999_009990_T1_K1ID2_ps20190814000000.tar.gz&#39;}&#34;)
+        &#34;&#34;&#34;
+        create_request = {
+            &#34;datasetId&#34;: project_id,
+            &#34;name&#34;: name,
+            &#34;workflowSourceFileId&#34;: tool,
+        }
+
+        if workflow_inputs:
+            create_request[&#34;workflowInputs&#34;] = workflow_inputs
+        elif workflow_inputs_file_id:
+            create_request[&#34;workflowInputsFileId&#34;] = workflow_inputs_file_id
+        else:
+            raise ValueError(
+                &#34;Must provide a value for the workflow_inputs or workflow_inputs_file_id&#34;
+            )
+
+        if output_project_folder:
+            create_request[&#34;outputProjectFolder&#34;] = output_project_folder
+
+        res = self._api_call(
+            &#34;/v1/workflows/ga4gh/wes/runs&#34;,
+            json=create_request,
+            http_verb=&#34;POST&#34;,
+        )
+        return res
+
+    def get(self, project_id: str, workflow_id: str) -&gt; ApiResponse:
+        &#34;&#34;&#34;Get workflow metadata by id
+
+        Parameters
+        ----------
+        project_id: str
+            The project ID
+        workflow_id : str
+            The workflow ID.
+
+        Returns
+        -------
+        phc.ApiResponse
+            The get workflow response
+        &#34;&#34;&#34;
+        return self._api_call(
+            f&#34;/v1/workflows/ga4gh/wes/runs/{project_id}:{workflow_id}&#34;,
+            http_verb=&#34;GET&#34;,
+        )
+
+    def get_list(
+        self,
+        project_id: str,
+        page_size: Optional[int] = 100,
+        next_page_token: Optional[str] = None,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetch a list of workflows run in the specified project
+
+        Parameters
+        ----------
+        project_id: str
+            The project ID
+        page_size : int, optional
+            The page size, by default 100
+        next_page_token : str, optional
+            The next page token, by default None
+
+        Returns
+        -------
+        phc.ApiResponse
+            The list workflow run response
+        &#34;&#34;&#34;
+        query_dict = {
+            &#34;datasetId&#34;: project_id,
+        }
+        if page_size:
+            query_dict[&#34;pageSize&#34;] = page_size
+        if next_page_token:
+            query_dict[&#34;nextPageToken&#34;] = next_page_token
+
+        return self._api_call(
+            f&#34;/v1/workflows/ga4gh/wes/runs?{urlencode(query_dict)}&#34;,
+            http_verb=&#34;GET&#34;,
+        )
+
+    def describe(self, project_id: str, tool: str) -&gt; ApiResponse:
+        &#34;&#34;&#34;Returns a description of the inputs the workflow engine requires for the given tool
+
+        Parameters
+        ----------
+        project_id: str
+            The project ID
+        tool: str
+            The tool id or organization/name of the tool to run
+
+        Returns
+        -------
+        phc.ApiResponse
+            The description of the inputs for the given tool
+        &#34;&#34;&#34;
+        describe_request = {
+            &#34;datasetId&#34;: project_id,
+            &#34;workflowSourceFileId&#34;: tool,
+        }
+
+        return self._api_call(
+            &#34;/v1/workflows/ga4gh/wes/runs/parse&#34;,
+            json=describe_request,
+            http_verb=&#34;POST&#34;,
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.services.Workflows.describe"><code class="name flex">
+<span>def <span class="ident">describe</span></span>(<span>self, project_id: str, tool: str) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a description of the inputs the workflow engine requires for the given tool</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>tool</code></strong> :&ensp;<code>str</code></dt>
+<dd>The tool id or organization/name of the tool to run</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
+<dd>The description of the inputs for the given tool</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def describe(self, project_id: str, tool: str) -&gt; ApiResponse:
+    &#34;&#34;&#34;Returns a description of the inputs the workflow engine requires for the given tool
+
+    Parameters
+    ----------
+    project_id: str
+        The project ID
+    tool: str
+        The tool id or organization/name of the tool to run
+
+    Returns
+    -------
+    phc.ApiResponse
+        The description of the inputs for the given tool
+    &#34;&#34;&#34;
+    describe_request = {
+        &#34;datasetId&#34;: project_id,
+        &#34;workflowSourceFileId&#34;: tool,
+    }
+
+    return self._api_call(
+        &#34;/v1/workflows/ga4gh/wes/runs/parse&#34;,
+        json=describe_request,
+        http_verb=&#34;POST&#34;,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Workflows.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, project_id: str, workflow_id: str) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get workflow metadata by id</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>workflow_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The workflow ID.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
+<dd>The get workflow response</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(self, project_id: str, workflow_id: str) -&gt; ApiResponse:
+    &#34;&#34;&#34;Get workflow metadata by id
+
+    Parameters
+    ----------
+    project_id: str
+        The project ID
+    workflow_id : str
+        The workflow ID.
+
+    Returns
+    -------
+    phc.ApiResponse
+        The get workflow response
+    &#34;&#34;&#34;
+    return self._api_call(
+        f&#34;/v1/workflows/ga4gh/wes/runs/{project_id}:{workflow_id}&#34;,
+        http_verb=&#34;GET&#34;,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Workflows.get_list"><code class="name flex">
+<span>def <span class="ident">get_list</span></span>(<span>self, project_id: str, page_size: Union[int, NoneType] = 100, next_page_token: Union[str, NoneType] = None) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetch a list of workflows run in the specified project</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>page_size</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The page size, by default 100</dd>
+<dt><strong><code>next_page_token</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The next page token, by default None</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
+<dd>The list workflow run response</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_list(
+    self,
+    project_id: str,
+    page_size: Optional[int] = 100,
+    next_page_token: Optional[str] = None,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetch a list of workflows run in the specified project
+
+    Parameters
+    ----------
+    project_id: str
+        The project ID
+    page_size : int, optional
+        The page size, by default 100
+    next_page_token : str, optional
+        The next page token, by default None
+
+    Returns
+    -------
+    phc.ApiResponse
+        The list workflow run response
+    &#34;&#34;&#34;
+    query_dict = {
+        &#34;datasetId&#34;: project_id,
+    }
+    if page_size:
+        query_dict[&#34;pageSize&#34;] = page_size
+    if next_page_token:
+        query_dict[&#34;nextPageToken&#34;] = next_page_token
+
+    return self._api_call(
+        f&#34;/v1/workflows/ga4gh/wes/runs?{urlencode(query_dict)}&#34;,
+        http_verb=&#34;GET&#34;,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Workflows.run"><code class="name flex">
+<span>def <span class="ident">run</span></span>(<span>self, project_id: str, name: str, tool: str, workflow_inputs: Union[str, NoneType] = None, workflow_inputs_file_id: Union[str, NoneType] = None, output_project_folder: Union[str, NoneType] = None) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a tool.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The name to give to this run of a tool</dd>
+<dt><strong><code>tool</code></strong> :&ensp;<code>str</code></dt>
+<dd>The tool id or organization/name of the tool to run</dd>
+<dt><strong><code>workflow_inputs</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The inputs required by the workflow as a json string, either this or workflow_inputs_file_id are required</dd>
+<dt><strong><code>workflow_inputs_file_id</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The inputs required by the workflow as provided in a file in PHC, either this or workflow_inputs are required</dd>
+<dt><strong><code>output_project_folder</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The destination output folder in PHC for the workflow run outputs</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ApiResponse</code></dt>
+<dd>The workflow run response</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from phc.services import Workflows
+&gt;&gt;&gt; workflows = Workflows(session)
+&gt;&gt;&gt; workflows.run(project_id=&quot;d2876f48-724f-4987-9cf0-92c7ef99a9fa&quot;,
+      name=&quot;Ashion ingest subj: 2405&quot;,
+      tool=&quot;lifeomic/ashion-ingest-workflow&quot;,
+      workflow_inputs=&quot;{'reference': 'GRCh37','tarFile': {'class': 'File','fileId': '28235c74-9731-4496-bb3c-41c361f106f3'}, 'source': 'incoming/ashion_C043_9999_009990_T1_K1ID2_ps20190814000000.tar.gz'}&quot;)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run(
+    self,
+    project_id: str,
+    name: str,
+    tool: str,
+    workflow_inputs: Optional[str] = None,
+    workflow_inputs_file_id: Optional[str] = None,
+    output_project_folder: Optional[str] = None,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Create a tool.
+
+    Parameters
+    ----------
+    project_id: str
+        The project ID
+    name: str
+        The name to give to this run of a tool
+    tool: str
+        The tool id or organization/name of the tool to run
+    workflow_inputs: str, optional
+        The inputs required by the workflow as a json string, either this or workflow_inputs_file_id are required
+    workflow_inputs_file_id: str, optional
+        The inputs required by the workflow as provided in a file in PHC, either this or workflow_inputs are required
+    output_project_folder: str, optional
+        The destination output folder in PHC for the workflow run outputs
+
+    Returns
+    -------
+    ApiResponse
+        The workflow run response
+
+    Examples
+    --------
+    &gt;&gt;&gt; from phc.services import Workflows
+    &gt;&gt;&gt; workflows = Workflows(session)
+    &gt;&gt;&gt; workflows.run(project_id=&#34;d2876f48-724f-4987-9cf0-92c7ef99a9fa&#34;,
+          name=&#34;Ashion ingest subj: 2405&#34;,
+          tool=&#34;lifeomic/ashion-ingest-workflow&#34;,
+          workflow_inputs=&#34;{&#39;reference&#39;: &#39;GRCh37&#39;,&#39;tarFile&#39;: {&#39;class&#39;: &#39;File&#39;,&#39;fileId&#39;: &#39;28235c74-9731-4496-bb3c-41c361f106f3&#39;}, &#39;source&#39;: &#39;incoming/ashion_C043_9999_009990_T1_K1ID2_ps20190814000000.tar.gz&#39;}&#34;)
+    &#34;&#34;&#34;
+    create_request = {
+        &#34;datasetId&#34;: project_id,
+        &#34;name&#34;: name,
+        &#34;workflowSourceFileId&#34;: tool,
+    }
+
+    if workflow_inputs:
+        create_request[&#34;workflowInputs&#34;] = workflow_inputs
+    elif workflow_inputs_file_id:
+        create_request[&#34;workflowInputsFileId&#34;] = workflow_inputs_file_id
+    else:
+        raise ValueError(
+            &#34;Must provide a value for the workflow_inputs or workflow_inputs_file_id&#34;
+        )
+
+    if output_project_folder:
+        create_request[&#34;outputProjectFolder&#34;] = output_project_folder
+
+    res = self._api_call(
+        &#34;/v1/workflows/ga4gh/wes/runs&#34;,
+        json=create_request,
+        http_verb=&#34;POST&#34;,
+    )
+    return res</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 </dl>
 </section>
 </article>
@@ -3793,6 +5082,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <li><code><a title="phc.services.Genomics.delete_set" href="#phc.services.Genomics.delete_set">delete_set</a></code></li>
 <li><code><a title="phc.services.Genomics.delete_test" href="#phc.services.Genomics.delete_test">delete_test</a></code></li>
 <li><code><a title="phc.services.Genomics.get_set" href="#phc.services.Genomics.get_set">get_set</a></code></li>
+<li><code><a title="phc.services.Genomics.get_test" href="#phc.services.Genomics.get_test">get_test</a></code></li>
 <li><code><a title="phc.services.Genomics.list_sets" href="#phc.services.Genomics.list_sets">list_sets</a></code></li>
 <li><code><a title="phc.services.Genomics.list_tests" href="#phc.services.Genomics.list_tests">list_tests</a></code></li>
 <li><code><a title="phc.services.Genomics.update_set" href="#phc.services.Genomics.update_set">update_set</a></code></li>
@@ -3808,13 +5098,33 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <li><code><a title="phc.services.Projects.update" href="#phc.services.Projects.update">update</a></code></li>
 </ul>
 </li>
+<li>
+<h4><code><a title="phc.services.Tools" href="#phc.services.Tools">Tools</a></code></h4>
+<ul class="two-column">
+<li><code><a title="phc.services.Tools.add_version" href="#phc.services.Tools.add_version">add_version</a></code></li>
+<li><code><a title="phc.services.Tools.create" href="#phc.services.Tools.create">create</a></code></li>
+<li><code><a title="phc.services.Tools.delete" href="#phc.services.Tools.delete">delete</a></code></li>
+<li><code><a title="phc.services.Tools.download" href="#phc.services.Tools.download">download</a></code></li>
+<li><code><a title="phc.services.Tools.get" href="#phc.services.Tools.get">get</a></code></li>
+<li><code><a title="phc.services.Tools.get_list" href="#phc.services.Tools.get_list">get_list</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.services.Workflows" href="#phc.services.Workflows">Workflows</a></code></h4>
+<ul class="">
+<li><code><a title="phc.services.Workflows.describe" href="#phc.services.Workflows.describe">describe</a></code></li>
+<li><code><a title="phc.services.Workflows.get" href="#phc.services.Workflows.get">get</a></code></li>
+<li><code><a title="phc.services.Workflows.get_list" href="#phc.services.Workflows.get_list">get_list</a></code></li>
+<li><code><a title="phc.services.Workflows.run" href="#phc.services.Workflows.run">run</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
 </footer>
 </body>
 </html>
