@@ -148,5 +148,17 @@ class APICache:
             lambda c: np.count_nonzero(c.str.match(DATE_FORMAT_REGEX))
             > min_count
         )
-        df.loc[:, mask] = df.loc[:, mask].apply(pd.to_datetime)
+
+        try:
+            df.loc[:, mask] = df.loc[:, mask].apply(pd.to_datetime)
+        except pd.errors.OutOfBoundsDatetime as ex:
+            print(
+                "[WARNING]: OutOfBoundsDatetime encountered. Casting to NaT.",
+                ex,
+            )
+
+            df.loc[:, mask] = df.loc[:, mask].apply(
+                lambda c: pd.to_datetime(c, errors="coerce")
+            )
+
         return df
