@@ -147,7 +147,7 @@ class Analytics(BaseClient):
         """
         payload = query.to_request_dict()
         return self._api_call(
-            "analytics/query", http_verb="POST", json=payload
+            "analytics/data-lake/query", http_verb="POST", json=payload
         ).get("queryId")
 
     def list_data_lake_queries(
@@ -169,7 +169,7 @@ class Analytics(BaseClient):
         phc.ApiResponse
             The data lake list query response
         """
-        path = "analytics/query?datasetId=%s&pageSize=%d" % (
+        path = "analytics/data-lake/query?datasetId=%s&pageSize=%d" % (
             project_id,
             page_size,
         )
@@ -190,7 +190,9 @@ class Analytics(BaseClient):
         phc.ApiResponse
             The data lake query get response
         """
-        return self._api_call("analytics/query/%s" % query_id, http_verb="GET")
+        return self._api_call(
+            "analytics/data-lake/query/%s" % query_id, http_verb="GET"
+        )
 
     def list_data_lake_schemas(self, project_id: str) -> ApiResponse:
         """Fetches the data lake table schemas
@@ -338,7 +340,12 @@ class Analytics(BaseClient):
             The data lake query result contained in a Pandas dataframe.
         """
         analytics_client = (
-            Analytics(self.session, run_async=False, timeout=self.timeout, trust_env=self.trust_env)
+            Analytics(
+                self.session,
+                run_async=False,
+                timeout=self.timeout,
+                trust_env=self.trust_env,
+            )
             if self.run_async
             else self
         )
@@ -376,7 +383,12 @@ class Analytics(BaseClient):
             The data lake query result contained in a Pandas dataframe.
         """
         analytics_client = (
-            Analytics(self.session, run_async=False, timeout=self.timeout, trust_env=self.trust_env)
+            Analytics(
+                self.session,
+                run_async=False,
+                timeout=self.timeout,
+                trust_env=self.trust_env,
+            )
             if self.run_async
             else self
         )
@@ -385,7 +397,10 @@ class Analytics(BaseClient):
         )  # verify the query exists, an exception will be thrown if it does not
 
         files_client = files.Files(
-            self.session, run_async=False, timeout=self.timeout, trust_env=self.trust_env
+            self.session,
+            run_async=False,
+            timeout=self.timeout,
+            trust_env=self.trust_env,
         )
         if not self.__poll_predicate(files_client.exists, 30, query_id):
             raise RuntimeError(
