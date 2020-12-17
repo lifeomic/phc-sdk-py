@@ -532,7 +532,7 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 - Added the `phc.services.Files` submodule that provides actions for files in PHC projects.
 - Added the `phc.services.Cohorts` submodule that provides actions for files in PHC cohorts.
 
-[0.21.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.20.0...v0.21.1
+[0.21.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.21.0...v0.21.1
 [0.21.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.20.0...v0.21.0
 [0.20.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.19.0...v0.20.0
 [0.19.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.18.1...v0.19.0
