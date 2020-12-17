@@ -310,7 +310,7 @@ __pdoc__ = {
         &#34;&#34;&#34;
         payload = query.to_request_dict()
         return self._api_call(
-            &#34;analytics/query&#34;, http_verb=&#34;POST&#34;, json=payload
+            &#34;analytics/data-lake/query&#34;, http_verb=&#34;POST&#34;, json=payload
         ).get(&#34;queryId&#34;)
 
     def list_data_lake_queries(
@@ -332,7 +332,7 @@ __pdoc__ = {
         phc.ApiResponse
             The data lake list query response
         &#34;&#34;&#34;
-        path = &#34;analytics/query?datasetId=%s&amp;pageSize=%d&#34; % (
+        path = &#34;analytics/data-lake/query?datasetId=%s&amp;pageSize=%d&#34; % (
             project_id,
             page_size,
         )
@@ -353,7 +353,9 @@ __pdoc__ = {
         phc.ApiResponse
             The data lake query get response
         &#34;&#34;&#34;
-        return self._api_call(&#34;analytics/query/%s&#34; % query_id, http_verb=&#34;GET&#34;)
+        return self._api_call(
+            &#34;analytics/data-lake/query/%s&#34; % query_id, http_verb=&#34;GET&#34;
+        )
 
     def list_data_lake_schemas(self, project_id: str) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetches the data lake table schemas
@@ -501,7 +503,12 @@ __pdoc__ = {
             The data lake query result contained in a Pandas dataframe.
         &#34;&#34;&#34;
         analytics_client = (
-            Analytics(self.session, run_async=False, timeout=self.timeout, trust_env=self.trust_env)
+            Analytics(
+                self.session,
+                run_async=False,
+                timeout=self.timeout,
+                trust_env=self.trust_env,
+            )
             if self.run_async
             else self
         )
@@ -539,7 +546,12 @@ __pdoc__ = {
             The data lake query result contained in a Pandas dataframe.
         &#34;&#34;&#34;
         analytics_client = (
-            Analytics(self.session, run_async=False, timeout=self.timeout, trust_env=self.trust_env)
+            Analytics(
+                self.session,
+                run_async=False,
+                timeout=self.timeout,
+                trust_env=self.trust_env,
+            )
             if self.run_async
             else self
         )
@@ -548,7 +560,10 @@ __pdoc__ = {
         )  # verify the query exists, an exception will be thrown if it does not
 
         files_client = files.Files(
-            self.session, run_async=False, timeout=self.timeout, trust_env=self.trust_env
+            self.session,
+            run_async=False,
+            timeout=self.timeout,
+            trust_env=self.trust_env,
         )
         if not self.__poll_predicate(files_client.exists, 30, query_id):
             raise RuntimeError(
@@ -690,7 +705,7 @@ __pdoc__ = {
     &#34;&#34;&#34;
     payload = query.to_request_dict()
     return self._api_call(
-        &#34;analytics/query&#34;, http_verb=&#34;POST&#34;, json=payload
+        &#34;analytics/data-lake/query&#34;, http_verb=&#34;POST&#34;, json=payload
     ).get(&#34;queryId&#34;)</code></pre>
 </details>
 </dd>
@@ -899,7 +914,9 @@ Defaults to the current working directory.</dd>
     phc.ApiResponse
         The data lake query get response
     &#34;&#34;&#34;
-    return self._api_call(&#34;analytics/query/%s&#34; % query_id, http_verb=&#34;GET&#34;)</code></pre>
+    return self._api_call(
+        &#34;analytics/data-lake/query/%s&#34; % query_id, http_verb=&#34;GET&#34;
+    )</code></pre>
 </details>
 </dd>
 <dt id="phc.services.Analytics.get_data_lake_schema"><code class="name flex">
@@ -1058,7 +1075,7 @@ Defaults to the current working directory.</dd>
     phc.ApiResponse
         The data lake list query response
     &#34;&#34;&#34;
-    path = &#34;analytics/query?datasetId=%s&amp;pageSize=%d&#34; % (
+    path = &#34;analytics/data-lake/query?datasetId=%s&amp;pageSize=%d&#34; % (
         project_id,
         page_size,
     )
@@ -2930,7 +2947,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = '20fc153a-740f-4d74-977d-df9cda6670c7', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = '65f979f4-b010-41a8-9972-3743a8e60a96', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
