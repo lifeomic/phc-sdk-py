@@ -3,6 +3,7 @@
 import os
 import jwt
 import time
+from urllib.parse import urlparse
 
 
 class Session:
@@ -31,13 +32,15 @@ class Session:
         self.token = token
         self.refresh_token = refresh_token
         self.account = account
+
+        hostname = urlparse(self._get_decoded_token().get("iss", "")).hostname
         env = (
             "dev"
-            if "cognito-idp.us-east-1.amazonaws.com"
-            in self._get_decoded_token().get("iss")
-            or "api.dev.lifeomic.com" in self._get_decoded_token().get("iss")
+            if hostname
+            in ["cognito-idp.us-east-1.amazonaws.com", "api.dev.lifeomic.com"]
             else "us"
         )
+
         self.api_url = f"https://api.{env}.lifeomic.com/v1/"
         self.fhir_url = f"https://fhir.{env}.lifeomic.com/{account}/dstu3/"
         self.ga4gh_url = f"https://ga4gh.{env}.lifeomic.com/{account}/v1/"
