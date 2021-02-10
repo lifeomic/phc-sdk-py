@@ -1,4 +1,5 @@
 import os
+import re
 from io import StringIO
 import pandas as pd
 
@@ -17,6 +18,10 @@ class CSVWriter:
         """Write a data frame to an existing CSV file without loading the entire
         file into memory
         """
+
+        # Remove newlines from column names
+        frame.columns = [re.sub(r'[\t\n]', '', c) for c in frame.columns.tolist()]
+
         if not os.path.exists(self.filename):
             frame.to_csv(
                 self.filename, date_format="%Y-%m-%dT%H:%M:%S%z", index=False
@@ -44,10 +49,7 @@ class CSVWriter:
         self._finalize()
 
     def _columns(self):
-        with open(self.filename, "r") as f:
-            header = f.readline()
-
-        return pd.read_csv(StringIO(header)).columns.tolist()
+        return pd.read_csv(self.filename, nrows=0).columns.tolist()
 
     def _copy_to_backup_file_without_header(self):
         os.system(f"sed 1,1d {self.filename} > {self.bak_filename}")
