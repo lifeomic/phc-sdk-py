@@ -1,10 +1,10 @@
 import math
 from functools import reduce, wraps
-from typing import Callable, List, Union, Optional
-from toolz import groupby
+from typing import Callable, List, Optional, Union
 
 import pandas as pd
 from funcy import lmapcat
+from toolz import groupby
 
 try:
     from tqdm.autonotebook import tqdm
@@ -92,7 +92,7 @@ def with_progress(
     if _has_tqdm:
         progress = init_progress()
         result = func(progress)
-        if progress:
+        if progress is not None:
             progress.close()
         return result
 
