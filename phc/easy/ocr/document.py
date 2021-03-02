@@ -69,5 +69,5 @@ class Document(DocumentReference):
             term={"meta.tag.code.keyword": "PrecisionOCR Service"},
             all_results=all_results,
             auth_args=auth_args,
-            **kw_args,
+            **{"ignore_cache": True, **kw_args},
         )
