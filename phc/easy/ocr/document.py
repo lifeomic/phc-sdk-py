@@ -1,6 +1,8 @@
 from phc.base_client import BaseClient
 from phc.easy.auth import Auth
 from phc.easy.document_reference import DocumentReference
+from phc.easy.ocr.suggestion import expand_suggestion_df
+from phc.easy.query import Query
 
 
 class Document(DocumentReference):
@@ -26,6 +28,38 @@ class Document(DocumentReference):
             f"ocr/fhir/projects/{auth.project_id}/documentReferences/{id}",
             http_verb="DELETE",
         )
+
+    @classmethod
+    def suggestions(
+        cls,
+        id: str,
+        all_results=False,
+        raw: bool = False,
+        drop_complex_columns: bool = True,
+        auth_args: Auth = Auth.shared(),
+        **kw_args,
+    ):
+        auth = Auth(auth_args)
+
+        results = Query.execute_paging_api(
+            f"ocr/fhir/projects/{auth.project_id}/documentReferences/{id}/suggestions",
+            {},
+            auth_args=auth_args,
+            item_key="records",
+            all_results=all_results,
+            try_count=False,
+            **{"ignore_cache": True, **kw_args},
+        )
+
+        if raw:
+            return results
+
+        results = expand_suggestion_df(results)
+
+        if drop_complex_columns:
+            return results.drop(["wordIds"], axis=1)
+
+        return results
 
     @classmethod
     def get_data_frame(
