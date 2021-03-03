@@ -1,5 +1,6 @@
 from phc.base_client import BaseClient
 from phc.easy.auth import Auth
+from phc.easy.ocr.block import Block
 from phc.easy.ocr.config import Config
 from phc.easy.ocr.document import Document
 from phc.easy.ocr.document_composition import DocumentComposition
@@ -10,6 +11,7 @@ class Ocr:
     Config = Config
     Document = Document
     DocumentComposition = DocumentComposition
+    Block = Block
 
     @staticmethod
     def upload(
