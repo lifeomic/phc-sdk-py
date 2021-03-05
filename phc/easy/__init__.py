@@ -20,6 +20,7 @@ from phc.easy.medication_dispense import MedicationDispense
 from phc.easy.medication_request import MedicationRequest
 from phc.easy.medication_statement import MedicationStatement
 from phc.easy.observation import Observation
+from phc.easy.ocr import Ocr
 from phc.easy.omics.gene import Gene
 from phc.easy.omics.gene_set import GeneSet
 from phc.easy.omics.genomic_copy_number_variant import GenomicCopyNumberVariant
@@ -69,6 +70,7 @@ __all__ = [
     "MedicationDispense",
     "MedicationRequest",
     "MedicationStatement",
+    "Ocr",
     "Observation",
     "Option",
     "Organization",
