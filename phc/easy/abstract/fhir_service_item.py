@@ -1,16 +1,47 @@
 from typing import List, Optional, Union
 
 import pandas as pd
-
 from phc.easy.auth import Auth
+from phc.easy.dstu3 import DSTU3
 from phc.easy.query import Query
 from phc.easy.util import without_keys
+from phc.util.string_case import snake_to_title_case
+
+
+class ClassProperty(property):
+    """Magic python to create a classmethod property to make it look like you're
+    just accessing a nested resource (but will actually have access to the class
+    resources and can dynamically return a result)
+
+    Usage:
+
+    class MyClass:
+        @ClassProperty
+        @classmethod
+        def Method(cls):
+            return OtherClass(cls.entity)
+
+    MyClass.Method  => <# OtherClass(entity: ...) #>
+    """
+
+    def __get__(self, cls, owner):
+        return self.fget.__get__(None, owner)()
 
 
 class FhirServiceItem:
     """Provides an abstract class and/or static methods for retrieving items
     from a FSS table
     """
+
+    @ClassProperty
+    @classmethod
+    def DSTU3(cls):
+        """Return a DSTU3 instance with the entity name configured
+
+        Usage:
+            phc.Patient.DSTU3.get(...)
+        """
+        return DSTU3(snake_to_title_case(cls.table_name()))
 
     @staticmethod
     def table_name() -> str:
