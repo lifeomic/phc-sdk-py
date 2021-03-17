@@ -92,7 +92,7 @@ def with_progress(
     if _has_tqdm:
         progress = init_progress()
         result = func(progress)
-        if progress:
+        if progress is not None:
             progress.close()
         return result
 
