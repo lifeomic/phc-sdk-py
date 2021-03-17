@@ -8,7 +8,7 @@ from phc.easy.query import Query
 class Document(DocumentReference):
     @classmethod
     def get(cls, id: str, auth_args: Auth = Auth.shared(), **kw_args):
-        return (
+        results = (
             super()
             .get_data_frame(
                 id=id,
@@ -16,8 +16,10 @@ class Document(DocumentReference):
                 auth_args=auth_args,
                 **kw_args,
             )
-            .to_dict("records")[0]
+            .to_dict("records")
         )
+
+        return results[0] if len(results) else None
 
     @staticmethod
     def delete(id: str, auth_args: Auth = Auth.shared()):

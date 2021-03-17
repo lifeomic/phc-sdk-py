@@ -17,7 +17,7 @@ class Config:
                 "project": auth.project_id,
                 "config": json.loads(config.json(exclude_none=True)),
             },
-        )
+        ).data
 
     @staticmethod
     def get(auth_args: Auth = Auth.shared()):
@@ -26,4 +26,4 @@ class Config:
 
         return client._api_call(
             f"ocr/config/{auth.project_id}", http_verb="GET"
-        )
+        ).data
