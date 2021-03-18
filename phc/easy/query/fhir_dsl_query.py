@@ -78,31 +78,31 @@ def _ids_adder(id: Union[str, None] = None, ids: List[str] = []):
     return lambda query: and_query_clause(query, {"terms": {"id.keyword": ids}})
 
 
-def _patient_ids_adder(
-    patient_id: Union[str, None] = None,
-    patient_ids: List[str] = [],
-    patient_key: str = "subject.reference",
-    patient_id_prefixes: List[str] = ["Patient/"],
+def foreign_ids_adder(
+    foreign_id: Optional[str],
+    foreign_ids: List[str],
+    foreign_key: str,
+    foreign_id_prefixes: List[str],
 ):
-    patient_ids = [*patient_ids, *([patient_id] if patient_id else [])]
+    foreign_ids = [*foreign_ids, *([foreign_id] if foreign_id else [])]
 
-    if len(patient_ids) == 0:
+    if len(foreign_ids) == 0:
         return identity
 
     return lambda query: and_query_clause(
         query,
         {
             "terms": {
-                f"{patient_key}.keyword": [
-                    *add_prefixes(patient_ids, patient_id_prefixes),
-                    *patient_ids,
+                f"{foreign_key}.keyword": [
+                    *add_prefixes(foreign_ids, foreign_id_prefixes),
+                    *foreign_ids,
                 ]
             }
         },
     )
 
 
-def _term_adder(term: Optional[dict]):
+def term_adder(term: Optional[dict]):
     if term is None:
         return identity
 
@@ -206,13 +206,13 @@ def build_query(
     return pipe(
         query,
         _ids_adder(id=id, ids=ids),
-        _patient_ids_adder(
-            patient_id=patient_id,
-            patient_ids=patient_ids,
-            patient_key=patient_key,
-            patient_id_prefixes=patient_id_prefixes,
+        foreign_ids_adder(
+            foreign_id=patient_id,
+            foreign_ids=patient_ids,
+            foreign_key=patient_key,
+            foreign_id_prefixes=patient_id_prefixes,
         ),
-        _term_adder(term),
+        term_adder(term),
         _code_adder(attribute="code", code_fields=code_fields, value=code),
         _code_adder(
             attribute="display", code_fields=code_fields, value=display
