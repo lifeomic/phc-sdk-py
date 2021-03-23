@@ -1,5 +1,9 @@
 import pandas as pd
 from toolz import partial, pipe
+from phc.base_client import BaseClient
+from phc.easy.auth import Auth
+from phc.easy.document_reference import DocumentReference
+from phc.easy.query import Query
 
 SUGGESTION_TYPES = [
     "observation",
@@ -7,6 +11,47 @@ SUGGESTION_TYPES = [
     "procedure",
     "medicationAdministration",
 ]
+
+COMPLEX_COLUMNS = [
+    "suggestions_comprehendResults",
+    "comprehendResults",
+    "wordIds",
+]
+
+
+class Suggestion(DocumentReference):
+    @classmethod
+    def get_data_frame(
+        cls,
+        document_id: str,
+        all_results=False,
+        raw: bool = False,
+        drop_complex_columns: bool = True,
+        auth_args: Auth = Auth.shared(),
+        **kw_args,
+    ):
+        auth = Auth(auth_args)
+
+        results = Query.execute_paging_api(
+            f"ocr/fhir/projects/{auth.project_id}/documentReferences/{document_id}/suggestions",
+            {},
+            auth_args=auth_args,
+            item_key="records",
+            all_results=all_results,
+            try_count=False,
+            **{"ignore_cache": True, **kw_args},
+        )
+
+        if raw:
+            return results
+
+        results = expand_suggestion_df(results)
+
+        complex_columns = [c for c in COMPLEX_COLUMNS if c in results.columns]
+        if drop_complex_columns and len(complex_columns) > 0:
+            return results.drop(complex_columns, axis=1)
+
+        return results
 
 
 def frame_for_type(df: pd.DataFrame, type: str):
@@ -190,9 +235,11 @@ def expand_array_column(df: pd.DataFrame, key: str, lprefix=""):
     if len(expanded) == 0:
         return main
 
-    return main.join(expanded.set_index(lprefix + "index")).reset_index(
-        drop=True
-    )
+    return main.join(
+        expanded.rename(
+            columns={"comprehendResults": f"{key}_comprehendResults"}
+        ).set_index(lprefix + "index")
+    ).reset_index(drop=True)
 
 
 def expand_generic(
