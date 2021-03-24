@@ -8,3 +8,4 @@ flake8
 nose
 pdoc3
 twine
+nose-watch

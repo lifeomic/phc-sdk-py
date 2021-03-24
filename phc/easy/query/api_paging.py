@@ -1,11 +1,11 @@
+import json
 from typing import Any, Callable, List, Optional, Union
+from urllib.parse import parse_qs, quote, urlparse
 
+from funcy import nth
 from phc.base_client import BaseClient
 from phc.easy.auth import Auth
 from phc.easy.util import tqdm
-
-from funcy import nth
-from urllib.parse import urlparse, parse_qs
 
 MAX_RESULT_SIZE = 999
 
@@ -18,7 +18,26 @@ def clean_params(params: dict):
     }
 
 
-def get_next_page_token(next_url: str):
+def get_next_page_token(data: dict):
+    if "links" in data:
+        # If links is present, the only 100% accurate way to get the next token is by
+        # parsing the next URL
+        return parse_next_page_token_from_url(
+            data.get("links", {}).get("next", "")
+        )
+
+    next_page_token = data.get("nextPageToken")
+    if next_page_token and isinstance(next_page_token, dict):
+        # URL encode next page token since it's sometimes a dictionary
+        return json.dumps(next_page_token)
+
+    if next_page_token and isinstance(next_page_token, str):
+        return next_page_token
+
+    return None
+
+
+def parse_next_page_token_from_url(next_url: str):
     "Parse next url and retrieve nextPageToken (or None)"
     return nth(0, parse_qs(urlparse(next_url).query).get("nextPageToken", []))
 
@@ -33,7 +52,9 @@ def recursive_paging_api_call(
     callback: Union[Callable[[Any, bool], None], None] = None,
     max_pages: Optional[int] = None,
     page_size: Optional[int] = None,
+    item_key: str = "items",
     log: bool = False,
+    try_count: bool = True,
     _current_page: int = 1,
     _prev_results: List[dict] = [],
     _next_page_token: Optional[str] = None,
@@ -53,7 +74,7 @@ def recursive_paging_api_call(
         max_pages = 1
 
     # Compute count and add to progress
-    if _count is None and len(_prev_results) == 0:
+    if try_count and _count is None and len(_prev_results) == 0:
         count_response = client._api_call(
             path,
             http_verb=http_verb,
@@ -72,17 +93,19 @@ def recursive_paging_api_call(
 
     response = client._api_call(path, http_verb=http_verb, params=params)
 
-    current_results = response.data.get("items", [])
+    current_results = response.data.get(item_key, [])
 
     if progress is not None:
         progress.update(len(current_results))
+
+    next_page_token = get_next_page_token(response.data)
 
     is_last_batch = (
         (scroll is False)
         or ((max_pages is not None) and (_current_page >= max_pages))
         # Using the next link is the only completely reliable way to tell if a
         # next page exists
-        or (response.data.get("links", {}).get("next") is None)
+        or (next_page_token is None)
     )
     results = [] if callback else [*_prev_results, *current_results]
 
@@ -125,10 +148,10 @@ def recursive_paging_api_call(
         page_size=page_size,
         log=log,
         scroll=scroll,
+        try_count=try_count,
+        item_key=item_key,
         _current_page=_current_page + 1,
         _prev_results=results,
-        _next_page_token=get_next_page_token(
-            response.data.get("links", {}).get("next", "")
-        ),
+        _next_page_token=next_page_token,
         _count=_count,
     )

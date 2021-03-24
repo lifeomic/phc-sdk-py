@@ -86,6 +86,7 @@ class FhirServiceItem:
         id: Optional[str] = None,
         ids: List[str] = [],
         # Codes
+        term: Optional[dict] = None,
         code: Optional[Union[str, List[str]]] = None,
         display: Optional[Union[str, List[str]]] = None,
         system: Optional[Union[str, List[str]]] = None,
@@ -129,6 +130,9 @@ class FhirServiceItem:
 
         ids : List[str]
             Find records for given ids
+
+        term : dict
+            Adds where clause for a full term clause
 
         code : str | List[str]
             Adds where clause for code value(s)
@@ -176,6 +180,7 @@ class FhirServiceItem:
             log=log,
             # Codes
             code_fields=code_fields,
+            term=term,
             code=code,
             display=display,
             system=system,

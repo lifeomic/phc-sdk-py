@@ -7,14 +7,10 @@ from phc.base_client import BaseClient
 from phc.easy.auth import Auth
 from phc.easy.query.api_paging import clean_params, recursive_paging_api_call
 from phc.easy.query.fhir_aggregation import FhirAggregation
-from phc.easy.query.fhir_dsl import (
-    DEFAULT_SCROLL_SIZE,
-    MAX_RESULT_SIZE,
-    execute_single_fhir_dsl,
-    recursive_execute_fhir_dsl,
-    tqdm,
-    with_progress,
-)
+from phc.easy.query.fhir_dsl import (DEFAULT_SCROLL_SIZE, MAX_RESULT_SIZE,
+                                     execute_single_fhir_dsl,
+                                     recursive_execute_fhir_dsl, tqdm,
+                                     with_progress)
 from phc.easy.query.fhir_dsl_query import build_query
 from phc.easy.query.ga4gh import recursive_execute_ga4gh
 from phc.easy.util import extract_codes
@@ -177,6 +173,8 @@ class Query:
         ignore_cache: bool = False,
         show_progress: bool = True,
         progress: Optional[tqdm] = None,
+        item_key: str = "items",
+        try_count: bool = True,
     ):
         """Execute a API query that pages through results
 
@@ -213,6 +211,12 @@ class Query:
         progress : Optional[tqdm] = None
             Override the given progress indicator
 
+        item_key : str
+            The key to find the results underneath (usually "items" but not always)
+
+        try_count : bool
+            Whether to try and send a "count" param to update the progress bar
+
         Examples
         --------
         >>> import phc.easy as phc
@@ -224,6 +228,7 @@ class Query:
                     "patientId": "<patient-uuid>"
                 }
             )
+
         """
 
         auth = Auth(auth_args)
@@ -274,6 +279,8 @@ class Query:
                 log=log,
                 auth_args=auth_args,
                 progress=progress,
+                item_key=item_key,
+                try_count=try_count,
             ),
         )
 

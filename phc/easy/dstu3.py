@@ -86,4 +86,6 @@ class DSTU3:
         auth = Auth(auth_args)
         client = BaseClient(auth.session())
 
-        client._fhir_call(f"{self.entity}/{record_id}", http_verb="DELETE").data
+        return client._fhir_call(
+            f"{self.entity}/{record_id}", http_verb="DELETE"
+        ).data

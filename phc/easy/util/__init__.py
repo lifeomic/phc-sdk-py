@@ -1,10 +1,10 @@
 import math
 from functools import reduce, wraps
-from typing import Callable, List, Union, Optional
-from toolz import groupby
+from typing import Callable, List, Optional, Union
 
 import pandas as pd
 from funcy import lmapcat
+from toolz import groupby
 
 try:
     from tqdm.autonotebook import tqdm

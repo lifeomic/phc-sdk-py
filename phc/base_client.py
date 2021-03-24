@@ -1,17 +1,17 @@
 """A Python module for a base PHC web client."""
-from urllib.parse import urljoin, urlencode
-from typing import Union
-
-import sys
-import platform
 import asyncio
+import platform
+import sys
+from typing import Union
+from urllib.parse import urlencode, urljoin
+
 import aiohttp
 import backoff
 
-from phc import Session
-from phc.errors import RequestError, ApiError
-from phc.api_response import ApiResponse
 import phc.version as ver
+from phc import Session
+from phc.api_response import ApiResponse
+from phc.errors import ApiError, RequestError
 
 
 class BaseClient:

@@ -1,9 +1,10 @@
-from phc.easy.abstract.fhir_service_patient_item import FhirServicePatientItem
 from phc.easy.abstract.fhir_service_item import FhirServiceItem
+from phc.easy.abstract.fhir_service_patient_item import FhirServicePatientItem
 from phc.easy.audit_event import AuditEvent
 from phc.easy.auth import Auth
 from phc.easy.care_plan import CarePlan
 from phc.easy.codeable import Codeable
+from phc.easy.composition import Composition
 from phc.easy.condition import Condition
 from phc.easy.consent import Consent
 from phc.easy.diagnostic_report import DiagnosticReport
@@ -19,10 +20,11 @@ from phc.easy.medication_dispense import MedicationDispense
 from phc.easy.medication_request import MedicationRequest
 from phc.easy.medication_statement import MedicationStatement
 from phc.easy.observation import Observation
+from phc.easy.ocr import Ocr
 from phc.easy.omics.gene import Gene
 from phc.easy.omics.gene_set import GeneSet
-from phc.easy.omics.genomic_expression import GenomicExpression
 from phc.easy.omics.genomic_copy_number_variant import GenomicCopyNumberVariant
+from phc.easy.omics.genomic_expression import GenomicExpression
 from phc.easy.omics.genomic_short_variant import GenomicShortVariant
 from phc.easy.omics.genomic_structural_variant import GenomicStructuralVariant
 from phc.easy.omics.genomic_test import GenomicTest
@@ -45,6 +47,7 @@ __all__ = [
     "Auth",
     "CarePlan",
     "Codeable",
+    "Composition",
     "Condition",
     "Consent",
     "DiagnosticReport",
@@ -67,6 +70,7 @@ __all__ = [
     "MedicationDispense",
     "MedicationRequest",
     "MedicationStatement",
+    "Ocr",
     "Observation",
     "Option",
     "Organization",

@@ -1,9 +1,8 @@
 from typing import List, Optional, Union
 
 import pandas as pd
-
-from phc.easy.auth import Auth
 from phc.easy.abstract.fhir_service_item import FhirServiceItem
+from phc.easy.auth import Auth
 from phc.easy.query import Query
 
 
@@ -37,6 +36,7 @@ class FhirServicePatientItem(FhirServiceItem):
         expand_args: dict = {},
         log: bool = False,
         # Codes
+        term: Optional[dict] = None,
         code: Optional[Union[str, List[str]]] = None,
         display: Optional[Union[str, List[str]]] = None,
         system: Optional[Union[str, List[str]]] = None,
@@ -86,6 +86,9 @@ class FhirServicePatientItem(FhirServiceItem):
 
         log : bool = False
             Whether to log some diagnostic statements for debugging
+
+        term : dict
+            Adds where clause for a full term clause
 
         code : str | List[str]
             Adds where clause for code value(s)
@@ -139,6 +142,7 @@ class FhirServicePatientItem(FhirServiceItem):
             patient_id_prefixes=cls.patient_id_prefixes(),
             # Codes
             code_fields=code_fields,
+            term=term,
             code=code,
             display=display,
             system=system,
