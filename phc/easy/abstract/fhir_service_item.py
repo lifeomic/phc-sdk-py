@@ -35,13 +35,20 @@ class FhirServiceItem:
 
     @ClassProperty
     @classmethod
-    def DSTU3(cls):
+    def DSTU3(cls) -> DSTU3:
         """Return a DSTU3 instance with the entity name configured
 
         Usage:
             phc.Patient.DSTU3.get(...)
         """
-        return DSTU3(snake_to_title_case(cls.table_name()))
+        try:
+            # Must wrap in try/except since docs try to access this on abstract classes
+            # where table_name() throws a ValueError
+            table_name = cls.table_name()
+        except Exception:
+            table_name = ""
+
+        return DSTU3(snake_to_title_case(table_name))
 
     @staticmethod
     def table_name() -> str:

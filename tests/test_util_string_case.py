@@ -7,3 +7,4 @@ def test_snake_to_title_case():
         snake_to_title_case("document_reference"), "DocumentReference"
     )
     assert_equals(snake_to_title_case("patient"), "Patient")
+    assert_equals(snake_to_title_case(""), "")
