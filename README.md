@@ -9,6 +9,7 @@ The phc-sdk-py is a developer kit for interfacing with the [PHC API](https://doc
 ![Downloads](https://img.shields.io/pypi/dw/phc?style=for-the-badge)
 ![GitHub release](https://img.shields.io/github/release/lifeomic/phc-sdk-py.svg?style=for-the-badge)
 [![Docs](https://img.shields.io/badge/DOCS-PASSING-green?style=for-the-badge)](https://lifeomic.github.io/phc-sdk-py/)
+[![User Guides](https://img.shields.io/badge/DOCS-PASSING-green?style=for-the-badge)](https://docs.us.lifeomic.com/user-guides/python-sdk/)
 
 ## Getting Started
 

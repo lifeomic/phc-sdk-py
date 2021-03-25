@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *(NOTE: All examples use fictious data or freely available data sets.)*
 
+## [0.22.0] - 2021-03-24
+
+### Fixed
+
+- Bug that caused error related to printing progress
+
+### Added
+
+Added lots of Ocr functionality and a Composition module in the `easy` namespace.
+
+- `phc.Ocr.Config` - Create and update PrecisionOCR config within a project
+- `phc.Ocr.Document` - Retrieve PrecisionOCR documents
+- `phc.Ocr.DocumentComposition` - Retrieve metadata by page for PrecisionOCR documents
+- `phc.Ocr.Block` - Retrieve the text and layout metadata from a PrecisionOCR document
+- `phc.Ocr.Suggestion` - Retrieve all permutations of PrecisionOCR medical suggestions
+- `phc.Composition` - Base FHIR class for retrieving Composition resources from the FHIR Search Service
+
+
 ## [0.21.1] - 2020-12-17
 
 ### Fixed
