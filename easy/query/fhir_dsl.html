@@ -137,7 +137,7 @@ def recursive_execute_fhir_dsl(
     if is_first_iteration and progress:
         progress.reset(actual_count)
 
-    if progress:
+    if progress is not None:
         progress.update(current_result_count)
 
     is_last_batch = (
@@ -294,7 +294,7 @@ def recursive_execute_fhir_dsl(
     if is_first_iteration and progress:
         progress.reset(actual_count)
 
-    if progress:
+    if progress is not None:
         progress.update(current_result_count)
 
     is_last_batch = (

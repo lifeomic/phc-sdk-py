@@ -36,14 +36,10 @@ from phc.base_client import BaseClient
 from phc.easy.auth import Auth
 from phc.easy.query.api_paging import clean_params, recursive_paging_api_call
 from phc.easy.query.fhir_aggregation import FhirAggregation
-from phc.easy.query.fhir_dsl import (
-    DEFAULT_SCROLL_SIZE,
-    MAX_RESULT_SIZE,
-    execute_single_fhir_dsl,
-    recursive_execute_fhir_dsl,
-    tqdm,
-    with_progress,
-)
+from phc.easy.query.fhir_dsl import (DEFAULT_SCROLL_SIZE, MAX_RESULT_SIZE,
+                                     execute_single_fhir_dsl,
+                                     recursive_execute_fhir_dsl, tqdm,
+                                     with_progress)
 from phc.easy.query.fhir_dsl_query import build_query
 from phc.easy.query.ga4gh import recursive_execute_ga4gh
 from phc.easy.util import extract_codes
@@ -206,6 +202,8 @@ class Query:
         ignore_cache: bool = False,
         show_progress: bool = True,
         progress: Optional[tqdm] = None,
+        item_key: str = &#34;items&#34;,
+        try_count: bool = True,
     ):
         &#34;&#34;&#34;Execute a API query that pages through results
 
@@ -242,6 +240,12 @@ class Query:
         progress : Optional[tqdm] = None
             Override the given progress indicator
 
+        item_key : str
+            The key to find the results underneath (usually &#34;items&#34; but not always)
+
+        try_count : bool
+            Whether to try and send a &#34;count&#34; param to update the progress bar
+
         Examples
         --------
         &gt;&gt;&gt; import phc.easy as phc
@@ -253,6 +257,7 @@ class Query:
                     &#34;patientId&#34;: &#34;&lt;patient-uuid&gt;&#34;
                 }
             )
+
         &#34;&#34;&#34;
 
         auth = Auth(auth_args)
@@ -303,6 +308,8 @@ class Query:
                 log=log,
                 auth_args=auth_args,
                 progress=progress,
+                item_key=item_key,
+                try_count=try_count,
             ),
         )
 
@@ -1067,6 +1074,8 @@ class Query:
         ignore_cache: bool = False,
         show_progress: bool = True,
         progress: Optional[tqdm] = None,
+        item_key: str = &#34;items&#34;,
+        try_count: bool = True,
     ):
         &#34;&#34;&#34;Execute a API query that pages through results
 
@@ -1103,6 +1112,12 @@ class Query:
         progress : Optional[tqdm] = None
             Override the given progress indicator
 
+        item_key : str
+            The key to find the results underneath (usually &#34;items&#34; but not always)
+
+        try_count : bool
+            Whether to try and send a &#34;count&#34; param to update the progress bar
+
         Examples
         --------
         &gt;&gt;&gt; import phc.easy as phc
@@ -1114,6 +1129,7 @@ class Query:
                     &#34;patientId&#34;: &#34;&lt;patient-uuid&gt;&#34;
                 }
             )
+
         &#34;&#34;&#34;
 
         auth = Auth(auth_args)
@@ -1164,6 +1180,8 @@ class Query:
                 log=log,
                 auth_args=auth_args,
                 progress=progress,
+                item_key=item_key,
+                try_count=try_count,
             ),
         )
 
@@ -2178,7 +2196,7 @@ def execute_ga4gh(
 </details>
 </dd>
 <dt id="phc.easy.query.Query.execute_paging_api"><code class="name flex">
-<span>def <span class="ident">execute_paging_api</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame] = &lt;function identity&gt;, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, raw: bool = False, ignore_cache: bool = False, show_progress: bool = True, progress: Union[tqdm.std.tqdm, NoneType] = None)</span>
+<span>def <span class="ident">execute_paging_api</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame] = &lt;function identity&gt;, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, raw: bool = False, ignore_cache: bool = False, show_progress: bool = True, progress: Union[tqdm.std.tqdm, NoneType] = None, item_key: str = 'items', try_count: bool = True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a API query that pages through results</p>
@@ -2205,6 +2223,10 @@ for example</p>
 <dd>Whether to log some diagnostic statements for debugging</dd>
 <dt><strong><code>progress</code></strong> :&ensp;<code>Optional[tqdm] = None</code></dt>
 <dd>Override the given progress indicator</dd>
+<dt><strong><code>item_key</code></strong> :&ensp;<code>str</code></dt>
+<dd>The key to find the results underneath (usually "items" but not always)</dd>
+<dt><strong><code>try_count</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to try and send a "count" param to update the progress bar</dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
@@ -2236,6 +2258,8 @@ def execute_paging_api(
     ignore_cache: bool = False,
     show_progress: bool = True,
     progress: Optional[tqdm] = None,
+    item_key: str = &#34;items&#34;,
+    try_count: bool = True,
 ):
     &#34;&#34;&#34;Execute a API query that pages through results
 
@@ -2272,6 +2296,12 @@ def execute_paging_api(
     progress : Optional[tqdm] = None
         Override the given progress indicator
 
+    item_key : str
+        The key to find the results underneath (usually &#34;items&#34; but not always)
+
+    try_count : bool
+        Whether to try and send a &#34;count&#34; param to update the progress bar
+
     Examples
     --------
     &gt;&gt;&gt; import phc.easy as phc
@@ -2283,6 +2313,7 @@ def execute_paging_api(
                 &#34;patientId&#34;: &#34;&lt;patient-uuid&gt;&#34;
             }
         )
+
     &#34;&#34;&#34;
 
     auth = Auth(auth_args)
@@ -2333,6 +2364,8 @@ def execute_paging_api(
             log=log,
             auth_args=auth_args,
             progress=progress,
+            item_key=item_key,
+            try_count=try_count,
         ),
     )
 

@@ -30,16 +30,54 @@
 <pre><code class="python">from typing import List, Optional, Union
 
 import pandas as pd
-
 from phc.easy.auth import Auth
+from phc.easy.dstu3 import DSTU3
 from phc.easy.query import Query
 from phc.easy.util import without_keys
+from phc.util.string_case import snake_to_title_case
+
+
+class ClassProperty(property):
+    &#34;&#34;&#34;Magic python to create a classmethod property to make it look like you&#39;re
+    just accessing a nested resource (but will actually have access to the class
+    resources and can dynamically return a result)
+
+    Usage:
+
+    class MyClass:
+        @ClassProperty
+        @classmethod
+        def Method(cls):
+            return OtherClass(cls.entity)
+
+    MyClass.Method  =&gt; &lt;# OtherClass(entity: ...) #&gt;
+    &#34;&#34;&#34;
+
+    def __get__(self, cls, owner):
+        return self.fget.__get__(None, owner)()
 
 
 class FhirServiceItem:
     &#34;&#34;&#34;Provides an abstract class and/or static methods for retrieving items
     from a FSS table
     &#34;&#34;&#34;
+
+    @ClassProperty
+    @classmethod
+    def DSTU3(cls) -&gt; DSTU3:
+        &#34;&#34;&#34;Return a DSTU3 instance with the entity name configured
+
+        Usage:
+            phc.Patient.DSTU3.get(...)
+        &#34;&#34;&#34;
+        try:
+            # Must wrap in try/except since docs try to access this on abstract classes
+            # where table_name() throws a ValueError
+            table_name = cls.table_name()
+        except Exception:
+            table_name = &#34;&#34;
+
+        return DSTU3(snake_to_title_case(table_name))
 
     @staticmethod
     def table_name() -&gt; str:
@@ -84,6 +122,7 @@ class FhirServiceItem:
         id: Optional[str] = None,
         ids: List[str] = [],
         # Codes
+        term: Optional[dict] = None,
         code: Optional[Union[str, List[str]]] = None,
         display: Optional[Union[str, List[str]]] = None,
         system: Optional[Union[str, List[str]]] = None,
@@ -127,6 +166,9 @@ class FhirServiceItem:
 
         ids : List[str]
             Find records for given ids
+
+        term : dict
+            Adds where clause for a full term clause
 
         code : str | List[str]
             Adds where clause for code value(s)
@@ -174,6 +216,7 @@ class FhirServiceItem:
             log=log,
             # Codes
             code_fields=code_fields,
+            term=term,
             code=code,
             display=display,
             system=system,
@@ -251,6 +294,50 @@ class FhirServiceItem:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
+<dt id="phc.easy.abstract.fhir_service_item.ClassProperty"><code class="flex name class">
+<span>class <span class="ident">ClassProperty</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Magic python to create a classmethod property to make it look like you're
+just accessing a nested resource (but will actually have access to the class
+resources and can dynamically return a result)</p>
+<p>Usage:</p>
+<p>class MyClass:
+@ClassProperty
+@classmethod
+def Method(cls):
+return OtherClass(cls.entity)</p>
+<p>MyClass.Method
+=&gt; &lt;# OtherClass(entity: &hellip;) #&gt;</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ClassProperty(property):
+    &#34;&#34;&#34;Magic python to create a classmethod property to make it look like you&#39;re
+    just accessing a nested resource (but will actually have access to the class
+    resources and can dynamically return a result)
+
+    Usage:
+
+    class MyClass:
+        @ClassProperty
+        @classmethod
+        def Method(cls):
+            return OtherClass(cls.entity)
+
+    MyClass.Method  =&gt; &lt;# OtherClass(entity: ...) #&gt;
+    &#34;&#34;&#34;
+
+    def __get__(self, cls, owner):
+        return self.fget.__get__(None, owner)()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.property</li>
+</ul>
+</dd>
 <dt id="phc.easy.abstract.fhir_service_item.FhirServiceItem"><code class="flex name class">
 <span>class <span class="ident">FhirServiceItem</span></span>
 </code></dt>
@@ -265,6 +352,23 @@ from a FSS table</p></div>
     &#34;&#34;&#34;Provides an abstract class and/or static methods for retrieving items
     from a FSS table
     &#34;&#34;&#34;
+
+    @ClassProperty
+    @classmethod
+    def DSTU3(cls) -&gt; DSTU3:
+        &#34;&#34;&#34;Return a DSTU3 instance with the entity name configured
+
+        Usage:
+            phc.Patient.DSTU3.get(...)
+        &#34;&#34;&#34;
+        try:
+            # Must wrap in try/except since docs try to access this on abstract classes
+            # where table_name() throws a ValueError
+            table_name = cls.table_name()
+        except Exception:
+            table_name = &#34;&#34;
+
+        return DSTU3(snake_to_title_case(table_name))
 
     @staticmethod
     def table_name() -&gt; str:
@@ -309,6 +413,7 @@ from a FSS table</p></div>
         id: Optional[str] = None,
         ids: List[str] = [],
         # Codes
+        term: Optional[dict] = None,
         code: Optional[Union[str, List[str]]] = None,
         display: Optional[Union[str, List[str]]] = None,
         system: Optional[Union[str, List[str]]] = None,
@@ -352,6 +457,9 @@ from a FSS table</p></div>
 
         ids : List[str]
             Find records for given ids
+
+        term : dict
+            Adds where clause for a full term clause
 
         code : str | List[str]
             Adds where clause for code value(s)
@@ -399,6 +507,7 @@ from a FSS table</p></div>
             log=log,
             # Codes
             code_fields=code_fields,
+            term=term,
             code=code,
             display=display,
             system=system,
@@ -473,6 +582,13 @@ from a FSS table</p></div>
 <li><a title="phc.easy.patients.Patient" href="../patients/index.html#phc.easy.patients.Patient">Patient</a></li>
 <li><a title="phc.easy.practitioner.Practitioner" href="../practitioner.html#phc.easy.practitioner.Practitioner">Practitioner</a></li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="phc.easy.abstract.fhir_service_item.FhirServiceItem.DSTU3"><code class="name">var <span class="ident">DSTU3</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Static methods</h3>
 <dl>
 <dt id="phc.easy.abstract.fhir_service_item.FhirServiceItem.code_fields"><code class="name flex">
@@ -615,7 +731,7 @@ def get_count_by_field(cls, field: str, **kwargs):
 </details>
 </dd>
 <dt id="phc.easy.abstract.fhir_service_item.FhirServiceItem.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retrieve records</p>
@@ -645,6 +761,8 @@ Caching only occurs when all results are being retrieved.</dd>
 <dd>Find records for a given id</dd>
 <dt><strong><code>ids</code></strong> :&ensp;<code>List[str]</code></dt>
 <dd>Find records for given ids</dd>
+<dt><strong><code>term</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Adds where clause for a full term clause</dd>
 <dt><strong><code>code</code></strong> :&ensp;<code>str | List[str]</code></dt>
 <dd>Adds where clause for code value(s)</dd>
 <dt><strong><code>display</code></strong> :&ensp;<code>str | List[str]</code></dt>
@@ -682,6 +800,7 @@ def get_data_frame(
     id: Optional[str] = None,
     ids: List[str] = [],
     # Codes
+    term: Optional[dict] = None,
     code: Optional[Union[str, List[str]]] = None,
     display: Optional[Union[str, List[str]]] = None,
     system: Optional[Union[str, List[str]]] = None,
@@ -725,6 +844,9 @@ def get_data_frame(
 
     ids : List[str]
         Find records for given ids
+
+    term : dict
+        Adds where clause for a full term clause
 
     code : str | List[str]
         Adds where clause for code value(s)
@@ -772,6 +894,7 @@ def get_data_frame(
         log=log,
         # Codes
         code_fields=code_fields,
+        term=term,
         code=code,
         display=display,
         system=system,
@@ -833,6 +956,9 @@ def transform_results(data_frame: pd.DataFrame, **_expand_args):
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
+<li>
+<h4><code><a title="phc.easy.abstract.fhir_service_item.ClassProperty" href="#phc.easy.abstract.fhir_service_item.ClassProperty">ClassProperty</a></code></h4>
+</li>
 <li>
 <h4><code><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></code></h4>
 <ul class="two-column">

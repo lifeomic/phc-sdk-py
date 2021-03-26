@@ -28,6 +28,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import os
+import re
 from io import StringIO
 import pandas as pd
 
@@ -46,6 +47,10 @@ class CSVWriter:
         &#34;&#34;&#34;Write a data frame to an existing CSV file without loading the entire
         file into memory
         &#34;&#34;&#34;
+
+        # Remove newlines from column names
+        frame.columns = [re.sub(r&#39;[\t\n]&#39;, &#39;&#39;, c) for c in frame.columns.tolist()]
+
         if not os.path.exists(self.filename):
             frame.to_csv(
                 self.filename, date_format=&#34;%Y-%m-%dT%H:%M:%S%z&#34;, index=False
@@ -73,10 +78,7 @@ class CSVWriter:
         self._finalize()
 
     def _columns(self):
-        with open(self.filename, &#34;r&#34;) as f:
-            header = f.readline()
-
-        return pd.read_csv(StringIO(header)).columns.tolist()
+        return pd.read_csv(self.filename, nrows=0).columns.tolist()
 
     def _copy_to_backup_file_without_header(self):
         os.system(f&#34;sed 1,1d {self.filename} &gt; {self.bak_filename}&#34;)
@@ -126,6 +128,10 @@ file where additional columns may be added in subsequent writes</p></div>
         &#34;&#34;&#34;Write a data frame to an existing CSV file without loading the entire
         file into memory
         &#34;&#34;&#34;
+
+        # Remove newlines from column names
+        frame.columns = [re.sub(r&#39;[\t\n]&#39;, &#39;&#39;, c) for c in frame.columns.tolist()]
+
         if not os.path.exists(self.filename):
             frame.to_csv(
                 self.filename, date_format=&#34;%Y-%m-%dT%H:%M:%S%z&#34;, index=False
@@ -153,10 +159,7 @@ file where additional columns may be added in subsequent writes</p></div>
         self._finalize()
 
     def _columns(self):
-        with open(self.filename, &#34;r&#34;) as f:
-            header = f.readline()
-
-        return pd.read_csv(StringIO(header)).columns.tolist()
+        return pd.read_csv(self.filename, nrows=0).columns.tolist()
 
     def _copy_to_backup_file_without_header(self):
         os.system(f&#34;sed 1,1d {self.filename} &gt; {self.bak_filename}&#34;)
@@ -187,6 +190,10 @@ file into memory</p></div>
     &#34;&#34;&#34;Write a data frame to an existing CSV file without loading the entire
     file into memory
     &#34;&#34;&#34;
+
+    # Remove newlines from column names
+    frame.columns = [re.sub(r&#39;[\t\n]&#39;, &#39;&#39;, c) for c in frame.columns.tolist()]
+
     if not os.path.exists(self.filename):
         frame.to_csv(
             self.filename, date_format=&#34;%Y-%m-%dT%H:%M:%S%z&#34;, index=False

@@ -30,7 +30,8 @@
 <img alt="PyPI status" src="https://img.shields.io/pypi/status/phc.svg?style=for-the-badge">
 <img alt="Downloads" src="https://img.shields.io/pypi/dw/phc?style=for-the-badge">
 <img alt="GitHub release" src="https://img.shields.io/github/release/lifeomic/phc-sdk-py.svg?style=for-the-badge">
-<a href="https://lifeomic.github.io/phc-sdk-py/"><img alt="Docs" src="https://img.shields.io/badge/DOCS-PASSING-green?style=for-the-badge"></a></p>
+<a href="https://lifeomic.github.io/phc-sdk-py/"><img alt="Docs" src="https://img.shields.io/badge/DOCS-PASSING-green?style=for-the-badge"></a>
+<a href="https://docs.us.lifeomic.com/user-guides/python-sdk/"><img alt="User Guides" src="https://img.shields.io/badge/DOCS-PASSING-green?style=for-the-badge"></a></p>
 <h2 id="getting-started">Getting Started</h2>
 <h3 id="dependencies">Dependencies</h3>
 <ul>
@@ -480,13 +481,15 @@ __pdoc__ = {
         self.token = token
         self.refresh_token = refresh_token
         self.account = account
+
+        hostname = urlparse(self._get_decoded_token().get(&#34;iss&#34;, &#34;&#34;)).hostname
         env = (
             &#34;dev&#34;
-            if &#34;cognito-idp.us-east-1.amazonaws.com&#34;
-            in self._get_decoded_token().get(&#34;iss&#34;)
-            or &#34;api.dev.lifeomic.com&#34; in self._get_decoded_token().get(&#34;iss&#34;)
+            if hostname
+            in [&#34;cognito-idp.us-east-1.amazonaws.com&#34;, &#34;api.dev.lifeomic.com&#34;]
             else &#34;us&#34;
         )
+
         self.api_url = f&#34;https://api.{env}.lifeomic.com/v1/&#34;
         self.fhir_url = f&#34;https://fhir.{env}.lifeomic.com/{account}/dstu3/&#34;
         self.ga4gh_url = f&#34;https://ga4gh.{env}.lifeomic.com/{account}/v1/&#34;

@@ -30,9 +30,8 @@
 <pre><code class="python">from typing import List, Optional, Union
 
 import pandas as pd
-
-from phc.easy.auth import Auth
 from phc.easy.abstract.fhir_service_item import FhirServiceItem
+from phc.easy.auth import Auth
 from phc.easy.query import Query
 
 
@@ -66,6 +65,7 @@ class FhirServicePatientItem(FhirServiceItem):
         expand_args: dict = {},
         log: bool = False,
         # Codes
+        term: Optional[dict] = None,
         code: Optional[Union[str, List[str]]] = None,
         display: Optional[Union[str, List[str]]] = None,
         system: Optional[Union[str, List[str]]] = None,
@@ -115,6 +115,9 @@ class FhirServicePatientItem(FhirServiceItem):
 
         log : bool = False
             Whether to log some diagnostic statements for debugging
+
+        term : dict
+            Adds where clause for a full term clause
 
         code : str | List[str]
             Adds where clause for code value(s)
@@ -168,6 +171,7 @@ class FhirServicePatientItem(FhirServiceItem):
             patient_id_prefixes=cls.patient_id_prefixes(),
             # Codes
             code_fields=code_fields,
+            term=term,
             code=code,
             display=display,
             system=system,
@@ -248,6 +252,7 @@ from a FSS table that relates to a patient</p></div>
         expand_args: dict = {},
         log: bool = False,
         # Codes
+        term: Optional[dict] = None,
         code: Optional[Union[str, List[str]]] = None,
         display: Optional[Union[str, List[str]]] = None,
         system: Optional[Union[str, List[str]]] = None,
@@ -297,6 +302,9 @@ from a FSS table that relates to a patient</p></div>
 
         log : bool = False
             Whether to log some diagnostic statements for debugging
+
+        term : dict
+            Adds where clause for a full term clause
 
         code : str | List[str]
             Adds where clause for code value(s)
@@ -350,6 +358,7 @@ from a FSS table that relates to a patient</p></div>
             patient_id_prefixes=cls.patient_id_prefixes(),
             # Codes
             code_fields=code_fields,
+            term=term,
             code=code,
             display=display,
             system=system,
@@ -388,6 +397,7 @@ from a FSS table that relates to a patient</p></div>
 <ul class="hlist">
 <li><a title="phc.easy.audit_event.AuditEvent" href="../audit_event.html#phc.easy.audit_event.AuditEvent">AuditEvent</a></li>
 <li><a title="phc.easy.care_plan.CarePlan" href="../care_plan.html#phc.easy.care_plan.CarePlan">CarePlan</a></li>
+<li><a title="phc.easy.composition.Composition" href="../composition.html#phc.easy.composition.Composition">Composition</a></li>
 <li><a title="phc.easy.condition.Condition" href="../condition.html#phc.easy.condition.Condition">Condition</a></li>
 <li><a title="phc.easy.consent.Consent" href="../consent.html#phc.easy.consent.Consent">Consent</a></li>
 <li><a title="phc.easy.diagnostic_report.DiagnosticReport" href="../diagnostic_report.html#phc.easy.diagnostic_report.DiagnosticReport">DiagnosticReport</a></li>
@@ -496,7 +506,7 @@ def get_count_by_patient(cls, **kwargs):
 </details>
 </dd>
 <dt id="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retrieve records</p>
@@ -530,6 +540,8 @@ Caching only occurs when all results are being retrieved.</dd>
 <dd>Additional arguments passed to phc.Frame.expand</dd>
 <dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
 <dd>Whether to log some diagnostic statements for debugging</dd>
+<dt><strong><code>term</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Adds where clause for a full term clause</dd>
 <dt><strong><code>code</code></strong> :&ensp;<code>str | List[str]</code></dt>
 <dd>Adds where clause for code value(s)</dd>
 <dt><strong><code>display</code></strong> :&ensp;<code>str | List[str]</code></dt>
@@ -569,6 +581,7 @@ def get_data_frame(
     expand_args: dict = {},
     log: bool = False,
     # Codes
+    term: Optional[dict] = None,
     code: Optional[Union[str, List[str]]] = None,
     display: Optional[Union[str, List[str]]] = None,
     system: Optional[Union[str, List[str]]] = None,
@@ -618,6 +631,9 @@ def get_data_frame(
 
     log : bool = False
         Whether to log some diagnostic statements for debugging
+
+    term : dict
+        Adds where clause for a full term clause
 
     code : str | List[str]
         Adds where clause for code value(s)
@@ -671,6 +687,7 @@ def get_data_frame(
         patient_id_prefixes=cls.patient_id_prefixes(),
         # Codes
         code_fields=code_fields,
+        term=term,
         code=code,
         display=display,
         system=system,

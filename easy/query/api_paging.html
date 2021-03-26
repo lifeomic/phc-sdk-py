@@ -27,14 +27,14 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from typing import Any, Callable, List, Optional, Union
+<pre><code class="python">import json
+from typing import Any, Callable, List, Optional, Union
+from urllib.parse import parse_qs, quote, urlparse
 
+from funcy import nth
 from phc.base_client import BaseClient
 from phc.easy.auth import Auth
 from phc.easy.util import tqdm
-
-from funcy import nth
-from urllib.parse import urlparse, parse_qs
 
 MAX_RESULT_SIZE = 999
 
@@ -47,7 +47,26 @@ def clean_params(params: dict):
     }
 
 
-def get_next_page_token(next_url: str):
+def get_next_page_token(data: dict):
+    if &#34;links&#34; in data:
+        # If links is present, the only 100% accurate way to get the next token is by
+        # parsing the next URL
+        return parse_next_page_token_from_url(
+            data.get(&#34;links&#34;, {}).get(&#34;next&#34;, &#34;&#34;)
+        )
+
+    next_page_token = data.get(&#34;nextPageToken&#34;)
+    if next_page_token and isinstance(next_page_token, dict):
+        # URL encode next page token since it&#39;s sometimes a dictionary
+        return json.dumps(next_page_token)
+
+    if next_page_token and isinstance(next_page_token, str):
+        return next_page_token
+
+    return None
+
+
+def parse_next_page_token_from_url(next_url: str):
     &#34;Parse next url and retrieve nextPageToken (or None)&#34;
     return nth(0, parse_qs(urlparse(next_url).query).get(&#34;nextPageToken&#34;, []))
 
@@ -62,7 +81,9 @@ def recursive_paging_api_call(
     callback: Union[Callable[[Any, bool], None], None] = None,
     max_pages: Optional[int] = None,
     page_size: Optional[int] = None,
+    item_key: str = &#34;items&#34;,
     log: bool = False,
+    try_count: bool = True,
     _current_page: int = 1,
     _prev_results: List[dict] = [],
     _next_page_token: Optional[str] = None,
@@ -82,7 +103,7 @@ def recursive_paging_api_call(
         max_pages = 1
 
     # Compute count and add to progress
-    if _count is None and len(_prev_results) == 0:
+    if try_count and _count is None and len(_prev_results) == 0:
         count_response = client._api_call(
             path,
             http_verb=http_verb,
@@ -101,17 +122,19 @@ def recursive_paging_api_call(
 
     response = client._api_call(path, http_verb=http_verb, params=params)
 
-    current_results = response.data.get(&#34;items&#34;, [])
+    current_results = response.data.get(item_key, [])
 
     if progress is not None:
         progress.update(len(current_results))
+
+    next_page_token = get_next_page_token(response.data)
 
     is_last_batch = (
         (scroll is False)
         or ((max_pages is not None) and (_current_page &gt;= max_pages))
         # Using the next link is the only completely reliable way to tell if a
         # next page exists
-        or (response.data.get(&#34;links&#34;, {}).get(&#34;next&#34;) is None)
+        or (next_page_token is None)
     )
     results = [] if callback else [*_prev_results, *current_results]
 
@@ -154,11 +177,11 @@ def recursive_paging_api_call(
         page_size=page_size,
         log=log,
         scroll=scroll,
+        try_count=try_count,
+        item_key=item_key,
         _current_page=_current_page + 1,
         _prev_results=results,
-        _next_page_token=get_next_page_token(
-            response.data.get(&#34;links&#34;, {}).get(&#34;next&#34;, &#34;&#34;)
-        ),
+        _next_page_token=next_page_token,
         _count=_count,
     )</code></pre>
 </details>
@@ -188,7 +211,35 @@ def recursive_paging_api_call(
 </details>
 </dd>
 <dt id="phc.easy.query.api_paging.get_next_page_token"><code class="name flex">
-<span>def <span class="ident">get_next_page_token</span></span>(<span>next_url: str)</span>
+<span>def <span class="ident">get_next_page_token</span></span>(<span>data: dict)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_next_page_token(data: dict):
+    if &#34;links&#34; in data:
+        # If links is present, the only 100% accurate way to get the next token is by
+        # parsing the next URL
+        return parse_next_page_token_from_url(
+            data.get(&#34;links&#34;, {}).get(&#34;next&#34;, &#34;&#34;)
+        )
+
+    next_page_token = data.get(&#34;nextPageToken&#34;)
+    if next_page_token and isinstance(next_page_token, dict):
+        # URL encode next page token since it&#39;s sometimes a dictionary
+        return json.dumps(next_page_token)
+
+    if next_page_token and isinstance(next_page_token, str):
+        return next_page_token
+
+    return None</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.query.api_paging.parse_next_page_token_from_url"><code class="name flex">
+<span>def <span class="ident">parse_next_page_token_from_url</span></span>(<span>next_url: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Parse next url and retrieve nextPageToken (or None)</p></div>
@@ -196,13 +247,13 @@ def recursive_paging_api_call(
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_next_page_token(next_url: str):
+<pre><code class="python">def parse_next_page_token_from_url(next_url: str):
     &#34;Parse next url and retrieve nextPageToken (or None)&#34;
     return nth(0, parse_qs(urlparse(next_url).query).get(&#34;nextPageToken&#34;, []))</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.query.api_paging.recursive_paging_api_call"><code class="name flex">
-<span>def <span class="ident">recursive_paging_api_call</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', scroll: bool = False, progress: Union[tqdm.std.tqdm, NoneType] = None, auth_args: Union[<a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a>, NoneType] = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False)</span>
+<span>def <span class="ident">recursive_paging_api_call</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', scroll: bool = False, progress: Union[tqdm.std.tqdm, NoneType] = None, auth_args: Union[<a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a>, NoneType] = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, item_key: str = 'items', log: bool = False, try_count: bool = True)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -220,7 +271,9 @@ def recursive_paging_api_call(
     callback: Union[Callable[[Any, bool], None], None] = None,
     max_pages: Optional[int] = None,
     page_size: Optional[int] = None,
+    item_key: str = &#34;items&#34;,
     log: bool = False,
+    try_count: bool = True,
     _current_page: int = 1,
     _prev_results: List[dict] = [],
     _next_page_token: Optional[str] = None,
@@ -240,7 +293,7 @@ def recursive_paging_api_call(
         max_pages = 1
 
     # Compute count and add to progress
-    if _count is None and len(_prev_results) == 0:
+    if try_count and _count is None and len(_prev_results) == 0:
         count_response = client._api_call(
             path,
             http_verb=http_verb,
@@ -259,17 +312,19 @@ def recursive_paging_api_call(
 
     response = client._api_call(path, http_verb=http_verb, params=params)
 
-    current_results = response.data.get(&#34;items&#34;, [])
+    current_results = response.data.get(item_key, [])
 
     if progress is not None:
         progress.update(len(current_results))
+
+    next_page_token = get_next_page_token(response.data)
 
     is_last_batch = (
         (scroll is False)
         or ((max_pages is not None) and (_current_page &gt;= max_pages))
         # Using the next link is the only completely reliable way to tell if a
         # next page exists
-        or (response.data.get(&#34;links&#34;, {}).get(&#34;next&#34;) is None)
+        or (next_page_token is None)
     )
     results = [] if callback else [*_prev_results, *current_results]
 
@@ -312,11 +367,11 @@ def recursive_paging_api_call(
         page_size=page_size,
         log=log,
         scroll=scroll,
+        try_count=try_count,
+        item_key=item_key,
         _current_page=_current_page + 1,
         _prev_results=results,
-        _next_page_token=get_next_page_token(
-            response.data.get(&#34;links&#34;, {}).get(&#34;next&#34;, &#34;&#34;)
-        ),
+        _next_page_token=next_page_token,
         _count=_count,
     )</code></pre>
 </details>
@@ -346,6 +401,7 @@ def recursive_paging_api_call(
 <ul class="">
 <li><code><a title="phc.easy.query.api_paging.clean_params" href="#phc.easy.query.api_paging.clean_params">clean_params</a></code></li>
 <li><code><a title="phc.easy.query.api_paging.get_next_page_token" href="#phc.easy.query.api_paging.get_next_page_token">get_next_page_token</a></code></li>
+<li><code><a title="phc.easy.query.api_paging.parse_next_page_token_from_url" href="#phc.easy.query.api_paging.parse_next_page_token_from_url">parse_next_page_token_from_url</a></code></li>
 <li><code><a title="phc.easy.query.api_paging.recursive_paging_api_call" href="#phc.easy.query.api_paging.recursive_paging_api_call">recursive_paging_api_call</a></code></li>
 </ul>
 </li>

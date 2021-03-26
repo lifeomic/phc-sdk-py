@@ -107,31 +107,31 @@ def _ids_adder(id: Union[str, None] = None, ids: List[str] = []):
     return lambda query: and_query_clause(query, {&#34;terms&#34;: {&#34;id.keyword&#34;: ids}})
 
 
-def _patient_ids_adder(
-    patient_id: Union[str, None] = None,
-    patient_ids: List[str] = [],
-    patient_key: str = &#34;subject.reference&#34;,
-    patient_id_prefixes: List[str] = [&#34;Patient/&#34;],
+def foreign_ids_adder(
+    foreign_id: Optional[str],
+    foreign_ids: List[str],
+    foreign_key: str,
+    foreign_id_prefixes: List[str],
 ):
-    patient_ids = [*patient_ids, *([patient_id] if patient_id else [])]
+    foreign_ids = [*foreign_ids, *([foreign_id] if foreign_id else [])]
 
-    if len(patient_ids) == 0:
+    if len(foreign_ids) == 0:
         return identity
 
     return lambda query: and_query_clause(
         query,
         {
             &#34;terms&#34;: {
-                f&#34;{patient_key}.keyword&#34;: [
-                    *add_prefixes(patient_ids, patient_id_prefixes),
-                    *patient_ids,
+                f&#34;{foreign_key}.keyword&#34;: [
+                    *add_prefixes(foreign_ids, foreign_id_prefixes),
+                    *foreign_ids,
                 ]
             }
         },
     )
 
 
-def _term_adder(term: Optional[dict]):
+def term_adder(term: Optional[dict]):
     if term is None:
         return identity
 
@@ -235,13 +235,13 @@ def build_query(
     return pipe(
         query,
         _ids_adder(id=id, ids=ids),
-        _patient_ids_adder(
-            patient_id=patient_id,
-            patient_ids=patient_ids,
-            patient_key=patient_key,
-            patient_id_prefixes=patient_id_prefixes,
+        foreign_ids_adder(
+            foreign_id=patient_id,
+            foreign_ids=patient_ids,
+            foreign_key=patient_key,
+            foreign_id_prefixes=patient_id_prefixes,
         ),
-        _term_adder(term),
+        term_adder(term),
         _code_adder(attribute=&#34;code&#34;, code_fields=code_fields, value=code),
         _code_adder(
             attribute=&#34;display&#34;, code_fields=code_fields, value=display
@@ -415,19 +415,52 @@ patient_ids if both supplied)</dd>
     return pipe(
         query,
         _ids_adder(id=id, ids=ids),
-        _patient_ids_adder(
-            patient_id=patient_id,
-            patient_ids=patient_ids,
-            patient_key=patient_key,
-            patient_id_prefixes=patient_id_prefixes,
+        foreign_ids_adder(
+            foreign_id=patient_id,
+            foreign_ids=patient_ids,
+            foreign_key=patient_key,
+            foreign_id_prefixes=patient_id_prefixes,
         ),
-        _term_adder(term),
+        term_adder(term),
         _code_adder(attribute=&#34;code&#34;, code_fields=code_fields, value=code),
         _code_adder(
             attribute=&#34;display&#34;, code_fields=code_fields, value=display
         ),
         _code_adder(attribute=&#34;system&#34;, code_fields=code_fields, value=system),
         _limit_adder(page_size),
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.query.fhir_dsl_query.foreign_ids_adder"><code class="name flex">
+<span>def <span class="ident">foreign_ids_adder</span></span>(<span>foreign_id: Union[str, NoneType], foreign_ids: List[str], foreign_key: str, foreign_id_prefixes: List[str])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def foreign_ids_adder(
+    foreign_id: Optional[str],
+    foreign_ids: List[str],
+    foreign_key: str,
+    foreign_id_prefixes: List[str],
+):
+    foreign_ids = [*foreign_ids, *([foreign_id] if foreign_id else [])]
+
+    if len(foreign_ids) == 0:
+        return identity
+
+    return lambda query: and_query_clause(
+        query,
+        {
+            &#34;terms&#34;: {
+                f&#34;{foreign_key}.keyword&#34;: [
+                    *add_prefixes(foreign_ids, foreign_id_prefixes),
+                    *foreign_ids,
+                ]
+            }
+        },
     )</code></pre>
 </details>
 </dd>
@@ -442,6 +475,22 @@ patient_ids if both supplied)</dd>
 </summary>
 <pre><code class="python">def get_limit(query: dict):
     return lens.Get(&#34;limit&#34;, [{}, {}])[1].Get(&#34;value&#34;, None).get()(query)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.query.fhir_dsl_query.term_adder"><code class="name flex">
+<span>def <span class="ident">term_adder</span></span>(<span>term: Union[dict, NoneType])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def term_adder(term: Optional[dict]):
+    if term is None:
+        return identity
+
+    return partial(and_query_clause, query_clause={&#34;term&#34;: term})</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.query.fhir_dsl_query.update_limit"><code class="name flex">
@@ -483,7 +532,9 @@ patient_ids if both supplied)</dd>
 <li><code><a title="phc.easy.query.fhir_dsl_query.and_query_clause" href="#phc.easy.query.fhir_dsl_query.and_query_clause">and_query_clause</a></code></li>
 <li><code><a title="phc.easy.query.fhir_dsl_query.and_query_clause_terms" href="#phc.easy.query.fhir_dsl_query.and_query_clause_terms">and_query_clause_terms</a></code></li>
 <li><code><a title="phc.easy.query.fhir_dsl_query.build_query" href="#phc.easy.query.fhir_dsl_query.build_query">build_query</a></code></li>
+<li><code><a title="phc.easy.query.fhir_dsl_query.foreign_ids_adder" href="#phc.easy.query.fhir_dsl_query.foreign_ids_adder">foreign_ids_adder</a></code></li>
 <li><code><a title="phc.easy.query.fhir_dsl_query.get_limit" href="#phc.easy.query.fhir_dsl_query.get_limit">get_limit</a></code></li>
+<li><code><a title="phc.easy.query.fhir_dsl_query.term_adder" href="#phc.easy.query.fhir_dsl_query.term_adder">term_adder</a></code></li>
 <li><code><a title="phc.easy.query.fhir_dsl_query.update_limit" href="#phc.easy.query.fhir_dsl_query.update_limit">update_limit</a></code></li>
 </ul>
 </li>

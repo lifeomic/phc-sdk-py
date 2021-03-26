@@ -112,6 +112,11 @@ from a FSS table that relates to a patient</p></div>
 <li><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></li>
 <li><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></li>
 </ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="phc.easy.ocr.document.Document" href="ocr/document.html#phc.easy.ocr.document.Document">Document</a></li>
+<li><a title="phc.easy.ocr.suggestion.Suggestion" href="ocr/suggestion.html#phc.easy.ocr.suggestion.Suggestion">Suggestion</a></li>
+</ul>
 <h3>Static methods</h3>
 <dl>
 <dt id="phc.easy.document_reference.DocumentReference.code_fields"><code class="name flex">
@@ -173,7 +178,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.document_reference.DocumentReference.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
