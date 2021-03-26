@@ -24,6 +24,15 @@ Added lots of Ocr functionality and a Composition module in the `easy` namespace
 - `phc.Ocr.Suggestion` - Retrieve all permutations of PrecisionOCR medical suggestions
 - `phc.Composition` - Base FHIR class for retrieving Composition resources from the FHIR Search Service
 
+Added the ability to create, read, update, and delete using the FHIR DSTU3 API by appending `.DSTU3` to any easy module that supports it.
+
+```python
+phc.Patient.DSTU3.create(...)
+phc.Patient.DSTU3.get(...)
+phc.Patient.DSTU3.update(...)
+phc.Patient.DSTU3.put(...)
+phc.Patient.DSTU3.delete(...)
+```
 
 ## [0.21.1] - 2020-12-17
 
