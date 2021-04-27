@@ -1,19 +1,25 @@
 """A Python Module for managing PHC sessions."""
 
 import os
-import jwt
 import time
 from urllib.parse import urlparse
+
+import jwt
+
+from phc.adapter import Adapter
 
 
 class Session:
     """Represents a PHC API session"""
+
+    adapter: Adapter
 
     def __init__(
         self,
         token: str = os.environ.get("PHC_ACCESS_TOKEN"),
         refresh_token: str = os.environ.get("PHC_REFRESH_TOKEN"),
         account: str = os.environ.get("PHC_ACCOUNT"),
+        adapter=Adapter(),
     ):
         """Initailizes a Session with token and account credentials.
 
@@ -32,6 +38,7 @@ class Session:
         self.token = token
         self.refresh_token = refresh_token
         self.account = account
+        self.adapter = adapter
 
         hostname = urlparse(self._get_decoded_token().get("iss", "")).hostname
         env = (
@@ -58,4 +65,7 @@ class Session:
         bool
             True if there is no token or the token is expired, otherwise False
         """
+        if self.adapter.should_refresh is False:
+            return False
+
         return self._get_decoded_token().get("exp", 0) < time.time()
