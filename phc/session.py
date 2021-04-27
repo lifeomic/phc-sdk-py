@@ -2,6 +2,7 @@
 
 import os
 import time
+from typing import Optional
 from urllib.parse import urlparse
 
 import jwt
@@ -16,10 +17,10 @@ class Session:
 
     def __init__(
         self,
-        token: str = os.environ.get("PHC_ACCESS_TOKEN"),
-        refresh_token: str = os.environ.get("PHC_REFRESH_TOKEN"),
-        account: str = os.environ.get("PHC_ACCOUNT"),
-        adapter=Adapter(),
+        token: Optional[str] = None,
+        refresh_token: Optional[str] = None,
+        account: Optional[str] = None,
+        adapter: Optional[Adapter] = None,
     ):
         """Initailizes a Session with token and account credentials.
 
@@ -27,11 +28,28 @@ class Session:
         ----------
         token : str, required
             The PHC access token or API key, by default os.environ.get("PHC_ACCESS_TOKEN")
-        refrsh_token : str, optional
+
+        refresh_token : str, optional
             The PHC refresh token, by default os.environ.get("PHC_REFRESH_TOKEN")
+
         account : str, required
             The PHC account ID, by default os.environ.get("PHC_ACCOUNT")
+
+        adapter : Adapter, optional
+            The adapter that executes requests
         """
+        if not token:
+            token = os.environ.get("PHC_ACCESS_TOKEN")
+
+        if not refresh_token:
+            refresh_token = os.environ.get("PHC_REFRESH_TOKEN")
+
+        if not account:
+            account = os.environ.get("PHC_ACCOUNT")
+
+        if not adapter:
+            adapter = Adapter()
+
         if not token or not account:
             raise ValueError("Must provide a value for both token and account")
 
