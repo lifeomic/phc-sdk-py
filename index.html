@@ -115,6 +115,10 @@ __pdoc__ = {
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
+<dt><code class="name"><a title="phc.adapter" href="adapter.html">phc.adapter</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt><code class="name"><a title="phc.easy" href="easy/index.html">phc.easy</a></code></dt>
 <dd>
 <div class="desc"></div>
@@ -437,7 +441,7 @@ __pdoc__ = {
 </dd>
 <dt id="phc.Session"><code class="flex name class">
 <span>class <span class="ident">Session</span></span>
-<span>(</span><span>token: str = None, refresh_token: str = None, account: str = None)</span>
+<span>(</span><span>token: Union[str, NoneType] = None, refresh_token: Union[str, NoneType] = None, account: Union[str, NoneType] = None, adapter: Union[<a title="phc.adapter.Adapter" href="adapter.html#phc.adapter.Adapter">Adapter</a>, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a PHC API session</p>
@@ -446,10 +450,12 @@ __pdoc__ = {
 <dl>
 <dt><strong><code>token</code></strong> :&ensp;<code>str, required</code></dt>
 <dd>The PHC access token or API key, by default os.environ.get("PHC_ACCESS_TOKEN")</dd>
-<dt><strong><code>refrsh_token</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dt><strong><code>refresh_token</code></strong> :&ensp;<code>str</code>, optional</dt>
 <dd>The PHC refresh token, by default os.environ.get("PHC_REFRESH_TOKEN")</dd>
 <dt><strong><code>account</code></strong> :&ensp;<code>str, required</code></dt>
 <dd>The PHC account ID, by default os.environ.get("PHC_ACCOUNT")</dd>
+<dt><strong><code>adapter</code></strong> :&ensp;<code>Adapter</code>, optional</dt>
+<dd>The adapter that executes requests</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -458,11 +464,14 @@ __pdoc__ = {
 <pre><code class="python">class Session:
     &#34;&#34;&#34;Represents a PHC API session&#34;&#34;&#34;
 
+    adapter: Adapter
+
     def __init__(
         self,
-        token: str = os.environ.get(&#34;PHC_ACCESS_TOKEN&#34;),
-        refresh_token: str = os.environ.get(&#34;PHC_REFRESH_TOKEN&#34;),
-        account: str = os.environ.get(&#34;PHC_ACCOUNT&#34;),
+        token: Optional[str] = None,
+        refresh_token: Optional[str] = None,
+        account: Optional[str] = None,
+        adapter: Optional[Adapter] = None,
     ):
         &#34;&#34;&#34;Initailizes a Session with token and account credentials.
 
@@ -470,17 +479,35 @@ __pdoc__ = {
         ----------
         token : str, required
             The PHC access token or API key, by default os.environ.get(&#34;PHC_ACCESS_TOKEN&#34;)
-        refrsh_token : str, optional
+
+        refresh_token : str, optional
             The PHC refresh token, by default os.environ.get(&#34;PHC_REFRESH_TOKEN&#34;)
+
         account : str, required
             The PHC account ID, by default os.environ.get(&#34;PHC_ACCOUNT&#34;)
+
+        adapter : Adapter, optional
+            The adapter that executes requests
         &#34;&#34;&#34;
+        if not token:
+            token = os.environ.get(&#34;PHC_ACCESS_TOKEN&#34;)
+
+        if not refresh_token:
+            refresh_token = os.environ.get(&#34;PHC_REFRESH_TOKEN&#34;)
+
+        if not account:
+            account = os.environ.get(&#34;PHC_ACCOUNT&#34;)
+
+        if not adapter:
+            adapter = Adapter()
+
         if not token or not account:
             raise ValueError(&#34;Must provide a value for both token and account&#34;)
 
         self.token = token
         self.refresh_token = refresh_token
         self.account = account
+        self.adapter = adapter
 
         hostname = urlparse(self._get_decoded_token().get(&#34;iss&#34;, &#34;&#34;)).hostname
         env = (
@@ -507,8 +534,18 @@ __pdoc__ = {
         bool
             True if there is no token or the token is expired, otherwise False
         &#34;&#34;&#34;
+        if self.adapter.should_refresh is False:
+            return False
+
         return self._get_decoded_token().get(&#34;exp&#34;, 0) &lt; time.time()</code></pre>
 </details>
+<h3>Class variables</h3>
+<dl>
+<dt id="phc.Session.adapter"><code class="name">var <span class="ident">adapter</span> : <a title="phc.adapter.Adapter" href="adapter.html#phc.adapter.Adapter">Adapter</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.Session.is_expired"><code class="name flex">
@@ -533,6 +570,9 @@ __pdoc__ = {
     bool
         True if there is no token or the token is expired, otherwise False
     &#34;&#34;&#34;
+    if self.adapter.should_refresh is False:
+        return False
+
     return self._get_decoded_token().get(&#34;exp&#34;, 0) &lt; time.time()</code></pre>
 </details>
 </dd>
@@ -580,6 +620,7 @@ __pdoc__ = {
 <ul id="index">
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
+<li><code><a title="phc.adapter" href="adapter.html">phc.adapter</a></code></li>
 <li><code><a title="phc.easy" href="easy/index.html">phc.easy</a></code></li>
 <li><code><a title="phc.errors" href="errors.html">phc.errors</a></code></li>
 <li><code><a title="phc.services" href="services/index.html">phc.services</a></code></li>

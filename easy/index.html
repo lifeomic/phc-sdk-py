@@ -505,12 +505,20 @@ Defaults to $PHC_ACCOUNT</p>
 Defaults to $PHC_PROJECT_ID</p>
 <p>token : str
 (Optional) The API key to use
-Defaults to $PHC_ACCESS_TOKEN</p></div>
+Defaults to $PHC_ACCESS_TOKEN</p>
+<p>adapter: Adapter
+(Optional) A custom adapter to execute requests
+Defaults to normal API adapter</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Auth:
+    token: str
+    project_id: str
+    account: str
+    adapter: Adapter
+
     def __init__(self, details: Union[Any, None, Dict[str, str]] = None):
         &#34;&#34;&#34;Create an authentication object that can be shared as a single argument to
         the &#39;easy&#39; SDK calls
@@ -534,7 +542,15 @@ Defaults to $PHC_ACCESS_TOKEN</p></div>
           token : str
               (Optional) The API key to use
               Defaults to $PHC_ACCESS_TOKEN
+
+          adapter: Adapter
+              (Optional) A custom adapter to execute requests
+              Defaults to normal API adapter
         &#34;&#34;&#34;
+        if _shared_auth:
+            # Start with shared credentials
+            self.update(_shared_auth.details())
+
         self.update(details)
 
     @staticmethod
@@ -581,9 +597,15 @@ Defaults to $PHC_ACCESS_TOKEN</p></div>
 
         return env_project_id
 
+    @defaultprop
+    def adapter(self):
+        return Adapter()
+
     def session(self):
         &#34;Create an API session for use with modules not in the &#39;easy&#39; namespace&#34;
-        return Session(token=self.token, account=self.account)
+        return Session(
+            token=self.token, account=self.account, adapter=self.adapter
+        )
 
     def accounts(self):
         &#34;List available accounts for the authenticated user&#34;
@@ -594,6 +616,7 @@ Defaults to $PHC_ACCESS_TOKEN</p></div>
             &#34;account&#34;: self.account,
             &#34;project_id&#34;: getattr(self, &#34;_project_id&#34;, None),
             &#34;token&#34;: self.token,
+            &#34;adapter&#34;: self.adapter,
         }
 
     def __copy(self):
@@ -622,6 +645,10 @@ Defaults to $PHC_ACCESS_TOKEN</p></div>
           token : str
               (Optional) The API key to use
               Defaults to $PHC_ACCESS_TOKEN
+
+          adapter: Adapter
+              (Optional) A custom adapter to execute requests
+              Defaults to normal API adapter
         &#34;&#34;&#34;
         if details is None:
             return
@@ -637,7 +664,10 @@ Defaults to $PHC_ACCESS_TOKEN</p></div>
             self._project_id = details.get(&#34;project_id&#34;)
 
         if details.get(&#34;token&#34;):
-            self._token = details.get(&#34;token&#34;)</code></pre>
+            self._token = details.get(&#34;token&#34;)
+
+        if details.get(&#34;adapter&#34;):
+            self._adapter = details.get(&#34;adapter&#34;)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -695,7 +725,7 @@ def shared():
 </dl>
 <h3>Instance variables</h3>
 <dl>
-<dt id="phc.easy.Auth.account"><code class="name">var <span class="ident">account</span></code></dt>
+<dt id="phc.easy.Auth.account"><code class="name">var <span class="ident">account</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
 <details class="source">
@@ -707,7 +737,19 @@ def account(self):
     return os.environ.get(&#34;PHC_ACCOUNT&#34;)</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.Auth.project_id"><code class="name">var <span class="ident">project_id</span></code></dt>
+<dt id="phc.easy.Auth.adapter"><code class="name">var <span class="ident">adapter</span> : <a title="phc.adapter.Adapter" href="../adapter.html#phc.adapter.Adapter">Adapter</a></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@defaultprop
+def adapter(self):
+    return Adapter()</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.Auth.project_id"><code class="name">var <span class="ident">project_id</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
 <details class="source">
@@ -724,7 +766,7 @@ def project_id(self):
     return env_project_id</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.Auth.token"><code class="name">var <span class="ident">token</span></code></dt>
+<dt id="phc.easy.Auth.token"><code class="name">var <span class="ident">token</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
 <details class="source">
@@ -783,6 +825,7 @@ def token(self):
         &#34;account&#34;: self.account,
         &#34;project_id&#34;: getattr(self, &#34;_project_id&#34;, None),
         &#34;token&#34;: self.token,
+        &#34;adapter&#34;: self.adapter,
     }</code></pre>
 </details>
 </dd>
@@ -797,7 +840,9 @@ def token(self):
 </summary>
 <pre><code class="python">def session(self):
     &#34;Create an API session for use with modules not in the &#39;easy&#39; namespace&#34;
-    return Session(token=self.token, account=self.account)</code></pre>
+    return Session(
+        token=self.token, account=self.account, adapter=self.adapter
+    )</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Auth.update"><code class="name flex">
@@ -822,7 +867,10 @@ Defaults to $PHC_ACCOUNT</p>
 Defaults to $PHC_PROJECT_ID</p>
 <p>token : str
 (Optional) The API key to use
-Defaults to $PHC_ACCESS_TOKEN</p></div>
+Defaults to $PHC_ACCESS_TOKEN</p>
+<p>adapter: Adapter
+(Optional) A custom adapter to execute requests
+Defaults to normal API adapter</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -850,6 +898,10 @@ Defaults to $PHC_ACCESS_TOKEN</p></div>
       token : str
           (Optional) The API key to use
           Defaults to $PHC_ACCESS_TOKEN
+
+      adapter: Adapter
+          (Optional) A custom adapter to execute requests
+          Defaults to normal API adapter
     &#34;&#34;&#34;
     if details is None:
         return
@@ -865,7 +917,10 @@ Defaults to $PHC_ACCESS_TOKEN</p></div>
         self._project_id = details.get(&#34;project_id&#34;)
 
     if details.get(&#34;token&#34;):
-        self._token = details.get(&#34;token&#34;)</code></pre>
+        self._token = details.get(&#34;token&#34;)
+
+    if details.get(&#34;adapter&#34;):
+        self._adapter = details.get(&#34;adapter&#34;)</code></pre>
 </details>
 </dd>
 </dl>
