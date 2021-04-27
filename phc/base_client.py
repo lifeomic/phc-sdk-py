@@ -265,8 +265,12 @@ class BaseClient:
             else:
                 req_args["data"] = upload_file
 
-        res = await self._request(
-            http_verb=http_verb, api_url=api_url, req_args=req_args
+        res = await self.session.adapter.send(
+            http_verb=http_verb,
+            api_url=api_url,
+            req_args=req_args,
+            trust_env=self.trust_env,
+            timeout=self.timeout,
         )
 
         for f in open_files:
@@ -279,24 +283,3 @@ class BaseClient:
             "req_args": req_args,
         }
         return ApiResponse(**{**data, **res}).validate()
-
-    async def _request(self, *, http_verb, api_url, req_args):
-        """Submit the HTTP request with the running session or a new session.
-
-        Returns:
-            A dictionary of the response data.
-        """
-        async with aiohttp.ClientSession(
-            timeout=aiohttp.ClientTimeout(total=self.timeout),
-            trust_env=self.trust_env,
-        ) as session:
-            async with session.request(http_verb, api_url, **req_args) as res:
-                return {
-                    "data": await (
-                        res.json()
-                        if res.content_type == "application/json"
-                        else res.text()
-                    ),
-                    "headers": res.headers,
-                    "status_code": res.status,
-                }

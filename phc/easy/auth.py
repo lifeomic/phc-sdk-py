@@ -1,13 +1,20 @@
 import os
-from typing import Union, Dict, Any
+from typing import Any, Dict, Union
+
 from phc import Session
-from phc.services import Accounts
+from phc.adapter import Adapter
 from phc.easy.util import defaultprop
+from phc.services import Accounts
 
 _shared_auth = None
 
 
 class Auth:
+    token: str
+    project_id: str
+    account: str
+    adapter: Adapter
+
     def __init__(self, details: Union[Any, None, Dict[str, str]] = None):
         """Create an authentication object that can be shared as a single argument to
         the 'easy' SDK calls
@@ -31,7 +38,15 @@ class Auth:
           token : str
               (Optional) The API key to use
               Defaults to $PHC_ACCESS_TOKEN
+
+          adapter: Adapter
+              (Optional) A custom adapter to execute requests
+              Defaults to normal API adapter
         """
+        if _shared_auth:
+            # Start with shared credentials
+            self.update(_shared_auth.details())
+
         self.update(details)
 
     @staticmethod
@@ -78,9 +93,15 @@ class Auth:
 
         return env_project_id
 
+    @defaultprop
+    def adapter(self):
+        return Adapter()
+
     def session(self):
         "Create an API session for use with modules not in the 'easy' namespace"
-        return Session(token=self.token, account=self.account)
+        return Session(
+            token=self.token, account=self.account, adapter=self.adapter
+        )
 
     def accounts(self):
         "List available accounts for the authenticated user"
@@ -91,6 +112,7 @@ class Auth:
             "account": self.account,
             "project_id": getattr(self, "_project_id", None),
             "token": self.token,
+            "adapter": self.adapter,
         }
 
     def __copy(self):
@@ -119,6 +141,10 @@ class Auth:
           token : str
               (Optional) The API key to use
               Defaults to $PHC_ACCESS_TOKEN
+
+          adapter: Adapter
+              (Optional) A custom adapter to execute requests
+              Defaults to normal API adapter
         """
         if details is None:
             return
@@ -135,3 +161,6 @@ class Auth:
 
         if details.get("token"):
             self._token = details.get("token")
+
+        if details.get("adapter"):
+            self._adapter = details.get("adapter")
