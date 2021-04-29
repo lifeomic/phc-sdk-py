@@ -50,7 +50,7 @@ class Session:
         if not adapter:
             adapter = Adapter()
 
-        if not token or not account:
+        if adapter.should_refresh and (not token or not account):
             raise ValueError("Must provide a value for both token and account")
 
         self.token = token
