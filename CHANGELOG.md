@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *(NOTE: All examples use fictious data or freely available data sets.)*
 
+## [0.22.2] - 2021-04-30
+
+### Fixed
+
+- Make token optional when using a custom adapter that doesn't support refreshing the token
+
+
 ## [0.22.1] - 2021-04-27
 
 ### Added
@@ -565,6 +572,7 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 - Added the `phc.services.Files` submodule that provides actions for files in PHC projects.
 - Added the `phc.services.Cohorts` submodule that provides actions for files in PHC cohorts.
 
+[0.22.2]: https://github.com/lifeomic/phc-sdk-py/compare/v0.22.1...v0.22.2
 [0.22.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.22.0...v0.22.1
 [0.22.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.21.1...v0.22.0
 [0.21.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.21.0...v0.21.1
