@@ -501,7 +501,7 @@ __pdoc__ = {
         if not adapter:
             adapter = Adapter()
 
-        if not token or not account:
+        if adapter.should_refresh and (not token or not account):
             raise ValueError(&#34;Must provide a value for both token and account&#34;)
 
         self.token = token
