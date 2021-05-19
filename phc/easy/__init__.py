@@ -44,6 +44,8 @@ from phc.easy.specimen import Specimen
 
 from phc.easy.summary.counts import SummaryCounts
 from phc.easy.summary.item_counts import SummaryItemCounts
+from phc.easy.summary.clinical_counts import SummaryClinicalCounts
+from phc.easy.summary.omics_counts import SummaryOmicsCounts
 
 __all__ = [
     "AuditEvent",
@@ -90,5 +92,7 @@ __all__ = [
     "Sequence",
     "Specimen",
     "SummaryCounts",
-    "SummaryItemCounts"
+    "SummaryItemCounts",
+    "SummaryOmicsCounts",
+    "SummaryClinicalCounts"
 ]
