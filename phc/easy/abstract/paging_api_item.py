@@ -34,11 +34,15 @@ class PagingApiOptions(BaseModel):
         )
 
 
-def split_kw_args(args: dict, blacklist: List[str] = []):
+def split_kw_args(
+    args: dict,
+    blacklist: List[str] = [],
+    additional_expand_keys: List[str] = [],
+):
     def value(pair):
         if pair[0] in EXECUTE_QUERY_ARGS:
             return "execute"
-        elif pair[0] in EXPAND_ARGS:
+        elif pair[0] in [*EXPAND_ARGS, *additional_expand_keys]:
             return "expand"
         else:
             return "query"
@@ -88,8 +92,17 @@ class PagingApiItem:
 
     @classmethod
     def get_data_frame(cls, **kw_args):
+        expand_keys = [
+            k
+            for k in inspect.getfullargspec(cls.transform_results).args
+            if k not in ["frame", "expand_keys"]
+        ]
         overrides = cls.execute_args()
-        split_args = split_kw_args({**kw_args, **overrides}, blacklist=["item_key"])
+        split_args = split_kw_args(
+            {**kw_args, **overrides},
+            blacklist=["item_key"],
+            additional_expand_keys=expand_keys,
+        )
         params, expand_args, execute_options = (
             cls.process_params(split_args.get("query", {})),
             split_args.get("expand", {}),

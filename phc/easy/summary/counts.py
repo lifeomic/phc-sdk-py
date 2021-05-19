@@ -12,7 +12,6 @@ from toolz import pipe
 class NoOptions(PagingApiOptions):
     pass
 
-
 class SummaryCounts(PagingApiItem):
     @staticmethod
     def resource_path():
@@ -37,9 +36,9 @@ class SummaryCounts(PagingApiItem):
         return NoOptions
 
     @staticmethod
-    def transform_results(data_frame: pd.DataFrame, **expand_args):
-        include_demographics = expand_args.get("include_demographcs", False)
-
+    def transform_results(
+        data_frame: pd.DataFrame, include_demographics: bool, **expand_args
+    ):
         return pipe(
             data_frame,
             rpartial(
@@ -47,7 +46,13 @@ class SummaryCounts(PagingApiItem):
             ),
             rpartial(
                 combine_first,
-                ["code_count", "count", "sequence_type_count", "test_type_count", "variant_count"],
+                [
+                    "code_count",
+                    "count",
+                    "sequence_type_count",
+                    "test_type_count",
+                    "variant_count",
+                ],
                 "count",
             ),
             rpartial(combine_first, ["display", "sequence_type"], "display"),
@@ -66,7 +71,7 @@ class SummaryCounts(PagingApiItem):
                     "code_count",
                     "demographic_value",
                     "test_type_count",
-                    "variant_count"
+                    "variant_count",
                 ],
             ),
             iffy(
@@ -76,7 +81,8 @@ class SummaryCounts(PagingApiItem):
                 ),
             ),
             iffy(
-                lambda df: not include_demographics and "summary" in df.columns,
+                lambda df: include_demographics is False
+                and "summary" in df.columns,
                 lambda df: df[~df.summary.str.contains("demographic")],
             ),
         ).reset_index(drop=True)
@@ -105,6 +111,9 @@ class SummaryCounts(PagingApiItem):
 
         Execution: `phc.easy.query.Query.execute_paging_api`
         """
+
+        # NOTE: include_demographics gets passed through to transform_results
+        # since explicitly declared there.
 
         df = super().get_data_frame(
             **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
