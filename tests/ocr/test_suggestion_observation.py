@@ -1,5 +1,4 @@
 import pandas as pd
-from nose.tools import assert_equals
 from phc.easy.ocr.suggestion import expand_json_and_merge, expand_observations
 
 
@@ -11,8 +10,8 @@ def as_frame(data: dict):
 
 def test_observation_date_with_bad_data_expands_to_empty_columns():
     df = expand_observations(as_frame({"date": [], "other": 1}))
-    assert_equals(len(df), 1)
-    assert_equals(list(df.columns), ["observation_other", "type"])
+    assert len(df) == 1
+    assert list(df.columns) == ["observation_other", "type"]
 
 
 def test_observation_date():
@@ -46,18 +45,15 @@ def test_observation_date():
     )
 
     df = expand_observations(frame)
-    assert_equals(len(df), 1)
-    assert_equals(
-        list(df.columns),
-        [
-            "date_value",
-            "date_confidence",
-            "date_isPHI",
-            "date_dataSource_source",
-            "date_sourceText",
-            "type",
-        ],
-    )
+    assert len(df) == 1
+    assert list(df.columns) == [
+        "date_value",
+        "date_confidence",
+        "date_isPHI",
+        "date_dataSource_source",
+        "date_sourceText",
+        "type",
+    ]
 
 
 def test_observation_date_multiple_values():
@@ -99,15 +95,12 @@ def test_observation_date_multiple_values():
     )
 
     df = expand_observations(frame)
-    assert_equals(len(df), 2)
-    assert_equals(
-        list(df.columns),
-        [
-            "date_value",
-            "date_confidence",
-            "date_isPHI",
-            "date_dataSource_source",
-            "date_sourceText",
-            "type",
-        ],
-    )
+    assert len(df) == 2
+    assert list(df.columns) == [
+        "date_value",
+        "date_confidence",
+        "date_isPHI",
+        "date_dataSource_source",
+        "date_sourceText",
+        "type",
+    ]

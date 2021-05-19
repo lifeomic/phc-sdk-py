@@ -1,6 +1,5 @@
 from uuid import uuid4
 from unittest import mock
-from nose.tools import assert_equals
 from phc.easy.auth import Auth
 from phc.easy.abstract.genomic_variant import GenomicVariant
 
@@ -26,7 +25,7 @@ def test_skipping_genomic_tests_if_variant_set_ids(get_data_frame):
         log=False,
     )
 
-    assert_equals(get_data_frame.call_count, 0)
+    assert get_data_frame.call_count == 0
 
-    assert_equals(len(test_df.columns), 1)
-    assert_equals(list(test_df.id), variant_set_ids)
+    assert len(test_df.columns) == 1
+    assert list(test_df.id) == variant_set_ids

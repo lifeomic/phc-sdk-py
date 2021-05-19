@@ -5,7 +5,7 @@ pyjwt==1.7.1
 pre-commit
 black==19.3b0
 flake8
-nose
 pdoc3
 twine
-nose-watch
+pytest
+pytest-watch

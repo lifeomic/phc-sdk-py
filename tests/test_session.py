@@ -1,6 +1,5 @@
 import jwt
 from uuid import uuid4
-from nose.tools import assert_equals
 
 from phc.session import Session
 
@@ -20,7 +19,7 @@ sample = {
 def test_session_env_dev_parsing():
     token = jwt.encode(sample, "secret")
     session = Session(token, account=sample["account"])
-    assert_equals(session.api_url, "https://api.dev.lifeomic.com/v1/")
+    assert session.api_url == "https://api.dev.lifeomic.com/v1/"
 
 
 def test_session_env_prod_parsing():
@@ -29,4 +28,4 @@ def test_session_env_prod_parsing():
     )
 
     session = Session(token, account=sample["account"])
-    assert_equals(session.api_url, "https://api.us.lifeomic.com/v1/")
+    assert session.api_url == "https://api.us.lifeomic.com/v1/"

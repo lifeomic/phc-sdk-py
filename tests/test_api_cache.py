@@ -1,5 +1,4 @@
 from io import StringIO
-from nose.tools import assert_equals
 from phc.easy.util.api_cache import APICache, FHIR_DSL
 
 
@@ -10,7 +9,7 @@ def test_filename_for_genomics_api_call():
         }
     )
 
-    assert_equals(filename, "genomics_projects_tests_2f4d9e60.csv")
+    assert filename == "genomics_projects_tests_2f4d9e60.csv"
 
 
 def test_filename_for_structural_variant_call():
@@ -18,7 +17,7 @@ def test_filename_for_structural_variant_call():
         {"path": "genomics/structural-variants"}
     )
 
-    assert_equals(filename, "genomics_structural_variants_769987ca.csv")
+    assert filename == "genomics_structural_variants_769987ca.csv"
 
 
 def test_filename_for_query_with_simple_statement():
