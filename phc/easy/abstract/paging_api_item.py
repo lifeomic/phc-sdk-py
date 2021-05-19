@@ -1,3 +1,4 @@
+from typing import Union, List
 import inspect
 from enum import Enum
 
@@ -33,7 +34,7 @@ class PagingApiOptions(BaseModel):
         )
 
 
-def split_kw_args(args: dict):
+def split_kw_args(args: dict, blacklist: List[str] = []):
     def value(pair):
         if pair[0] in EXECUTE_QUERY_ARGS:
             return "execute"
@@ -41,6 +42,10 @@ def split_kw_args(args: dict):
             return "expand"
         else:
             return "query"
+
+    for blacklist_key in blacklist:
+        if blacklist_key in args.keys():
+            raise ValueError(f"'{blacklist_key}' not supported.")
 
     return {k: dict(v) for k, v in groupby(value, args.items()).items()}
 
@@ -67,6 +72,14 @@ class PagingApiItem:
         return data_frame
 
     @staticmethod
+    def response_to_items(data: Union[list, dict]) -> list:
+        return data.get("items", [])
+
+    @staticmethod
+    def execute_args() -> dict:
+        return {}
+
+    @staticmethod
     def _get_current_args(frame: any, local_vars: dict):
         """Helper function for getting all arguments to the current function as a dictionary"""
         EXCEPTIONS = ["cls", "frame"]
@@ -75,7 +88,8 @@ class PagingApiItem:
 
     @classmethod
     def get_data_frame(cls, **kw_args):
-        split_args = split_kw_args(kw_args)
+        overrides = cls.execute_args()
+        split_args = split_kw_args({**kw_args, **overrides}, blacklist=["item_key"])
         params, expand_args, execute_options = (
             cls.process_params(split_args.get("query", {})),
             split_args.get("expand", {}),
@@ -89,7 +103,11 @@ class PagingApiItem:
             return cls.transform_results(df, params=params, **expand_args)
 
         df = Query.execute_paging_api(
-            cls.resource_path(), params, **execute_options, transform=transform
+            cls.resource_path(),
+            params,
+            **execute_options,
+            transform=transform,
+            response_to_items=cls.response_to_items,
         )
 
         return df

@@ -1,5 +1,6 @@
 import json
 import math
+from phc.easy.query.url import merge_pattern
 from typing import Any, Callable, List, Optional, Tuple, Union
 
 import pandas as pd
@@ -175,6 +176,7 @@ class Query:
         progress: Optional[tqdm] = None,
         item_key: str = "items",
         try_count: bool = True,
+        response_to_items: Optional[Callable[[Union[list, dict]], list]] = None
     ):
         """Execute a API query that pages through results
 
@@ -185,7 +187,7 @@ class Query:
         ----------
         path : str
             The API path to hit
-            (Special tokens: `:project_id`)
+            (Special tokens: `{project_id}`)
 
         params : dict
             The parameters to include with request
@@ -217,13 +219,17 @@ class Query:
         try_count : bool
             Whether to try and send a "count" param to update the progress bar
 
+        response_to_items : Callable
+            Custom function to transform response data to list of items
+            (Overrides item_key when present)
+
         Examples
         --------
         >>> import phc.easy as phc
         >>> phc.Auth.set({ 'account': '<your-account-name>' })
         >>> phc.Project.set_current('My Project Name')
         >>> phc.Query.execute_paging_api(
-                "genomics/projects/:project_id/tests",
+                "genomics/projects/{project_id}/tests",
                 params={
                     "patientId": "<patient-uuid>"
                 }
@@ -237,7 +243,9 @@ class Query:
 
         # Do not pull project_id if not in URL (which throws error if project not selected)
         if "project_id" in path:
-            path = path.replace(":project_id", auth.project_id)
+            path = path.replace("{project_id}", auth.project_id)
+
+        path, params = merge_pattern(path, params)
 
         query = {"path": path, "method": http_verb, "params": params}
 
@@ -280,6 +288,7 @@ class Query:
                 auth_args=auth_args,
                 progress=progress,
                 item_key=item_key,
+                response_to_items=response_to_items,
                 try_count=try_count,
             ),
         )

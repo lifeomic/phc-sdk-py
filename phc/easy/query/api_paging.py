@@ -53,6 +53,7 @@ def recursive_paging_api_call(
     max_pages: Optional[int] = None,
     page_size: Optional[int] = None,
     item_key: str = "items",
+    response_to_items: Optional[Callable[[Union[list, dict]], list]] = None,
     log: bool = False,
     try_count: bool = True,
     _current_page: int = 1,
@@ -93,7 +94,11 @@ def recursive_paging_api_call(
 
     response = client._api_call(path, http_verb=http_verb, params=params)
 
-    current_results = response.data.get(item_key, [])
+    if response_to_items is None:
+        def response_to_items(data):
+            return data.get(item_key, [])
+
+    current_results = response_to_items(response.data)
 
     if progress is not None:
         progress.update(len(current_results))
@@ -150,6 +155,7 @@ def recursive_paging_api_call(
         scroll=scroll,
         try_count=try_count,
         item_key=item_key,
+        response_to_items=response_to_items,
         _current_page=_current_page + 1,
         _prev_results=results,
         _next_page_token=next_page_token,
