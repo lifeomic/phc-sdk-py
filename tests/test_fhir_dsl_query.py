@@ -1,6 +1,5 @@
 import math
-
-from nose.tools import raises, assert_equals
+import pytest
 
 from phc.easy.query.fhir_dsl_query import build_query, get_limit, update_limit
 
@@ -42,7 +41,7 @@ def test_no_modification():
     assert build_query(example) == example
 
 
-@raises(ValueError)
+@pytest.mark.xfail(raises=ValueError)
 def test_throws_with_non_elasticsearch_where():
     build_query({"where": {"query": "blah-blah-blah"}}, patient_id="a")
 
@@ -182,15 +181,12 @@ def test_add_patient_id_with_bool_should_query():
 def test_add_ids_to_query():
     result = build_query({}, ids=["a", "b"], id="c")
 
-    assert_equals(
-        result,
-        {
-            "where": {
-                "type": "elasticsearch",
-                "query": {"terms": {"id.keyword": ["a", "b", "c"]}},
-            }
-        },
-    )
+    assert result == {
+        "where": {
+            "type": "elasticsearch",
+            "query": {"terms": {"id.keyword": ["a", "b", "c"]}},
+        }
+    }
 
 
 def test_add_single_patient_id_to_query():

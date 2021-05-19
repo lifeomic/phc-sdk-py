@@ -1,5 +1,3 @@
-from nose.tools import assert_equals
-
 from phc.easy.util import (
     add_prefixes,
     concat_dicts,
@@ -114,7 +112,7 @@ def test_split_by():
 
 
 def test_rename_keys():
-    assert_equals(rename_keys({"a": 1, "b": 2}, {"a": "aa"}), {"aa": 1, "b": 2})
+    assert rename_keys({"a": 1, "b": 2}, {"a": "aa"}) == {"aa": 1, "b": 2}
 
 
 # defaultprop

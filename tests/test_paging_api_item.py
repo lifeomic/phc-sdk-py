@@ -1,4 +1,3 @@
-from nose.tools import assert_equals
 from phc.easy.abstract.paging_api_item import split_kw_args
 from phc.easy.query.api_paging import parse_next_page_token_from_url
 
@@ -24,7 +23,7 @@ def test_parse_next_token_from_response_links():
     next_token = "<my-next-token>"
     url = f"/v1/projects?nextPageToken={next_token}&pageSize=100"
 
-    assert_equals(parse_next_page_token_from_url(url), next_token)
+    assert parse_next_page_token_from_url(url) == next_token
 
     # Handles case when no next token exists
-    assert_equals(parse_next_page_token_from_url(""), None)
+    assert parse_next_page_token_from_url("") == None

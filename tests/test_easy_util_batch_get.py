@@ -1,8 +1,6 @@
-from typing import List, Optional
-from nose.tools import assert_equals
+from typing import List
 import pandas as pd
 from phc.easy.util.batch import batch_get_frame
-from phc.easy.util import tqdm
 
 
 def transform(ids: List[str], total: int):
@@ -13,15 +11,14 @@ def transform(ids: List[str], total: int):
 
 
 def test_batch_get_frame():
-    assert_equals(
-        batch_get_frame(["a", "b", "c"], 2, transform).to_dict("records"),
-        [
-            {"id": "a", "batch_size": 2, "prev_total": 0},
-            {"id": "b", "batch_size": 2, "prev_total": 0},
-            {"id": "c", "batch_size": 1, "prev_total": 2},
-        ],
-    )
+    assert batch_get_frame(["a", "b", "c"], 2, transform).to_dict(
+        "records"
+    ) == [
+        {"id": "a", "batch_size": 2, "prev_total": 0},
+        {"id": "b", "batch_size": 2, "prev_total": 0},
+        {"id": "c", "batch_size": 1, "prev_total": 2},
+    ]
 
 
 def test_empty_batch():
-    assert_equals(batch_get_frame([], 2, transform).to_dict("records"), [])
+    assert batch_get_frame([], 2, transform).to_dict("records") == []
