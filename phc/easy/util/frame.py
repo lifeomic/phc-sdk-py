@@ -1,6 +1,21 @@
 import pandas as pd
 from functools import reduce
-from typing import List
+from typing import List, Optional
+
+
+def search(frame: pd.DataFrame, query: Optional[str] = None):
+    if query is None:
+        return frame
+
+    return frame[
+        frame.select_dtypes(include=[object, "string"])
+        .apply(
+            lambda column: column.str.contains(
+                query, regex=False, case=False, na=False
+            )
+        )
+        .any(axis=1)
+    ]
 
 
 def combine_first(frame: pd.DataFrame, columns: List[str], column_name: str):
