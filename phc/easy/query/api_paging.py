@@ -95,6 +95,7 @@ def recursive_paging_api_call(
     response = client._api_call(path, http_verb=http_verb, params=params)
 
     if response_to_items is None:
+
         def response_to_items(data):
             return data.get(item_key, [])
 

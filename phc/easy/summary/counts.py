@@ -12,6 +12,7 @@ from toolz import pipe
 class NoOptions(PagingApiOptions):
     pass
 
+
 class SummaryCounts(PagingApiItem):
     @staticmethod
     def resource_path():
@@ -103,7 +104,7 @@ class SummaryCounts(PagingApiItem):
         NOTE: By default, demographic data is excluded since it is not
         technically counts of entities. If demographics-only data is desired,
         use this:
-        
+
         >>> from phc.easy.summary.item_counts import SummaryItemCounts
         >>> SummaryItemCounts.get_data_frame(summary="demographics")
 

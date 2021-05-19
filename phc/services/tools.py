@@ -219,10 +219,7 @@ class Tools(BaseClient):
         phc.ApiResponse
             The updated tool response
         """
-        version_request = {
-            "version": version,
-            "isDefault": is_default,
-        }
+        version_request = {"version": version, "isDefault": is_default}
 
         res = self._api_call(
             f"/v1/trs/v2/tools/{tool_id}/versions",
@@ -310,10 +307,7 @@ class Tools(BaseClient):
         phc.ApiResponse
             The list files response
         """
-        query_dict = {
-            "limit": page_size,
-            "offset": page_count,
-        }
+        query_dict = {"limit": page_size, "offset": page_count}
         if tool_class:
             if not hasattr(ToolClass, tool_class):
                 raise ValueError(
@@ -330,6 +324,5 @@ class Tools(BaseClient):
             query_dict["label"] = ",".join(labels)
 
         return self._api_call(
-            f"/v1/trs/v2/tools?{urlencode(query_dict)}",
-            http_verb="GET",
+            f"/v1/trs/v2/tools?{urlencode(query_dict)}", http_verb="GET"
         )

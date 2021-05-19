@@ -94,5 +94,5 @@ __all__ = [
     "SummaryCounts",
     "SummaryItemCounts",
     "SummaryOmicsCounts",
-    "SummaryClinicalCounts"
+    "SummaryClinicalCounts",
 ]

@@ -133,7 +133,9 @@ class Genomics(BaseClient):
                 set_type.value, json=json_body, http_verb="POST"
             )
 
-    def update_set(self, set_type: SetType, set_id: str, updates: dict) -> ApiResponse:
+    def update_set(
+        self, set_type: SetType, set_id: str, updates: dict
+    ) -> ApiResponse:
         """Update a genomic set
 
         Parameters
@@ -150,7 +152,9 @@ class Genomics(BaseClient):
         ApiResponse
             The fetch response
         """
-        return self._ga4gh_call(f"{set_type.value}/{set_id}", json=updates, http_verb="PATCH")
+        return self._ga4gh_call(
+            f"{set_type.value}/{set_id}", json=updates, http_verb="PATCH"
+        )
 
     def get_set(self, set_type: SetType, set_id: str) -> ApiResponse:
         """Fetch a genomic set
@@ -275,8 +279,7 @@ class Genomics(BaseClient):
             The get test response
         """
         return self._api_call(
-            f"genomics/projects/{project_id}/tests/{test_id}",
-            http_verb="GET",
+            f"genomics/projects/{project_id}/tests/{test_id}", http_verb="GET"
         )
 
     def delete_test(self, project_id: str, test_id: str) -> bool:

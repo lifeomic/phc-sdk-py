@@ -8,9 +8,10 @@ def merge_pattern(url_pattern: str, params: dict) -> Tuple[str, dict]:
 
         pattern = f"{{{key}}}"
         if pattern in temp_url:
-            return temp_url.replace(pattern, temp_params[key]), {
-                k: v for k, v in temp_params.items() if k != key
-            }
+            return (
+                temp_url.replace(pattern, temp_params[key]),
+                {k: v for k, v in temp_params.items() if k != key},
+            )
 
         return pair
 

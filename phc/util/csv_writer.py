@@ -20,7 +20,9 @@ class CSVWriter:
         """
 
         # Remove newlines from column names
-        frame.columns = [re.sub(r'[\t\n]', '', c) for c in frame.columns.tolist()]
+        frame.columns = [
+            re.sub(r"[\t\n]", "", c) for c in frame.columns.tolist()
+        ]
 
         if not os.path.exists(self.filename):
             frame.to_csv(

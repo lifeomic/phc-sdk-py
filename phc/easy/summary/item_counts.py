@@ -39,8 +39,13 @@ class SummaryItemCounts(PagingApiItem):
                 ["demographic_name", "count"], ascending=False
             ).reset_index(drop=True)
 
-        if "code_count" in data_frame.columns and "patient_count" in data_frame.columns:
-            return data_frame.sort_values(["code_count", "patient_count"], ascending=False)
+        if (
+            "code_count" in data_frame.columns
+            and "patient_count" in data_frame.columns
+        ):
+            return data_frame.sort_values(
+                ["code_count", "patient_count"], ascending=False
+            )
 
         return data_frame
 
@@ -68,7 +73,7 @@ class SummaryItemCounts(PagingApiItem):
         NOTE: By default, demographic data is excluded since it is not
         technically counts of entities. If demographics-only data is desired,
         use this:
-        
+
         >>> from phc.easy.summary.item_counts import SummaryItemCounts
         >>> SummaryItemCounts.get_data_frame(summary="demographics")
 

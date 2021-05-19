@@ -8,10 +8,14 @@ from phc.base_client import BaseClient
 from phc.easy.auth import Auth
 from phc.easy.query.api_paging import clean_params, recursive_paging_api_call
 from phc.easy.query.fhir_aggregation import FhirAggregation
-from phc.easy.query.fhir_dsl import (DEFAULT_SCROLL_SIZE, MAX_RESULT_SIZE,
-                                     execute_single_fhir_dsl,
-                                     recursive_execute_fhir_dsl, tqdm,
-                                     with_progress)
+from phc.easy.query.fhir_dsl import (
+    DEFAULT_SCROLL_SIZE,
+    MAX_RESULT_SIZE,
+    execute_single_fhir_dsl,
+    recursive_execute_fhir_dsl,
+    tqdm,
+    with_progress,
+)
 from phc.easy.query.fhir_dsl_query import build_query
 from phc.easy.query.ga4gh import recursive_execute_ga4gh
 from phc.easy.util import extract_codes
@@ -176,7 +180,7 @@ class Query:
         progress: Optional[tqdm] = None,
         item_key: str = "items",
         try_count: bool = True,
-        response_to_items: Optional[Callable[[Union[list, dict]], list]] = None
+        response_to_items: Optional[Callable[[Union[list, dict]], list]] = None,
     ):
         """Execute a API query that pages through results
 
