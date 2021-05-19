@@ -14,7 +14,7 @@ from phc.easy.summary.options.item_counts import (
 class SummaryItemCounts(PagingApiItem):
     @staticmethod
     def resource_path():
-        return "analytics/summary/{project_id}/{summary_type}/{summary}"
+        return "analytics/summary/{project_id}/{summary_type}/{summary}/counts"
 
     @classmethod
     def process_params(cls, params: dict) -> dict:
@@ -43,10 +43,6 @@ class SummaryItemCounts(PagingApiItem):
             return data_frame.sort_values(["code_count", "patient_count"], ascending=False)
 
         return data_frame
-
-    @staticmethod
-    def response_to_items(data):
-        return data.get("counts", [])
 
     @staticmethod
     def execute_args() -> dict:
