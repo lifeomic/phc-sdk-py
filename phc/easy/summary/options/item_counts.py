@@ -1,7 +1,8 @@
 from enum import Enum
 from typing import Union
 
-from phc.easy.abstract.paging_api_item import PagingApiOptions
+from phc.easy.summary.options.clinical_counts import \
+    SummaryClinicalCountsOptions
 
 
 class SummaryClinicalType(str, Enum):
@@ -33,5 +34,5 @@ class SummaryOmicsType(str, Enum):
         return any(value == item.value for item in cls)
 
 
-class SummaryItemCountsOptions(PagingApiOptions):
+class SummaryItemCountsOptions(SummaryClinicalCountsOptions):
     summary: Union[SummaryClinicalType, SummaryOmicsType]
