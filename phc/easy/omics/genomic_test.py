@@ -13,7 +13,7 @@ from phc.easy.abstract.paging_api_item import PagingApiItem, PagingApiOptions
 
 
 class GenomicTestOptions(PagingApiOptions):
-    """Options to pass to `/v1/genomics/projects/:project_id/tests`
+    """Options to pass to `/v1/genomics/projects/{project_id}/tests`
 
     See https://docs.us.lifeomic.com/api/#get-tests
     """
@@ -32,7 +32,7 @@ class GenomicTestOptions(PagingApiOptions):
 class GenomicTest(PagingApiItem):
     @staticmethod
     def resource_path():
-        return "genomics/projects/:project_id/tests"
+        return "genomics/projects/{project_id}/tests"
 
     @staticmethod
     def params_class():

@@ -141,7 +141,7 @@ def test_get_data_frame(execute_paging_api):
     frame = GenomicTest.get_data_frame()
 
     execute_paging_api.assert_called_once_with(
-        "genomics/projects/:project_id/tests",
+        "genomics/projects/{project_id}/tests",
         {"patientId": None, "status": "ACTIVE", "type": None},
         all_results=False,
         auth_args=ANY,
@@ -150,6 +150,7 @@ def test_get_data_frame(execute_paging_api):
         log=False,
         ignore_cache=False,
         transform=ANY,
+        response_to_items=ANY
     )
 
     assert frame.columns.tolist() == [

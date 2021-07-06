@@ -15,11 +15,17 @@ from phc.easy.omics.options.genomic_test import (GenomicTestStatus,
 from phc.easy.omics.options.in_frame import InFrame
 from phc.easy.omics.options.structural_type import StructuralType
 from phc.easy.omics.options.zygosity import Zygosity
+from phc.easy.summary.options.clinical_counts import \
+    SummaryClinicalCountsOptions
+from phc.easy.summary.options.item_counts import (SummaryClinicalType,
+                                                  SummaryItemCountsOptions,
+                                                  SummaryOmicsType)
 
 
 class Option:
     """Class that references all available API options"""
 
+    # Omics
     GenomicVariantInclude = GenomicVariantInclude
     GenomicCopyNumberVariantOptions = GenomicCopyNumberVariantOptions
     GenomicShortVariantOptions = GenomicShortVariantOptions
@@ -34,4 +40,12 @@ class Option:
     CopyNumberStatus = CopyNumberStatus
     InFrame = InFrame
     StructuralType = StructuralType
+
+    # OCR
     OcrConfig = OcrConfig
+
+    # Summary APIs
+    SummaryItemCountsOptions = SummaryItemCountsOptions
+    SummaryOmicsType = SummaryOmicsType
+    SummaryClinicalType = SummaryClinicalType
+    SummaryClinicalCountsOptions = SummaryClinicalCountsOptions

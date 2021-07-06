@@ -133,9 +133,7 @@ class Workflows(BaseClient):
         phc.ApiResponse
             The list workflow run response
         """
-        query_dict = {
-            "datasetId": project_id,
-        }
+        query_dict = {"datasetId": project_id}
         if page_size:
             query_dict["pageSize"] = page_size
         if next_page_token:

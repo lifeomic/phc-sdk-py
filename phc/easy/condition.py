@@ -1,3 +1,6 @@
+from phc.easy.summary.item_counts import SummaryItemCounts
+from phc.easy.util.frame import search
+from typing import Optional
 import pandas as pd
 
 from phc.easy.frame import Frame
@@ -17,6 +20,22 @@ class Condition(FhirServicePatientItem):
             "bodySite.coding",
             "stage.summary.coding",
         ]
+
+    @classmethod
+    def get_codes(cls, query: Optional[str] = None):
+        """Find codes based on case-insensitive matching of code/display/system
+
+        Example
+        --------
+        >>> import phc.easy as phc
+        >>> phc.Auth.set({'account': '<your-account-name>'})
+        >>> phc.Project.set_current('My Project Name')
+        >>>
+        >>> phc.Observation.get_codes("loinc")
+        """
+        return search(
+            SummaryItemCounts.get_data_frame(cls.table_name()), query=query
+        )
 
     @staticmethod
     def transform_results(df: pd.DataFrame, **expand_args):

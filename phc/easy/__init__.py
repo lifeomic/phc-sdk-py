@@ -42,6 +42,11 @@ from phc.easy.referral_request import ReferralRequest
 from phc.easy.sequence import Sequence
 from phc.easy.specimen import Specimen
 
+from phc.easy.summary.counts import SummaryCounts
+from phc.easy.summary.item_counts import SummaryItemCounts
+from phc.easy.summary.clinical_counts import SummaryClinicalCounts
+from phc.easy.summary.omics_counts import SummaryOmicsCounts
+
 __all__ = [
     "AuditEvent",
     "Auth",
@@ -86,4 +91,8 @@ __all__ = [
     "ReferralRequest",
     "Sequence",
     "Specimen",
+    "SummaryCounts",
+    "SummaryItemCounts",
+    "SummaryOmicsCounts",
+    "SummaryClinicalCounts",
 ]
