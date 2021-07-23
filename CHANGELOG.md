@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *(NOTE: All examples use fictious data or freely available data sets.)*
 
+## [0.23.0] - 2021-07-23
+
+### Fixed
+
+- `phc.Project` now operates properly when one of the accounts only has limited access
+- `phc.Observation`, `phc.Condition`, and `phc.Procedures`'s `get_codes` method now uses the new summary APIs to return better results.
+
+### Added
+
+- Summary APIs ([PR #150](https://github.com/lifeomic/phc-sdk-py/pull/150))
+  - `phc.SummaryClinicalCounts` - Retrieve all clinical counts (across tables like observation, conditions, procedures, and medications)
+  - `phc.SummaryOmicsCounts` - Retrieve summaries across genomic data (counts of clinvar_significance, gene_variant, sequence, test, etc)
+  - `phc.SummaryCounts` - Retrieve all summaries (across omics and clinical)
+  - `phc.SummaryItemCounts` - Retrieve counts for a specific table (e.g. `condition`, `procedure`)
+
+Example
+```python
+phc.SummaryClinicalCounts.get_data_frame(match="fuzzy", system=["snomed.info", "loinc.org"])
+#        summary       code                           display  patient_count                  system   count media_type  media_type_count
+# 0    procedure  406505007       modified radical mastectomy          322.0  http://snomed.info/sct   322.0        NaN               NaN
+# 1    procedure  392090004                             other          272.0  http://snomed.info/sct   272.0        NaN               NaN
+# 2  observation    21975-8              Date of Last Contact         1094.0        http://loinc.org  1094.0        NaN               NaN
+# 3   medication  387420009                           cytoxan          514.0  http://snomed.info/sct   523.0        NaN               NaN
+# 4   medication  372817009       doxorubicin+cyclophosphamid          364.0  http://snomed.info/sct   371.0        NaN               NaN
+# 5    condition  254837009                              None         1086.0  http://snomed.info/sct  1086.0        NaN               NaN
+# 6    condition   82711006  Infiltrating duct carcinoma, NOS          778.0  http://snomed.info/sct   778.0        NaN               NaN
+```
+
+
 ## [0.22.2] - 2021-04-30
 
 ### Fixed
@@ -572,6 +601,7 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 - Added the `phc.services.Files` submodule that provides actions for files in PHC projects.
 - Added the `phc.services.Cohorts` submodule that provides actions for files in PHC cohorts.
 
+[0.23.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.22.2...v0.23.0
 [0.22.2]: https://github.com/lifeomic/phc-sdk-py/compare/v0.22.1...v0.22.2
 [0.22.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.22.0...v0.22.1
 [0.22.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.21.1...v0.22.0
