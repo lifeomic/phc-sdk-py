@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *(NOTE: All examples use fictious data or freely available data sets.)*
 
+## [0.23.1] - 2021-07-26
+
+### Fixed
+
+- Fix import error because of missing `__init__` file for summary API folder
+
 ## [0.23.0] - 2021-07-23
 
 ### Fixed
