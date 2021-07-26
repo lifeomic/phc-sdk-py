@@ -49,7 +49,9 @@ class CSVWriter:
         &#34;&#34;&#34;
 
         # Remove newlines from column names
-        frame.columns = [re.sub(r&#39;[\t\n]&#39;, &#39;&#39;, c) for c in frame.columns.tolist()]
+        frame.columns = [
+            re.sub(r&#34;[\t\n]&#34;, &#34;&#34;, c) for c in frame.columns.tolist()
+        ]
 
         if not os.path.exists(self.filename):
             frame.to_csv(
@@ -130,7 +132,9 @@ file where additional columns may be added in subsequent writes</p></div>
         &#34;&#34;&#34;
 
         # Remove newlines from column names
-        frame.columns = [re.sub(r&#39;[\t\n]&#39;, &#39;&#39;, c) for c in frame.columns.tolist()]
+        frame.columns = [
+            re.sub(r&#34;[\t\n]&#34;, &#34;&#34;, c) for c in frame.columns.tolist()
+        ]
 
         if not os.path.exists(self.filename):
             frame.to_csv(
@@ -192,7 +196,9 @@ file into memory</p></div>
     &#34;&#34;&#34;
 
     # Remove newlines from column names
-    frame.columns = [re.sub(r&#39;[\t\n]&#39;, &#39;&#39;, c) for c in frame.columns.tolist()]
+    frame.columns = [
+        re.sub(r&#34;[\t\n]&#34;, &#34;&#34;, c) for c in frame.columns.tolist()
+    ]
 
     if not os.path.exists(self.filename):
         frame.to_csv(

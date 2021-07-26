@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>phc.easy.summary.counts API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>.flex{display:flex !important}body{line-height:1.5em;font-family:"Lato",Helvetica,Roboto,Arial,"Lucida Grande",sans-serif}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:90%}ul li code a{font-size:80%}a{color:#00539a;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#f7944d}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<link rel="shortcut icon" href="./favicon.ico">
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>phc.easy.summary.counts</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import inspect
+from typing import Optional
+
+import pandas as pd
+from funcy import first, iffy, lmapcat, rpartial
+from phc.easy.abstract.paging_api_item import PagingApiItem, PagingApiOptions
+from phc.easy.auth import Auth
+from phc.easy.util.frame import combine_first, drop
+from toolz import pipe
+
+
+class NoOptions(PagingApiOptions):
+    pass
+
+
+class SummaryCounts(PagingApiItem):
+    @staticmethod
+    def resource_path():
+        return &#34;analytics/summary/{project_id}&#34;
+
+    @staticmethod
+    def response_to_items(data):
+        squashed = first(pd.json_normalize(data).to_dict(&#34;records&#34;)) or {}
+        return lmapcat(
+            lambda k: [{&#34;summary&#34;: k, **v} for v in squashed[k]]
+            if isinstance(squashed[k], list)
+            else [],
+            squashed.keys(),
+        )
+
+    @staticmethod
+    def execute_args() -&gt; dict:
+        return dict(ignore_cache=True)
+
+    @staticmethod
+    def params_class():
+        return NoOptions
+
+    @staticmethod
+    def transform_results(
+        data_frame: pd.DataFrame, include_demographics: bool, **expand_args
+    ):
+        return pipe(
+            data_frame,
+            rpartial(
+                combine_first, [&#34;code&#34;, &#34;index&#34;, &#34;demographic_value&#34;], &#34;code&#34;
+            ),
+            rpartial(
+                combine_first,
+                [
+                    &#34;code_count&#34;,
+                    &#34;count&#34;,
+                    &#34;sequence_type_count&#34;,
+                    &#34;test_type_count&#34;,
+                    &#34;variant_count&#34;,
+                ],
+                &#34;count&#34;,
+            ),
+            rpartial(combine_first, [&#34;display&#34;, &#34;sequence_type&#34;], &#34;display&#34;),
+            iffy(
+                lambda df: &#34;summary&#34; in df.columns,
+                lambda df: df.assign(
+                    summary=df.summary.str.replace(&#34;.counts&#34;, &#34;&#34;, regex=False)
+                ),
+            ),
+            rpartial(
+                drop,
+                [
+                    &#34;index&#34;,
+                    &#34;sequence_type_count&#34;,
+                    &#34;sequence_type&#34;,
+                    &#34;code_count&#34;,
+                    &#34;demographic_value&#34;,
+                    &#34;test_type_count&#34;,
+                    &#34;variant_count&#34;,
+                ],
+            ),
+            iffy(
+                lambda df: &#34;summary&#34; in df.columns and &#34;count&#34; in df.columns,
+                lambda df: df.sort_values(
+                    [&#34;summary&#34;, &#34;count&#34;], ascending=False
+                ),
+            ),
+            iffy(
+                lambda df: include_demographics is False
+                and &#34;summary&#34; in df.columns,
+                lambda df: df[~df.summary.str.contains(&#34;demographic&#34;)],
+            ),
+        ).reset_index(drop=True)
+
+    @classmethod
+    def get_data_frame(
+        cls,
+        include_demographics: bool = False,
+        all_results: bool = True,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Optional[int] = None,
+        page_size: Optional[int] = None,
+        log: bool = False,
+        **kw_args,
+    ):
+        &#34;&#34;&#34;Execute a request for summary counts across clinical and omics data
+
+        NOTE: By default, demographic data is excluded since it is not
+        technically counts of entities. If demographics-only data is desired,
+        use this:
+
+        &gt;&gt;&gt; from phc.easy.summary.item_counts import SummaryItemCounts
+        &gt;&gt;&gt; SummaryItemCounts.get_data_frame(summary=&#34;demographics&#34;)
+
+        ## Parameters
+
+        Execution: `phc.easy.query.Query.execute_paging_api`
+        &#34;&#34;&#34;
+
+        # NOTE: include_demographics gets passed through to transform_results
+        # since explicitly declared there.
+
+        df = super().get_data_frame(
+            **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+        )
+
+        return df</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="phc.easy.summary.counts.NoOptions"><code class="flex name class">
+<span>class <span class="ident">NoOptions</span></span>
+<span>(</span><span>**data: Any)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NoOptions(PagingApiOptions):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></li>
+<li>pydantic.main.BaseModel</li>
+<li>pydantic.utils.Representation</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.easy.summary.counts.NoOptions.dict"><code class="name flex">
+<span>def <span class="ident">dict</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions.dict" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions.dict">dict</a></code>
+</p>
+<div class="desc inherited"><p>Generate a dictionary representation of the model, optionally specifying which fields to include or exclude.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.summary.counts.SummaryCounts"><code class="flex name class">
+<span>class <span class="ident">SummaryCounts</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SummaryCounts(PagingApiItem):
+    @staticmethod
+    def resource_path():
+        return &#34;analytics/summary/{project_id}&#34;
+
+    @staticmethod
+    def response_to_items(data):
+        squashed = first(pd.json_normalize(data).to_dict(&#34;records&#34;)) or {}
+        return lmapcat(
+            lambda k: [{&#34;summary&#34;: k, **v} for v in squashed[k]]
+            if isinstance(squashed[k], list)
+            else [],
+            squashed.keys(),
+        )
+
+    @staticmethod
+    def execute_args() -&gt; dict:
+        return dict(ignore_cache=True)
+
+    @staticmethod
+    def params_class():
+        return NoOptions
+
+    @staticmethod
+    def transform_results(
+        data_frame: pd.DataFrame, include_demographics: bool, **expand_args
+    ):
+        return pipe(
+            data_frame,
+            rpartial(
+                combine_first, [&#34;code&#34;, &#34;index&#34;, &#34;demographic_value&#34;], &#34;code&#34;
+            ),
+            rpartial(
+                combine_first,
+                [
+                    &#34;code_count&#34;,
+                    &#34;count&#34;,
+                    &#34;sequence_type_count&#34;,
+                    &#34;test_type_count&#34;,
+                    &#34;variant_count&#34;,
+                ],
+                &#34;count&#34;,
+            ),
+            rpartial(combine_first, [&#34;display&#34;, &#34;sequence_type&#34;], &#34;display&#34;),
+            iffy(
+                lambda df: &#34;summary&#34; in df.columns,
+                lambda df: df.assign(
+                    summary=df.summary.str.replace(&#34;.counts&#34;, &#34;&#34;, regex=False)
+                ),
+            ),
+            rpartial(
+                drop,
+                [
+                    &#34;index&#34;,
+                    &#34;sequence_type_count&#34;,
+                    &#34;sequence_type&#34;,
+                    &#34;code_count&#34;,
+                    &#34;demographic_value&#34;,
+                    &#34;test_type_count&#34;,
+                    &#34;variant_count&#34;,
+                ],
+            ),
+            iffy(
+                lambda df: &#34;summary&#34; in df.columns and &#34;count&#34; in df.columns,
+                lambda df: df.sort_values(
+                    [&#34;summary&#34;, &#34;count&#34;], ascending=False
+                ),
+            ),
+            iffy(
+                lambda df: include_demographics is False
+                and &#34;summary&#34; in df.columns,
+                lambda df: df[~df.summary.str.contains(&#34;demographic&#34;)],
+            ),
+        ).reset_index(drop=True)
+
+    @classmethod
+    def get_data_frame(
+        cls,
+        include_demographics: bool = False,
+        all_results: bool = True,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Optional[int] = None,
+        page_size: Optional[int] = None,
+        log: bool = False,
+        **kw_args,
+    ):
+        &#34;&#34;&#34;Execute a request for summary counts across clinical and omics data
+
+        NOTE: By default, demographic data is excluded since it is not
+        technically counts of entities. If demographics-only data is desired,
+        use this:
+
+        &gt;&gt;&gt; from phc.easy.summary.item_counts import SummaryItemCounts
+        &gt;&gt;&gt; SummaryItemCounts.get_data_frame(summary=&#34;demographics&#34;)
+
+        ## Parameters
+
+        Execution: `phc.easy.query.Query.execute_paging_api`
+        &#34;&#34;&#34;
+
+        # NOTE: include_demographics gets passed through to transform_results
+        # since explicitly declared there.
+
+        df = super().get_data_frame(
+            **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+        )
+
+        return df</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.summary.counts.SummaryCounts.execute_args"><code class="name flex">
+<span>def <span class="ident">execute_args</span></span>(<span>) ‑> dict</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def execute_args() -&gt; dict:
+    return dict(ignore_cache=True)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.summary.counts.SummaryCounts.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>include_demographics: bool = False, all_results: bool = True, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Execute a request for summary counts across clinical and omics data</p>
+<p>NOTE: By default, demographic data is excluded since it is not
+technically counts of entities. If demographics-only data is desired,
+use this:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from phc.easy.summary.item_counts import SummaryItemCounts
+&gt;&gt;&gt; SummaryItemCounts.get_data_frame(summary=&quot;demographics&quot;)
+</code></pre>
+<h2 id="parameters">Parameters</h2>
+<p>Execution: <code><a title="phc.easy.query.Query.execute_paging_api" href="../query/index.html#phc.easy.query.Query.execute_paging_api">Query.execute_paging_api()</a></code></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_data_frame(
+    cls,
+    include_demographics: bool = False,
+    all_results: bool = True,
+    auth_args: Auth = Auth.shared(),
+    max_pages: Optional[int] = None,
+    page_size: Optional[int] = None,
+    log: bool = False,
+    **kw_args,
+):
+    &#34;&#34;&#34;Execute a request for summary counts across clinical and omics data
+
+    NOTE: By default, demographic data is excluded since it is not
+    technically counts of entities. If demographics-only data is desired,
+    use this:
+
+    &gt;&gt;&gt; from phc.easy.summary.item_counts import SummaryItemCounts
+    &gt;&gt;&gt; SummaryItemCounts.get_data_frame(summary=&#34;demographics&#34;)
+
+    ## Parameters
+
+    Execution: `phc.easy.query.Query.execute_paging_api`
+    &#34;&#34;&#34;
+
+    # NOTE: include_demographics gets passed through to transform_results
+    # since explicitly declared there.
+
+    df = super().get_data_frame(
+        **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+    )
+
+    return df</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.summary.counts.SummaryCounts.params_class"><code class="name flex">
+<span>def <span class="ident">params_class</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.params_class" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.params_class">params_class</a></code>
+</p>
+<div class="desc inherited"><p>Returns a pydantic type that validates and transforms the params with dict()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def params_class():
+    return NoOptions</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.summary.counts.SummaryCounts.process_params"><code class="name flex">
+<span>def <span class="ident">process_params</span></span>(<span>params: dict) ‑> dict</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.process_params" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.process_params">process_params</a></code>
+</p>
+<div class="desc inherited"><p>Validates and transforms the API query parameters</p></div>
+</dd>
+<dt id="phc.easy.summary.counts.SummaryCounts.resource_path"><code class="name flex">
+<span>def <span class="ident">resource_path</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.resource_path" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.resource_path">resource_path</a></code>
+</p>
+<div class="desc inherited"><p>Returns the API url name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def resource_path():
+    return &#34;analytics/summary/{project_id}&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.summary.counts.SummaryCounts.response_to_items"><code class="name flex">
+<span>def <span class="ident">response_to_items</span></span>(<span>data)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def response_to_items(data):
+    squashed = first(pd.json_normalize(data).to_dict(&#34;records&#34;)) or {}
+    return lmapcat(
+        lambda k: [{&#34;summary&#34;: k, **v} for v in squashed[k]]
+        if isinstance(squashed[k], list)
+        else [],
+        squashed.keys(),
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.summary.counts.SummaryCounts.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, include_demographics: bool, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.transform_results" href="../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(
+    data_frame: pd.DataFrame, include_demographics: bool, **expand_args
+):
+    return pipe(
+        data_frame,
+        rpartial(
+            combine_first, [&#34;code&#34;, &#34;index&#34;, &#34;demographic_value&#34;], &#34;code&#34;
+        ),
+        rpartial(
+            combine_first,
+            [
+                &#34;code_count&#34;,
+                &#34;count&#34;,
+                &#34;sequence_type_count&#34;,
+                &#34;test_type_count&#34;,
+                &#34;variant_count&#34;,
+            ],
+            &#34;count&#34;,
+        ),
+        rpartial(combine_first, [&#34;display&#34;, &#34;sequence_type&#34;], &#34;display&#34;),
+        iffy(
+            lambda df: &#34;summary&#34; in df.columns,
+            lambda df: df.assign(
+                summary=df.summary.str.replace(&#34;.counts&#34;, &#34;&#34;, regex=False)
+            ),
+        ),
+        rpartial(
+            drop,
+            [
+                &#34;index&#34;,
+                &#34;sequence_type_count&#34;,
+                &#34;sequence_type&#34;,
+                &#34;code_count&#34;,
+                &#34;demographic_value&#34;,
+                &#34;test_type_count&#34;,
+                &#34;variant_count&#34;,
+            ],
+        ),
+        iffy(
+            lambda df: &#34;summary&#34; in df.columns and &#34;count&#34; in df.columns,
+            lambda df: df.sort_values(
+                [&#34;summary&#34;, &#34;count&#34;], ascending=False
+            ),
+        ),
+        iffy(
+            lambda df: include_demographics is False
+            and &#34;summary&#34; in df.columns,
+            lambda df: df[~df.summary.str.contains(&#34;demographic&#34;)],
+        ),
+    ).reset_index(drop=True)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<header>
+<a class="homelink" rel="home" title="PHC Home" href="https://lifeomic.github.io/phc-sdk-py/">
+<img src="./phc.png" alt="">
+</a>
+</header>
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="phc.easy.summary" href="index.html">phc.easy.summary</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="phc.easy.summary.counts.NoOptions" href="#phc.easy.summary.counts.NoOptions">NoOptions</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.summary.counts.NoOptions.dict" href="../abstract/paging_api_item.html#phc.easy.summary.counts.NoOptions.dict">dict</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.summary.counts.SummaryCounts" href="#phc.easy.summary.counts.SummaryCounts">SummaryCounts</a></code></h4>
+<ul class="two-column">
+<li><code><a title="phc.easy.summary.counts.SummaryCounts.execute_args" href="#phc.easy.summary.counts.SummaryCounts.execute_args">execute_args</a></code></li>
+<li><code><a title="phc.easy.summary.counts.SummaryCounts.get_data_frame" href="#phc.easy.summary.counts.SummaryCounts.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.summary.counts.SummaryCounts.params_class" href="#phc.easy.summary.counts.SummaryCounts.params_class">params_class</a></code></li>
+<li><code><a title="phc.easy.summary.counts.SummaryCounts.process_params" href="../abstract/paging_api_item.html#phc.easy.summary.counts.SummaryCounts.process_params">process_params</a></code></li>
+<li><code><a title="phc.easy.summary.counts.SummaryCounts.resource_path" href="#phc.easy.summary.counts.SummaryCounts.resource_path">resource_path</a></code></li>
+<li><code><a title="phc.easy.summary.counts.SummaryCounts.response_to_items" href="#phc.easy.summary.counts.SummaryCounts.response_to_items">response_to_items</a></code></li>
+<li><code><a title="phc.easy.summary.counts.SummaryCounts.transform_results" href="#phc.easy.summary.counts.SummaryCounts.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

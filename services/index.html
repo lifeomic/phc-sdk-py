@@ -2752,7 +2752,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
                 set_type.value, json=json_body, http_verb=&#34;POST&#34;
             )
 
-    def update_set(self, set_type: SetType, set_id: str, updates: dict) -&gt; ApiResponse:
+    def update_set(
+        self, set_type: SetType, set_id: str, updates: dict
+    ) -&gt; ApiResponse:
         &#34;&#34;&#34;Update a genomic set
 
         Parameters
@@ -2769,7 +2771,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
         ApiResponse
             The fetch response
         &#34;&#34;&#34;
-        return self._ga4gh_call(f&#34;{set_type.value}/{set_id}&#34;, json=updates, http_verb=&#34;PATCH&#34;)
+        return self._ga4gh_call(
+            f&#34;{set_type.value}/{set_id}&#34;, json=updates, http_verb=&#34;PATCH&#34;
+        )
 
     def get_set(self, set_type: SetType, set_id: str) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetch a genomic set
@@ -2894,8 +2898,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
             The get test response
         &#34;&#34;&#34;
         return self._api_call(
-            f&#34;genomics/projects/{project_id}/tests/{test_id}&#34;,
-            http_verb=&#34;GET&#34;,
+            f&#34;genomics/projects/{project_id}/tests/{test_id}&#34;, http_verb=&#34;GET&#34;
         )
 
     def delete_test(self, project_id: str, test_id: str) -&gt; bool:
@@ -2947,7 +2950,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = '4f7eb96c-96a9-4b63-8401-68e1f859a9ac', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = '1d9ae546-e425-4df0-8a37-1334f7515059', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
@@ -3246,8 +3249,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
         The get test response
     &#34;&#34;&#34;
     return self._api_call(
-        f&#34;genomics/projects/{project_id}/tests/{test_id}&#34;,
-        http_verb=&#34;GET&#34;,
+        f&#34;genomics/projects/{project_id}/tests/{test_id}&#34;, http_verb=&#34;GET&#34;
     )</code></pre>
 </details>
 </dd>
@@ -3396,7 +3398,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def update_set(self, set_type: SetType, set_id: str, updates: dict) -&gt; ApiResponse:
+<pre><code class="python">def update_set(
+    self, set_type: SetType, set_id: str, updates: dict
+) -&gt; ApiResponse:
     &#34;&#34;&#34;Update a genomic set
 
     Parameters
@@ -3413,7 +3417,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
     ApiResponse
         The fetch response
     &#34;&#34;&#34;
-    return self._ga4gh_call(f&#34;{set_type.value}/{set_id}&#34;, json=updates, http_verb=&#34;PATCH&#34;)</code></pre>
+    return self._ga4gh_call(
+        f&#34;{set_type.value}/{set_id}&#34;, json=updates, http_verb=&#34;PATCH&#34;
+    )</code></pre>
 </details>
 </dd>
 </dl>
@@ -4006,10 +4012,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
         phc.ApiResponse
             The updated tool response
         &#34;&#34;&#34;
-        version_request = {
-            &#34;version&#34;: version,
-            &#34;isDefault&#34;: is_default,
-        }
+        version_request = {&#34;version&#34;: version, &#34;isDefault&#34;: is_default}
 
         res = self._api_call(
             f&#34;/v1/trs/v2/tools/{tool_id}/versions&#34;,
@@ -4097,10 +4100,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
         phc.ApiResponse
             The list files response
         &#34;&#34;&#34;
-        query_dict = {
-            &#34;limit&#34;: page_size,
-            &#34;offset&#34;: page_count,
-        }
+        query_dict = {&#34;limit&#34;: page_size, &#34;offset&#34;: page_count}
         if tool_class:
             if not hasattr(ToolClass, tool_class):
                 raise ValueError(
@@ -4117,8 +4117,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
             query_dict[&#34;label&#34;] = &#34;,&#34;.join(labels)
 
         return self._api_call(
-            f&#34;/v1/trs/v2/tools?{urlencode(query_dict)}&#34;,
-            http_verb=&#34;GET&#34;,
+            f&#34;/v1/trs/v2/tools?{urlencode(query_dict)}&#34;, http_verb=&#34;GET&#34;
         )</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -4177,10 +4176,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
     phc.ApiResponse
         The updated tool response
     &#34;&#34;&#34;
-    version_request = {
-        &#34;version&#34;: version,
-        &#34;isDefault&#34;: is_default,
-    }
+    version_request = {&#34;version&#34;: version, &#34;isDefault&#34;: is_default}
 
     res = self._api_call(
         f&#34;/v1/trs/v2/tools/{tool_id}/versions&#34;,
@@ -4552,10 +4548,7 @@ def download(
     phc.ApiResponse
         The list files response
     &#34;&#34;&#34;
-    query_dict = {
-        &#34;limit&#34;: page_size,
-        &#34;offset&#34;: page_count,
-    }
+    query_dict = {&#34;limit&#34;: page_size, &#34;offset&#34;: page_count}
     if tool_class:
         if not hasattr(ToolClass, tool_class):
             raise ValueError(
@@ -4572,8 +4565,7 @@ def download(
         query_dict[&#34;label&#34;] = &#34;,&#34;.join(labels)
 
     return self._api_call(
-        f&#34;/v1/trs/v2/tools?{urlencode(query_dict)}&#34;,
-        http_verb=&#34;GET&#34;,
+        f&#34;/v1/trs/v2/tools?{urlencode(query_dict)}&#34;, http_verb=&#34;GET&#34;
     )</code></pre>
 </details>
 </dd>
@@ -4722,9 +4714,7 @@ def download(
         phc.ApiResponse
             The list workflow run response
         &#34;&#34;&#34;
-        query_dict = {
-            &#34;datasetId&#34;: project_id,
-        }
+        query_dict = {&#34;datasetId&#34;: project_id}
         if page_size:
             query_dict[&#34;pageSize&#34;] = page_size
         if next_page_token:
@@ -4902,9 +4892,7 @@ def download(
     phc.ApiResponse
         The list workflow run response
     &#34;&#34;&#34;
-    query_dict = {
-        &#34;datasetId&#34;: project_id,
-    }
+    query_dict = {&#34;datasetId&#34;: project_id}
     if page_size:
         query_dict[&#34;pageSize&#34;] = page_size
     if next_page_token:

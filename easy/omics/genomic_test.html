@@ -42,7 +42,7 @@ from phc.easy.abstract.paging_api_item import PagingApiItem, PagingApiOptions
 
 
 class GenomicTestOptions(PagingApiOptions):
-    &#34;&#34;&#34;Options to pass to `/v1/genomics/projects/:project_id/tests`
+    &#34;&#34;&#34;Options to pass to `/v1/genomics/projects/{project_id}/tests`
 
     See https://docs.us.lifeomic.com/api/#get-tests
     &#34;&#34;&#34;
@@ -61,7 +61,7 @@ class GenomicTestOptions(PagingApiOptions):
 class GenomicTest(PagingApiItem):
     @staticmethod
     def resource_path():
-        return &#34;genomics/projects/:project_id/tests&#34;
+        return &#34;genomics/projects/{project_id}/tests&#34;
 
     @staticmethod
     def params_class():
@@ -166,7 +166,7 @@ class GenomicTest(PagingApiItem):
 <pre><code class="python">class GenomicTest(PagingApiItem):
     @staticmethod
     def resource_path():
-        return &#34;genomics/projects/:project_id/tests&#34;
+        return &#34;genomics/projects/{project_id}/tests&#34;
 
     @staticmethod
     def params_class():
@@ -345,7 +345,7 @@ def params_class():
 </summary>
 <pre><code class="python">@staticmethod
 def resource_path():
-    return &#34;genomics/projects/:project_id/tests&#34;</code></pre>
+    return &#34;genomics/projects/{project_id}/tests&#34;</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.omics.genomic_test.GenomicTest.transform_results"><code class="name flex">
@@ -414,7 +414,7 @@ def transform_results(
 <span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Options to pass to <code>/v1/genomics/projects/:project_id/tests</code></p>
+<div class="desc"><p>Options to pass to <code>/v1/genomics/projects/{project_id}/tests</code></p>
 <p>See <a href="https://docs.us.lifeomic.com/api/#get-tests">https://docs.us.lifeomic.com/api/#get-tests</a></p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
 <p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
@@ -423,7 +423,7 @@ def transform_results(
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class GenomicTestOptions(PagingApiOptions):
-    &#34;&#34;&#34;Options to pass to `/v1/genomics/projects/:project_id/tests`
+    &#34;&#34;&#34;Options to pass to `/v1/genomics/projects/{project_id}/tests`
 
     See https://docs.us.lifeomic.com/api/#get-tests
     &#34;&#34;&#34;

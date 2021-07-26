@@ -29,6 +29,7 @@
 </summary>
 <pre><code class="python">import json
 import math
+from phc.easy.query.url import merge_pattern
 from typing import Any, Callable, List, Optional, Tuple, Union
 
 import pandas as pd
@@ -36,10 +37,14 @@ from phc.base_client import BaseClient
 from phc.easy.auth import Auth
 from phc.easy.query.api_paging import clean_params, recursive_paging_api_call
 from phc.easy.query.fhir_aggregation import FhirAggregation
-from phc.easy.query.fhir_dsl import (DEFAULT_SCROLL_SIZE, MAX_RESULT_SIZE,
-                                     execute_single_fhir_dsl,
-                                     recursive_execute_fhir_dsl, tqdm,
-                                     with_progress)
+from phc.easy.query.fhir_dsl import (
+    DEFAULT_SCROLL_SIZE,
+    MAX_RESULT_SIZE,
+    execute_single_fhir_dsl,
+    recursive_execute_fhir_dsl,
+    tqdm,
+    with_progress,
+)
 from phc.easy.query.fhir_dsl_query import build_query
 from phc.easy.query.ga4gh import recursive_execute_ga4gh
 from phc.easy.util import extract_codes
@@ -204,6 +209,7 @@ class Query:
         progress: Optional[tqdm] = None,
         item_key: str = &#34;items&#34;,
         try_count: bool = True,
+        response_to_items: Optional[Callable[[Union[list, dict]], list]] = None,
     ):
         &#34;&#34;&#34;Execute a API query that pages through results
 
@@ -214,7 +220,7 @@ class Query:
         ----------
         path : str
             The API path to hit
-            (Special tokens: `:project_id`)
+            (Special tokens: `{project_id}`)
 
         params : dict
             The parameters to include with request
@@ -246,13 +252,17 @@ class Query:
         try_count : bool
             Whether to try and send a &#34;count&#34; param to update the progress bar
 
+        response_to_items : Callable
+            Custom function to transform response data to list of items
+            (Overrides item_key when present)
+
         Examples
         --------
         &gt;&gt;&gt; import phc.easy as phc
         &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
         &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
         &gt;&gt;&gt; phc.Query.execute_paging_api(
-                &#34;genomics/projects/:project_id/tests&#34;,
+                &#34;genomics/projects/{project_id}/tests&#34;,
                 params={
                     &#34;patientId&#34;: &#34;&lt;patient-uuid&gt;&#34;
                 }
@@ -266,7 +276,9 @@ class Query:
 
         # Do not pull project_id if not in URL (which throws error if project not selected)
         if &#34;project_id&#34; in path:
-            path = path.replace(&#34;:project_id&#34;, auth.project_id)
+            path = path.replace(&#34;{project_id}&#34;, auth.project_id)
+
+        path, params = merge_pattern(path, params)
 
         query = {&#34;path&#34;: path, &#34;method&#34;: http_verb, &#34;params&#34;: params}
 
@@ -309,6 +321,7 @@ class Query:
                 auth_args=auth_args,
                 progress=progress,
                 item_key=item_key,
+                response_to_items=response_to_items,
                 try_count=try_count,
             ),
         )
@@ -902,6 +915,10 @@ class Query:
 <dd>
 <div class="desc"></div>
 </dd>
+<dt><code class="name"><a title="phc.easy.query.url" href="url.html">phc.easy.query.url</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 </dl>
 </section>
 <section>
@@ -1076,6 +1093,7 @@ class Query:
         progress: Optional[tqdm] = None,
         item_key: str = &#34;items&#34;,
         try_count: bool = True,
+        response_to_items: Optional[Callable[[Union[list, dict]], list]] = None,
     ):
         &#34;&#34;&#34;Execute a API query that pages through results
 
@@ -1086,7 +1104,7 @@ class Query:
         ----------
         path : str
             The API path to hit
-            (Special tokens: `:project_id`)
+            (Special tokens: `{project_id}`)
 
         params : dict
             The parameters to include with request
@@ -1118,13 +1136,17 @@ class Query:
         try_count : bool
             Whether to try and send a &#34;count&#34; param to update the progress bar
 
+        response_to_items : Callable
+            Custom function to transform response data to list of items
+            (Overrides item_key when present)
+
         Examples
         --------
         &gt;&gt;&gt; import phc.easy as phc
         &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
         &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
         &gt;&gt;&gt; phc.Query.execute_paging_api(
-                &#34;genomics/projects/:project_id/tests&#34;,
+                &#34;genomics/projects/{project_id}/tests&#34;,
                 params={
                     &#34;patientId&#34;: &#34;&lt;patient-uuid&gt;&#34;
                 }
@@ -1138,7 +1160,9 @@ class Query:
 
         # Do not pull project_id if not in URL (which throws error if project not selected)
         if &#34;project_id&#34; in path:
-            path = path.replace(&#34;:project_id&#34;, auth.project_id)
+            path = path.replace(&#34;{project_id}&#34;, auth.project_id)
+
+        path, params = merge_pattern(path, params)
 
         query = {&#34;path&#34;: path, &#34;method&#34;: http_verb, &#34;params&#34;: params}
 
@@ -1181,6 +1205,7 @@ class Query:
                 auth_args=auth_args,
                 progress=progress,
                 item_key=item_key,
+                response_to_items=response_to_items,
                 try_count=try_count,
             ),
         )
@@ -2196,7 +2221,7 @@ def execute_ga4gh(
 </details>
 </dd>
 <dt id="phc.easy.query.Query.execute_paging_api"><code class="name flex">
-<span>def <span class="ident">execute_paging_api</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame] = &lt;function identity&gt;, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, raw: bool = False, ignore_cache: bool = False, show_progress: bool = True, progress: Union[tqdm.std.tqdm, NoneType] = None, item_key: str = 'items', try_count: bool = True)</span>
+<span>def <span class="ident">execute_paging_api</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame] = &lt;function identity&gt;, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, raw: bool = False, ignore_cache: bool = False, show_progress: bool = True, progress: Union[tqdm.std.tqdm, NoneType] = None, item_key: str = 'items', try_count: bool = True, response_to_items: Union[Callable[[Union[list, dict]], list], NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a API query that pages through results</p>
@@ -2206,7 +2231,7 @@ for example</p>
 <dl>
 <dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
 <dd>The API path to hit
-(Special tokens: <code>:project_id</code>)</dd>
+(Special tokens: <code>{project_id}</code>)</dd>
 <dt><strong><code>params</code></strong> :&ensp;<code>dict</code></dt>
 <dd>The parameters to include with request</dd>
 <dt><strong><code>http_verb</code></strong> :&ensp;<code>str</code></dt>
@@ -2227,13 +2252,16 @@ for example</p>
 <dd>The key to find the results underneath (usually "items" but not always)</dd>
 <dt><strong><code>try_count</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Whether to try and send a "count" param to update the progress bar</dd>
+<dt><strong><code>response_to_items</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>Custom function to transform response data to list of items
+(Overrides item_key when present)</dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
 &gt;&gt;&gt; phc.Auth.set({ 'account': '&lt;your-account-name&gt;' })
 &gt;&gt;&gt; phc.Project.set_current('My Project Name')
 &gt;&gt;&gt; phc.Query.execute_paging_api(
-        &quot;genomics/projects/:project_id/tests&quot;,
+        &quot;genomics/projects/{project_id}/tests&quot;,
         params={
             &quot;patientId&quot;: &quot;&lt;patient-uuid&gt;&quot;
         }
@@ -2260,6 +2288,7 @@ def execute_paging_api(
     progress: Optional[tqdm] = None,
     item_key: str = &#34;items&#34;,
     try_count: bool = True,
+    response_to_items: Optional[Callable[[Union[list, dict]], list]] = None,
 ):
     &#34;&#34;&#34;Execute a API query that pages through results
 
@@ -2270,7 +2299,7 @@ def execute_paging_api(
     ----------
     path : str
         The API path to hit
-        (Special tokens: `:project_id`)
+        (Special tokens: `{project_id}`)
 
     params : dict
         The parameters to include with request
@@ -2302,13 +2331,17 @@ def execute_paging_api(
     try_count : bool
         Whether to try and send a &#34;count&#34; param to update the progress bar
 
+    response_to_items : Callable
+        Custom function to transform response data to list of items
+        (Overrides item_key when present)
+
     Examples
     --------
     &gt;&gt;&gt; import phc.easy as phc
     &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
     &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
     &gt;&gt;&gt; phc.Query.execute_paging_api(
-            &#34;genomics/projects/:project_id/tests&#34;,
+            &#34;genomics/projects/{project_id}/tests&#34;,
             params={
                 &#34;patientId&#34;: &#34;&lt;patient-uuid&gt;&#34;
             }
@@ -2322,7 +2355,9 @@ def execute_paging_api(
 
     # Do not pull project_id if not in URL (which throws error if project not selected)
     if &#34;project_id&#34; in path:
-        path = path.replace(&#34;:project_id&#34;, auth.project_id)
+        path = path.replace(&#34;{project_id}&#34;, auth.project_id)
+
+    path, params = merge_pattern(path, params)
 
     query = {&#34;path&#34;: path, &#34;method&#34;: http_verb, &#34;params&#34;: params}
 
@@ -2365,6 +2400,7 @@ def execute_paging_api(
             auth_args=auth_args,
             progress=progress,
             item_key=item_key,
+            response_to_items=response_to_items,
             try_count=try_count,
         ),
     )
@@ -2844,6 +2880,7 @@ def get_count_by_field(
 <li><code><a title="phc.easy.query.fhir_dsl" href="fhir_dsl.html">phc.easy.query.fhir_dsl</a></code></li>
 <li><code><a title="phc.easy.query.fhir_dsl_query" href="fhir_dsl_query.html">phc.easy.query.fhir_dsl_query</a></code></li>
 <li><code><a title="phc.easy.query.ga4gh" href="ga4gh.html">phc.easy.query.ga4gh</a></code></li>
+<li><code><a title="phc.easy.query.url" href="url.html">phc.easy.query.url</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>

@@ -44,11 +44,17 @@ from phc.easy.omics.options.genomic_test import (GenomicTestStatus,
 from phc.easy.omics.options.in_frame import InFrame
 from phc.easy.omics.options.structural_type import StructuralType
 from phc.easy.omics.options.zygosity import Zygosity
+from phc.easy.summary.options.clinical_counts import \
+    SummaryClinicalCountsOptions
+from phc.easy.summary.options.item_counts import (SummaryClinicalType,
+                                                  SummaryItemCountsOptions,
+                                                  SummaryOmicsType)
 
 
 class Option:
     &#34;&#34;&#34;Class that references all available API options&#34;&#34;&#34;
 
+    # Omics
     GenomicVariantInclude = GenomicVariantInclude
     GenomicCopyNumberVariantOptions = GenomicCopyNumberVariantOptions
     GenomicShortVariantOptions = GenomicShortVariantOptions
@@ -63,7 +69,15 @@ class Option:
     CopyNumberStatus = CopyNumberStatus
     InFrame = InFrame
     StructuralType = StructuralType
-    OcrConfig = OcrConfig</code></pre>
+
+    # OCR
+    OcrConfig = OcrConfig
+
+    # Summary APIs
+    SummaryItemCountsOptions = SummaryItemCountsOptions
+    SummaryOmicsType = SummaryOmicsType
+    SummaryClinicalType = SummaryClinicalType
+    SummaryClinicalCountsOptions = SummaryClinicalCountsOptions</code></pre>
 </details>
 </section>
 <section>
@@ -87,6 +101,7 @@ class Option:
 <pre><code class="python">class Option:
     &#34;&#34;&#34;Class that references all available API options&#34;&#34;&#34;
 
+    # Omics
     GenomicVariantInclude = GenomicVariantInclude
     GenomicCopyNumberVariantOptions = GenomicCopyNumberVariantOptions
     GenomicShortVariantOptions = GenomicShortVariantOptions
@@ -101,7 +116,15 @@ class Option:
     CopyNumberStatus = CopyNumberStatus
     InFrame = InFrame
     StructuralType = StructuralType
-    OcrConfig = OcrConfig</code></pre>
+
+    # OCR
+    OcrConfig = OcrConfig
+
+    # Summary APIs
+    SummaryItemCountsOptions = SummaryItemCountsOptions
+    SummaryOmicsType = SummaryOmicsType
+    SummaryClinicalType = SummaryClinicalType
+    SummaryClinicalCountsOptions = SummaryClinicalCountsOptions</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -160,6 +183,22 @@ class Option:
 <div class="desc"></div>
 </dd>
 <dt id="phc.easy.option.Option.StructuralType"><code class="name">var <span class="ident">StructuralType</span></code></dt>
+<dd>
+<div class="desc"><p>An enumeration.</p></div>
+</dd>
+<dt id="phc.easy.option.Option.SummaryClinicalCountsOptions"><code class="name">var <span class="ident">SummaryClinicalCountsOptions</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="phc.easy.option.Option.SummaryClinicalType"><code class="name">var <span class="ident">SummaryClinicalType</span></code></dt>
+<dd>
+<div class="desc"><p>An enumeration.</p></div>
+</dd>
+<dt id="phc.easy.option.Option.SummaryItemCountsOptions"><code class="name">var <span class="ident">SummaryItemCountsOptions</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="phc.easy.option.Option.SummaryOmicsType"><code class="name">var <span class="ident">SummaryOmicsType</span></code></dt>
 <dd>
 <div class="desc"><p>An enumeration.</p></div>
 </dd>

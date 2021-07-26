@@ -27,7 +27,8 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import inspect
+<pre><code class="python">from typing import Union, List
+import inspect
 from enum import Enum
 
 import pandas as pd
@@ -62,14 +63,22 @@ class PagingApiOptions(BaseModel):
         )
 
 
-def split_kw_args(args: dict):
+def split_kw_args(
+    args: dict,
+    blacklist: List[str] = [],
+    additional_expand_keys: List[str] = [],
+):
     def value(pair):
         if pair[0] in EXECUTE_QUERY_ARGS:
             return &#34;execute&#34;
-        elif pair[0] in EXPAND_ARGS:
+        elif pair[0] in [*EXPAND_ARGS, *additional_expand_keys]:
             return &#34;expand&#34;
         else:
             return &#34;query&#34;
+
+    for blacklist_key in blacklist:
+        if blacklist_key in args.keys():
+            raise ValueError(f&#34;&#39;{blacklist_key}&#39; not supported.&#34;)
 
     return {k: dict(v) for k, v in groupby(value, args.items()).items()}
 
@@ -96,6 +105,14 @@ class PagingApiItem:
         return data_frame
 
     @staticmethod
+    def response_to_items(data: Union[list, dict]) -&gt; list:
+        return data.get(&#34;items&#34;, [])
+
+    @staticmethod
+    def execute_args() -&gt; dict:
+        return {}
+
+    @staticmethod
     def _get_current_args(frame: any, local_vars: dict):
         &#34;&#34;&#34;Helper function for getting all arguments to the current function as a dictionary&#34;&#34;&#34;
         EXCEPTIONS = [&#34;cls&#34;, &#34;frame&#34;]
@@ -104,7 +121,17 @@ class PagingApiItem:
 
     @classmethod
     def get_data_frame(cls, **kw_args):
-        split_args = split_kw_args(kw_args)
+        expand_keys = [
+            k
+            for k in inspect.getfullargspec(cls.transform_results).args
+            if k not in [&#34;frame&#34;, &#34;expand_keys&#34;]
+        ]
+        overrides = cls.execute_args()
+        split_args = split_kw_args(
+            {**kw_args, **overrides},
+            blacklist=[&#34;item_key&#34;],
+            additional_expand_keys=expand_keys,
+        )
         params, expand_args, execute_options = (
             cls.process_params(split_args.get(&#34;query&#34;, {})),
             split_args.get(&#34;expand&#34;, {}),
@@ -118,7 +145,11 @@ class PagingApiItem:
             return cls.transform_results(df, params=params, **expand_args)
 
         df = Query.execute_paging_api(
-            cls.resource_path(), params, **execute_options, transform=transform
+            cls.resource_path(),
+            params,
+            **execute_options,
+            transform=transform,
+            response_to_items=cls.response_to_items,
         )
 
         return df</code></pre>
@@ -132,7 +163,7 @@ class PagingApiItem:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="phc.easy.abstract.paging_api_item.split_kw_args"><code class="name flex">
-<span>def <span class="ident">split_kw_args</span></span>(<span>args: dict)</span>
+<span>def <span class="ident">split_kw_args</span></span>(<span>args: dict, blacklist: List[str] = [], additional_expand_keys: List[str] = [])</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -140,14 +171,22 @@ class PagingApiItem:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def split_kw_args(args: dict):
+<pre><code class="python">def split_kw_args(
+    args: dict,
+    blacklist: List[str] = [],
+    additional_expand_keys: List[str] = [],
+):
     def value(pair):
         if pair[0] in EXECUTE_QUERY_ARGS:
             return &#34;execute&#34;
-        elif pair[0] in EXPAND_ARGS:
+        elif pair[0] in [*EXPAND_ARGS, *additional_expand_keys]:
             return &#34;expand&#34;
         else:
             return &#34;query&#34;
+
+    for blacklist_key in blacklist:
+        if blacklist_key in args.keys():
+            raise ValueError(f&#34;&#39;{blacklist_key}&#39; not supported.&#34;)
 
     return {k: dict(v) for k, v in groupby(value, args.items()).items()}</code></pre>
 </details>
@@ -188,6 +227,14 @@ class PagingApiItem:
         return data_frame
 
     @staticmethod
+    def response_to_items(data: Union[list, dict]) -&gt; list:
+        return data.get(&#34;items&#34;, [])
+
+    @staticmethod
+    def execute_args() -&gt; dict:
+        return {}
+
+    @staticmethod
     def _get_current_args(frame: any, local_vars: dict):
         &#34;&#34;&#34;Helper function for getting all arguments to the current function as a dictionary&#34;&#34;&#34;
         EXCEPTIONS = [&#34;cls&#34;, &#34;frame&#34;]
@@ -196,7 +243,17 @@ class PagingApiItem:
 
     @classmethod
     def get_data_frame(cls, **kw_args):
-        split_args = split_kw_args(kw_args)
+        expand_keys = [
+            k
+            for k in inspect.getfullargspec(cls.transform_results).args
+            if k not in [&#34;frame&#34;, &#34;expand_keys&#34;]
+        ]
+        overrides = cls.execute_args()
+        split_args = split_kw_args(
+            {**kw_args, **overrides},
+            blacklist=[&#34;item_key&#34;],
+            additional_expand_keys=expand_keys,
+        )
         params, expand_args, execute_options = (
             cls.process_params(split_args.get(&#34;query&#34;, {})),
             split_args.get(&#34;expand&#34;, {}),
@@ -210,7 +267,11 @@ class PagingApiItem:
             return cls.transform_results(df, params=params, **expand_args)
 
         df = Query.execute_paging_api(
-            cls.resource_path(), params, **execute_options, transform=transform
+            cls.resource_path(),
+            params,
+            **execute_options,
+            transform=transform,
+            response_to_items=cls.response_to_items,
         )
 
         return df</code></pre>
@@ -220,9 +281,27 @@ class PagingApiItem:
 <li><a title="phc.easy.abstract.genomic_variant.GenomicVariant" href="genomic_variant.html#phc.easy.abstract.genomic_variant.GenomicVariant">GenomicVariant</a></li>
 <li><a title="phc.easy.omics.genomic_test.GenomicTest" href="../omics/genomic_test.html#phc.easy.omics.genomic_test.GenomicTest">GenomicTest</a></li>
 <li><a title="phc.easy.projects.Project" href="../projects.html#phc.easy.projects.Project">Project</a></li>
+<li><a title="phc.easy.summary.clinical_counts.SummaryClinicalCounts" href="../summary/clinical_counts.html#phc.easy.summary.clinical_counts.SummaryClinicalCounts">SummaryClinicalCounts</a></li>
+<li><a title="phc.easy.summary.counts.SummaryCounts" href="../summary/counts.html#phc.easy.summary.counts.SummaryCounts">SummaryCounts</a></li>
+<li><a title="phc.easy.summary.item_counts.SummaryItemCounts" href="../summary/item_counts.html#phc.easy.summary.item_counts.SummaryItemCounts">SummaryItemCounts</a></li>
+<li><a title="phc.easy.summary.omics_counts.SummaryOmicsCounts" href="../summary/omics_counts.html#phc.easy.summary.omics_counts.SummaryOmicsCounts">SummaryOmicsCounts</a></li>
 </ul>
 <h3>Static methods</h3>
 <dl>
+<dt id="phc.easy.abstract.paging_api_item.PagingApiItem.execute_args"><code class="name flex">
+<span>def <span class="ident">execute_args</span></span>(<span>) ‑> dict</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def execute_args() -&gt; dict:
+    return {}</code></pre>
+</details>
+</dd>
 <dt id="phc.easy.abstract.paging_api_item.PagingApiItem.get_data_frame"><code class="name flex">
 <span>def <span class="ident">get_data_frame</span></span>(<span>**kw_args)</span>
 </code></dt>
@@ -234,7 +313,17 @@ class PagingApiItem:
 </summary>
 <pre><code class="python">@classmethod
 def get_data_frame(cls, **kw_args):
-    split_args = split_kw_args(kw_args)
+    expand_keys = [
+        k
+        for k in inspect.getfullargspec(cls.transform_results).args
+        if k not in [&#34;frame&#34;, &#34;expand_keys&#34;]
+    ]
+    overrides = cls.execute_args()
+    split_args = split_kw_args(
+        {**kw_args, **overrides},
+        blacklist=[&#34;item_key&#34;],
+        additional_expand_keys=expand_keys,
+    )
     params, expand_args, execute_options = (
         cls.process_params(split_args.get(&#34;query&#34;, {})),
         split_args.get(&#34;expand&#34;, {}),
@@ -248,7 +337,11 @@ def get_data_frame(cls, **kw_args):
         return cls.transform_results(df, params=params, **expand_args)
 
     df = Query.execute_paging_api(
-        cls.resource_path(), params, **execute_options, transform=transform
+        cls.resource_path(),
+        params,
+        **execute_options,
+        transform=transform,
+        response_to_items=cls.response_to_items,
     )
 
     return df</code></pre>
@@ -297,6 +390,20 @@ def process_params(cls, params: dict) -&gt; dict:
 def resource_path() -&gt; str:
     &#34;Returns the API url name for retrieval&#34;
     return &#34;&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.abstract.paging_api_item.PagingApiItem.response_to_items"><code class="name flex">
+<span>def <span class="ident">response_to_items</span></span>(<span>data: Union[list, dict]) ‑> list</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def response_to_items(data: Union[list, dict]) -&gt; list:
+    return data.get(&#34;items&#34;, [])</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.abstract.paging_api_item.PagingApiItem.transform_results"><code class="name flex">
@@ -361,6 +468,8 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 <li><a title="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions" href="../omics/options/genomic_short_variant.html#phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions">GenomicShortVariantOptions</a></li>
 <li><a title="phc.easy.omics.options.genomic_structural_variant.GenomicStructuralVariantOptions" href="../omics/options/genomic_structural_variant.html#phc.easy.omics.options.genomic_structural_variant.GenomicStructuralVariantOptions">GenomicStructuralVariantOptions</a></li>
 <li><a title="phc.easy.projects.ProjectListOptions" href="../projects.html#phc.easy.projects.ProjectListOptions">ProjectListOptions</a></li>
+<li><a title="phc.easy.summary.counts.NoOptions" href="../summary/counts.html#phc.easy.summary.counts.NoOptions">NoOptions</a></li>
+<li><a title="phc.easy.summary.options.clinical_counts.SummaryClinicalCountsOptions" href="../summary/options/clinical_counts.html#phc.easy.summary.options.clinical_counts.SummaryClinicalCountsOptions">SummaryClinicalCountsOptions</a></li>
 </ul>
 <h3>Static methods</h3>
 <dl>
@@ -437,11 +546,13 @@ def transform(key, value):
 <ul>
 <li>
 <h4><code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code></h4>
-<ul class="">
+<ul class="two-column">
+<li><code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.execute_args" href="#phc.easy.abstract.paging_api_item.PagingApiItem.execute_args">execute_args</a></code></li>
 <li><code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.get_data_frame" href="#phc.easy.abstract.paging_api_item.PagingApiItem.get_data_frame">get_data_frame</a></code></li>
 <li><code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.params_class" href="#phc.easy.abstract.paging_api_item.PagingApiItem.params_class">params_class</a></code></li>
 <li><code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.process_params" href="#phc.easy.abstract.paging_api_item.PagingApiItem.process_params">process_params</a></code></li>
 <li><code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.resource_path" href="#phc.easy.abstract.paging_api_item.PagingApiItem.resource_path">resource_path</a></code></li>
+<li><code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.response_to_items" href="#phc.easy.abstract.paging_api_item.PagingApiItem.response_to_items">response_to_items</a></code></li>
 <li><code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.transform_results" href="#phc.easy.abstract.paging_api_item.PagingApiItem.transform_results">transform_results</a></code></li>
 </ul>
 </li>

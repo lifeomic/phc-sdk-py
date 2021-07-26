@@ -71,6 +71,11 @@ from phc.easy.referral_request import ReferralRequest
 from phc.easy.sequence import Sequence
 from phc.easy.specimen import Specimen
 
+from phc.easy.summary.counts import SummaryCounts
+from phc.easy.summary.item_counts import SummaryItemCounts
+from phc.easy.summary.clinical_counts import SummaryClinicalCounts
+from phc.easy.summary.omics_counts import SummaryOmicsCounts
+
 __all__ = [
     &#34;AuditEvent&#34;,
     &#34;Auth&#34;,
@@ -115,6 +120,10 @@ __all__ = [
     &#34;ReferralRequest&#34;,
     &#34;Sequence&#34;,
     &#34;Specimen&#34;,
+    &#34;SummaryCounts&#34;,
+    &#34;SummaryItemCounts&#34;,
+    &#34;SummaryOmicsCounts&#34;,
+    &#34;SummaryClinicalCounts&#34;,
 ]</code></pre>
 </details>
 </section>
@@ -266,6 +275,10 @@ __all__ = [
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="phc.easy.specimen" href="specimen.html">phc.easy.specimen</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.summary" href="summary/index.html">phc.easy.summary</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1320,6 +1333,22 @@ from a FSS table that relates to a patient</p></div>
             &#34;stage.summary.coding&#34;,
         ]
 
+    @classmethod
+    def get_codes(cls, query: Optional[str] = None):
+        &#34;&#34;&#34;Find codes based on case-insensitive matching of code/display/system
+
+        Example
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; phc.Observation.get_codes(&#34;loinc&#34;)
+        &#34;&#34;&#34;
+        return search(
+            SummaryItemCounts.get_data_frame(cls.table_name()), query=query
+        )
+
     @staticmethod
     def transform_results(df: pd.DataFrame, **expand_args):
         return Frame.expand(
@@ -1375,14 +1404,37 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Condition.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>query: Union[str, NoneType] = None)</span>
 </code></dt>
 <dd>
-<p class="inheritance">
-<em>Inherited from:</em>
-<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_codes" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_codes">get_codes</a></code>
-</p>
-<div class="desc inherited"><p>Find all codes …</p></div>
+<div class="desc"><p>Find codes based on case-insensitive matching of code/display/system</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({'account': '&lt;your-account-name&gt;'})
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt;
+&gt;&gt;&gt; phc.Observation.get_codes(&quot;loinc&quot;)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_codes(cls, query: Optional[str] = None):
+    &#34;&#34;&#34;Find codes based on case-insensitive matching of code/display/system
+
+    Example
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; phc.Observation.get_codes(&#34;loinc&#34;)
+    &#34;&#34;&#34;
+    return search(
+        SummaryItemCounts.get_data_frame(cls.table_name()), query=query
+    )</code></pre>
+</details>
 </dd>
 <dt id="phc.easy.Condition.get_count"><code class="name flex">
 <span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
@@ -4798,7 +4850,7 @@ def transform_results(data_frame: pd.DataFrame, params={}, **expand_args):
 <pre><code class="python">class GenomicTest(PagingApiItem):
     @staticmethod
     def resource_path():
-        return &#34;genomics/projects/:project_id/tests&#34;
+        return &#34;genomics/projects/{project_id}/tests&#34;
 
     @staticmethod
     def params_class():
@@ -4977,7 +5029,7 @@ def params_class():
 </summary>
 <pre><code class="python">@staticmethod
 def resource_path():
-    return &#34;genomics/projects/:project_id/tests&#34;</code></pre>
+    return &#34;genomics/projects/{project_id}/tests&#34;</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.GenomicTest.transform_results"><code class="name flex">
@@ -6449,6 +6501,22 @@ from a FSS table that relates to a patient</p></div>
             &#34;referenceRange.type.coding&#34;,
         ]
 
+    @classmethod
+    def get_codes(cls, query: Optional[str] = None):
+        &#34;&#34;&#34;Find codes based on case-insensitive matching of code/display/system
+
+        Example
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; phc.Observation.get_codes(&#34;loinc&#34;)
+        &#34;&#34;&#34;
+        return search(
+            SummaryItemCounts.get_data_frame(cls.table_name()), query=query
+        )
+
     @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
@@ -6502,14 +6570,37 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Observation.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>query: Union[str, NoneType] = None)</span>
 </code></dt>
 <dd>
-<p class="inheritance">
-<em>Inherited from:</em>
-<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_codes" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_codes">get_codes</a></code>
-</p>
-<div class="desc inherited"><p>Find all codes …</p></div>
+<div class="desc"><p>Find codes based on case-insensitive matching of code/display/system</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({'account': '&lt;your-account-name&gt;'})
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt;
+&gt;&gt;&gt; phc.Observation.get_codes(&quot;loinc&quot;)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_codes(cls, query: Optional[str] = None):
+    &#34;&#34;&#34;Find codes based on case-insensitive matching of code/display/system
+
+    Example
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; phc.Observation.get_codes(&#34;loinc&#34;)
+    &#34;&#34;&#34;
+    return search(
+        SummaryItemCounts.get_data_frame(cls.table_name()), query=query
+    )</code></pre>
+</details>
 </dd>
 <dt id="phc.easy.Observation.get_count"><code class="name flex">
 <span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
@@ -6809,6 +6900,7 @@ def upload_and_run(
 <pre><code class="python">class Option:
     &#34;&#34;&#34;Class that references all available API options&#34;&#34;&#34;
 
+    # Omics
     GenomicVariantInclude = GenomicVariantInclude
     GenomicCopyNumberVariantOptions = GenomicCopyNumberVariantOptions
     GenomicShortVariantOptions = GenomicShortVariantOptions
@@ -6823,7 +6915,15 @@ def upload_and_run(
     CopyNumberStatus = CopyNumberStatus
     InFrame = InFrame
     StructuralType = StructuralType
-    OcrConfig = OcrConfig</code></pre>
+
+    # OCR
+    OcrConfig = OcrConfig
+
+    # Summary APIs
+    SummaryItemCountsOptions = SummaryItemCountsOptions
+    SummaryOmicsType = SummaryOmicsType
+    SummaryClinicalType = SummaryClinicalType
+    SummaryClinicalCountsOptions = SummaryClinicalCountsOptions</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -6882,6 +6982,22 @@ def upload_and_run(
 <div class="desc"></div>
 </dd>
 <dt id="phc.easy.Option.StructuralType"><code class="name">var <span class="ident">StructuralType</span></code></dt>
+<dd>
+<div class="desc"><p>An enumeration.</p></div>
+</dd>
+<dt id="phc.easy.Option.SummaryClinicalCountsOptions"><code class="name">var <span class="ident">SummaryClinicalCountsOptions</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="phc.easy.Option.SummaryClinicalType"><code class="name">var <span class="ident">SummaryClinicalType</span></code></dt>
+<dd>
+<div class="desc"><p>An enumeration.</p></div>
+</dd>
+<dt id="phc.easy.Option.SummaryItemCountsOptions"><code class="name">var <span class="ident">SummaryItemCountsOptions</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="phc.easy.Option.SummaryOmicsType"><code class="name">var <span class="ident">SummaryOmicsType</span></code></dt>
 <dd>
 <div class="desc"><p>An enumeration.</p></div>
 </dd>
@@ -7519,6 +7635,22 @@ from a FSS table that relates to a patient</p></div>
     def code_fields():
         return [&#34;meta.tag&#34;, &#34;code.coding&#34;, &#34;category.coding&#34;]
 
+    @classmethod
+    def get_codes(cls, query: Optional[str] = None):
+        &#34;&#34;&#34;Find codes based on case-insensitive matching of code/display/system
+
+        Example
+        --------
+        &gt;&gt;&gt; import phc.easy as phc
+        &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+        &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; phc.Observation.get_codes(&#34;loinc&#34;)
+        &#34;&#34;&#34;
+        return search(
+            SummaryItemCounts.get_data_frame(cls.table_name()), query=query
+        )
+
     @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
         args = {
@@ -7565,14 +7697,37 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Procedure.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>query: Union[str, NoneType] = None)</span>
 </code></dt>
 <dd>
-<p class="inheritance">
-<em>Inherited from:</em>
-<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_codes" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_codes">get_codes</a></code>
-</p>
-<div class="desc inherited"><p>Find all codes …</p></div>
+<div class="desc"><p>Find codes based on case-insensitive matching of code/display/system</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
+&gt;&gt;&gt; phc.Auth.set({'account': '&lt;your-account-name&gt;'})
+&gt;&gt;&gt; phc.Project.set_current('My Project Name')
+&gt;&gt;&gt;
+&gt;&gt;&gt; phc.Observation.get_codes(&quot;loinc&quot;)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_codes(cls, query: Optional[str] = None):
+    &#34;&#34;&#34;Find codes based on case-insensitive matching of code/display/system
+
+    Example
+    --------
+    &gt;&gt;&gt; import phc.easy as phc
+    &gt;&gt;&gt; phc.Auth.set({&#39;account&#39;: &#39;&lt;your-account-name&gt;&#39;})
+    &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; phc.Observation.get_codes(&#34;loinc&#34;)
+    &#34;&#34;&#34;
+    return search(
+        SummaryItemCounts.get_data_frame(cls.table_name()), query=query
+    )</code></pre>
+</details>
 </dd>
 <dt id="phc.easy.Procedure.get_count"><code class="name flex">
 <span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
@@ -7864,6 +8019,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
         page_size: Optional[int] = None,
         log: bool = False,
         show_progress: bool = False,
+        account: Optional[str] = None,
     ):
         &#34;&#34;&#34;Execute a request for projects
 
@@ -7888,22 +8044,33 @@ def transform_results(df: pd.DataFrame, **expand_args):
         )
 
         def get_projects_for_account(account: dict):
-            df = get_data_frame(
-                ignore_cache=True,
-                all_results=max_pages is None,
-                auth_args=auth.customized({&#34;account&#34;: account[&#34;id&#34;]}),
-                show_progress=show_progress,
-                **get_data_frame_args,
-            )
-            df[&#34;account&#34;] = account[&#34;id&#34;]
-            return df
+            try:
+                df = get_data_frame(
+                    ignore_cache=True,
+                    all_results=max_pages is None,
+                    auth_args=auth.customized({&#34;account&#34;: account[&#34;id&#34;]}),
+                    show_progress=show_progress,
+                    **get_data_frame_args,
+                )
+                df[&#34;account&#34;] = account[&#34;id&#34;]
 
-        frame = pd.concat(list(pmap(get_projects_for_account, auth.accounts())))
+                return df
 
-        return frame.reset_index(drop=True)
+            except ApiError as e:
+                message = e.response.get(&#34;error&#34;, &#34;Unknown API error&#34;)
+                print(f&#34;Skipping \&#34;{account[&#39;id&#39;]}\&#34; due to \&#34;{message}\&#34;&#34;)
+
+                return pd.DataFrame()
+
+        if account:
+            return get_projects_for_account({&#34;id&#34;: account})
+
+        return pd.concat(
+            list(pmap(get_projects_for_account, auth.accounts()))
+        ).reset_index(drop=True)
 
     @staticmethod
-    def find(search: str, auth_args: Auth = Auth.shared()):
+    def find(search: str, account: Optional[str] = None, auth_args: Auth = Auth.shared()):
         &#34;&#34;&#34;Search for a project using given criteria and return results as a data frame
 
         Attributes
@@ -7914,12 +8081,12 @@ def transform_results(df: pd.DataFrame, **expand_args):
         auth_args : Any
             The authenication to use for the account and project (defaults to shared)
         &#34;&#34;&#34;
-        projects = Project.get_data_frame(auth_args=auth_args)
+        projects = Project.get_data_frame(auth_args=auth_args, account=account)
         text = projects[SEARCH_COLUMNS].agg(join_strings, axis=1)
         return projects[text.str.contains(search.lower())]
 
     @staticmethod
-    def set_current(search: str, auth: Auth = Auth.shared()):
+    def set_current(search: str, account: Optional[str] = None, auth: Auth = Auth.shared()):
         &#34;&#34;&#34;Search for a project using given criteria, set it to the authentication
         object, and return the matching projects as a data frame
 
@@ -7931,7 +8098,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
         auth : Auth
             The authenication to update for the account and project (defaults to shared)
         &#34;&#34;&#34;
-        matches = Project.find(search, auth)
+        matches = Project.find(search, account=account, auth_args=auth)
 
         if len(matches) &gt; 1:
             print(&#34;Multiple projects found. Try a more specific search&#34;)
@@ -7951,7 +8118,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <h3>Static methods</h3>
 <dl>
 <dt id="phc.easy.Project.find"><code class="name flex">
-<span>def <span class="ident">find</span></span>(<span>search: str, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
+<span>def <span class="ident">find</span></span>(<span>search: str, account: Union[str, NoneType] = None, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Search for a project using given criteria and return results as a data frame</p>
@@ -7967,7 +8134,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def find(search: str, auth_args: Auth = Auth.shared()):
+def find(search: str, account: Optional[str] = None, auth_args: Auth = Auth.shared()):
     &#34;&#34;&#34;Search for a project using given criteria and return results as a data frame
 
     Attributes
@@ -7978,13 +8145,13 @@ def find(search: str, auth_args: Auth = Auth.shared()):
     auth_args : Any
         The authenication to use for the account and project (defaults to shared)
     &#34;&#34;&#34;
-    projects = Project.get_data_frame(auth_args=auth_args)
+    projects = Project.get_data_frame(auth_args=auth_args, account=account)
     text = projects[SEARCH_COLUMNS].agg(join_strings, axis=1)
     return projects[text.str.contains(search.lower())]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Project.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>cls, name: Union[str, NoneType] = None, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, show_progress: bool = False)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>cls, name: Union[str, NoneType] = None, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, show_progress: bool = False, account: Union[str, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a request for projects</p>
@@ -8005,6 +8172,7 @@ def get_data_frame(
     page_size: Optional[int] = None,
     log: bool = False,
     show_progress: bool = False,
+    account: Optional[str] = None,
 ):
     &#34;&#34;&#34;Execute a request for projects
 
@@ -8029,19 +8197,30 @@ def get_data_frame(
     )
 
     def get_projects_for_account(account: dict):
-        df = get_data_frame(
-            ignore_cache=True,
-            all_results=max_pages is None,
-            auth_args=auth.customized({&#34;account&#34;: account[&#34;id&#34;]}),
-            show_progress=show_progress,
-            **get_data_frame_args,
-        )
-        df[&#34;account&#34;] = account[&#34;id&#34;]
-        return df
+        try:
+            df = get_data_frame(
+                ignore_cache=True,
+                all_results=max_pages is None,
+                auth_args=auth.customized({&#34;account&#34;: account[&#34;id&#34;]}),
+                show_progress=show_progress,
+                **get_data_frame_args,
+            )
+            df[&#34;account&#34;] = account[&#34;id&#34;]
 
-    frame = pd.concat(list(pmap(get_projects_for_account, auth.accounts())))
+            return df
 
-    return frame.reset_index(drop=True)</code></pre>
+        except ApiError as e:
+            message = e.response.get(&#34;error&#34;, &#34;Unknown API error&#34;)
+            print(f&#34;Skipping \&#34;{account[&#39;id&#39;]}\&#34; due to \&#34;{message}\&#34;&#34;)
+
+            return pd.DataFrame()
+
+    if account:
+        return get_projects_for_account({&#34;id&#34;: account})
+
+    return pd.concat(
+        list(pmap(get_projects_for_account, auth.accounts()))
+    ).reset_index(drop=True)</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Project.params_class"><code class="name flex">
@@ -8091,7 +8270,7 @@ def resource_path():
 </details>
 </dd>
 <dt id="phc.easy.Project.set_current"><code class="name flex">
-<span>def <span class="ident">set_current</span></span>(<span>search: str, auth: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
+<span>def <span class="ident">set_current</span></span>(<span>search: str, account: Union[str, NoneType] = None, auth: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Search for a project using given criteria, set it to the authentication
@@ -8108,7 +8287,7 @@ object, and return the matching projects as a data frame</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def set_current(search: str, auth: Auth = Auth.shared()):
+def set_current(search: str, account: Optional[str] = None, auth: Auth = Auth.shared()):
     &#34;&#34;&#34;Search for a project using given criteria, set it to the authentication
     object, and return the matching projects as a data frame
 
@@ -8120,7 +8299,7 @@ def set_current(search: str, auth: Auth = Auth.shared()):
     auth : Auth
         The authenication to update for the account and project (defaults to shared)
     &#34;&#34;&#34;
-    matches = Project.find(search, auth)
+    matches = Project.find(search, account=account, auth_args=auth)
 
     if len(matches) &gt; 1:
         print(&#34;Multiple projects found. Try a more specific search&#34;)
@@ -8491,6 +8670,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
         progress: Optional[tqdm] = None,
         item_key: str = &#34;items&#34;,
         try_count: bool = True,
+        response_to_items: Optional[Callable[[Union[list, dict]], list]] = None,
     ):
         &#34;&#34;&#34;Execute a API query that pages through results
 
@@ -8501,7 +8681,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
         ----------
         path : str
             The API path to hit
-            (Special tokens: `:project_id`)
+            (Special tokens: `{project_id}`)
 
         params : dict
             The parameters to include with request
@@ -8533,13 +8713,17 @@ def transform_results(df: pd.DataFrame, **expand_args):
         try_count : bool
             Whether to try and send a &#34;count&#34; param to update the progress bar
 
+        response_to_items : Callable
+            Custom function to transform response data to list of items
+            (Overrides item_key when present)
+
         Examples
         --------
         &gt;&gt;&gt; import phc.easy as phc
         &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
         &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
         &gt;&gt;&gt; phc.Query.execute_paging_api(
-                &#34;genomics/projects/:project_id/tests&#34;,
+                &#34;genomics/projects/{project_id}/tests&#34;,
                 params={
                     &#34;patientId&#34;: &#34;&lt;patient-uuid&gt;&#34;
                 }
@@ -8553,7 +8737,9 @@ def transform_results(df: pd.DataFrame, **expand_args):
 
         # Do not pull project_id if not in URL (which throws error if project not selected)
         if &#34;project_id&#34; in path:
-            path = path.replace(&#34;:project_id&#34;, auth.project_id)
+            path = path.replace(&#34;{project_id}&#34;, auth.project_id)
+
+        path, params = merge_pattern(path, params)
 
         query = {&#34;path&#34;: path, &#34;method&#34;: http_verb, &#34;params&#34;: params}
 
@@ -8596,6 +8782,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
                 auth_args=auth_args,
                 progress=progress,
                 item_key=item_key,
+                response_to_items=response_to_items,
                 try_count=try_count,
             ),
         )
@@ -9611,7 +9798,7 @@ def execute_ga4gh(
 </details>
 </dd>
 <dt id="phc.easy.Query.execute_paging_api"><code class="name flex">
-<span>def <span class="ident">execute_paging_api</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame] = &lt;function identity&gt;, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, raw: bool = False, ignore_cache: bool = False, show_progress: bool = True, progress: Union[tqdm.std.tqdm, NoneType] = None, item_key: str = 'items', try_count: bool = True)</span>
+<span>def <span class="ident">execute_paging_api</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame] = &lt;function identity&gt;, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, raw: bool = False, ignore_cache: bool = False, show_progress: bool = True, progress: Union[tqdm.std.tqdm, NoneType] = None, item_key: str = 'items', try_count: bool = True, response_to_items: Union[Callable[[Union[list, dict]], list], NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a API query that pages through results</p>
@@ -9621,7 +9808,7 @@ for example</p>
 <dl>
 <dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
 <dd>The API path to hit
-(Special tokens: <code>:project_id</code>)</dd>
+(Special tokens: <code>{project_id}</code>)</dd>
 <dt><strong><code>params</code></strong> :&ensp;<code>dict</code></dt>
 <dd>The parameters to include with request</dd>
 <dt><strong><code>http_verb</code></strong> :&ensp;<code>str</code></dt>
@@ -9642,13 +9829,16 @@ for example</p>
 <dd>The key to find the results underneath (usually "items" but not always)</dd>
 <dt><strong><code>try_count</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Whether to try and send a "count" param to update the progress bar</dd>
+<dt><strong><code>response_to_items</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>Custom function to transform response data to list of items
+(Overrides item_key when present)</dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
 &gt;&gt;&gt; phc.Auth.set({ 'account': '&lt;your-account-name&gt;' })
 &gt;&gt;&gt; phc.Project.set_current('My Project Name')
 &gt;&gt;&gt; phc.Query.execute_paging_api(
-        &quot;genomics/projects/:project_id/tests&quot;,
+        &quot;genomics/projects/{project_id}/tests&quot;,
         params={
             &quot;patientId&quot;: &quot;&lt;patient-uuid&gt;&quot;
         }
@@ -9675,6 +9865,7 @@ def execute_paging_api(
     progress: Optional[tqdm] = None,
     item_key: str = &#34;items&#34;,
     try_count: bool = True,
+    response_to_items: Optional[Callable[[Union[list, dict]], list]] = None,
 ):
     &#34;&#34;&#34;Execute a API query that pages through results
 
@@ -9685,7 +9876,7 @@ def execute_paging_api(
     ----------
     path : str
         The API path to hit
-        (Special tokens: `:project_id`)
+        (Special tokens: `{project_id}`)
 
     params : dict
         The parameters to include with request
@@ -9717,13 +9908,17 @@ def execute_paging_api(
     try_count : bool
         Whether to try and send a &#34;count&#34; param to update the progress bar
 
+    response_to_items : Callable
+        Custom function to transform response data to list of items
+        (Overrides item_key when present)
+
     Examples
     --------
     &gt;&gt;&gt; import phc.easy as phc
     &gt;&gt;&gt; phc.Auth.set({ &#39;account&#39;: &#39;&lt;your-account-name&gt;&#39; })
     &gt;&gt;&gt; phc.Project.set_current(&#39;My Project Name&#39;)
     &gt;&gt;&gt; phc.Query.execute_paging_api(
-            &#34;genomics/projects/:project_id/tests&#34;,
+            &#34;genomics/projects/{project_id}/tests&#34;,
             params={
                 &#34;patientId&#34;: &#34;&lt;patient-uuid&gt;&#34;
             }
@@ -9737,7 +9932,9 @@ def execute_paging_api(
 
     # Do not pull project_id if not in URL (which throws error if project not selected)
     if &#34;project_id&#34; in path:
-        path = path.replace(&#34;:project_id&#34;, auth.project_id)
+        path = path.replace(&#34;{project_id}&#34;, auth.project_id)
+
+    path, params = merge_pattern(path, params)
 
     query = {&#34;path&#34;: path, &#34;method&#34;: http_verb, &#34;params&#34;: params}
 
@@ -9780,6 +9977,7 @@ def execute_paging_api(
             auth_args=auth_args,
             progress=progress,
             item_key=item_key,
+            response_to_items=response_to_items,
             try_count=try_count,
         ),
     )
@@ -10721,6 +10919,959 @@ def transform_results(df: pd.DataFrame, **expand_args):
 </dd>
 </dl>
 </dd>
+<dt id="phc.easy.SummaryClinicalCounts"><code class="flex name class">
+<span>class <span class="ident">SummaryClinicalCounts</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SummaryClinicalCounts(PagingApiItem):
+    @staticmethod
+    def resource_path():
+        return &#34;analytics/summary/{project_id}/clinical/codified/counts&#34;
+
+    @staticmethod
+    def execute_args() -&gt; dict:
+        return SummaryCounts.execute_args()
+
+    @staticmethod
+    def params_class():
+        return SummaryClinicalCountsOptions
+
+    @classmethod
+    def get_data_frame(
+        cls,
+        all_results: bool = True,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Optional[int] = None,
+        page_size: Optional[int] = None,
+        log: bool = False,
+        match: Optional[SummarySearchMatchOption] = None,
+        code: Optional[Union[str, List[str]]] = None,
+        display: Optional[Union[str, List[str]]] = None,
+        system: Optional[Union[str, List[str]]] = None,
+        **kw_args,
+    ):
+        &#34;&#34;&#34;Execute a request for summary counts across clinical data
+
+        &gt;&gt;&gt; from phc.easy.summary.clinical_counts import SummaryClinicalCountsOptions
+        &gt;&gt;&gt; SummaryClinicalCountsOptions.get_data_frame(match=&#34;fuzzy&#34;, display=&#34;sleep&#34;)
+
+        ## Parameters
+
+        Execution: `phc.easy.query.Query.execute_paging_api`
+        &#34;&#34;&#34;
+
+        df = super().get_data_frame(
+            **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+        )
+
+        return df</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.SummaryClinicalCounts.execute_args"><code class="name flex">
+<span>def <span class="ident">execute_args</span></span>(<span>) ‑> dict</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def execute_args() -&gt; dict:
+    return SummaryCounts.execute_args()</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryClinicalCounts.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = True, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, match: Union[<a title="phc.easy.summary.options.clinical_counts.SummarySearchMatchOption" href="summary/options/clinical_counts.html#phc.easy.summary.options.clinical_counts.SummarySearchMatchOption">SummarySearchMatchOption</a>, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, **kw_args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Execute a request for summary counts across clinical data</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from phc.easy.summary.clinical_counts import SummaryClinicalCountsOptions
+&gt;&gt;&gt; SummaryClinicalCountsOptions.get_data_frame(match=&quot;fuzzy&quot;, display=&quot;sleep&quot;)
+</code></pre>
+<h2 id="parameters">Parameters</h2>
+<p>Execution: <code><a title="phc.easy.query.Query.execute_paging_api" href="query/index.html#phc.easy.query.Query.execute_paging_api">Query.execute_paging_api()</a></code></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_data_frame(
+    cls,
+    all_results: bool = True,
+    auth_args: Auth = Auth.shared(),
+    max_pages: Optional[int] = None,
+    page_size: Optional[int] = None,
+    log: bool = False,
+    match: Optional[SummarySearchMatchOption] = None,
+    code: Optional[Union[str, List[str]]] = None,
+    display: Optional[Union[str, List[str]]] = None,
+    system: Optional[Union[str, List[str]]] = None,
+    **kw_args,
+):
+    &#34;&#34;&#34;Execute a request for summary counts across clinical data
+
+    &gt;&gt;&gt; from phc.easy.summary.clinical_counts import SummaryClinicalCountsOptions
+    &gt;&gt;&gt; SummaryClinicalCountsOptions.get_data_frame(match=&#34;fuzzy&#34;, display=&#34;sleep&#34;)
+
+    ## Parameters
+
+    Execution: `phc.easy.query.Query.execute_paging_api`
+    &#34;&#34;&#34;
+
+    df = super().get_data_frame(
+        **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+    )
+
+    return df</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryClinicalCounts.params_class"><code class="name flex">
+<span>def <span class="ident">params_class</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.params_class" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.params_class">params_class</a></code>
+</p>
+<div class="desc inherited"><p>Returns a pydantic type that validates and transforms the params with dict()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def params_class():
+    return SummaryClinicalCountsOptions</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryClinicalCounts.process_params"><code class="name flex">
+<span>def <span class="ident">process_params</span></span>(<span>params: dict) ‑> dict</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.process_params" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.process_params">process_params</a></code>
+</p>
+<div class="desc inherited"><p>Validates and transforms the API query parameters</p></div>
+</dd>
+<dt id="phc.easy.SummaryClinicalCounts.resource_path"><code class="name flex">
+<span>def <span class="ident">resource_path</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.resource_path" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.resource_path">resource_path</a></code>
+</p>
+<div class="desc inherited"><p>Returns the API url name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def resource_path():
+    return &#34;analytics/summary/{project_id}/clinical/codified/counts&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryClinicalCounts.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.transform_results" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.SummaryCounts"><code class="flex name class">
+<span>class <span class="ident">SummaryCounts</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SummaryCounts(PagingApiItem):
+    @staticmethod
+    def resource_path():
+        return &#34;analytics/summary/{project_id}&#34;
+
+    @staticmethod
+    def response_to_items(data):
+        squashed = first(pd.json_normalize(data).to_dict(&#34;records&#34;)) or {}
+        return lmapcat(
+            lambda k: [{&#34;summary&#34;: k, **v} for v in squashed[k]]
+            if isinstance(squashed[k], list)
+            else [],
+            squashed.keys(),
+        )
+
+    @staticmethod
+    def execute_args() -&gt; dict:
+        return dict(ignore_cache=True)
+
+    @staticmethod
+    def params_class():
+        return NoOptions
+
+    @staticmethod
+    def transform_results(
+        data_frame: pd.DataFrame, include_demographics: bool, **expand_args
+    ):
+        return pipe(
+            data_frame,
+            rpartial(
+                combine_first, [&#34;code&#34;, &#34;index&#34;, &#34;demographic_value&#34;], &#34;code&#34;
+            ),
+            rpartial(
+                combine_first,
+                [
+                    &#34;code_count&#34;,
+                    &#34;count&#34;,
+                    &#34;sequence_type_count&#34;,
+                    &#34;test_type_count&#34;,
+                    &#34;variant_count&#34;,
+                ],
+                &#34;count&#34;,
+            ),
+            rpartial(combine_first, [&#34;display&#34;, &#34;sequence_type&#34;], &#34;display&#34;),
+            iffy(
+                lambda df: &#34;summary&#34; in df.columns,
+                lambda df: df.assign(
+                    summary=df.summary.str.replace(&#34;.counts&#34;, &#34;&#34;, regex=False)
+                ),
+            ),
+            rpartial(
+                drop,
+                [
+                    &#34;index&#34;,
+                    &#34;sequence_type_count&#34;,
+                    &#34;sequence_type&#34;,
+                    &#34;code_count&#34;,
+                    &#34;demographic_value&#34;,
+                    &#34;test_type_count&#34;,
+                    &#34;variant_count&#34;,
+                ],
+            ),
+            iffy(
+                lambda df: &#34;summary&#34; in df.columns and &#34;count&#34; in df.columns,
+                lambda df: df.sort_values(
+                    [&#34;summary&#34;, &#34;count&#34;], ascending=False
+                ),
+            ),
+            iffy(
+                lambda df: include_demographics is False
+                and &#34;summary&#34; in df.columns,
+                lambda df: df[~df.summary.str.contains(&#34;demographic&#34;)],
+            ),
+        ).reset_index(drop=True)
+
+    @classmethod
+    def get_data_frame(
+        cls,
+        include_demographics: bool = False,
+        all_results: bool = True,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Optional[int] = None,
+        page_size: Optional[int] = None,
+        log: bool = False,
+        **kw_args,
+    ):
+        &#34;&#34;&#34;Execute a request for summary counts across clinical and omics data
+
+        NOTE: By default, demographic data is excluded since it is not
+        technically counts of entities. If demographics-only data is desired,
+        use this:
+
+        &gt;&gt;&gt; from phc.easy.summary.item_counts import SummaryItemCounts
+        &gt;&gt;&gt; SummaryItemCounts.get_data_frame(summary=&#34;demographics&#34;)
+
+        ## Parameters
+
+        Execution: `phc.easy.query.Query.execute_paging_api`
+        &#34;&#34;&#34;
+
+        # NOTE: include_demographics gets passed through to transform_results
+        # since explicitly declared there.
+
+        df = super().get_data_frame(
+            **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+        )
+
+        return df</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.SummaryCounts.execute_args"><code class="name flex">
+<span>def <span class="ident">execute_args</span></span>(<span>) ‑> dict</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def execute_args() -&gt; dict:
+    return dict(ignore_cache=True)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryCounts.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>include_demographics: bool = False, all_results: bool = True, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Execute a request for summary counts across clinical and omics data</p>
+<p>NOTE: By default, demographic data is excluded since it is not
+technically counts of entities. If demographics-only data is desired,
+use this:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from phc.easy.summary.item_counts import SummaryItemCounts
+&gt;&gt;&gt; SummaryItemCounts.get_data_frame(summary=&quot;demographics&quot;)
+</code></pre>
+<h2 id="parameters">Parameters</h2>
+<p>Execution: <code><a title="phc.easy.query.Query.execute_paging_api" href="query/index.html#phc.easy.query.Query.execute_paging_api">Query.execute_paging_api()</a></code></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_data_frame(
+    cls,
+    include_demographics: bool = False,
+    all_results: bool = True,
+    auth_args: Auth = Auth.shared(),
+    max_pages: Optional[int] = None,
+    page_size: Optional[int] = None,
+    log: bool = False,
+    **kw_args,
+):
+    &#34;&#34;&#34;Execute a request for summary counts across clinical and omics data
+
+    NOTE: By default, demographic data is excluded since it is not
+    technically counts of entities. If demographics-only data is desired,
+    use this:
+
+    &gt;&gt;&gt; from phc.easy.summary.item_counts import SummaryItemCounts
+    &gt;&gt;&gt; SummaryItemCounts.get_data_frame(summary=&#34;demographics&#34;)
+
+    ## Parameters
+
+    Execution: `phc.easy.query.Query.execute_paging_api`
+    &#34;&#34;&#34;
+
+    # NOTE: include_demographics gets passed through to transform_results
+    # since explicitly declared there.
+
+    df = super().get_data_frame(
+        **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+    )
+
+    return df</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryCounts.params_class"><code class="name flex">
+<span>def <span class="ident">params_class</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.params_class" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.params_class">params_class</a></code>
+</p>
+<div class="desc inherited"><p>Returns a pydantic type that validates and transforms the params with dict()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def params_class():
+    return NoOptions</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryCounts.process_params"><code class="name flex">
+<span>def <span class="ident">process_params</span></span>(<span>params: dict) ‑> dict</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.process_params" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.process_params">process_params</a></code>
+</p>
+<div class="desc inherited"><p>Validates and transforms the API query parameters</p></div>
+</dd>
+<dt id="phc.easy.SummaryCounts.resource_path"><code class="name flex">
+<span>def <span class="ident">resource_path</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.resource_path" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.resource_path">resource_path</a></code>
+</p>
+<div class="desc inherited"><p>Returns the API url name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def resource_path():
+    return &#34;analytics/summary/{project_id}&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryCounts.response_to_items"><code class="name flex">
+<span>def <span class="ident">response_to_items</span></span>(<span>data)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def response_to_items(data):
+    squashed = first(pd.json_normalize(data).to_dict(&#34;records&#34;)) or {}
+    return lmapcat(
+        lambda k: [{&#34;summary&#34;: k, **v} for v in squashed[k]]
+        if isinstance(squashed[k], list)
+        else [],
+        squashed.keys(),
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryCounts.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, include_demographics: bool, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.transform_results" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(
+    data_frame: pd.DataFrame, include_demographics: bool, **expand_args
+):
+    return pipe(
+        data_frame,
+        rpartial(
+            combine_first, [&#34;code&#34;, &#34;index&#34;, &#34;demographic_value&#34;], &#34;code&#34;
+        ),
+        rpartial(
+            combine_first,
+            [
+                &#34;code_count&#34;,
+                &#34;count&#34;,
+                &#34;sequence_type_count&#34;,
+                &#34;test_type_count&#34;,
+                &#34;variant_count&#34;,
+            ],
+            &#34;count&#34;,
+        ),
+        rpartial(combine_first, [&#34;display&#34;, &#34;sequence_type&#34;], &#34;display&#34;),
+        iffy(
+            lambda df: &#34;summary&#34; in df.columns,
+            lambda df: df.assign(
+                summary=df.summary.str.replace(&#34;.counts&#34;, &#34;&#34;, regex=False)
+            ),
+        ),
+        rpartial(
+            drop,
+            [
+                &#34;index&#34;,
+                &#34;sequence_type_count&#34;,
+                &#34;sequence_type&#34;,
+                &#34;code_count&#34;,
+                &#34;demographic_value&#34;,
+                &#34;test_type_count&#34;,
+                &#34;variant_count&#34;,
+            ],
+        ),
+        iffy(
+            lambda df: &#34;summary&#34; in df.columns and &#34;count&#34; in df.columns,
+            lambda df: df.sort_values(
+                [&#34;summary&#34;, &#34;count&#34;], ascending=False
+            ),
+        ),
+        iffy(
+            lambda df: include_demographics is False
+            and &#34;summary&#34; in df.columns,
+            lambda df: df[~df.summary.str.contains(&#34;demographic&#34;)],
+        ),
+    ).reset_index(drop=True)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.SummaryItemCounts"><code class="flex name class">
+<span>class <span class="ident">SummaryItemCounts</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SummaryItemCounts(PagingApiItem):
+    @staticmethod
+    def resource_path():
+        return &#34;analytics/summary/{project_id}/{summary_type}/{summary}/counts&#34;
+
+    @classmethod
+    def process_params(cls, params: dict) -&gt; dict:
+        new_params = cls.params_class()(**params).dict()
+
+        if SummaryClinicalType.has_value(new_params[&#34;summary&#34;]):
+            return {**new_params, &#34;summary_type&#34;: &#34;clinical&#34;}
+        elif SummaryOmicsType.has_value(new_params[&#34;summary&#34;]):
+            return {**new_params, &#34;summary_type&#34;: &#34;omics&#34;}
+
+        # Unknown summary_type
+        return None
+
+    @staticmethod
+    def transform_results(data_frame: pd.DataFrame, **expand_args):
+        if len(data_frame) == 0:
+            return data_frame
+
+        if expand_args.get(&#34;params&#34;, {}).get(&#34;summary&#34;) == &#34;demographic&#34;:
+            # Sort demographics results in a nice way
+            return data_frame.sort_values(
+                [&#34;demographic_name&#34;, &#34;count&#34;], ascending=False
+            ).reset_index(drop=True)
+
+        if (
+            &#34;code_count&#34; in data_frame.columns
+            and &#34;patient_count&#34; in data_frame.columns
+        ):
+            return data_frame.sort_values(
+                [&#34;code_count&#34;, &#34;patient_count&#34;], ascending=False
+            )
+
+        return data_frame
+
+    @staticmethod
+    def execute_args() -&gt; dict:
+        return dict(ignore_cache=True)
+
+    @staticmethod
+    def params_class():
+        return SummaryItemCountsOptions
+
+    @classmethod
+    def get_data_frame(
+        cls,
+        summary: Union[SummaryOmicsType, SummaryClinicalType],
+        all_results: bool = True,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Optional[int] = None,
+        page_size: Optional[int] = None,
+        log: bool = False,
+        **kw_args,
+    ):
+        &#34;&#34;&#34;Execute a request for summary counts across clinical and omics data
+
+        NOTE: By default, demographic data is excluded since it is not
+        technically counts of entities. If demographics-only data is desired,
+        use this:
+
+        &gt;&gt;&gt; from phc.easy.summary.item_counts import SummaryItemCounts
+        &gt;&gt;&gt; SummaryItemCounts.get_data_frame(summary=&#34;demographics&#34;)
+
+        ## Parameters
+
+        Execution: `phc.easy.query.Query.execute_paging_api`
+        &#34;&#34;&#34;
+
+        df = super().get_data_frame(
+            **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+        )
+
+        return df</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.SummaryItemCounts.execute_args"><code class="name flex">
+<span>def <span class="ident">execute_args</span></span>(<span>) ‑> dict</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def execute_args() -&gt; dict:
+    return dict(ignore_cache=True)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryItemCounts.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>summary: Union[<a title="phc.easy.summary.options.item_counts.SummaryOmicsType" href="summary/options/item_counts.html#phc.easy.summary.options.item_counts.SummaryOmicsType">SummaryOmicsType</a>, <a title="phc.easy.summary.options.item_counts.SummaryClinicalType" href="summary/options/item_counts.html#phc.easy.summary.options.item_counts.SummaryClinicalType">SummaryClinicalType</a>], all_results: bool = True, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Execute a request for summary counts across clinical and omics data</p>
+<p>NOTE: By default, demographic data is excluded since it is not
+technically counts of entities. If demographics-only data is desired,
+use this:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from phc.easy.summary.item_counts import SummaryItemCounts
+&gt;&gt;&gt; SummaryItemCounts.get_data_frame(summary=&quot;demographics&quot;)
+</code></pre>
+<h2 id="parameters">Parameters</h2>
+<p>Execution: <code><a title="phc.easy.query.Query.execute_paging_api" href="query/index.html#phc.easy.query.Query.execute_paging_api">Query.execute_paging_api()</a></code></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_data_frame(
+    cls,
+    summary: Union[SummaryOmicsType, SummaryClinicalType],
+    all_results: bool = True,
+    auth_args: Auth = Auth.shared(),
+    max_pages: Optional[int] = None,
+    page_size: Optional[int] = None,
+    log: bool = False,
+    **kw_args,
+):
+    &#34;&#34;&#34;Execute a request for summary counts across clinical and omics data
+
+    NOTE: By default, demographic data is excluded since it is not
+    technically counts of entities. If demographics-only data is desired,
+    use this:
+
+    &gt;&gt;&gt; from phc.easy.summary.item_counts import SummaryItemCounts
+    &gt;&gt;&gt; SummaryItemCounts.get_data_frame(summary=&#34;demographics&#34;)
+
+    ## Parameters
+
+    Execution: `phc.easy.query.Query.execute_paging_api`
+    &#34;&#34;&#34;
+
+    df = super().get_data_frame(
+        **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+    )
+
+    return df</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryItemCounts.params_class"><code class="name flex">
+<span>def <span class="ident">params_class</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.params_class" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.params_class">params_class</a></code>
+</p>
+<div class="desc inherited"><p>Returns a pydantic type that validates and transforms the params with dict()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def params_class():
+    return SummaryItemCountsOptions</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryItemCounts.process_params"><code class="name flex">
+<span>def <span class="ident">process_params</span></span>(<span>params: dict) ‑> dict</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.process_params" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.process_params">process_params</a></code>
+</p>
+<div class="desc inherited"><p>Validates and transforms the API query parameters</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def process_params(cls, params: dict) -&gt; dict:
+    new_params = cls.params_class()(**params).dict()
+
+    if SummaryClinicalType.has_value(new_params[&#34;summary&#34;]):
+        return {**new_params, &#34;summary_type&#34;: &#34;clinical&#34;}
+    elif SummaryOmicsType.has_value(new_params[&#34;summary&#34;]):
+        return {**new_params, &#34;summary_type&#34;: &#34;omics&#34;}
+
+    # Unknown summary_type
+    return None</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryItemCounts.resource_path"><code class="name flex">
+<span>def <span class="ident">resource_path</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.resource_path" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.resource_path">resource_path</a></code>
+</p>
+<div class="desc inherited"><p>Returns the API url name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def resource_path():
+    return &#34;analytics/summary/{project_id}/{summary_type}/{summary}/counts&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryItemCounts.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.transform_results" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(data_frame: pd.DataFrame, **expand_args):
+    if len(data_frame) == 0:
+        return data_frame
+
+    if expand_args.get(&#34;params&#34;, {}).get(&#34;summary&#34;) == &#34;demographic&#34;:
+        # Sort demographics results in a nice way
+        return data_frame.sort_values(
+            [&#34;demographic_name&#34;, &#34;count&#34;], ascending=False
+        ).reset_index(drop=True)
+
+    if (
+        &#34;code_count&#34; in data_frame.columns
+        and &#34;patient_count&#34; in data_frame.columns
+    ):
+        return data_frame.sort_values(
+            [&#34;code_count&#34;, &#34;patient_count&#34;], ascending=False
+        )
+
+    return data_frame</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.SummaryOmicsCounts"><code class="flex name class">
+<span>class <span class="ident">SummaryOmicsCounts</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SummaryOmicsCounts(PagingApiItem):
+    @staticmethod
+    def resource_path():
+        return &#34;analytics/summary/{project_id}/omics&#34;
+
+    @staticmethod
+    def response_to_items(data):
+        # Common functionality with SummaryCounts since pd.json_normalize squashes nested keys until nested arrays encountered
+        return SummaryCounts.response_to_items(data)
+
+    @staticmethod
+    def transform_results(data_frame: pd.DataFrame, **expand_args):
+        return SummaryCounts.transform_results(
+            data_frame,
+            # Omics doesn&#39;t include demographics
+            include_demographics=False,
+            **expand_args,
+        )
+
+    @staticmethod
+    def execute_args() -&gt; dict:
+        return SummaryCounts.execute_args()
+
+    @staticmethod
+    def params_class():
+        return NoOptions
+
+    @classmethod
+    def get_data_frame(
+        cls,
+        all_results: bool = True,
+        auth_args: Auth = Auth.shared(),
+        max_pages: Optional[int] = None,
+        page_size: Optional[int] = None,
+        log: bool = False,
+        **kw_args,
+    ):
+        &#34;&#34;&#34;Execute a request for summary counts across omics data
+
+        ## Parameters
+
+        Execution: `phc.easy.query.Query.execute_paging_api`
+        &#34;&#34;&#34;
+
+        df = super().get_data_frame(
+            **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+        )
+
+        return df</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.SummaryOmicsCounts.execute_args"><code class="name flex">
+<span>def <span class="ident">execute_args</span></span>(<span>) ‑> dict</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def execute_args() -&gt; dict:
+    return SummaryCounts.execute_args()</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryOmicsCounts.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = True, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Execute a request for summary counts across omics data</p>
+<h2 id="parameters">Parameters</h2>
+<p>Execution: <code><a title="phc.easy.query.Query.execute_paging_api" href="query/index.html#phc.easy.query.Query.execute_paging_api">Query.execute_paging_api()</a></code></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_data_frame(
+    cls,
+    all_results: bool = True,
+    auth_args: Auth = Auth.shared(),
+    max_pages: Optional[int] = None,
+    page_size: Optional[int] = None,
+    log: bool = False,
+    **kw_args,
+):
+    &#34;&#34;&#34;Execute a request for summary counts across omics data
+
+    ## Parameters
+
+    Execution: `phc.easy.query.Query.execute_paging_api`
+    &#34;&#34;&#34;
+
+    df = super().get_data_frame(
+        **kw_args, **cls._get_current_args(inspect.currentframe(), locals())
+    )
+
+    return df</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryOmicsCounts.params_class"><code class="name flex">
+<span>def <span class="ident">params_class</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.params_class" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.params_class">params_class</a></code>
+</p>
+<div class="desc inherited"><p>Returns a pydantic type that validates and transforms the params with dict()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def params_class():
+    return NoOptions</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryOmicsCounts.process_params"><code class="name flex">
+<span>def <span class="ident">process_params</span></span>(<span>params: dict) ‑> dict</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.process_params" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.process_params">process_params</a></code>
+</p>
+<div class="desc inherited"><p>Validates and transforms the API query parameters</p></div>
+</dd>
+<dt id="phc.easy.SummaryOmicsCounts.resource_path"><code class="name flex">
+<span>def <span class="ident">resource_path</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.resource_path" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.resource_path">resource_path</a></code>
+</p>
+<div class="desc inherited"><p>Returns the API url name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def resource_path():
+    return &#34;analytics/summary/{project_id}/omics&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryOmicsCounts.response_to_items"><code class="name flex">
+<span>def <span class="ident">response_to_items</span></span>(<span>data)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def response_to_items(data):
+    # Common functionality with SummaryCounts since pd.json_normalize squashes nested keys until nested arrays encountered
+    return SummaryCounts.response_to_items(data)</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.SummaryOmicsCounts.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>data_frame: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem">PagingApiItem</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiItem.transform_results" href="abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(data_frame: pd.DataFrame, **expand_args):
+    return SummaryCounts.transform_results(
+        data_frame,
+        # Omics doesn&#39;t include demographics
+        include_demographics=False,
+        **expand_args,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 </dl>
 </section>
 </article>
@@ -10779,6 +11930,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li><code><a title="phc.easy.referral_request" href="referral_request.html">phc.easy.referral_request</a></code></li>
 <li><code><a title="phc.easy.sequence" href="sequence.html">phc.easy.sequence</a></code></li>
 <li><code><a title="phc.easy.specimen" href="specimen.html">phc.easy.specimen</a></code></li>
+<li><code><a title="phc.easy.summary" href="summary/index.html">phc.easy.summary</a></code></li>
 <li><code><a title="phc.easy.util" href="util/index.html">phc.easy.util</a></code></li>
 </ul>
 </li>
@@ -10847,7 +11999,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <h4><code><a title="phc.easy.Condition" href="#phc.easy.Condition">Condition</a></code></h4>
 <ul class="">
 <li><code><a title="phc.easy.Condition.code_fields" href="#phc.easy.Condition.code_fields">code_fields</a></code></li>
-<li><code><a title="phc.easy.Condition.get_codes" href="abstract/fhir_service_item.html#phc.easy.Condition.get_codes">get_codes</a></code></li>
+<li><code><a title="phc.easy.Condition.get_codes" href="#phc.easy.Condition.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Condition.get_count" href="abstract/fhir_service_item.html#phc.easy.Condition.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Condition.get_count_by_field" href="abstract/fhir_service_item.html#phc.easy.Condition.get_count_by_field">get_count_by_field</a></code></li>
 <li><code><a title="phc.easy.Condition.get_count_by_patient" href="abstract/fhir_service_patient_item.html#phc.easy.Condition.get_count_by_patient">get_count_by_patient</a></code></li>
@@ -11119,7 +12271,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <h4><code><a title="phc.easy.Observation" href="#phc.easy.Observation">Observation</a></code></h4>
 <ul class="">
 <li><code><a title="phc.easy.Observation.code_fields" href="#phc.easy.Observation.code_fields">code_fields</a></code></li>
-<li><code><a title="phc.easy.Observation.get_codes" href="abstract/fhir_service_item.html#phc.easy.Observation.get_codes">get_codes</a></code></li>
+<li><code><a title="phc.easy.Observation.get_codes" href="#phc.easy.Observation.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Observation.get_count" href="abstract/fhir_service_item.html#phc.easy.Observation.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Observation.get_count_by_field" href="abstract/fhir_service_item.html#phc.easy.Observation.get_count_by_field">get_count_by_field</a></code></li>
 <li><code><a title="phc.easy.Observation.get_count_by_patient" href="abstract/fhir_service_patient_item.html#phc.easy.Observation.get_count_by_patient">get_count_by_patient</a></code></li>
@@ -11193,7 +12345,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <h4><code><a title="phc.easy.Procedure" href="#phc.easy.Procedure">Procedure</a></code></h4>
 <ul class="">
 <li><code><a title="phc.easy.Procedure.code_fields" href="#phc.easy.Procedure.code_fields">code_fields</a></code></li>
-<li><code><a title="phc.easy.Procedure.get_codes" href="abstract/fhir_service_item.html#phc.easy.Procedure.get_codes">get_codes</a></code></li>
+<li><code><a title="phc.easy.Procedure.get_codes" href="#phc.easy.Procedure.get_codes">get_codes</a></code></li>
 <li><code><a title="phc.easy.Procedure.get_count" href="abstract/fhir_service_item.html#phc.easy.Procedure.get_count">get_count</a></code></li>
 <li><code><a title="phc.easy.Procedure.get_count_by_field" href="abstract/fhir_service_item.html#phc.easy.Procedure.get_count_by_field">get_count_by_field</a></code></li>
 <li><code><a title="phc.easy.Procedure.get_count_by_patient" href="abstract/fhir_service_patient_item.html#phc.easy.Procedure.get_count_by_patient">get_count_by_patient</a></code></li>
@@ -11292,6 +12444,52 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <li><code><a title="phc.easy.Specimen.get_data_frame" href="abstract/fhir_service_patient_item.html#phc.easy.Specimen.get_data_frame">get_data_frame</a></code></li>
 <li><code><a title="phc.easy.Specimen.table_name" href="#phc.easy.Specimen.table_name">table_name</a></code></li>
 <li><code><a title="phc.easy.Specimen.transform_results" href="#phc.easy.Specimen.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.SummaryClinicalCounts" href="#phc.easy.SummaryClinicalCounts">SummaryClinicalCounts</a></code></h4>
+<ul class="two-column">
+<li><code><a title="phc.easy.SummaryClinicalCounts.execute_args" href="#phc.easy.SummaryClinicalCounts.execute_args">execute_args</a></code></li>
+<li><code><a title="phc.easy.SummaryClinicalCounts.get_data_frame" href="#phc.easy.SummaryClinicalCounts.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.SummaryClinicalCounts.params_class" href="#phc.easy.SummaryClinicalCounts.params_class">params_class</a></code></li>
+<li><code><a title="phc.easy.SummaryClinicalCounts.process_params" href="abstract/paging_api_item.html#phc.easy.SummaryClinicalCounts.process_params">process_params</a></code></li>
+<li><code><a title="phc.easy.SummaryClinicalCounts.resource_path" href="#phc.easy.SummaryClinicalCounts.resource_path">resource_path</a></code></li>
+<li><code><a title="phc.easy.SummaryClinicalCounts.transform_results" href="abstract/paging_api_item.html#phc.easy.SummaryClinicalCounts.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.SummaryCounts" href="#phc.easy.SummaryCounts">SummaryCounts</a></code></h4>
+<ul class="two-column">
+<li><code><a title="phc.easy.SummaryCounts.execute_args" href="#phc.easy.SummaryCounts.execute_args">execute_args</a></code></li>
+<li><code><a title="phc.easy.SummaryCounts.get_data_frame" href="#phc.easy.SummaryCounts.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.SummaryCounts.params_class" href="#phc.easy.SummaryCounts.params_class">params_class</a></code></li>
+<li><code><a title="phc.easy.SummaryCounts.process_params" href="abstract/paging_api_item.html#phc.easy.SummaryCounts.process_params">process_params</a></code></li>
+<li><code><a title="phc.easy.SummaryCounts.resource_path" href="#phc.easy.SummaryCounts.resource_path">resource_path</a></code></li>
+<li><code><a title="phc.easy.SummaryCounts.response_to_items" href="#phc.easy.SummaryCounts.response_to_items">response_to_items</a></code></li>
+<li><code><a title="phc.easy.SummaryCounts.transform_results" href="#phc.easy.SummaryCounts.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.SummaryItemCounts" href="#phc.easy.SummaryItemCounts">SummaryItemCounts</a></code></h4>
+<ul class="two-column">
+<li><code><a title="phc.easy.SummaryItemCounts.execute_args" href="#phc.easy.SummaryItemCounts.execute_args">execute_args</a></code></li>
+<li><code><a title="phc.easy.SummaryItemCounts.get_data_frame" href="#phc.easy.SummaryItemCounts.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.SummaryItemCounts.params_class" href="#phc.easy.SummaryItemCounts.params_class">params_class</a></code></li>
+<li><code><a title="phc.easy.SummaryItemCounts.process_params" href="#phc.easy.SummaryItemCounts.process_params">process_params</a></code></li>
+<li><code><a title="phc.easy.SummaryItemCounts.resource_path" href="#phc.easy.SummaryItemCounts.resource_path">resource_path</a></code></li>
+<li><code><a title="phc.easy.SummaryItemCounts.transform_results" href="#phc.easy.SummaryItemCounts.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.SummaryOmicsCounts" href="#phc.easy.SummaryOmicsCounts">SummaryOmicsCounts</a></code></h4>
+<ul class="two-column">
+<li><code><a title="phc.easy.SummaryOmicsCounts.execute_args" href="#phc.easy.SummaryOmicsCounts.execute_args">execute_args</a></code></li>
+<li><code><a title="phc.easy.SummaryOmicsCounts.get_data_frame" href="#phc.easy.SummaryOmicsCounts.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.SummaryOmicsCounts.params_class" href="#phc.easy.SummaryOmicsCounts.params_class">params_class</a></code></li>
+<li><code><a title="phc.easy.SummaryOmicsCounts.process_params" href="abstract/paging_api_item.html#phc.easy.SummaryOmicsCounts.process_params">process_params</a></code></li>
+<li><code><a title="phc.easy.SummaryOmicsCounts.resource_path" href="#phc.easy.SummaryOmicsCounts.resource_path">resource_path</a></code></li>
+<li><code><a title="phc.easy.SummaryOmicsCounts.response_to_items" href="#phc.easy.SummaryOmicsCounts.response_to_items">response_to_items</a></code></li>
+<li><code><a title="phc.easy.SummaryOmicsCounts.transform_results" href="#phc.easy.SummaryOmicsCounts.transform_results">transform_results</a></code></li>
 </ul>
 </li>
 </ul>

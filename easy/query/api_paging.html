@@ -82,6 +82,7 @@ def recursive_paging_api_call(
     max_pages: Optional[int] = None,
     page_size: Optional[int] = None,
     item_key: str = &#34;items&#34;,
+    response_to_items: Optional[Callable[[Union[list, dict]], list]] = None,
     log: bool = False,
     try_count: bool = True,
     _current_page: int = 1,
@@ -122,7 +123,12 @@ def recursive_paging_api_call(
 
     response = client._api_call(path, http_verb=http_verb, params=params)
 
-    current_results = response.data.get(item_key, [])
+    if response_to_items is None:
+
+        def response_to_items(data):
+            return data.get(item_key, [])
+
+    current_results = response_to_items(response.data)
 
     if progress is not None:
         progress.update(len(current_results))
@@ -179,6 +185,7 @@ def recursive_paging_api_call(
         scroll=scroll,
         try_count=try_count,
         item_key=item_key,
+        response_to_items=response_to_items,
         _current_page=_current_page + 1,
         _prev_results=results,
         _next_page_token=next_page_token,
@@ -253,7 +260,7 @@ def recursive_paging_api_call(
 </details>
 </dd>
 <dt id="phc.easy.query.api_paging.recursive_paging_api_call"><code class="name flex">
-<span>def <span class="ident">recursive_paging_api_call</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', scroll: bool = False, progress: Union[tqdm.std.tqdm, NoneType] = None, auth_args: Union[<a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a>, NoneType] = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, item_key: str = 'items', log: bool = False, try_count: bool = True)</span>
+<span>def <span class="ident">recursive_paging_api_call</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', scroll: bool = False, progress: Union[tqdm.std.tqdm, NoneType] = None, auth_args: Union[<a title="phc.easy.auth.Auth" href="../auth.html#phc.easy.auth.Auth">Auth</a>, NoneType] = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, item_key: str = 'items', response_to_items: Union[Callable[[Union[list, dict]], list], NoneType] = None, log: bool = False, try_count: bool = True)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -272,6 +279,7 @@ def recursive_paging_api_call(
     max_pages: Optional[int] = None,
     page_size: Optional[int] = None,
     item_key: str = &#34;items&#34;,
+    response_to_items: Optional[Callable[[Union[list, dict]], list]] = None,
     log: bool = False,
     try_count: bool = True,
     _current_page: int = 1,
@@ -312,7 +320,12 @@ def recursive_paging_api_call(
 
     response = client._api_call(path, http_verb=http_verb, params=params)
 
-    current_results = response.data.get(item_key, [])
+    if response_to_items is None:
+
+        def response_to_items(data):
+            return data.get(item_key, [])
+
+    current_results = response_to_items(response.data)
 
     if progress is not None:
         progress.update(len(current_results))
@@ -369,6 +382,7 @@ def recursive_paging_api_call(
         scroll=scroll,
         try_count=try_count,
         item_key=item_key,
+        response_to_items=response_to_items,
         _current_page=_current_page + 1,
         _prev_results=results,
         _next_page_token=next_page_token,
