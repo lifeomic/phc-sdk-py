@@ -127,3 +127,15 @@ def test_reading_cache_file_with_invalid_date_does_not_raise():
     sample_file.seek(0)
 
     APICache.read_csv(sample_file)
+
+
+def test_filename_for_sql():
+    assert (
+        APICache.filename_for_sql("SELECT * FROM my_table", extension="parquet")
+        == "data_lake_my_table_f84bab09.parquet"
+    )
+
+    assert (
+        APICache.filename_for_sql("unknown sql command", extension="parquet")
+        == "data_lake_table_a61006f5.parquet"
+    )
