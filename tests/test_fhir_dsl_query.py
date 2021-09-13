@@ -60,7 +60,7 @@ def test_add_patient_ids_with_no_where_clause():
     ]
 
 
-def test_add_patient_id_and_limit_with_query_term():
+def test_add_patient_id_and_limit_with_query_term_and_max_terms():
     result = build_queries(
         {
             "where": {
@@ -70,6 +70,7 @@ def test_add_patient_id_and_limit_with_query_term():
         },
         patient_ids=["a", "b"],
         page_size=100,
+        max_terms=2,
     )
 
     assert result == [
@@ -85,8 +86,6 @@ def test_add_patient_id_and_limit_with_query_term():
                                     "subject.reference.keyword": [
                                         "Patient/a",
                                         "Patient/b",
-                                        "a",
-                                        "b",
                                     ]
                                 }
                             },
@@ -98,7 +97,28 @@ def test_add_patient_id_and_limit_with_query_term():
                 {"type": "number", "value": 0},
                 {"type": "number", "value": 100},
             ],
-        }
+        },
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"term": {"test.field.keyword": "blah"}},
+                            {
+                                "terms": {
+                                    "subject.reference.keyword": ["a", "b"]
+                                }
+                            },
+                        ]
+                    }
+                },
+            },
+            "limit": [
+                {"type": "number", "value": 0},
+                {"type": "number", "value": 100},
+            ],
+        },
     ]
 
 

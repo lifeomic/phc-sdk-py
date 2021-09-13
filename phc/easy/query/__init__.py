@@ -397,7 +397,7 @@ class Query:
             frame = (
                 batch_frame
                 if len(frame) == 0
-                else pd.concat([frame, batch_frame])
+                else pd.concat([frame, batch_frame]).reset_index(drop=True)
             )
 
         if raw:
