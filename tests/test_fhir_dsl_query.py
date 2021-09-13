@@ -1,7 +1,8 @@
 import math
-import pytest
 
-from phc.easy.query.fhir_dsl_query import build_query, get_limit, update_limit
+import pytest
+from phc.easy.query.fhir_dsl_query import (build_queries, get_limit,
+                                           update_limit)
 
 
 def test_update_limit_with_base_query():
@@ -38,27 +39,29 @@ def test_no_modification():
         }
     }
 
-    assert build_query(example) == example
+    assert build_queries(example) == [example]
 
 
 @pytest.mark.xfail(raises=ValueError)
 def test_throws_with_non_elasticsearch_where():
-    build_query({"where": {"query": "blah-blah-blah"}}, patient_id="a")
+    build_queries({"where": {"query": "blah-blah-blah"}}, patient_id="a")
 
 
 def test_add_patient_ids_with_no_where_clause():
-    assert build_query({}, patient_ids=["a"]) == {
-        "where": {
-            "type": "elasticsearch",
-            "query": {
-                "terms": {"subject.reference.keyword": ["Patient/a", "a"]}
-            },
+    assert build_queries({}, patient_ids=["a"]) == [
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "terms": {"subject.reference.keyword": ["Patient/a", "a"]}
+                },
+            }
         }
-    }
+    ]
 
 
 def test_add_patient_id_and_limit_with_query_term():
-    result = build_query(
+    result = build_queries(
         {
             "where": {
                 "type": "elasticsearch",
@@ -69,36 +72,38 @@ def test_add_patient_id_and_limit_with_query_term():
         page_size=100,
     )
 
-    assert result == {
-        "where": {
-            "type": "elasticsearch",
-            "query": {
-                "bool": {
-                    "must": [
-                        {"term": {"test.field.keyword": "blah"}},
-                        {
-                            "terms": {
-                                "subject.reference.keyword": [
-                                    "Patient/a",
-                                    "Patient/b",
-                                    "a",
-                                    "b",
-                                ]
-                            }
-                        },
-                    ]
-                }
+    assert result == [
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"term": {"test.field.keyword": "blah"}},
+                            {
+                                "terms": {
+                                    "subject.reference.keyword": [
+                                        "Patient/a",
+                                        "Patient/b",
+                                        "a",
+                                        "b",
+                                    ]
+                                }
+                            },
+                        ]
+                    }
+                },
             },
-        },
-        "limit": [
-            {"type": "number", "value": 0},
-            {"type": "number", "value": 100},
-        ],
-    }
+            "limit": [
+                {"type": "number", "value": 0},
+                {"type": "number", "value": 100},
+            ],
+        }
+    ]
 
 
 def test_replace_limit():
-    result = build_query(
+    result = build_queries(
         {
             "limit": [
                 {"type": "number", "value": 0},
@@ -108,16 +113,18 @@ def test_replace_limit():
         page_size=1000,
     )
 
-    assert result == {
-        "limit": [
-            {"type": "number", "value": 0},
-            {"type": "number", "value": 1000},
-        ]
-    }
+    assert result == [
+        {
+            "limit": [
+                {"type": "number", "value": 0},
+                {"type": "number", "value": 1000},
+            ]
+        }
+    ]
 
 
 def test_add_patient_id_with_bool_must_query():
-    result = build_query(
+    result = build_queries(
         {
             "where": {
                 "type": "elasticsearch",
@@ -130,23 +137,25 @@ def test_add_patient_id_with_bool_must_query():
         patient_key="id",
     )
 
-    assert result == {
-        "where": {
-            "type": "elasticsearch",
-            "query": {
-                "bool": {
-                    "must": [
-                        {"term": {"gender.keyword": "male"}},
-                        {"terms": {"id.keyword": ["Patient/a", "a"]}},
-                    ]
-                }
-            },
+    assert result == [
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"term": {"gender.keyword": "male"}},
+                            {"terms": {"id.keyword": ["Patient/a", "a"]}},
+                        ]
+                    }
+                },
+            }
         }
-    }
+    ]
 
 
 def test_add_patient_id_with_bool_should_query():
-    result = build_query(
+    result = build_queries(
         {
             "where": {
                 "type": "elasticsearch",
@@ -159,68 +168,78 @@ def test_add_patient_id_with_bool_should_query():
         patient_key="id",
     )
 
-    assert result == {
-        "where": {
-            "type": "elasticsearch",
-            "query": {
-                "bool": {
-                    "must": [
-                        {
-                            "bool": {
-                                "should": [{"term": {"gender.keyword": "male"}}]
-                            }
-                        },
-                        {"terms": {"id.keyword": ["Patient/a", "a"]}},
-                    ]
-                }
-            },
+    assert result == [
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "bool": {
+                        "must": [
+                            {
+                                "bool": {
+                                    "should": [
+                                        {"term": {"gender.keyword": "male"}}
+                                    ]
+                                }
+                            },
+                            {"terms": {"id.keyword": ["Patient/a", "a"]}},
+                        ]
+                    }
+                },
+            }
         }
-    }
+    ]
 
 
 def test_add_ids_to_query():
-    result = build_query({}, ids=["a", "b"], id="c")
+    result = build_queries({}, ids=["a", "b"], id="c")
 
-    assert result == {
-        "where": {
-            "type": "elasticsearch",
-            "query": {"terms": {"id.keyword": ["a", "b", "c"]}},
+    assert result == [
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {"terms": {"id.keyword": ["a", "b", "c"]}},
+            }
         }
-    }
+    ]
 
 
 def test_add_single_patient_id_to_query():
-    result = build_query({}, patient_id="a")
+    result = build_queries({}, patient_id="a")
 
-    assert result == {
-        "where": {
-            "type": "elasticsearch",
-            "query": {
-                "terms": {"subject.reference.keyword": ["Patient/a", "a"]}
-            },
+    assert result == [
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "terms": {"subject.reference.keyword": ["Patient/a", "a"]}
+                },
+            }
         }
-    }
+    ]
 
 
 def test_add_single_patient_id_with_prefix():
-    result = build_query(
+    result = build_queries(
         {}, patient_id="a", patient_id_prefixes=["Patient/", "urn:uuid:"]
     )
 
-    assert result == {
-        "where": {
-            "type": "elasticsearch",
-            "query": {
-                "terms": {
-                    "subject.reference.keyword": [
-                        "Patient/a",
-                        "urn:uuid:a",
-                        "a",
-                    ]
-                }
-            },
+    assert result == [
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "terms": {
+                        "subject.reference.keyword": [
+                            "Patient/a",
+                            "urn:uuid:a",
+                            "a",
+                        ]
+                    }
+                },
+            }
         }
-    }
+    ]
 
 
 def test_get_limit():
@@ -240,7 +259,7 @@ def test_get_limit():
 
 
 def test_add_term():
-    result = build_query(
+    result = build_queries(
         {
             "where": {
                 "type": "elasticsearch",
@@ -250,23 +269,25 @@ def test_add_term():
         term={"code.coding.code.keyword": "blah"},
     )
 
-    assert result == {
-        "where": {
-            "type": "elasticsearch",
-            "query": {
-                "bool": {
-                    "must": [
-                        {"terms": {"a.keyword": [1, 2, 3]}},
-                        {"term": {"code.coding.code.keyword": "blah"}},
-                    ]
-                }
-            },
+    assert result == [
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"terms": {"a.keyword": [1, 2, 3]}},
+                            {"term": {"code.coding.code.keyword": "blah"}},
+                        ]
+                    }
+                },
+            }
         }
-    }
+    ]
 
 
 def test_add_code_filters():
-    result = build_query(
+    result = build_queries(
         query={},
         code_fields=["meta.tag", "code.coding"],
         code=["1234-5"],
@@ -274,64 +295,68 @@ def test_add_code_filters():
         system="http://unitsofmeasure.org",
     )
 
-    assert result == {
-        "where": {
-            "type": "elasticsearch",
-            "query": {
-                "bool": {
-                    "must": [
-                        {
-                            "bool": {
-                                "should": [
-                                    {
-                                        "terms": {
-                                            "meta.tag.code.keyword": ["1234-5"]
-                                        }
-                                    },
-                                    {
-                                        "terms": {
-                                            "code.coding.code.keyword": [
-                                                "1234-5"
-                                            ]
-                                        }
-                                    },
-                                ]
-                            }
-                        },
-                        {
-                            "bool": {
-                                "should": [
-                                    {
-                                        "term": {
-                                            "meta.tag.display.keyword": "My Code"
-                                        }
-                                    },
-                                    {
-                                        "term": {
-                                            "code.coding.display.keyword": "My Code"
-                                        }
-                                    },
-                                ]
-                            }
-                        },
-                        {
-                            "bool": {
-                                "should": [
-                                    {
-                                        "term": {
-                                            "meta.tag.system.keyword": "http://unitsofmeasure.org"
-                                        }
-                                    },
-                                    {
-                                        "term": {
-                                            "code.coding.system.keyword": "http://unitsofmeasure.org"
-                                        }
-                                    },
-                                ]
-                            }
-                        },
-                    ]
-                }
-            },
+    assert result == [
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "bool": {
+                        "must": [
+                            {
+                                "bool": {
+                                    "should": [
+                                        {
+                                            "terms": {
+                                                "meta.tag.code.keyword": [
+                                                    "1234-5"
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "terms": {
+                                                "code.coding.code.keyword": [
+                                                    "1234-5"
+                                                ]
+                                            }
+                                        },
+                                    ]
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "should": [
+                                        {
+                                            "term": {
+                                                "meta.tag.display.keyword": "My Code"
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "code.coding.display.keyword": "My Code"
+                                            }
+                                        },
+                                    ]
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "should": [
+                                        {
+                                            "term": {
+                                                "meta.tag.system.keyword": "http://unitsofmeasure.org"
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "code.coding.system.keyword": "http://unitsofmeasure.org"
+                                            }
+                                        },
+                                    ]
+                                }
+                            },
+                        ]
+                    }
+                },
+            }
         }
-    }
+    ]

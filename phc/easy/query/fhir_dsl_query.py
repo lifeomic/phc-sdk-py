@@ -2,9 +2,9 @@ from functools import partial
 from typing import Callable, List, Optional, Union
 
 from lenses import lens
-from toolz import compose, curry, identity, pipe
-
+from phc.easy.query.util import flat_map_pipe
 from phc.easy.util import add_prefixes
+from toolz import compose, curry, identity, pipe
 
 MAX_RESULT_SIZE = 10000
 DEFAULT_SCROLL_SIZE = int(MAX_RESULT_SIZE * 0.9)
@@ -139,7 +139,7 @@ def _limit_adder(page_size: Union[int, None]):
     return FHIR_LIMIT.set(page_size)
 
 
-def build_query(
+def build_queries(
     query: dict,
     id: Optional[str] = None,
     ids: List[str] = [],
@@ -203,7 +203,7 @@ def build_query(
         Adds where clause for code system value(s)
     """
 
-    return pipe(
+    return flat_map_pipe(
         query,
         _ids_adder(id=id, ids=ids),
         foreign_ids_adder(
