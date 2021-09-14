@@ -380,3 +380,93 @@ def test_add_code_filters():
             }
         }
     ]
+
+
+def test_add_terms_filter_with_max_for_multiple_chunks():
+    # This scenario can technically produce inaccurate results but we're doing our best effort if
+    # we have to chunk multiple sets of parameters.
+
+    result = build_queries(
+        query={},
+        term={"id.keyword": ["a", "b", "c"]},
+        terms=[
+            {"identifier.value": [1, 2, 3]},
+            {"identifier.system": "http://example.com/id"},
+        ],
+        max_terms=2,
+    )
+
+    assert result == [
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"terms": {"id.keyword": ["a", "b"]}},
+                            {"terms": {"identifier.value": [1, 2]}},
+                            {
+                                "term": {
+                                    "identifier.system": "http://example.com/id"
+                                }
+                            },
+                        ]
+                    }
+                },
+            }
+        },
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"terms": {"id.keyword": ["a", "b"]}},
+                            {"terms": {"identifier.value": [3]}},
+                            {
+                                "term": {
+                                    "identifier.system": "http://example.com/id"
+                                }
+                            },
+                        ]
+                    }
+                },
+            }
+        },
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"terms": {"id.keyword": ["c"]}},
+                            {"terms": {"identifier.value": [1, 2]}},
+                            {
+                                "term": {
+                                    "identifier.system": "http://example.com/id"
+                                }
+                            },
+                        ]
+                    }
+                },
+            }
+        },
+        {
+            "where": {
+                "type": "elasticsearch",
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"terms": {"id.keyword": ["c"]}},
+                            {"terms": {"identifier.value": [3]}},
+                            {
+                                "term": {
+                                    "identifier.system": "http://example.com/id"
+                                }
+                            },
+                        ]
+                    }
+                },
+            }
+        },
+    ]

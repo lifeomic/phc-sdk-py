@@ -8,9 +8,14 @@ def test_flat_map_pipe_with_list():
     def duplicate_and_plus_one(x):
         return [x + 1, x + 1]
 
-    value = flat_map_pipe([1, 2, 3], plus_one, duplicate_and_plus_one)
+    def duplicate_and_plus_two(x):
+        return [x + 2, x + 2]
 
-    assert value == [3, 3, 4, 4, 5, 5]
+    value = flat_map_pipe(
+        [1, 2, 3], plus_one, duplicate_and_plus_one, duplicate_and_plus_two
+    )
+
+    assert value == [5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7]
 
 
 def test_flat_map_pipe():

@@ -1,4 +1,4 @@
-from functools import reduce
+from functools import partial, reduce
 from typing import Any, List, Union
 
 from funcy import lmapcat
@@ -6,8 +6,9 @@ from funcy import lmapcat
 
 def _flat_map_reduce(acc, func):
     def wrap_func(value):
-        out = func(value)
-        return out if isinstance(out, list) else [out]
+        map_output = func(value)
+
+        return map_output if isinstance(map_output, list) else [map_output]
 
     output = lmapcat(wrap_func, acc)
 

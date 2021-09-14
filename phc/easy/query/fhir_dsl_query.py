@@ -108,24 +108,54 @@ def foreign_ids_adder(
     )
 
 
+def _term_or_terms_adder(
+    term: Optional[dict], terms: List[dict], max_terms: int = DEFAULT_MAX_TERMS
+):
+    if term is None and len(terms) == 0:
+        return identity
+
+    terms = [term, *terms] if term is not None else terms
+
+    def _adder(query):
+        return flat_map_pipe(
+            query,
+            *[
+                (
+                    terms_adder(t, max_terms=max_terms)
+                    if isinstance(list(t.values())[0], list)
+                    else term_adder(t)
+                )
+                for t in terms
+            ],
+        )
+
+    return _adder
+
+
 def term_adder(term: Optional[dict]):
     if term is None:
         return identity
+
+    if len(term.keys()) > 1:
+        raise ValueError(
+            f"Multiple keys unexpected for term dictionary for fhir-search-service. {term}"
+        )
 
     return partial(and_query_clause, query_clause={"term": term})
 
 
 def terms_adder(terms: Optional[dict], max_terms: int = DEFAULT_MAX_TERMS):
+    if terms is None:
+        return identity
+
     if len(terms.keys()) > 1:
         raise ValueError(
             f"Multiple keys unexpected for terms dictionary for fhir-search-service. {terms}"
         )
 
-    if terms is None:
-        return identity
-
     key = list(terms.keys())[0]
-    value_batches = chunks(max_terms, list(terms.values())[0])
+    # NOTE: Must convert chunks from generator so that function can be run multiple times
+    value_batches = list(chunks(max_terms, list(terms.values())[0]))
 
     def _adder(query):
         return [
@@ -176,6 +206,7 @@ def build_queries(
     patient_id_prefixes: List[str] = ["Patient/"],
     page_size: Optional[int] = None,
     term: Optional[dict] = None,
+    terms: List[dict] = [],
     max_terms: int = DEFAULT_MAX_TERMS,
     # Codes
     code_fields: List[str] = [],
@@ -213,7 +244,10 @@ def build_queries(
         "0a20d90f-c73c-4149-953d-7614ce7867f")
 
     term : dict
-        Add an arbitrary ES term to the query
+        Add an arbitrary ES term/s to the query (includes chunking)
+
+    terms : dict
+        Add multiple arbitrary ES term/s to the query (includes chunking)
 
     page_size: int
         The number of records to fetch per page
@@ -240,7 +274,7 @@ def build_queries(
             foreign_id_prefixes=patient_id_prefixes,
             max_terms=max_terms,
         ),
-        term_adder(term),
+        _term_or_terms_adder(term=term, terms=terms, max_terms=max_terms),
         _code_adder(attribute="code", code_fields=code_fields, value=code),
         _code_adder(
             attribute="display", code_fields=code_fields, value=display

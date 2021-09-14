@@ -38,6 +38,7 @@ class FhirServicePatientItem(FhirServiceItem):
         log: bool = False,
         # Terms
         term: Optional[dict] = None,
+        terms: List[dict] = [],
         max_terms: int = DEFAULT_MAX_TERMS,
         # Codes
         code: Optional[Union[str, List[str]]] = None,
@@ -94,7 +95,10 @@ class FhirServicePatientItem(FhirServiceItem):
             Maximum terms per query clause before chunking into multiple requests
 
         term : dict
-            Adds where clause for a full term clause
+            Add an arbitrary ES term/s to the query (includes chunking)
+
+        terms : dict
+            Add multiple arbitrary ES term/s to the query (includes chunking)
 
         code : str | List[str]
             Adds where clause for code value(s)
@@ -148,6 +152,7 @@ class FhirServicePatientItem(FhirServiceItem):
             patient_id_prefixes=cls.patient_id_prefixes(),
             # Terms
             term=term,
+            terms=terms,
             max_terms=max_terms,
             # Codes
             code_fields=code_fields,
