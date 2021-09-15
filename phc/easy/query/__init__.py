@@ -1,6 +1,5 @@
 import json
 import math
-from phc.easy.query.url import merge_pattern
 from typing import Any, Callable, List, Optional, Tuple, Union
 
 import pandas as pd
@@ -8,17 +7,14 @@ from phc.base_client import BaseClient
 from phc.easy.auth import Auth
 from phc.easy.query.api_paging import clean_params, recursive_paging_api_call
 from phc.easy.query.fhir_aggregation import FhirAggregation
-from phc.easy.query.fhir_dsl import (
-    DEFAULT_SCROLL_SIZE,
-    MAX_RESULT_SIZE,
-    execute_single_fhir_dsl,
-    recursive_execute_fhir_dsl,
-    tqdm,
-    with_progress,
-)
-from phc.easy.query.fhir_dsl_query import build_query
+from phc.easy.query.fhir_dsl import (DEFAULT_SCROLL_SIZE, MAX_RESULT_SIZE,
+                                     execute_single_fhir_dsl,
+                                     recursive_execute_fhir_dsl, tqdm,
+                                     with_progress)
+from phc.easy.query.fhir_dsl_query import build_queries
 from phc.easy.query.ga4gh import recursive_execute_ga4gh
-from phc.easy.util import extract_codes
+from phc.easy.query.url import merge_pattern
+from phc.easy.util import _has_tqdm, extract_codes
 from phc.easy.util.api_cache import FHIR_DSL, APICache
 from phc.services import Fhir
 from toolz import identity
@@ -57,7 +53,7 @@ class Query:
         fhir = Fhir(auth.session())
 
         response = fhir.execute_es(
-            auth.project_id, build_query(query, page_size=1), scroll="true"
+            auth.project_id, build_queries(query, page_size=1)[0], scroll="true"
         )
 
         return response.data["hits"]["total"]["value"]
@@ -108,8 +104,8 @@ class Query:
             Whether to log the elasticsearch query sent to the server
 
         query_kwargs : dict
-            Arguments to pass to build_query such as patient_id, patient_ids,
-            and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+            Arguments to pass to build_queries such as patient_id, patient_ids,
+            and patient_key. (See phc.easy.query.fhir_dsl_query.build_queries)
 
         Examples
         --------
@@ -125,43 +121,66 @@ class Query:
         }, all_results=True)
 
         """
-        query = build_query(query, **query_kwargs)
+        queries = build_queries(query, **query_kwargs)
 
         if log:
-            print(json.dumps(query, indent=4))
+            print(json.dumps(queries, indent=4))
 
-        if FhirAggregation.is_aggregation_query(query):
-            response = execute_single_fhir_dsl(query, auth_args=auth_args)
+        if len(queries) > 1 and FhirAggregation.is_aggregation_query(
+            queries[0]
+        ):
+            raise ValueError(
+                "Cannot combine multiple aggregation query results"
+            )
+
+        if FhirAggregation.is_aggregation_query(queries[0]):
+            response = execute_single_fhir_dsl(queries[0], auth_args=auth_args)
             return FhirAggregation.from_response(response)
 
-        if all_results:
-            return with_progress(
-                lambda: tqdm(total=MAX_RESULT_SIZE),
-                lambda progress: recursive_execute_fhir_dsl(
-                    {
-                        "limit": [
-                            {"type": "number", "value": 0},
-                            # Make window size smaller than maximum to reduce
-                            # pressure on API
-                            {"type": "number", "value": DEFAULT_SCROLL_SIZE},
-                        ],
-                        **query,
-                    },
+        if len(queries) > 1 and _has_tqdm:
+            queries = tqdm(queries)
+
+        result_set = []
+
+        for query in queries:
+            if all_results:
+                results = with_progress(
+                    lambda: tqdm(total=MAX_RESULT_SIZE),
+                    lambda progress: recursive_execute_fhir_dsl(
+                        {
+                            "limit": [
+                                {"type": "number", "value": 0},
+                                # Make window size smaller than maximum to reduce
+                                # pressure on API
+                                {
+                                    "type": "number",
+                                    "value": DEFAULT_SCROLL_SIZE,
+                                },
+                            ],
+                            **query,
+                        },
+                        scroll=all_results,
+                        progress=progress,
+                        callback=callback,
+                        auth_args=auth_args,
+                        max_pages=max_pages,
+                    ),
+                )
+            else:
+                results = recursive_execute_fhir_dsl(
+                    query,
                     scroll=all_results,
-                    progress=progress,
                     callback=callback,
                     auth_args=auth_args,
                     max_pages=max_pages,
-                ),
-            )
+                )
 
-        return recursive_execute_fhir_dsl(
-            query,
-            scroll=all_results,
-            callback=callback,
-            auth_args=auth_args,
-            max_pages=max_pages,
-        )
+            if len(result_set) == 0:
+                result_set = results
+            else:
+                result_set.append(*results)
+
+        return result_set
 
     @staticmethod
     def execute_paging_api(
@@ -317,53 +336,74 @@ class Query:
         log: bool = False,
         **query_kwargs,
     ):
-        query = build_query({**query, **query_overrides}, **query_kwargs)
+        queries = build_queries({**query, **query_overrides}, **query_kwargs)
 
         if log:
-            print(json.dumps(query, indent=4))
+            print(json.dumps(queries, indent=4))
+
+        is_first_agg_query = FhirAggregation.is_aggregation_query(queries[0])
+
+        if len(queries) > 1 and is_first_agg_query:
+            raise ValueError("Cannot combine multiple aggregate results")
 
         use_cache = (
             (not ignore_cache)
             and (not raw)
-            and (all_results or FhirAggregation.is_aggregation_query(query))
+            and (all_results or is_first_agg_query)
             and (max_pages is None)
         )
 
-        if use_cache and APICache.does_cache_for_query_exist(
-            query, namespace=FHIR_DSL
-        ):
-            return APICache.load_cache_for_query(query, namespace=FHIR_DSL)
+        if len(queries) > 1 and _has_tqdm:
+            queries = tqdm(queries)
 
-        callback = (
-            APICache.build_cache_callback(query, transform, namespace=FHIR_DSL)
-            if use_cache
-            else None
-        )
+        frame = pd.DataFrame()
 
-        results = Query.execute_fhir_dsl(
-            query,
-            all_results,
-            auth_args,
-            callback=callback,
-            max_pages=max_pages,
-        )
+        for one_query in queries:
+            if use_cache and APICache.does_cache_for_query_exist(
+                one_query, namespace=FHIR_DSL
+            ):
+                results = APICache.load_cache_for_query(
+                    one_query, namespace=FHIR_DSL
+                )
+            else:
+                results = Query.execute_fhir_dsl(
+                    one_query,
+                    all_results,
+                    auth_args,
+                    callback=(
+                        APICache.build_cache_callback(
+                            one_query, transform, namespace=FHIR_DSL
+                        )
+                        if use_cache
+                        else None
+                    ),
+                    max_pages=max_pages,
+                )
 
-        if isinstance(results, FhirAggregation):
-            # Cache isn't written in batches so we need to explicitly do it here
-            if use_cache:
-                APICache.write_agg(query, results)
+            if isinstance(results, FhirAggregation):
+                # Cache isn't written in batches so we need to explicitly do it here
+                if use_cache:
+                    APICache.write_agg(one_query, results)
 
-            return results
+                # We don't support multiple agg queries so fine to return first one
+                return results
 
-        if isinstance(results, pd.DataFrame):
-            return results
+            batch_frame = (
+                pd.DataFrame(map(lambda r: r["_source"], results))
+                if not isinstance(results, pd.DataFrame)
+                else results
+            )
 
-        df = pd.DataFrame(map(lambda r: r["_source"], results))
+            frame = (
+                batch_frame
+                if len(frame) == 0
+                else pd.concat([frame, batch_frame]).reset_index(drop=True)
+            )
 
         if raw:
-            return df
+            return frame
 
-        return transform(df)
+        return transform(frame)
 
     @staticmethod
     def get_codes(
@@ -616,8 +656,8 @@ class Query:
             The number of pages to retrieve (useful if working with tons of records)
 
         query_kwargs : dict
-            Arguments to pass to build_query such as patient_id, patient_ids,
-            and patient_key. See :func:`~phc.easy.query.fhir_dsl_query.build_query`.
+            Arguments to pass to build_queries such as patient_id, patient_ids,
+            and patient_key. See :func:`~phc.easy.query.fhir_dsl_query.build_queries`.
 
         Examples
         --------
@@ -712,8 +752,8 @@ class Query:
             Whether to log the elasticsearch query sent to the server
 
         query_kwargs : dict
-            Arguments to pass to build_query such as patient_id, patient_ids,
-            and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+            Arguments to pass to build_queries such as patient_id, patient_ids,
+            and patient_key. (See phc.easy.query.fhir_dsl_query.build_queries)
 
         Examples
         --------

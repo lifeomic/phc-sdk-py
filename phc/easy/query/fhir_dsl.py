@@ -12,7 +12,7 @@ from phc.easy.query.fhir_dsl_query import (
     DEFAULT_SCROLL_SIZE,
     get_limit,
     update_limit,
-    build_query,
+    build_queries,
 )
 
 MAX_RETRY_BACKOFF = 3
@@ -49,8 +49,12 @@ def execute_single_fhir_dsl(
 
         if _retry_time == 1:
             # Base first retry attempt on record count
+            # NOTE: Uses the first query to grab count (not the end of the world
+            # if the count isn't accurate)
             record_count = fhir.dsl(
-                auth.project_id, build_query(query, page_size=1), scroll="true"
+                auth.project_id,
+                build_queries(query, page_size=1)[0],
+                scroll="true",
             ).data["hits"]["total"]["value"]
 
             def backoff_limit(limit: int):

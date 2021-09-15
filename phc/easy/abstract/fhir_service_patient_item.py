@@ -4,6 +4,7 @@ import pandas as pd
 from phc.easy.abstract.fhir_service_item import FhirServiceItem
 from phc.easy.auth import Auth
 from phc.easy.query import Query
+from phc.easy.query.fhir_dsl_query import DEFAULT_MAX_TERMS
 
 
 class FhirServicePatientItem(FhirServiceItem):
@@ -35,8 +36,11 @@ class FhirServicePatientItem(FhirServiceItem):
         ignore_cache: bool = False,
         expand_args: dict = {},
         log: bool = False,
-        # Codes
+        # Terms
         term: Optional[dict] = None,
+        terms: List[dict] = [],
+        max_terms: int = DEFAULT_MAX_TERMS,
+        # Codes
         code: Optional[Union[str, List[str]]] = None,
         display: Optional[Union[str, List[str]]] = None,
         system: Optional[Union[str, List[str]]] = None,
@@ -87,8 +91,14 @@ class FhirServicePatientItem(FhirServiceItem):
         log : bool = False
             Whether to log some diagnostic statements for debugging
 
+        max_terms : int
+            Maximum terms per query clause before chunking into multiple requests
+
         term : dict
-            Adds where clause for a full term clause
+            Add an arbitrary ES term/s to the query (includes chunking)
+
+        terms : dict
+            Add multiple arbitrary ES term/s to the query (includes chunking)
 
         code : str | List[str]
             Adds where clause for code value(s)
@@ -140,9 +150,12 @@ class FhirServicePatientItem(FhirServiceItem):
             patient_key=cls.patient_key(),
             log=log,
             patient_id_prefixes=cls.patient_id_prefixes(),
+            # Terms
+            term=term,
+            terms=terms,
+            max_terms=max_terms,
             # Codes
             code_fields=code_fields,
-            term=term,
             code=code,
             display=display,
             system=system,

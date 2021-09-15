@@ -1,10 +1,13 @@
-from functools import partial
+from functools import partial, reduce
 from typing import Callable, List, Optional, Union
 
+from funcy import chunks
 from lenses import lens
+from phc.easy.query.util import flat_map_pipe
+from phc.easy.util import add_prefixes
 from toolz import compose, curry, identity, pipe
 
-from phc.easy.util import add_prefixes
+DEFAULT_MAX_TERMS = 30_000
 
 MAX_RESULT_SIZE = 10000
 DEFAULT_SCROLL_SIZE = int(MAX_RESULT_SIZE * 0.9)
@@ -69,13 +72,17 @@ def and_query_clause(query: dict, query_clause: dict):
     raise ValueError("Could not add clause to query", query_clause, query)
 
 
-def _ids_adder(id: Union[str, None] = None, ids: List[str] = []):
+def _ids_adder(
+    id: Union[str, None] = None,
+    ids: List[str] = [],
+    max_terms: int = DEFAULT_MAX_TERMS,
+):
     ids = [*ids, *([id] if id else [])]
 
     if len(ids) == 0:
         return identity
 
-    return lambda query: and_query_clause(query, {"terms": {"id.keyword": ids}})
+    return terms_adder({"id.keyword": ids}, max_terms=max_terms)
 
 
 def foreign_ids_adder(
@@ -83,30 +90,80 @@ def foreign_ids_adder(
     foreign_ids: List[str],
     foreign_key: str,
     foreign_id_prefixes: List[str],
+    max_terms: int = DEFAULT_MAX_TERMS,
 ):
     foreign_ids = [*foreign_ids, *([foreign_id] if foreign_id else [])]
 
     if len(foreign_ids) == 0:
         return identity
 
-    return lambda query: and_query_clause(
-        query,
+    return terms_adder(
         {
-            "terms": {
-                f"{foreign_key}.keyword": [
-                    *add_prefixes(foreign_ids, foreign_id_prefixes),
-                    *foreign_ids,
-                ]
-            }
+            f"{foreign_key}.keyword": [
+                *add_prefixes(foreign_ids, foreign_id_prefixes),
+                *foreign_ids,
+            ]
         },
+        max_terms=max_terms,
     )
+
+
+def _term_or_terms_adder(
+    term: Optional[dict], terms: List[dict], max_terms: int = DEFAULT_MAX_TERMS
+):
+    if term is None and len(terms) == 0:
+        return identity
+
+    terms = [term, *terms] if term is not None else terms
+
+    def _adder(query):
+        return flat_map_pipe(
+            query,
+            *[
+                (
+                    terms_adder(t, max_terms=max_terms)
+                    if isinstance(list(t.values())[0], list)
+                    else term_adder(t)
+                )
+                for t in terms
+            ],
+        )
+
+    return _adder
 
 
 def term_adder(term: Optional[dict]):
     if term is None:
         return identity
 
+    if len(term.keys()) > 1:
+        raise ValueError(
+            f"Multiple keys unexpected for term dictionary for fhir-search-service. {term}"
+        )
+
     return partial(and_query_clause, query_clause={"term": term})
+
+
+def terms_adder(terms: Optional[dict], max_terms: int = DEFAULT_MAX_TERMS):
+    if terms is None:
+        return identity
+
+    if len(terms.keys()) > 1:
+        raise ValueError(
+            f"Multiple keys unexpected for terms dictionary for fhir-search-service. {terms}"
+        )
+
+    key = list(terms.keys())[0]
+    # NOTE: Must convert chunks from generator so that function can be run multiple times
+    value_batches = list(chunks(max_terms, list(terms.values())[0]))
+
+    def _adder(query):
+        return [
+            and_query_clause(query, {"terms": {key: value_batch}})
+            for value_batch in value_batches
+        ]
+
+    return _adder
 
 
 def _code_adder(
@@ -139,7 +196,7 @@ def _limit_adder(page_size: Union[int, None]):
     return FHIR_LIMIT.set(page_size)
 
 
-def build_query(
+def build_queries(
     query: dict,
     id: Optional[str] = None,
     ids: List[str] = [],
@@ -149,6 +206,8 @@ def build_query(
     patient_id_prefixes: List[str] = ["Patient/"],
     page_size: Optional[int] = None,
     term: Optional[dict] = None,
+    terms: List[dict] = [],
+    max_terms: int = DEFAULT_MAX_TERMS,
     # Codes
     code_fields: List[str] = [],
     code: Optional[Union[str, List[str]]] = None,
@@ -185,7 +244,10 @@ def build_query(
         "0a20d90f-c73c-4149-953d-7614ce7867f")
 
     term : dict
-        Add an arbitrary ES term to the query
+        Add an arbitrary ES term/s to the query (includes chunking)
+
+    terms : dict
+        Add multiple arbitrary ES term/s to the query (includes chunking)
 
     page_size: int
         The number of records to fetch per page
@@ -202,17 +264,17 @@ def build_query(
     system : str | List[str]
         Adds where clause for code system value(s)
     """
-
-    return pipe(
+    return flat_map_pipe(
         query,
-        _ids_adder(id=id, ids=ids),
+        _ids_adder(id=id, ids=ids, max_terms=max_terms),
         foreign_ids_adder(
             foreign_id=patient_id,
             foreign_ids=patient_ids,
             foreign_key=patient_key,
             foreign_id_prefixes=patient_id_prefixes,
+            max_terms=max_terms,
         ),
-        term_adder(term),
+        _term_or_terms_adder(term=term, terms=terms, max_terms=max_terms),
         _code_adder(attribute="code", code_fields=code_fields, value=code),
         _code_adder(
             attribute="display", code_fields=code_fields, value=display
