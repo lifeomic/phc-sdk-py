@@ -7,6 +7,7 @@ from phc.easy.codeable import Codeable
 from phc.easy.composition import Composition
 from phc.easy.condition import Condition
 from phc.easy.consent import Consent
+from phc.easy.data_lake import DataLake
 from phc.easy.diagnostic_report import DiagnosticReport
 from phc.easy.document_reference import DocumentReference
 from phc.easy.encounter import Encounter
@@ -55,6 +56,7 @@ __all__ = [
     "Composition",
     "Condition",
     "Consent",
+    "DataLake",
     "DiagnosticReport",
     "DocumentReference",
     "Encounter",

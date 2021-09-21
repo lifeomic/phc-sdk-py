@@ -8,3 +8,4 @@ lenses
 toolz
 pydantic
 python-pmap
+fastparquet
