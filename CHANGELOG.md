@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *(NOTE: All examples use fictious data or freely available data sets.)*
 
+## [0.23.2] - 2021-09-27
+
+### Fixed
+
+- Terms and any list parameters (e.g. `ids`/`patient_ids`) with more than 30K
+  values get auto-chunked into multiple queries (No need to iterate!)
+
+### Added
+
+- Added support for single/multiple values with the `term` or `terms` (New!) parameters
+- Added configurable term limit for sending multiple queries (param `max_terms`)
+- Added `phc.DataLake` for sending SQL queries to the data lake
+
+Example
+```python
+phc.DataLake.get_data_frame(
+  "SELECT * FROM my_table",
+  extension="parquet",
+  transform=lambda df: df.drop(["id"], axis=1)
+)
+# => Loading from "~/Downloads/phc/api-cache/data_lake_my_table_f84bab09.parquet"
+```
+
 ## [0.23.1] - 2021-07-26
 
 ### Fixed
@@ -607,6 +630,7 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 - Added the `phc.services.Files` submodule that provides actions for files in PHC projects.
 - Added the `phc.services.Cohorts` submodule that provides actions for files in PHC cohorts.
 
+[0.23.2]: https://github.com/lifeomic/phc-sdk-py/compare/v0.23.1...v0.23.2
 [0.23.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.23.0...v0.23.1
 [0.23.0]: https://github.com/lifeomic/phc-sdk-py/compare/v0.22.2...v0.23.0
 [0.22.2]: https://github.com/lifeomic/phc-sdk-py/compare/v0.22.1...v0.22.2
