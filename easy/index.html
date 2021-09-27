@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.2" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>phc.easy API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -36,6 +36,7 @@ from phc.easy.codeable import Codeable
 from phc.easy.composition import Composition
 from phc.easy.condition import Condition
 from phc.easy.consent import Consent
+from phc.easy.data_lake import DataLake
 from phc.easy.diagnostic_report import DiagnosticReport
 from phc.easy.document_reference import DocumentReference
 from phc.easy.encounter import Encounter
@@ -84,6 +85,7 @@ __all__ = [
     &#34;Composition&#34;,
     &#34;Condition&#34;,
     &#34;Consent&#34;,
+    &#34;DataLake&#34;,
     &#34;DiagnosticReport&#34;,
     &#34;DocumentReference&#34;,
     &#34;Encounter&#34;,
@@ -159,6 +161,10 @@ __all__ = [
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="phc.easy.consent" href="consent.html">phc.easy.consent</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.data_lake" href="data_lake/index.html">phc.easy.data_lake</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -369,7 +375,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.AuditEvent.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -417,7 +423,7 @@ def get_count_by_patient():
 </details>
 </dd>
 <dt id="phc.easy.AuditEvent.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -497,7 +503,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 </dd>
 <dt id="phc.easy.Auth"><code class="flex name class">
 <span>class <span class="ident">Auth</span></span>
-<span>(</span><span>details: Union[Any, NoneType, Dict[str, str]] = None)</span>
+<span>(</span><span>details: Union[Any, None, Dict[str, str]] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create an authentication object that can be shared as a single argument to
@@ -685,7 +691,7 @@ Defaults to normal API adapter</p></div>
 <h3>Static methods</h3>
 <dl>
 <dt id="phc.easy.Auth.custom"><code class="name flex">
-<span>def <span class="ident">custom</span></span>(<span>details: Union[NoneType, Dict[str, str]])</span>
+<span>def <span class="ident">custom</span></span>(<span>details: Optional[None])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns customized auth object from the shared one</p></div>
@@ -700,7 +706,7 @@ def custom(details: Union[None, Dict[str, str]]):
 </details>
 </dd>
 <dt id="phc.easy.Auth.set"><code class="name flex">
-<span>def <span class="ident">set</span></span>(<span>details: Union[NoneType, Dict[str, str]])</span>
+<span>def <span class="ident">set</span></span>(<span>details: Optional[None])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Updates and returns the shared authentication singleton</p></div>
@@ -809,7 +815,7 @@ def token(self):
 </details>
 </dd>
 <dt id="phc.easy.Auth.customized"><code class="name flex">
-<span>def <span class="ident">customized</span></span>(<span>self, details: Union[NoneType, Dict[str, str]])</span>
+<span>def <span class="ident">customized</span></span>(<span>self, details: Optional[None])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns copied, customized auth object from this object</p></div>
@@ -859,7 +865,7 @@ def token(self):
 </details>
 </dd>
 <dt id="phc.easy.Auth.update"><code class="name flex">
-<span>def <span class="ident">update</span></span>(<span>self, details: Union[Any, NoneType, Dict[str, str]] = None)</span>
+<span>def <span class="ident">update</span></span>(<span>self, details: Union[Any, None, Dict[str, str]] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Set details of authentication for API calls
@@ -995,7 +1001,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.CarePlan.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1035,7 +1041,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.CarePlan.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1208,7 +1214,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Composition.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1248,7 +1254,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Composition.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1404,7 +1410,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Condition.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>query: Union[str, NoneType] = None)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>query: Optional[str] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Find codes based on case-insensitive matching of code/display/system</p>
@@ -1467,7 +1473,7 @@ def get_codes(cls, query: Optional[str] = None):
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Condition.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1596,7 +1602,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Consent.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1636,7 +1642,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Consent.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1706,6 +1712,215 @@ def transform_results(df: pd.DataFrame, **expand_args):
 </dd>
 </dl>
 </dd>
+<dt id="phc.easy.DataLake"><code class="flex name class">
+<span>class <span class="ident">DataLake</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DataLake:
+    @classmethod
+    def execute_sql(
+        cls,
+        sql: str,
+        transform: Callable[[pd.DataFrame], pd.DataFrame] = identity,
+        ignore_cache: bool = False,
+        auth_args: Auth = Auth.shared(),
+        extension: str = &#34;parquet&#34;,
+    ):
+        auth = Auth(auth_args)
+        client = Analytics(auth.session())
+
+        sql_plus_project = auth.project_id + &#34;:&#34; + sql
+
+        cache_folder = &#34;/tmp&#34; if ignore_cache else API_CACHE_DIR
+        csv_filename = APICache.filename_for_sql(sql_plus_project, &#34;csv&#34;)
+        output_filename = APICache.filename_for_sql(
+            sql_plus_project, extension=extension
+        )
+        csv_cache_path = os.path.join(cache_folder, csv_filename)
+        output_cache_path = os.path.join(cache_folder, output_filename)
+
+        has_cache_file = APICache.does_cache_for_sql_exist(
+            sql_plus_project, extension=extension
+        )
+
+        if not ignore_cache and extension == &#34;csv&#34; and has_cache_file:
+            print(f&#39;[CACHE] Loading from &#34;{output_cache_path}&#34;&#39;)
+            return APICache.read_csv(output_cache_path)
+        elif not ignore_cache and extension == &#34;parquet&#34; and has_cache_file:
+            print(f&#39;[CACHE] Loading from &#34;{output_cache_path}&#34;&#39;)
+            return pd.read_parquet(output_cache_path)
+
+        service_query = DataLakeServiceQuery(auth.project_id, sql, csv_filename)
+
+        frame = client.execute_data_lake_query_to_dataframe(
+            service_query, dest_dir=cache_folder
+        )
+
+        csv_cache_path = cls.find_cache_file(csv_filename)
+
+        # Remove loaded raw file from data lake
+        if csv_cache_path:
+            os.remove(csv_cache_path)
+        else:
+            warnings.warn(
+                &#34;Couldn&#39;t find downloaded data lake cache file for removal. Skipping...&#34;
+            )
+
+        frame = transform(frame)
+
+        if ignore_cache:
+            return frame
+
+        print(f&#39;Loading from &#34;{output_cache_path}&#34;&#39;)
+
+        if extension == &#34;csv&#34;:
+            frame.to_csv(output_cache_path, index=False)
+        elif extension == &#34;parquet&#34;:
+            frame.to_parquet(output_cache_path, index=False)
+        else:
+            warnings.warn(
+                f&#39;Invalid cache extension &#34;{extension}&#34;. Not writing to cache.&#39;
+            )
+
+        return frame
+
+    @staticmethod
+    def find_cache_file(filename: str) -&gt; Optional[str]:
+        &#34;&#34;&#34;Find files even if data lake writes a file with an appended number
+        Example: my_file.csv(2)
+        &#34;&#34;&#34;
+
+        NON_OVERRIDE_REGEX = r&#34;(\((\d+)\))?$&#34;
+
+        paths = glob(os.path.join(API_CACHE_DIR, filename + &#34;*&#34;))
+
+        if len(paths) == 0:
+            return None
+
+        def sort_value(path: str) -&gt; int:
+            return int(
+                next(re.finditer(NON_OVERRIDE_REGEX, path)).group(2) or &#34;0&#34;
+            )
+
+        return sorted(paths, key=sort_value)[-1]</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.DataLake.execute_sql"><code class="name flex">
+<span>def <span class="ident">execute_sql</span></span>(<span>sql: str, transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame] = &lt;function identity&gt;, ignore_cache: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, extension: str = 'parquet')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def execute_sql(
+    cls,
+    sql: str,
+    transform: Callable[[pd.DataFrame], pd.DataFrame] = identity,
+    ignore_cache: bool = False,
+    auth_args: Auth = Auth.shared(),
+    extension: str = &#34;parquet&#34;,
+):
+    auth = Auth(auth_args)
+    client = Analytics(auth.session())
+
+    sql_plus_project = auth.project_id + &#34;:&#34; + sql
+
+    cache_folder = &#34;/tmp&#34; if ignore_cache else API_CACHE_DIR
+    csv_filename = APICache.filename_for_sql(sql_plus_project, &#34;csv&#34;)
+    output_filename = APICache.filename_for_sql(
+        sql_plus_project, extension=extension
+    )
+    csv_cache_path = os.path.join(cache_folder, csv_filename)
+    output_cache_path = os.path.join(cache_folder, output_filename)
+
+    has_cache_file = APICache.does_cache_for_sql_exist(
+        sql_plus_project, extension=extension
+    )
+
+    if not ignore_cache and extension == &#34;csv&#34; and has_cache_file:
+        print(f&#39;[CACHE] Loading from &#34;{output_cache_path}&#34;&#39;)
+        return APICache.read_csv(output_cache_path)
+    elif not ignore_cache and extension == &#34;parquet&#34; and has_cache_file:
+        print(f&#39;[CACHE] Loading from &#34;{output_cache_path}&#34;&#39;)
+        return pd.read_parquet(output_cache_path)
+
+    service_query = DataLakeServiceQuery(auth.project_id, sql, csv_filename)
+
+    frame = client.execute_data_lake_query_to_dataframe(
+        service_query, dest_dir=cache_folder
+    )
+
+    csv_cache_path = cls.find_cache_file(csv_filename)
+
+    # Remove loaded raw file from data lake
+    if csv_cache_path:
+        os.remove(csv_cache_path)
+    else:
+        warnings.warn(
+            &#34;Couldn&#39;t find downloaded data lake cache file for removal. Skipping...&#34;
+        )
+
+    frame = transform(frame)
+
+    if ignore_cache:
+        return frame
+
+    print(f&#39;Loading from &#34;{output_cache_path}&#34;&#39;)
+
+    if extension == &#34;csv&#34;:
+        frame.to_csv(output_cache_path, index=False)
+    elif extension == &#34;parquet&#34;:
+        frame.to_parquet(output_cache_path, index=False)
+    else:
+        warnings.warn(
+            f&#39;Invalid cache extension &#34;{extension}&#34;. Not writing to cache.&#39;
+        )
+
+    return frame</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.DataLake.find_cache_file"><code class="name flex">
+<span>def <span class="ident">find_cache_file</span></span>(<span>filename: str) ‑> Optional[str]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Find files even if data lake writes a file with an appended number
+Example: my_file.csv(2)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def find_cache_file(filename: str) -&gt; Optional[str]:
+    &#34;&#34;&#34;Find files even if data lake writes a file with an appended number
+    Example: my_file.csv(2)
+    &#34;&#34;&#34;
+
+    NON_OVERRIDE_REGEX = r&#34;(\((\d+)\))?$&#34;
+
+    paths = glob(os.path.join(API_CACHE_DIR, filename + &#34;*&#34;))
+
+    if len(paths) == 0:
+        return None
+
+    def sort_value(path: str) -&gt; int:
+        return int(
+            next(re.finditer(NON_OVERRIDE_REGEX, path)).group(2) or &#34;0&#34;
+        )
+
+    return sorted(paths, key=sort_value)[-1]</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 <dt id="phc.easy.DiagnosticReport"><code class="flex name class">
 <span>class <span class="ident">DiagnosticReport</span></span>
 </code></dt>
@@ -1771,7 +1986,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.DiagnosticReport.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1811,7 +2026,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.DiagnosticReport.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -1962,7 +2177,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.DocumentReference.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2002,7 +2217,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.DocumentReference.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2155,7 +2370,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Encounter.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2195,7 +2410,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Encounter.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -2353,8 +2568,11 @@ from a FSS table</p></div>
         log: bool = False,
         id: Optional[str] = None,
         ids: List[str] = [],
-        # Codes
+        # Terms
         term: Optional[dict] = None,
+        terms: List[dict] = [],
+        max_terms: int = DEFAULT_MAX_TERMS,
+        # Codes
         code: Optional[Union[str, List[str]]] = None,
         display: Optional[Union[str, List[str]]] = None,
         system: Optional[Union[str, List[str]]] = None,
@@ -2399,8 +2617,14 @@ from a FSS table</p></div>
         ids : List[str]
             Find records for given ids
 
+        max_terms : int
+            Maximum terms per query clause before chunking into multiple requests
+
         term : dict
-            Adds where clause for a full term clause
+            Add an arbitrary ES term/s to the query (includes chunking)
+
+        terms : dict
+            Add multiple arbitrary ES term/s to the query (includes chunking)
 
         code : str | List[str]
             Adds where clause for code value(s)
@@ -2446,9 +2670,12 @@ from a FSS table</p></div>
             page_size=page_size,
             max_pages=max_pages,
             log=log,
+            # Terms
+            term=term,
+            terms=terms,
+            max_terms=max_terms,
             # Codes
             code_fields=code_fields,
-            term=term,
             code=code,
             display=display,
             system=system,
@@ -2548,7 +2775,7 @@ def code_fields() -&gt; List[str]:
 </details>
 </dd>
 <dt id="phc.easy.FhirServiceItem.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Find all codes</p>
@@ -2672,7 +2899,7 @@ def get_count_by_field(cls, field: str, **kwargs):
 </details>
 </dd>
 <dt id="phc.easy.FhirServiceItem.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, id: Optional[str] = None, ids: List[str] = [], term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retrieve records</p>
@@ -2702,8 +2929,12 @@ Caching only occurs when all results are being retrieved.</dd>
 <dd>Find records for a given id</dd>
 <dt><strong><code>ids</code></strong> :&ensp;<code>List[str]</code></dt>
 <dd>Find records for given ids</dd>
+<dt><strong><code>max_terms</code></strong> :&ensp;<code>int</code></dt>
+<dd>Maximum terms per query clause before chunking into multiple requests</dd>
 <dt><strong><code>term</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Adds where clause for a full term clause</dd>
+<dd>Add an arbitrary ES term/s to the query (includes chunking)</dd>
+<dt><strong><code>terms</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Add multiple arbitrary ES term/s to the query (includes chunking)</dd>
 <dt><strong><code>code</code></strong> :&ensp;<code>str | List[str]</code></dt>
 <dd>Adds where clause for code value(s)</dd>
 <dt><strong><code>display</code></strong> :&ensp;<code>str | List[str]</code></dt>
@@ -2740,8 +2971,11 @@ def get_data_frame(
     log: bool = False,
     id: Optional[str] = None,
     ids: List[str] = [],
-    # Codes
+    # Terms
     term: Optional[dict] = None,
+    terms: List[dict] = [],
+    max_terms: int = DEFAULT_MAX_TERMS,
+    # Codes
     code: Optional[Union[str, List[str]]] = None,
     display: Optional[Union[str, List[str]]] = None,
     system: Optional[Union[str, List[str]]] = None,
@@ -2786,8 +3020,14 @@ def get_data_frame(
     ids : List[str]
         Find records for given ids
 
+    max_terms : int
+        Maximum terms per query clause before chunking into multiple requests
+
     term : dict
-        Adds where clause for a full term clause
+        Add an arbitrary ES term/s to the query (includes chunking)
+
+    terms : dict
+        Add multiple arbitrary ES term/s to the query (includes chunking)
 
     code : str | List[str]
         Adds where clause for code value(s)
@@ -2833,9 +3073,12 @@ def get_data_frame(
         page_size=page_size,
         max_pages=max_pages,
         log=log,
+        # Terms
+        term=term,
+        terms=terms,
+        max_terms=max_terms,
         # Codes
         code_fields=code_fields,
-        term=term,
         code=code,
         display=display,
         system=system,
@@ -2915,8 +3158,11 @@ from a FSS table that relates to a patient</p></div>
         ignore_cache: bool = False,
         expand_args: dict = {},
         log: bool = False,
-        # Codes
+        # Terms
         term: Optional[dict] = None,
+        terms: List[dict] = [],
+        max_terms: int = DEFAULT_MAX_TERMS,
+        # Codes
         code: Optional[Union[str, List[str]]] = None,
         display: Optional[Union[str, List[str]]] = None,
         system: Optional[Union[str, List[str]]] = None,
@@ -2967,8 +3213,14 @@ from a FSS table that relates to a patient</p></div>
         log : bool = False
             Whether to log some diagnostic statements for debugging
 
+        max_terms : int
+            Maximum terms per query clause before chunking into multiple requests
+
         term : dict
-            Adds where clause for a full term clause
+            Add an arbitrary ES term/s to the query (includes chunking)
+
+        terms : dict
+            Add multiple arbitrary ES term/s to the query (includes chunking)
 
         code : str | List[str]
             Adds where clause for code value(s)
@@ -3020,9 +3272,12 @@ from a FSS table that relates to a patient</p></div>
             patient_key=cls.patient_key(),
             log=log,
             patient_id_prefixes=cls.patient_id_prefixes(),
+            # Terms
+            term=term,
+            terms=terms,
+            max_terms=max_terms,
             # Codes
             code_fields=code_fields,
-            term=term,
             code=code,
             display=display,
             system=system,
@@ -3097,7 +3352,7 @@ from a FSS table that relates to a patient</p></div>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 </dd>
 <dt id="phc.easy.FhirServicePatientItem.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -3170,7 +3425,7 @@ def get_count_by_patient(cls, **kwargs):
 </details>
 </dd>
 <dt id="phc.easy.FhirServicePatientItem.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retrieve records</p>
@@ -3204,8 +3459,12 @@ Caching only occurs when all results are being retrieved.</dd>
 <dd>Additional arguments passed to phc.Frame.expand</dd>
 <dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
 <dd>Whether to log some diagnostic statements for debugging</dd>
+<dt><strong><code>max_terms</code></strong> :&ensp;<code>int</code></dt>
+<dd>Maximum terms per query clause before chunking into multiple requests</dd>
 <dt><strong><code>term</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Adds where clause for a full term clause</dd>
+<dd>Add an arbitrary ES term/s to the query (includes chunking)</dd>
+<dt><strong><code>terms</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Add multiple arbitrary ES term/s to the query (includes chunking)</dd>
 <dt><strong><code>code</code></strong> :&ensp;<code>str | List[str]</code></dt>
 <dd>Adds where clause for code value(s)</dd>
 <dt><strong><code>display</code></strong> :&ensp;<code>str | List[str]</code></dt>
@@ -3244,8 +3503,11 @@ def get_data_frame(
     ignore_cache: bool = False,
     expand_args: dict = {},
     log: bool = False,
-    # Codes
+    # Terms
     term: Optional[dict] = None,
+    terms: List[dict] = [],
+    max_terms: int = DEFAULT_MAX_TERMS,
+    # Codes
     code: Optional[Union[str, List[str]]] = None,
     display: Optional[Union[str, List[str]]] = None,
     system: Optional[Union[str, List[str]]] = None,
@@ -3296,8 +3558,14 @@ def get_data_frame(
     log : bool = False
         Whether to log some diagnostic statements for debugging
 
+    max_terms : int
+        Maximum terms per query clause before chunking into multiple requests
+
     term : dict
-        Adds where clause for a full term clause
+        Add an arbitrary ES term/s to the query (includes chunking)
+
+    terms : dict
+        Add multiple arbitrary ES term/s to the query (includes chunking)
 
     code : str | List[str]
         Adds where clause for code value(s)
@@ -3349,9 +3617,12 @@ def get_data_frame(
         patient_key=cls.patient_key(),
         log=log,
         patient_id_prefixes=cls.patient_id_prefixes(),
+        # Terms
+        term=term,
+        terms=terms,
+        max_terms=max_terms,
         # Codes
         code_fields=code_fields,
-        term=term,
         code=code,
         display=display,
         system=system,
@@ -3924,7 +4195,7 @@ def expand(
 <h3>Static methods</h3>
 <dl>
 <dt id="phc.easy.GenomicCopyNumberVariant.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>variant_set_ids: List[str] = [], include: List[<a title="phc.easy.omics.options.common.GenomicVariantInclude" href="omics/options/common.html#phc.easy.omics.options.common.GenomicVariantInclude">GenomicVariantInclude</a>] = [], gene: List[str] = [], interpretation: List[str] = [], effect: List[<a title="phc.easy.omics.options.copy_number_status.CopyNumberStatus" href="omics/options/copy_number_status.html#phc.easy.omics.options.copy_number_status.CopyNumberStatus">CopyNumberStatus</a>] = [], in_ckb: Union[bool, NoneType] = None, patient_id: Union[str, NoneType] = None, test_status: Union[<a title="phc.easy.omics.options.genomic_test.GenomicTestStatus" href="omics/options/genomic_test.html#phc.easy.omics.options.genomic_test.GenomicTestStatus">GenomicTestStatus</a>, NoneType] = GenomicTestStatus.ACTIVE, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>variant_set_ids: List[str] = [], include: List[<a title="phc.easy.omics.options.common.GenomicVariantInclude" href="omics/options/common.html#phc.easy.omics.options.common.GenomicVariantInclude">GenomicVariantInclude</a>] = [], gene: List[str] = [], interpretation: List[str] = [], effect: List[<a title="phc.easy.omics.options.copy_number_status.CopyNumberStatus" href="omics/options/copy_number_status.html#phc.easy.omics.options.copy_number_status.CopyNumberStatus">CopyNumberStatus</a>] = [], in_ckb: Optional[bool] = None, patient_id: Optional[str] = None, test_status: Optional[<a title="phc.easy.omics.options.genomic_test.GenomicTestStatus" href="omics/options/genomic_test.html#phc.easy.omics.options.genomic_test.GenomicTestStatus">GenomicTestStatus</a>] = GenomicTestStatus.ACTIVE, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Optional[int] = None, page_size: Optional[int] = None, log: bool = False, **kw_args)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a request for genomic copy number variants</p>
@@ -4146,7 +4417,7 @@ def transform_results(data_frame: pd.DataFrame, params={}, **expand_args):
 <h3>Static methods</h3>
 <dl>
 <dt id="phc.easy.GenomicExpression.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>variant_set_ids: List[str] = [], include: List[<a title="phc.easy.omics.options.common.GenomicVariantInclude" href="omics/options/common.html#phc.easy.omics.options.common.GenomicVariantInclude">GenomicVariantInclude</a>] = [], gene: List[str] = [], expression: Union[str, NoneType] = None, outlier_std_dev: str = None, in_ckb: Union[bool, NoneType] = None, order_by: Union[str, NoneType] = None, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>variant_set_ids: List[str] = [], include: List[<a title="phc.easy.omics.options.common.GenomicVariantInclude" href="omics/options/common.html#phc.easy.omics.options.common.GenomicVariantInclude">GenomicVariantInclude</a>] = [], gene: List[str] = [], expression: Optional[str] = None, outlier_std_dev: str = None, in_ckb: Optional[bool] = None, order_by: Optional[str] = None, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Optional[int] = None, page_size: Optional[int] = None, log: bool = False, **kw_args)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a request for genomic expression</p>
@@ -4423,7 +4694,7 @@ def transform_results(data_frame: pd.DataFrame, params={}, **expand_args):
 <h3>Static methods</h3>
 <dl>
 <dt id="phc.easy.GenomicShortVariant.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>variant_set_ids: List[str] = [], include: List[<a title="phc.easy.omics.options.common.GenomicVariantInclude" href="omics/options/common.html#phc.easy.omics.options.common.GenomicVariantInclude">GenomicVariantInclude</a>] = ['vcf'], gene: List[str] = [], rs_id: List[str] = [], chromosome: List[<a title="phc.easy.omics.options.chromosome.Chromosome" href="omics/options/chromosome.html#phc.easy.omics.options.chromosome.Chromosome">Chromosome</a>] = [], clinvar_allele_id: List[str] = [], clinvar_disease: List[str] = [], clinvar_review: List[<a title="phc.easy.omics.options.clinvar_review.ClinVarReview" href="omics/options/clinvar_review.html#phc.easy.omics.options.clinvar_review.ClinVarReview">ClinVarReview</a>] = [], clinvar_significance: List[<a title="phc.easy.omics.options.clinvar_significance.ClinVarSignificance" href="omics/options/clinvar_significance.html#phc.easy.omics.options.clinvar_significance.ClinVarSignificance">ClinVarSignificance</a>] = [], cosmic_id: List[str] = [], cosmic_status: List[str] = [], cosmic_histology: List[str] = [], cosmic_tumor_site: List[str] = [], variant_class: List[str] = [], coding_effect: List[<a title="phc.easy.omics.options.coding_effect.CodingEffect" href="omics/options/coding_effect.html#phc.easy.omics.options.coding_effect.CodingEffect">CodingEffect</a>] = [], impact: List[str] = [], transcript_id: List[str] = [], gene_class: List[<a title="phc.easy.omics.options.gene_class.GeneClass" href="omics/options/gene_class.html#phc.easy.omics.options.gene_class.GeneClass">GeneClass</a>] = [], protein_changes: List[str] = [], sequence_type: List[str] = [], position: List[Union[str, int]] = [], cosmic_min_count: Union[int, NoneType] = None, min_allele_frequency: Union[str, NoneType] = None, max_allele_frequency: Union[str, NoneType] = None, pop_allele_frequency: Union[str, NoneType] = None, exac_allele_frequency: Union[str, NoneType] = None, exac_homozygous: List[str] = [], dbnsfp_damaging_count: List[str] = [], dbnsfp_damaging_predictor: List[str] = [], dbnsfp_damaging_vote: List[str] = [], dbnsfp_fathmm_rankscore: List[str] = [], dbnsfp_fathmm_pred: List[str] = [], dbnsfp_mean_rankscore: List[str] = [], dbnsfp_mean_rankscore_predictor: List[str] = [], dbnsfp_mutationtaster_rankscore: List[str] = [], dbnsfp_mutationtaster_pred: List[str] = [], dbnsfp_sift_rankscore: List[str] = [], dbnsfp_sift_pred: List[str] = [], zygosity: List[<a title="phc.easy.omics.options.zygosity.Zygosity" href="omics/options/zygosity.html#phc.easy.omics.options.zygosity.Zygosity">Zygosity</a>] = [], genotype: List[str] = [], variant_allele_frequency: List[str] = [], quality: List[str] = [], read_depth: List[str] = [], alt_read_depth: List[str] = [], ref_read_depth: List[str] = [], variant_filter: List[str] = [], in_ckb: Union[bool, NoneType] = None, patient_id: Union[str, NoneType] = None, test_status: Union[<a title="phc.easy.omics.options.genomic_test.GenomicTestStatus" href="omics/options/genomic_test.html#phc.easy.omics.options.genomic_test.GenomicTestStatus">GenomicTestStatus</a>, NoneType] = GenomicTestStatus.ACTIVE, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>variant_set_ids: List[str] = [], include: List[<a title="phc.easy.omics.options.common.GenomicVariantInclude" href="omics/options/common.html#phc.easy.omics.options.common.GenomicVariantInclude">GenomicVariantInclude</a>] = ['vcf'], gene: List[str] = [], rs_id: List[str] = [], chromosome: List[<a title="phc.easy.omics.options.chromosome.Chromosome" href="omics/options/chromosome.html#phc.easy.omics.options.chromosome.Chromosome">Chromosome</a>] = [], clinvar_allele_id: List[str] = [], clinvar_disease: List[str] = [], clinvar_review: List[<a title="phc.easy.omics.options.clinvar_review.ClinVarReview" href="omics/options/clinvar_review.html#phc.easy.omics.options.clinvar_review.ClinVarReview">ClinVarReview</a>] = [], clinvar_significance: List[<a title="phc.easy.omics.options.clinvar_significance.ClinVarSignificance" href="omics/options/clinvar_significance.html#phc.easy.omics.options.clinvar_significance.ClinVarSignificance">ClinVarSignificance</a>] = [], cosmic_id: List[str] = [], cosmic_status: List[str] = [], cosmic_histology: List[str] = [], cosmic_tumor_site: List[str] = [], variant_class: List[str] = [], coding_effect: List[<a title="phc.easy.omics.options.coding_effect.CodingEffect" href="omics/options/coding_effect.html#phc.easy.omics.options.coding_effect.CodingEffect">CodingEffect</a>] = [], impact: List[str] = [], transcript_id: List[str] = [], gene_class: List[<a title="phc.easy.omics.options.gene_class.GeneClass" href="omics/options/gene_class.html#phc.easy.omics.options.gene_class.GeneClass">GeneClass</a>] = [], protein_changes: List[str] = [], sequence_type: List[str] = [], position: List[Union[str, int]] = [], cosmic_min_count: Optional[int] = None, min_allele_frequency: Optional[str] = None, max_allele_frequency: Optional[str] = None, pop_allele_frequency: Optional[str] = None, exac_allele_frequency: Optional[str] = None, exac_homozygous: List[str] = [], dbnsfp_damaging_count: List[str] = [], dbnsfp_damaging_predictor: List[str] = [], dbnsfp_damaging_vote: List[str] = [], dbnsfp_fathmm_rankscore: List[str] = [], dbnsfp_fathmm_pred: List[str] = [], dbnsfp_mean_rankscore: List[str] = [], dbnsfp_mean_rankscore_predictor: List[str] = [], dbnsfp_mutationtaster_rankscore: List[str] = [], dbnsfp_mutationtaster_pred: List[str] = [], dbnsfp_sift_rankscore: List[str] = [], dbnsfp_sift_pred: List[str] = [], zygosity: List[<a title="phc.easy.omics.options.zygosity.Zygosity" href="omics/options/zygosity.html#phc.easy.omics.options.zygosity.Zygosity">Zygosity</a>] = [], genotype: List[str] = [], variant_allele_frequency: List[str] = [], quality: List[str] = [], read_depth: List[str] = [], alt_read_depth: List[str] = [], ref_read_depth: List[str] = [], variant_filter: List[str] = [], in_ckb: Optional[bool] = None, patient_id: Optional[str] = None, test_status: Optional[<a title="phc.easy.omics.options.genomic_test.GenomicTestStatus" href="omics/options/genomic_test.html#phc.easy.omics.options.genomic_test.GenomicTestStatus">GenomicTestStatus</a>] = GenomicTestStatus.ACTIVE, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Optional[int] = None, page_size: Optional[int] = None, log: bool = False, **kw_args)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a request for genomic short variants</p>
@@ -4703,7 +4974,7 @@ def transform_results(data_frame: pd.DataFrame, params={}, **expand_args):
 <h3>Static methods</h3>
 <dl>
 <dt id="phc.easy.GenomicStructuralVariant.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>variant_set_ids: List[str] = [], gene: List[str] = [], effect: List[<a title="phc.easy.omics.options.structural_type.StructuralType" href="omics/options/structural_type.html#phc.easy.omics.options.structural_type.StructuralType">StructuralType</a>] = [], interpretation: List[str] = [], in_frame: List[<a title="phc.easy.omics.options.in_frame.InFrame" href="omics/options/in_frame.html#phc.easy.omics.options.in_frame.InFrame">InFrame</a>] = [], in_ckb: Union[bool, NoneType] = None, include: List[<a title="phc.easy.omics.options.common.GenomicVariantInclude" href="omics/options/common.html#phc.easy.omics.options.common.GenomicVariantInclude">GenomicVariantInclude</a>] = [], all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>variant_set_ids: List[str] = [], gene: List[str] = [], effect: List[<a title="phc.easy.omics.options.structural_type.StructuralType" href="omics/options/structural_type.html#phc.easy.omics.options.structural_type.StructuralType">StructuralType</a>] = [], interpretation: List[str] = [], in_frame: List[<a title="phc.easy.omics.options.in_frame.InFrame" href="omics/options/in_frame.html#phc.easy.omics.options.in_frame.InFrame">InFrame</a>] = [], in_ckb: Optional[bool] = None, include: List[<a title="phc.easy.omics.options.common.GenomicVariantInclude" href="omics/options/common.html#phc.easy.omics.options.common.GenomicVariantInclude">GenomicVariantInclude</a>] = [], all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Optional[int] = None, page_size: Optional[int] = None, log: bool = False, **kw_args)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a request for genomic structural variants</p>
@@ -4940,7 +5211,7 @@ def transform_results(data_frame: pd.DataFrame, params={}, **expand_args):
 <h3>Static methods</h3>
 <dl>
 <dt id="phc.easy.GenomicTest.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>patient_id: Union[str, NoneType] = None, status: Union[<a title="phc.easy.omics.options.genomic_test.GenomicTestStatus" href="omics/options/genomic_test.html#phc.easy.omics.options.genomic_test.GenomicTestStatus">GenomicTestStatus</a>, NoneType] = GenomicTestStatus.ACTIVE, test_type: Union[<a title="phc.easy.omics.options.genomic_test.GenomicTestType" href="omics/options/genomic_test.html#phc.easy.omics.options.genomic_test.GenomicTestType">GenomicTestType</a>, NoneType] = None, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, ignore_cache: bool = False, **kw_args)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>patient_id: Optional[str] = None, status: Optional[<a title="phc.easy.omics.options.genomic_test.GenomicTestStatus" href="omics/options/genomic_test.html#phc.easy.omics.options.genomic_test.GenomicTestStatus">GenomicTestStatus</a>] = GenomicTestStatus.ACTIVE, test_type: Optional[<a title="phc.easy.omics.options.genomic_test.GenomicTestType" href="omics/options/genomic_test.html#phc.easy.omics.options.genomic_test.GenomicTestType">GenomicTestType</a>] = None, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Optional[int] = None, page_size: Optional[int] = None, log: bool = False, ignore_cache: bool = False, **kw_args)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a request for genomic tests</p>
@@ -5151,7 +5422,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Goal.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5191,7 +5462,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Goal.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5311,7 +5582,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.ImagingStudy.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5351,7 +5622,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.ImagingStudy.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5489,7 +5760,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Immunization.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5529,7 +5800,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Immunization.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5677,7 +5948,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Media.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5717,7 +5988,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Media.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5847,7 +6118,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.MedicationAdministration.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -5887,7 +6158,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.MedicationAdministration.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -6027,7 +6298,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.MedicationDispense.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -6067,7 +6338,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.MedicationDispense.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -6200,7 +6471,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.MedicationRequest.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -6240,7 +6511,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.MedicationRequest.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -6374,7 +6645,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.MedicationStatement.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -6414,7 +6685,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.MedicationStatement.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -6570,7 +6841,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Observation.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>query: Union[str, NoneType] = None)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>query: Optional[str] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Find codes based on case-insensitive matching of code/display/system</p>
@@ -6633,7 +6904,7 @@ def get_codes(cls, query: Optional[str] = None):
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Observation.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7062,7 +7333,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Organization.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7092,7 +7363,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Organization.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, id: Optional[str] = None, ids: List[str] = [], term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7219,7 +7490,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Patient.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7249,7 +7520,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Patient.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, id: Optional[str] = None, ids: List[str] = [], term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7371,7 +7642,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Person.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7411,7 +7682,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Person.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7533,7 +7804,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Practitioner.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7563,7 +7834,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Practitioner.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, id: Optional[str] = None, ids: List[str] = [], term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7697,7 +7968,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Procedure.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>query: Union[str, NoneType] = None)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>query: Optional[str] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Find codes based on case-insensitive matching of code/display/system</p>
@@ -7760,7 +8031,7 @@ def get_codes(cls, query: Optional[str] = None):
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Procedure.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7888,7 +8159,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.ProcedureRequest.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -7928,7 +8199,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.ProcedureRequest.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -8118,7 +8389,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <h3>Static methods</h3>
 <dl>
 <dt id="phc.easy.Project.find"><code class="name flex">
-<span>def <span class="ident">find</span></span>(<span>search: str, account: Union[str, NoneType] = None, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
+<span>def <span class="ident">find</span></span>(<span>search: str, account: Optional[str] = None, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Search for a project using given criteria and return results as a data frame</p>
@@ -8151,7 +8422,7 @@ def find(search: str, account: Optional[str] = None, auth_args: Auth = Auth.shar
 </details>
 </dd>
 <dt id="phc.easy.Project.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>cls, name: Union[str, NoneType] = None, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, show_progress: bool = False, account: Union[str, NoneType] = None)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>cls, name: Optional[str] = None, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Optional[int] = None, page_size: Optional[int] = None, log: bool = False, show_progress: bool = False, account: Optional[str] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a request for projects</p>
@@ -8270,7 +8541,7 @@ def resource_path():
 </details>
 </dd>
 <dt id="phc.easy.Project.set_current"><code class="name flex">
-<span>def <span class="ident">set_current</span></span>(<span>search: str, account: Union[str, NoneType] = None, auth: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
+<span>def <span class="ident">set_current</span></span>(<span>search: str, account: Optional[str] = None, auth: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Search for a project using given criteria, set it to the authentication
@@ -8391,7 +8662,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Provenance.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -8431,7 +8702,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Provenance.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -8547,7 +8818,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
         fhir = Fhir(auth.session())
 
         response = fhir.execute_es(
-            auth.project_id, build_query(query, page_size=1), scroll=&#34;true&#34;
+            auth.project_id, build_queries(query, page_size=1)[0], scroll=&#34;true&#34;
         )
 
         return response.data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]
@@ -8598,8 +8869,8 @@ def transform_results(df: pd.DataFrame, **expand_args):
             Whether to log the elasticsearch query sent to the server
 
         query_kwargs : dict
-            Arguments to pass to build_query such as patient_id, patient_ids,
-            and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+            Arguments to pass to build_queries such as patient_id, patient_ids,
+            and patient_key. (See phc.easy.query.fhir_dsl_query.build_queries)
 
         Examples
         --------
@@ -8615,43 +8886,66 @@ def transform_results(df: pd.DataFrame, **expand_args):
         }, all_results=True)
 
         &#34;&#34;&#34;
-        query = build_query(query, **query_kwargs)
+        queries = build_queries(query, **query_kwargs)
 
         if log:
-            print(json.dumps(query, indent=4))
+            print(json.dumps(queries, indent=4))
 
-        if FhirAggregation.is_aggregation_query(query):
-            response = execute_single_fhir_dsl(query, auth_args=auth_args)
+        if len(queries) &gt; 1 and FhirAggregation.is_aggregation_query(
+            queries[0]
+        ):
+            raise ValueError(
+                &#34;Cannot combine multiple aggregation query results&#34;
+            )
+
+        if FhirAggregation.is_aggregation_query(queries[0]):
+            response = execute_single_fhir_dsl(queries[0], auth_args=auth_args)
             return FhirAggregation.from_response(response)
 
-        if all_results:
-            return with_progress(
-                lambda: tqdm(total=MAX_RESULT_SIZE),
-                lambda progress: recursive_execute_fhir_dsl(
-                    {
-                        &#34;limit&#34;: [
-                            {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
-                            # Make window size smaller than maximum to reduce
-                            # pressure on API
-                            {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: DEFAULT_SCROLL_SIZE},
-                        ],
-                        **query,
-                    },
+        if len(queries) &gt; 1 and _has_tqdm:
+            queries = tqdm(queries)
+
+        result_set = []
+
+        for query in queries:
+            if all_results:
+                results = with_progress(
+                    lambda: tqdm(total=MAX_RESULT_SIZE),
+                    lambda progress: recursive_execute_fhir_dsl(
+                        {
+                            &#34;limit&#34;: [
+                                {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
+                                # Make window size smaller than maximum to reduce
+                                # pressure on API
+                                {
+                                    &#34;type&#34;: &#34;number&#34;,
+                                    &#34;value&#34;: DEFAULT_SCROLL_SIZE,
+                                },
+                            ],
+                            **query,
+                        },
+                        scroll=all_results,
+                        progress=progress,
+                        callback=callback,
+                        auth_args=auth_args,
+                        max_pages=max_pages,
+                    ),
+                )
+            else:
+                results = recursive_execute_fhir_dsl(
+                    query,
                     scroll=all_results,
-                    progress=progress,
                     callback=callback,
                     auth_args=auth_args,
                     max_pages=max_pages,
-                ),
-            )
+                )
 
-        return recursive_execute_fhir_dsl(
-            query,
-            scroll=all_results,
-            callback=callback,
-            auth_args=auth_args,
-            max_pages=max_pages,
-        )
+            if len(result_set) == 0:
+                result_set = results
+            else:
+                result_set.append(*results)
+
+        return result_set
 
     @staticmethod
     def execute_paging_api(
@@ -8807,53 +9101,74 @@ def transform_results(df: pd.DataFrame, **expand_args):
         log: bool = False,
         **query_kwargs,
     ):
-        query = build_query({**query, **query_overrides}, **query_kwargs)
+        queries = build_queries({**query, **query_overrides}, **query_kwargs)
 
         if log:
-            print(json.dumps(query, indent=4))
+            print(json.dumps(queries, indent=4))
+
+        is_first_agg_query = FhirAggregation.is_aggregation_query(queries[0])
+
+        if len(queries) &gt; 1 and is_first_agg_query:
+            raise ValueError(&#34;Cannot combine multiple aggregate results&#34;)
 
         use_cache = (
             (not ignore_cache)
             and (not raw)
-            and (all_results or FhirAggregation.is_aggregation_query(query))
+            and (all_results or is_first_agg_query)
             and (max_pages is None)
         )
 
-        if use_cache and APICache.does_cache_for_query_exist(
-            query, namespace=FHIR_DSL
-        ):
-            return APICache.load_cache_for_query(query, namespace=FHIR_DSL)
+        if len(queries) &gt; 1 and _has_tqdm:
+            queries = tqdm(queries)
 
-        callback = (
-            APICache.build_cache_callback(query, transform, namespace=FHIR_DSL)
-            if use_cache
-            else None
-        )
+        frame = pd.DataFrame()
 
-        results = Query.execute_fhir_dsl(
-            query,
-            all_results,
-            auth_args,
-            callback=callback,
-            max_pages=max_pages,
-        )
+        for one_query in queries:
+            if use_cache and APICache.does_cache_for_query_exist(
+                one_query, namespace=FHIR_DSL
+            ):
+                results = APICache.load_cache_for_query(
+                    one_query, namespace=FHIR_DSL
+                )
+            else:
+                results = Query.execute_fhir_dsl(
+                    one_query,
+                    all_results,
+                    auth_args,
+                    callback=(
+                        APICache.build_cache_callback(
+                            one_query, transform, namespace=FHIR_DSL
+                        )
+                        if use_cache
+                        else None
+                    ),
+                    max_pages=max_pages,
+                )
 
-        if isinstance(results, FhirAggregation):
-            # Cache isn&#39;t written in batches so we need to explicitly do it here
-            if use_cache:
-                APICache.write_agg(query, results)
+            if isinstance(results, FhirAggregation):
+                # Cache isn&#39;t written in batches so we need to explicitly do it here
+                if use_cache:
+                    APICache.write_agg(one_query, results)
 
-            return results
+                # We don&#39;t support multiple agg queries so fine to return first one
+                return results
 
-        if isinstance(results, pd.DataFrame):
-            return results
+            batch_frame = (
+                pd.DataFrame(map(lambda r: r[&#34;_source&#34;], results))
+                if not isinstance(results, pd.DataFrame)
+                else results
+            )
 
-        df = pd.DataFrame(map(lambda r: r[&#34;_source&#34;], results))
+            frame = (
+                batch_frame
+                if len(frame) == 0
+                else pd.concat([frame, batch_frame]).reset_index(drop=True)
+            )
 
         if raw:
-            return df
+            return frame
 
-        return transform(df)
+        return transform(frame)
 
     @staticmethod
     def get_codes(
@@ -9106,8 +9421,8 @@ def transform_results(df: pd.DataFrame, **expand_args):
             The number of pages to retrieve (useful if working with tons of records)
 
         query_kwargs : dict
-            Arguments to pass to build_query such as patient_id, patient_ids,
-            and patient_key. See :func:`~phc.easy.query.fhir_dsl_query.build_query`.
+            Arguments to pass to build_queries such as patient_id, patient_ids,
+            and patient_key. See :func:`~phc.easy.query.fhir_dsl_query.build_queries`.
 
         Examples
         --------
@@ -9202,8 +9517,8 @@ def transform_results(df: pd.DataFrame, **expand_args):
             Whether to log the elasticsearch query sent to the server
 
         query_kwargs : dict
-            Arguments to pass to build_query such as patient_id, patient_ids,
-            and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+            Arguments to pass to build_queries such as patient_id, patient_ids,
+            and patient_key. (See phc.easy.query.fhir_dsl_query.build_queries)
 
         Examples
         --------
@@ -9355,7 +9670,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <h3>Static methods</h3>
 <dl>
 <dt id="phc.easy.Query.execute_composite_aggregations"><code class="name flex">
-<span>def <span class="ident">execute_composite_aggregations</span></span>(<span>table_name: str, key_sources_pairs: List[Tuple[str, List[dict]]], batch_size: int = 100, query_overrides: dict = {}, log: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, **query_kwargs)</span>
+<span>def <span class="ident">execute_composite_aggregations</span></span>(<span>table_name: str, key_sources_pairs: List[Tuple[str, List[dict]]], batch_size: int = 100, query_overrides: dict = {}, log: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Optional[int] = None, **query_kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Count records by multiple fields</p>
@@ -9407,8 +9722,8 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <dt><strong><code>max_pages</code></strong> :&ensp;<code>int</code></dt>
 <dd>The number of pages to retrieve (useful if working with tons of records)</dd>
 <dt><strong><code>query_kwargs</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Arguments to pass to build_query such as patient_id, patient_ids,
-and patient_key. See :func:<code>~phc.easy.query.fhir_dsl_query.build_query</code>.</dd>
+<dd>Arguments to pass to build_queries such as patient_id, patient_ids,
+and patient_key. See :func:<code>~phc.easy.query.fhir_dsl_query.build_queries</code>.</dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
@@ -9497,8 +9812,8 @@ def execute_composite_aggregations(
         The number of pages to retrieve (useful if working with tons of records)
 
     query_kwargs : dict
-        Arguments to pass to build_query such as patient_id, patient_ids,
-        and patient_key. See :func:`~phc.easy.query.fhir_dsl_query.build_query`.
+        Arguments to pass to build_queries such as patient_id, patient_ids,
+        and patient_key. See :func:`~phc.easy.query.fhir_dsl_query.build_queries`.
 
     Examples
     --------
@@ -9537,7 +9852,7 @@ def execute_composite_aggregations(
 </details>
 </dd>
 <dt id="phc.easy.Query.execute_fhir_dsl"><code class="name flex">
-<span>def <span class="ident">execute_fhir_dsl</span></span>(<span>query: dict, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, callback: Union[Callable[[Any, bool], NoneType], NoneType] = None, max_pages: Union[int, NoneType] = None, log: bool = False, **query_kwargs)</span>
+<span>def <span class="ident">execute_fhir_dsl</span></span>(<span>query: dict, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, callback: Optional[Callable[[Any, bool], None]] = None, max_pages: Optional[int] = None, log: bool = False, **query_kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a FHIR query with the DSL</p>
@@ -9569,8 +9884,8 @@ file and then returning the completed result from that file.</p>
 <dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
 <dd>Whether to log the elasticsearch query sent to the server</dd>
 <dt><strong><code>query_kwargs</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Arguments to pass to build_query such as patient_id, patient_ids,
-and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)</dd>
+<dd>Arguments to pass to build_queries such as patient_id, patient_ids,
+and patient_key. (See phc.easy.query.fhir_dsl_query.build_queries)</dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
@@ -9634,8 +9949,8 @@ def execute_fhir_dsl(
         Whether to log the elasticsearch query sent to the server
 
     query_kwargs : dict
-        Arguments to pass to build_query such as patient_id, patient_ids,
-        and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+        Arguments to pass to build_queries such as patient_id, patient_ids,
+        and patient_key. (See phc.easy.query.fhir_dsl_query.build_queries)
 
     Examples
     --------
@@ -9651,47 +9966,70 @@ def execute_fhir_dsl(
     }, all_results=True)
 
     &#34;&#34;&#34;
-    query = build_query(query, **query_kwargs)
+    queries = build_queries(query, **query_kwargs)
 
     if log:
-        print(json.dumps(query, indent=4))
+        print(json.dumps(queries, indent=4))
 
-    if FhirAggregation.is_aggregation_query(query):
-        response = execute_single_fhir_dsl(query, auth_args=auth_args)
+    if len(queries) &gt; 1 and FhirAggregation.is_aggregation_query(
+        queries[0]
+    ):
+        raise ValueError(
+            &#34;Cannot combine multiple aggregation query results&#34;
+        )
+
+    if FhirAggregation.is_aggregation_query(queries[0]):
+        response = execute_single_fhir_dsl(queries[0], auth_args=auth_args)
         return FhirAggregation.from_response(response)
 
-    if all_results:
-        return with_progress(
-            lambda: tqdm(total=MAX_RESULT_SIZE),
-            lambda progress: recursive_execute_fhir_dsl(
-                {
-                    &#34;limit&#34;: [
-                        {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
-                        # Make window size smaller than maximum to reduce
-                        # pressure on API
-                        {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: DEFAULT_SCROLL_SIZE},
-                    ],
-                    **query,
-                },
+    if len(queries) &gt; 1 and _has_tqdm:
+        queries = tqdm(queries)
+
+    result_set = []
+
+    for query in queries:
+        if all_results:
+            results = with_progress(
+                lambda: tqdm(total=MAX_RESULT_SIZE),
+                lambda progress: recursive_execute_fhir_dsl(
+                    {
+                        &#34;limit&#34;: [
+                            {&#34;type&#34;: &#34;number&#34;, &#34;value&#34;: 0},
+                            # Make window size smaller than maximum to reduce
+                            # pressure on API
+                            {
+                                &#34;type&#34;: &#34;number&#34;,
+                                &#34;value&#34;: DEFAULT_SCROLL_SIZE,
+                            },
+                        ],
+                        **query,
+                    },
+                    scroll=all_results,
+                    progress=progress,
+                    callback=callback,
+                    auth_args=auth_args,
+                    max_pages=max_pages,
+                ),
+            )
+        else:
+            results = recursive_execute_fhir_dsl(
+                query,
                 scroll=all_results,
-                progress=progress,
                 callback=callback,
                 auth_args=auth_args,
                 max_pages=max_pages,
-            ),
-        )
+            )
 
-    return recursive_execute_fhir_dsl(
-        query,
-        scroll=all_results,
-        callback=callback,
-        auth_args=auth_args,
-        max_pages=max_pages,
-    )</code></pre>
+        if len(result_set) == 0:
+            result_set = results
+        else:
+            result_set.append(*results)
+
+    return result_set</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Query.execute_fhir_dsl_with_options"><code class="name flex">
-<span>def <span class="ident">execute_fhir_dsl_with_options</span></span>(<span>query: dict, transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame], all_results: bool, raw: bool, query_overrides: dict, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a>, ignore_cache: bool, max_pages: Union[int, NoneType], log: bool = False, **query_kwargs)</span>
+<span>def <span class="ident">execute_fhir_dsl_with_options</span></span>(<span>query: dict, transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame], all_results: bool, raw: bool, query_overrides: dict, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a>, ignore_cache: bool, max_pages: Optional[int], log: bool = False, **query_kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -9712,53 +10050,74 @@ def execute_fhir_dsl_with_options(
     log: bool = False,
     **query_kwargs,
 ):
-    query = build_query({**query, **query_overrides}, **query_kwargs)
+    queries = build_queries({**query, **query_overrides}, **query_kwargs)
 
     if log:
-        print(json.dumps(query, indent=4))
+        print(json.dumps(queries, indent=4))
+
+    is_first_agg_query = FhirAggregation.is_aggregation_query(queries[0])
+
+    if len(queries) &gt; 1 and is_first_agg_query:
+        raise ValueError(&#34;Cannot combine multiple aggregate results&#34;)
 
     use_cache = (
         (not ignore_cache)
         and (not raw)
-        and (all_results or FhirAggregation.is_aggregation_query(query))
+        and (all_results or is_first_agg_query)
         and (max_pages is None)
     )
 
-    if use_cache and APICache.does_cache_for_query_exist(
-        query, namespace=FHIR_DSL
-    ):
-        return APICache.load_cache_for_query(query, namespace=FHIR_DSL)
+    if len(queries) &gt; 1 and _has_tqdm:
+        queries = tqdm(queries)
 
-    callback = (
-        APICache.build_cache_callback(query, transform, namespace=FHIR_DSL)
-        if use_cache
-        else None
-    )
+    frame = pd.DataFrame()
 
-    results = Query.execute_fhir_dsl(
-        query,
-        all_results,
-        auth_args,
-        callback=callback,
-        max_pages=max_pages,
-    )
+    for one_query in queries:
+        if use_cache and APICache.does_cache_for_query_exist(
+            one_query, namespace=FHIR_DSL
+        ):
+            results = APICache.load_cache_for_query(
+                one_query, namespace=FHIR_DSL
+            )
+        else:
+            results = Query.execute_fhir_dsl(
+                one_query,
+                all_results,
+                auth_args,
+                callback=(
+                    APICache.build_cache_callback(
+                        one_query, transform, namespace=FHIR_DSL
+                    )
+                    if use_cache
+                    else None
+                ),
+                max_pages=max_pages,
+            )
 
-    if isinstance(results, FhirAggregation):
-        # Cache isn&#39;t written in batches so we need to explicitly do it here
-        if use_cache:
-            APICache.write_agg(query, results)
+        if isinstance(results, FhirAggregation):
+            # Cache isn&#39;t written in batches so we need to explicitly do it here
+            if use_cache:
+                APICache.write_agg(one_query, results)
 
-        return results
+            # We don&#39;t support multiple agg queries so fine to return first one
+            return results
 
-    if isinstance(results, pd.DataFrame):
-        return results
+        batch_frame = (
+            pd.DataFrame(map(lambda r: r[&#34;_source&#34;], results))
+            if not isinstance(results, pd.DataFrame)
+            else results
+        )
 
-    df = pd.DataFrame(map(lambda r: r[&#34;_source&#34;], results))
+        frame = (
+            batch_frame
+            if len(frame) == 0
+            else pd.concat([frame, batch_frame]).reset_index(drop=True)
+        )
 
     if raw:
-        return df
+        return frame
 
-    return transform(df)</code></pre>
+    return transform(frame)</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Query.execute_ga4gh"><code class="name flex">
@@ -9798,7 +10157,7 @@ def execute_ga4gh(
 </details>
 </dd>
 <dt id="phc.easy.Query.execute_paging_api"><code class="name flex">
-<span>def <span class="ident">execute_paging_api</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame] = &lt;function identity&gt;, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, raw: bool = False, ignore_cache: bool = False, show_progress: bool = True, progress: Union[tqdm.std.tqdm, NoneType] = None, item_key: str = 'items', try_count: bool = True, response_to_items: Union[Callable[[Union[list, dict]], list], NoneType] = None)</span>
+<span>def <span class="ident">execute_paging_api</span></span>(<span>path: str, params: dict = {}, http_verb: str = 'GET', transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame] = &lt;function identity&gt;, all_results: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Optional[int] = None, page_size: Optional[int] = None, log: bool = False, raw: bool = False, ignore_cache: bool = False, show_progress: bool = True, progress: Optional[tqdm.std.tqdm] = None, item_key: str = 'items', try_count: bool = True, response_to_items: Optional[Callable[[Union[list, dict]], list]] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a API query that pages through results</p>
@@ -10049,14 +10408,14 @@ def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
     fhir = Fhir(auth.session())
 
     response = fhir.execute_es(
-        auth.project_id, build_query(query, page_size=1), scroll=&#34;true&#34;
+        auth.project_id, build_queries(query, page_size=1)[0], scroll=&#34;true&#34;
     )
 
     return response.data[&#34;hits&#34;][&#34;total&#34;][&#34;value&#34;]</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.Query.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>table_name: str, code_fields: List[str], display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>table_name: str, code_fields: List[str], display_query: Optional[str] = None, sample_size: Optional[int] = None, **kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Find FHIR codes with a display for a given table</p>
@@ -10319,8 +10678,8 @@ def get_codes(
 <dt><strong><code>log</code></strong> :&ensp;<code>bool = False</code></dt>
 <dd>Whether to log the elasticsearch query sent to the server</dd>
 <dt><strong><code>query_kwargs</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Arguments to pass to build_query such as patient_id, patient_ids,
-and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)</dd>
+<dd>Arguments to pass to build_queries such as patient_id, patient_ids,
+and patient_key. (See phc.easy.query.fhir_dsl_query.build_queries)</dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; import phc.easy as phc
@@ -10393,8 +10752,8 @@ def get_count_by_field(
         Whether to log the elasticsearch query sent to the server
 
     query_kwargs : dict
-        Arguments to pass to build_query such as patient_id, patient_ids,
-        and patient_key. (See phc.easy.query.fhir_dsl_query.build_query)
+        Arguments to pass to build_queries such as patient_id, patient_ids,
+        and patient_key. (See phc.easy.query.fhir_dsl_query.build_queries)
 
     Examples
     --------
@@ -10492,7 +10851,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.ReferralRequest.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -10532,7 +10891,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.ReferralRequest.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -10646,7 +11005,7 @@ from a FSS table that relates to a patient</p></div>
 <div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
 </dd>
 <dt id="phc.easy.Sequence.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -10686,7 +11045,7 @@ from a FSS table that relates to a patient</p></div>
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Sequence.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -10821,7 +11180,7 @@ def code_fields():
 </details>
 </dd>
 <dt id="phc.easy.Specimen.get_codes"><code class="name flex">
-<span>def <span class="ident">get_codes</span></span>(<span>display_query: Union[str, NoneType] = None, sample_size: Union[int, NoneType] = None, exclude_meta_tag=True, **kwargs)</span>
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -10861,7 +11220,7 @@ def code_fields():
 <div class="desc inherited"><p>Count records by a given field …</p></div>
 </dd>
 <dt id="phc.easy.Specimen.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Union[str, NoneType] = None, ids: List[str] = [], patient_id: Union[NoneType, str] = None, patient_ids: List[str] = [], page_size: Union[int, NoneType] = None, max_pages: Union[int, NoneType] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Union[dict, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, code_fields: List[str] = [])</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, code_fields: List[str] = [])</span>
 </code></dt>
 <dd>
 <p class="inheritance">
@@ -10992,7 +11351,7 @@ def execute_args() -&gt; dict:
 </details>
 </dd>
 <dt id="phc.easy.SummaryClinicalCounts.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = True, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, match: Union[<a title="phc.easy.summary.options.clinical_counts.SummarySearchMatchOption" href="summary/options/clinical_counts.html#phc.easy.summary.options.clinical_counts.SummarySearchMatchOption">SummarySearchMatchOption</a>, NoneType] = None, code: Union[str, List[str], NoneType] = None, display: Union[str, List[str], NoneType] = None, system: Union[str, List[str], NoneType] = None, **kw_args)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = True, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Optional[int] = None, page_size: Optional[int] = None, log: bool = False, match: Optional[<a title="phc.easy.summary.options.clinical_counts.SummarySearchMatchOption" href="summary/options/clinical_counts.html#phc.easy.summary.options.clinical_counts.SummarySearchMatchOption">SummarySearchMatchOption</a>] = None, code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None, **kw_args)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a request for summary counts across clinical data</p>
@@ -11233,7 +11592,7 @@ def execute_args() -&gt; dict:
 </details>
 </dd>
 <dt id="phc.easy.SummaryCounts.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>include_demographics: bool = False, all_results: bool = True, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>include_demographics: bool = False, all_results: bool = True, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Optional[int] = None, page_size: Optional[int] = None, log: bool = False, **kw_args)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a request for summary counts across clinical and omics data</p>
@@ -11525,7 +11884,7 @@ def execute_args() -&gt; dict:
 </details>
 </dd>
 <dt id="phc.easy.SummaryItemCounts.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>summary: Union[<a title="phc.easy.summary.options.item_counts.SummaryOmicsType" href="summary/options/item_counts.html#phc.easy.summary.options.item_counts.SummaryOmicsType">SummaryOmicsType</a>, <a title="phc.easy.summary.options.item_counts.SummaryClinicalType" href="summary/options/item_counts.html#phc.easy.summary.options.item_counts.SummaryClinicalType">SummaryClinicalType</a>], all_results: bool = True, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>summary: Union[<a title="phc.easy.summary.options.item_counts.SummaryOmicsType" href="summary/options/item_counts.html#phc.easy.summary.options.item_counts.SummaryOmicsType">SummaryOmicsType</a>, <a title="phc.easy.summary.options.item_counts.SummaryClinicalType" href="summary/options/item_counts.html#phc.easy.summary.options.item_counts.SummaryClinicalType">SummaryClinicalType</a>], all_results: bool = True, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Optional[int] = None, page_size: Optional[int] = None, log: bool = False, **kw_args)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a request for summary counts across clinical and omics data</p>
@@ -11752,7 +12111,7 @@ def execute_args() -&gt; dict:
 </details>
 </dd>
 <dt id="phc.easy.SummaryOmicsCounts.get_data_frame"><code class="name flex">
-<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = True, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Union[int, NoneType] = None, page_size: Union[int, NoneType] = None, log: bool = False, **kw_args)</span>
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = True, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, max_pages: Optional[int] = None, page_size: Optional[int] = None, log: bool = False, **kw_args)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a request for summary counts across omics data</p>
@@ -11901,6 +12260,7 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 <li><code><a title="phc.easy.composition" href="composition.html">phc.easy.composition</a></code></li>
 <li><code><a title="phc.easy.condition" href="condition.html">phc.easy.condition</a></code></li>
 <li><code><a title="phc.easy.consent" href="consent.html">phc.easy.consent</a></code></li>
+<li><code><a title="phc.easy.data_lake" href="data_lake/index.html">phc.easy.data_lake</a></code></li>
 <li><code><a title="phc.easy.diagnostic_report" href="diagnostic_report.html">phc.easy.diagnostic_report</a></code></li>
 <li><code><a title="phc.easy.document_reference" href="document_reference.html">phc.easy.document_reference</a></code></li>
 <li><code><a title="phc.easy.dstu3" href="dstu3.html">phc.easy.dstu3</a></code></li>
@@ -12020,6 +12380,13 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 <li><code><a title="phc.easy.Consent.patient_key" href="#phc.easy.Consent.patient_key">patient_key</a></code></li>
 <li><code><a title="phc.easy.Consent.table_name" href="#phc.easy.Consent.table_name">table_name</a></code></li>
 <li><code><a title="phc.easy.Consent.transform_results" href="#phc.easy.Consent.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.DataLake" href="#phc.easy.DataLake">DataLake</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.DataLake.execute_sql" href="#phc.easy.DataLake.execute_sql">execute_sql</a></code></li>
+<li><code><a title="phc.easy.DataLake.find_cache_file" href="#phc.easy.DataLake.find_cache_file">find_cache_file</a></code></li>
 </ul>
 </li>
 <li>
@@ -12498,7 +12865,7 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>
