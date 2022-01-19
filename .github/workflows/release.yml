@@ -9,6 +9,7 @@ jobs:
   build:
     if: ${{ github.head_ref }} == "master"
     runs-on: ubuntu-latest
+    environment: pypi
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.7
