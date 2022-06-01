@@ -72,7 +72,11 @@ class Session:
 
     def _get_decoded_token(self):
         if self.token:
-            return jwt.decode(self.token, verify=False)
+            return jwt.decode(
+                self.token,
+                options={"verify_signature": False},
+                algorithms="RS256",
+            )
         return {}
 
     def is_expired(self) -> bool:
