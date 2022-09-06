@@ -59,8 +59,8 @@ class DSTU3:
             f"{self.entity}/{record_id}", http_verb="PUT", json=data
         )
 
-        if response.status_code == 200 or response.status_code == 201:
-            return data
+        if 200 <= response.status_code < 300:
+            return response.data
 
         raise ValueError(f"Unexpected response: {response}")
 
@@ -73,8 +73,8 @@ class DSTU3:
             f"{self.entity}", http_verb="POST", json=data
         )
 
-        if response.status_code == 201:
-            return True
+        if 200 <= response.status_code < 300:
+            return response.data
 
         raise ValueError(f"Unexpected response: {response}")
 
