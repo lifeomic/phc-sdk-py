@@ -523,7 +523,11 @@ __pdoc__ = {
 
     def _get_decoded_token(self):
         if self.token:
-            return jwt.decode(self.token, verify=False)
+            return jwt.decode(
+                self.token,
+                options={&#34;verify_signature&#34;: False},
+                algorithms=&#34;RS256&#34;,
+            )
         return {}
 
     def is_expired(self) -&gt; bool:

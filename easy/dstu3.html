@@ -86,10 +86,10 @@ class DSTU3:
 
         response = client._fhir_call(
             f&#34;{self.entity}/{record_id}&#34;, http_verb=&#34;PUT&#34;, json=data
-        ).data
+        )
 
-        if response == &#34;OK&#34;:
-            return data
+        if 200 &lt;= response.status_code &lt; 300:
+            return response.data
 
         raise ValueError(f&#34;Unexpected response: {response}&#34;)
 
@@ -100,10 +100,10 @@ class DSTU3:
 
         response = client._fhir_call(
             f&#34;{self.entity}&#34;, http_verb=&#34;POST&#34;, json=data
-        ).data
+        )
 
-        if response == &#34;Created&#34;:
-            return True
+        if 200 &lt;= response.status_code &lt; 300:
+            return response.data
 
         raise ValueError(f&#34;Unexpected response: {response}&#34;)
 
@@ -190,10 +190,10 @@ class DSTU3:
 
         response = client._fhir_call(
             f&#34;{self.entity}/{record_id}&#34;, http_verb=&#34;PUT&#34;, json=data
-        ).data
+        )
 
-        if response == &#34;OK&#34;:
-            return data
+        if 200 &lt;= response.status_code &lt; 300:
+            return response.data
 
         raise ValueError(f&#34;Unexpected response: {response}&#34;)
 
@@ -204,10 +204,10 @@ class DSTU3:
 
         response = client._fhir_call(
             f&#34;{self.entity}&#34;, http_verb=&#34;POST&#34;, json=data
-        ).data
+        )
 
-        if response == &#34;Created&#34;:
-            return True
+        if 200 &lt;= response.status_code &lt; 300:
+            return response.data
 
         raise ValueError(f&#34;Unexpected response: {response}&#34;)
 
@@ -248,10 +248,10 @@ class DSTU3:
 
     response = client._fhir_call(
         f&#34;{self.entity}&#34;, http_verb=&#34;POST&#34;, json=data
-    ).data
+    )
 
-    if response == &#34;Created&#34;:
-        return True
+    if 200 &lt;= response.status_code &lt; 300:
+        return response.data
 
     raise ValueError(f&#34;Unexpected response: {response}&#34;)</code></pre>
 </details>
@@ -331,10 +331,10 @@ class DSTU3:
 
     response = client._fhir_call(
         f&#34;{self.entity}/{record_id}&#34;, http_verb=&#34;PUT&#34;, json=data
-    ).data
+    )
 
-    if response == &#34;OK&#34;:
-        return data
+    if 200 &lt;= response.status_code &lt; 300:
+        return response.data
 
     raise ValueError(f&#34;Unexpected response: {response}&#34;)</code></pre>
 </details>
