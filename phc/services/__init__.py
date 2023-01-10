@@ -12,7 +12,7 @@ from phc.services.genomics import Genomics
 from phc.services.tools import Tools
 from phc.services.workflows import Workflows
 from phc.services.genomic_ingestions import GenomicIngestions, IngestionStep
-
+from phc.services.tasks import Tasks
 
 __all__ = [
     "Accounts",
@@ -25,6 +25,7 @@ __all__ = [
     "Tools",
     "Workflows",
     "GenomicIngestions",
+    "Tasks",
 ]
 
 __pdoc__ = {
@@ -38,4 +39,5 @@ __pdoc__ = {
     "tools": False,
     "workflows": False,
     "genomic_ingestions": False,
+    "tasks": False,
 }

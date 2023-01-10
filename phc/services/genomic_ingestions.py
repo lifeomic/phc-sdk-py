@@ -3,7 +3,7 @@
 from enum import Enum
 from phc import ApiResponse
 from phc.base_client import BaseClient
-from typing import Optional, List, Dict, Union
+from typing import Optional, Dict, Union
 from urllib.parse import urlencode
 
 
@@ -82,7 +82,7 @@ class GenomicIngestions(BaseClient):
         phc.ApiResponse
             The list ingestions response.
         """
-        query_dict: Dict[str, Union[str, int, bool, List[str]]] = {}
+        query_dict: Dict[str, Union[str, int, bool]] = {}
         if page_size:
             query_dict["pageSize"] = page_size
         if next_page_token:
