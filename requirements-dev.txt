@@ -9,3 +9,4 @@ pdoc3
 twine
 pytest
 pytest-watch
+click==8.0.2
