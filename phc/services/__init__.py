@@ -11,6 +11,7 @@ from phc.services.cohorts import Cohorts
 from phc.services.genomics import Genomics
 from phc.services.tools import Tools
 from phc.services.workflows import Workflows
+from phc.services.genomic_ingestions import GenomicIngestions, IngestionStep
 
 
 __all__ = [
@@ -23,6 +24,7 @@ __all__ = [
     "Genomics",
     "Tools",
     "Workflows",
+    "GenomicIngestions",
 ]
 
 __pdoc__ = {
@@ -35,4 +37,5 @@ __pdoc__ = {
     "genomics": False,
     "tools": False,
     "workflows": False,
+    "genomic_ingestions": False,
 }
