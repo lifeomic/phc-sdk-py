@@ -79,7 +79,7 @@ class Tasks(BaseClient):
         phc.ApiResponse
             The create task response.
         """
-        return self._api_call(f"tasks", json=task)
+        return self._api_call("tasks", json=task)
 
     def list(
         self,
