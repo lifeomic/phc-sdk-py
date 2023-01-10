@@ -22,13 +22,13 @@ class GenomicIngestions(BaseClient):
     Parameters
     ----------
     session: phc.Session
-    The PHC session
+        The PHC session.
     run_async: bool
-        True to return promises, False to return results (default is False)
+        True to return promises, False to return results (default is False).
     timeout: int
-        Operation timeout (default is 30)
+        Operation timeout (default is 30).
     trust_env: bool
-        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default)
+        Get proxies information from HTTP_PROXY / HTTPS_PROXY environment variables if the parameter is True (False by default).
     """
 
     def get(self, ingestion_id: str, project_id: str) -> ApiResponse:
@@ -69,7 +69,7 @@ class GenomicIngestions(BaseClient):
         name: str, optional
             The name to filter ingestions by, by default None.
         failed: bool, optional
-            The status of the ingestions to filter, by default None.
+            The status of the ingestions to filter by, by default None.
         step: IngestionStep, optional
             The ingestion steps to filter by, by default None.
         page_size: int, optional
@@ -119,7 +119,7 @@ class GenomicIngestions(BaseClient):
         report_file_id: str
             The ID of the Report file to ingest.
         vcf_file_id: str, optional
-            The ID of hte VCF file to ingest, by default None.
+            The ID of the VCF file to ingest, by default None.
         succeeded_email: str, optional
             The email address to notify if the ingestion succeeds, by default None.
         failed_email: str, optional
@@ -158,7 +158,7 @@ class GenomicIngestions(BaseClient):
         Parameters
         ----------
         project_id: str
-            The project ID to create hte ingestion in.
+            The project ID to create the ingestion in.
         tar_file_id: str
             The ID of the TAR file to ingest.
         succeeded_email: str, optional
@@ -195,7 +195,7 @@ class GenomicIngestions(BaseClient):
         Parameters
         ----------
         project_id: str
-            The project ID to create hte ingestion in.
+            The project ID to create the ingestion in.
         bam_file_id: str
             The ID of the BAM file to ingest.
         succeeded_email: str, optional
@@ -232,7 +232,7 @@ class GenomicIngestions(BaseClient):
         Parameters
         ----------
         project_id: str
-            The project ID to create hte ingestion in.
+            The project ID to create the ingestion in.
         bam_file_id: str
             The ID of the BAM file to ingest.
         succeeded_email: str, optional
