@@ -29,6 +29,8 @@ class FhirServicePatientItem(FhirServiceItem):
         ids: List[str] = [],
         patient_id: Union[None, str] = None,
         patient_ids: List[str] = [],
+        device_id: Union[None, str] = None,
+        device_ids: List[str] = [],
         page_size: Union[int, None] = None,
         max_pages: Union[int, None] = None,
         query_overrides: dict = {},
@@ -68,6 +70,12 @@ class FhirServicePatientItem(FhirServiceItem):
 
         patient_ids : List[str]
             Find records for given patient_ids
+
+        device_id: None or str = None
+            Find records for a given device_id
+
+        device_ids: List[str]
+            Find records for given device_ids
 
         page_size : int
             The number of records to fetch per page
@@ -132,6 +140,16 @@ class FhirServicePatientItem(FhirServiceItem):
 
         def transform(df: pd.DataFrame):
             return cls.transform_results(df, **expand_args)
+
+        # TODO: As of Feb 2023, only observations with patient references are indexed.
+        # So in order to query for observations associated with a device we have to set the
+        # device_id to the patient_id.
+        # This is a workaround and should be fixed once The Platform properly indexes devices.
+        if device_id:
+            patient_id = device_id
+
+        if device_ids:
+            patient_ids = device_ids
 
         return Query.execute_fhir_dsl_with_options(
             query,
