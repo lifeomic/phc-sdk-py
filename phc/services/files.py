@@ -7,7 +7,11 @@ from phc.base_client import BaseClient
 from phc import ApiResponse
 from urllib.parse import urlencode
 from urllib.request import urlretrieve
-from phc.errors import ApiError
+from phc.errors import ApiError, ClientError
+
+
+class FileArchiveError(ClientError):
+    """Error raised when operations are attempted on an archived file."""
 
 
 class Files(BaseClient):
@@ -147,9 +151,15 @@ class Files(BaseClient):
         >>> files = files(session)
         >>> files.download(file_id="db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3", dest_dir="./mydata")
         """
-        res = self._api_call(
-            f"files/{file_id}?include=downloadUrl", http_verb="GET"
-        )
+        try:
+            res = self._api_call(
+                f"files/{file_id}?include=downloadUrl", http_verb="GET"
+            )
+        except ApiError as e:
+            if e.response.status_code == 422:
+                raise FileArchiveError(
+                    "This file is currently archived and is not available for download. Contact LifeOmic support to learn more."
+                ) from None
 
         file_path = os.path.join(dest_dir, res.get("name"))
         target_dir = os.path.dirname(file_path)
@@ -204,9 +214,15 @@ class Files(BaseClient):
         if project_id:
             json_body["datasetId"] = project_id
 
-        return self._api_call(
-            f"files/{file_id}", json=json_body, http_verb="PATCH"
-        )
+        try:
+            return self._api_call(
+                f"files/{file_id}", json=json_body, http_verb="PATCH"
+            )
+        except ApiError as e:
+            if e.response.status_code == 422:
+                raise FileArchiveError(
+                    "This file is currently archived and cannot be moved. Contact LifeOmic support to learn more."
+                ) from None
 
     def delete(self, file_id: str) -> bool:
         """Delete a file
