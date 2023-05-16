@@ -2044,9 +2044,15 @@ Defaults to the current working directory.</dd>
         &gt;&gt;&gt; files = files(session)
         &gt;&gt;&gt; files.download(file_id=&#34;db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3&#34;, dest_dir=&#34;./mydata&#34;)
         &#34;&#34;&#34;
-        res = self._api_call(
-            f&#34;files/{file_id}?include=downloadUrl&#34;, http_verb=&#34;GET&#34;
-        )
+        try:
+            res = self._api_call(
+                f&#34;files/{file_id}?include=downloadUrl&#34;, http_verb=&#34;GET&#34;
+            )
+        except ApiError as e:
+            if e.response.status_code == 422:
+                raise FileArchiveError(
+                    &#34;This file is currently archived and is not available for download. Contact LifeOmic support to learn more.&#34;
+                ) from None
 
         file_path = os.path.join(dest_dir, res.get(&#34;name&#34;))
         target_dir = os.path.dirname(file_path)
@@ -2101,9 +2107,15 @@ Defaults to the current working directory.</dd>
         if project_id:
             json_body[&#34;datasetId&#34;] = project_id
 
-        return self._api_call(
-            f&#34;files/{file_id}&#34;, json=json_body, http_verb=&#34;PATCH&#34;
-        )
+        try:
+            return self._api_call(
+                f&#34;files/{file_id}&#34;, json=json_body, http_verb=&#34;PATCH&#34;
+            )
+        except ApiError as e:
+            if e.response.status_code == 422:
+                raise FileArchiveError(
+                    &#34;This file is currently archived and cannot be moved. Contact LifeOmic support to learn more.&#34;
+                ) from None
 
     def delete(self, file_id: str) -&gt; bool:
         &#34;&#34;&#34;Delete a file
@@ -2267,9 +2279,15 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
     &gt;&gt;&gt; files = files(session)
     &gt;&gt;&gt; files.download(file_id=&#34;db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3&#34;, dest_dir=&#34;./mydata&#34;)
     &#34;&#34;&#34;
-    res = self._api_call(
-        f&#34;files/{file_id}?include=downloadUrl&#34;, http_verb=&#34;GET&#34;
-    )
+    try:
+        res = self._api_call(
+            f&#34;files/{file_id}?include=downloadUrl&#34;, http_verb=&#34;GET&#34;
+        )
+    except ApiError as e:
+        if e.response.status_code == 422:
+            raise FileArchiveError(
+                &#34;This file is currently archived and is not available for download. Contact LifeOmic support to learn more.&#34;
+            ) from None
 
     file_path = os.path.join(dest_dir, res.get(&#34;name&#34;))
     target_dir = os.path.dirname(file_path)
@@ -2473,9 +2491,15 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
     if project_id:
         json_body[&#34;datasetId&#34;] = project_id
 
-    return self._api_call(
-        f&#34;files/{file_id}&#34;, json=json_body, http_verb=&#34;PATCH&#34;
-    )</code></pre>
+    try:
+        return self._api_call(
+            f&#34;files/{file_id}&#34;, json=json_body, http_verb=&#34;PATCH&#34;
+        )
+    except ApiError as e:
+        if e.response.status_code == 422:
+            raise FileArchiveError(
+                &#34;This file is currently archived and cannot be moved. Contact LifeOmic support to learn more.&#34;
+            ) from None</code></pre>
 </details>
 </dd>
 <dt id="phc.services.Files.upload"><code class="name flex">
@@ -3607,7 +3631,7 @@ The ingestion that was created.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = 'fc176964-8ef2-4d3e-b661-945680164da8', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = 'aba6a05c-95aa-475a-8d78-a36909a4204e', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
