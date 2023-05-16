@@ -256,3 +256,40 @@ class GenomicIngestions(BaseClient):
                 },
             },
         )
+
+    def create_nextgen(
+        self,
+        project_id: str,
+        tar_file_id: str,
+        succeeded_email: Optional[str] = None,
+        failed_email: Optional[str] = None,
+    ) -> ApiResponse:
+        """Create a NextGen ingestion in a project
+
+        Parameters
+        ----------
+        project_id: str
+            The project ID to create the ingestion in.
+        tar_file_id: str
+            The ID of the TAR file to ingest.
+        succeeded_email: str, optional
+            The email address to notify if the ingestion succeeds, by default None.
+        failed_email: str, optional
+            The email address to notify if the ingestion fails, by default None.
+
+        Returns
+        phc.ApiResponse
+            The ingestion that was created.
+        """
+
+        return self._api_call(
+            f"genomic-ingestion/projects/{project_id}/ingestions",
+            json={
+                "ingestionType": "NextGen",
+                "inputFiles": {"tar": tar_file_id},
+                "notificationConfig": {
+                    "succeededEmail": succeeded_email,
+                    "failedEmail": failed_email,
+                },
+            },
+        )
