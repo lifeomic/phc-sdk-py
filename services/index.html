@@ -2895,6 +2895,43 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
                     &#34;failedEmail&#34;: failed_email,
                 },
             },
+        )
+
+    def create_nextgen(
+        self,
+        project_id: str,
+        tar_file_id: str,
+        succeeded_email: Optional[str] = None,
+        failed_email: Optional[str] = None,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Create a NextGen ingestion in a project
+
+        Parameters
+        ----------
+        project_id: str
+            The project ID to create the ingestion in.
+        tar_file_id: str
+            The ID of the TAR file to ingest.
+        succeeded_email: str, optional
+            The email address to notify if the ingestion succeeds, by default None.
+        failed_email: str, optional
+            The email address to notify if the ingestion fails, by default None.
+
+        Returns
+        phc.ApiResponse
+            The ingestion that was created.
+        &#34;&#34;&#34;
+
+        return self._api_call(
+            f&#34;genomic-ingestion/projects/{project_id}/ingestions&#34;,
+            json={
+                &#34;ingestionType&#34;: &#34;NextGen&#34;,
+                &#34;inputFiles&#34;: {&#34;tar&#34;: tar_file_id},
+                &#34;notificationConfig&#34;: {
+                    &#34;succeededEmail&#34;: succeeded_email,
+                    &#34;failedEmail&#34;: failed_email,
+                },
+            },
         )</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -3157,6 +3194,68 @@ The ingestion that was created.</p></div>
         json={
             &#34;ingestionType&#34;: &#34;FoundationBam&#34;,
             &#34;inputFiles&#34;: {&#34;bam&#34;: bam_file_id},
+            &#34;notificationConfig&#34;: {
+                &#34;succeededEmail&#34;: succeeded_email,
+                &#34;failedEmail&#34;: failed_email,
+            },
+        },
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.GenomicIngestions.create_nextgen"><code class="name flex">
+<span>def <span class="ident">create_nextgen</span></span>(<span>self, project_id: str, tar_file_id: str, succeeded_email: Optional[str] = None, failed_email: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a NextGen ingestion in a project</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID to create the ingestion in.</dd>
+<dt><strong><code>tar_file_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The ID of the TAR file to ingest.</dd>
+<dt><strong><code>succeeded_email</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The email address to notify if the ingestion succeeds, by default None.</dd>
+<dt><strong><code>failed_email</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The email address to notify if the ingestion fails, by default None.</dd>
+<dt><strong><code>Returns</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
+<p>phc.ApiResponse
+The ingestion that was created.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_nextgen(
+    self,
+    project_id: str,
+    tar_file_id: str,
+    succeeded_email: Optional[str] = None,
+    failed_email: Optional[str] = None,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Create a NextGen ingestion in a project
+
+    Parameters
+    ----------
+    project_id: str
+        The project ID to create the ingestion in.
+    tar_file_id: str
+        The ID of the TAR file to ingest.
+    succeeded_email: str, optional
+        The email address to notify if the ingestion succeeds, by default None.
+    failed_email: str, optional
+        The email address to notify if the ingestion fails, by default None.
+
+    Returns
+    phc.ApiResponse
+        The ingestion that was created.
+    &#34;&#34;&#34;
+
+    return self._api_call(
+        f&#34;genomic-ingestion/projects/{project_id}/ingestions&#34;,
+        json={
+            &#34;ingestionType&#34;: &#34;NextGen&#34;,
+            &#34;inputFiles&#34;: {&#34;tar&#34;: tar_file_id},
             &#34;notificationConfig&#34;: {
                 &#34;succeededEmail&#34;: succeeded_email,
                 &#34;failedEmail&#34;: failed_email,
@@ -3631,7 +3730,7 @@ The ingestion that was created.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = 'aba6a05c-95aa-475a-8d78-a36909a4204e', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = '03554ad0-d4ae-4df8-b413-f32a0fa5fe3d', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
@@ -6134,6 +6233,7 @@ def download(
 <li><code><a title="phc.services.GenomicIngestions.create_caris_bam" href="#phc.services.GenomicIngestions.create_caris_bam">create_caris_bam</a></code></li>
 <li><code><a title="phc.services.GenomicIngestions.create_foundation" href="#phc.services.GenomicIngestions.create_foundation">create_foundation</a></code></li>
 <li><code><a title="phc.services.GenomicIngestions.create_foundation_bam" href="#phc.services.GenomicIngestions.create_foundation_bam">create_foundation_bam</a></code></li>
+<li><code><a title="phc.services.GenomicIngestions.create_nextgen" href="#phc.services.GenomicIngestions.create_nextgen">create_nextgen</a></code></li>
 <li><code><a title="phc.services.GenomicIngestions.get" href="#phc.services.GenomicIngestions.get">get</a></code></li>
 <li><code><a title="phc.services.GenomicIngestions.list" href="#phc.services.GenomicIngestions.list">list</a></code></li>
 </ul>
