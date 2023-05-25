@@ -36,7 +36,6 @@ from phc.easy.codeable import Codeable
 from phc.easy.composition import Composition
 from phc.easy.condition import Condition
 from phc.easy.consent import Consent
-from phc.easy.data_lake import DataLake
 from phc.easy.diagnostic_report import DiagnosticReport
 from phc.easy.document_reference import DocumentReference
 from phc.easy.encounter import Encounter
@@ -85,7 +84,6 @@ __all__ = [
     &#34;Composition&#34;,
     &#34;Condition&#34;,
     &#34;Consent&#34;,
-    &#34;DataLake&#34;,
     &#34;DiagnosticReport&#34;,
     &#34;DocumentReference&#34;,
     &#34;Encounter&#34;,
@@ -161,10 +159,6 @@ __all__ = [
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="phc.easy.consent" href="consent.html">phc.easy.consent</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="phc.easy.data_lake" href="data_lake/index.html">phc.easy.data_lake</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1708,215 +1702,6 @@ def transform_results(df: pd.DataFrame, **expand_args):
             Frame.codeable_like_column_expander(&#34;patient&#34;),
         ],
     )</code></pre>
-</details>
-</dd>
-</dl>
-</dd>
-<dt id="phc.easy.DataLake"><code class="flex name class">
-<span>class <span class="ident">DataLake</span></span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class DataLake:
-    @classmethod
-    def execute_sql(
-        cls,
-        sql: str,
-        transform: Callable[[pd.DataFrame], pd.DataFrame] = identity,
-        ignore_cache: bool = False,
-        auth_args: Auth = Auth.shared(),
-        extension: str = &#34;parquet&#34;,
-    ):
-        auth = Auth(auth_args)
-        client = Analytics(auth.session())
-
-        sql_plus_project = auth.project_id + &#34;:&#34; + sql
-
-        cache_folder = &#34;/tmp&#34; if ignore_cache else API_CACHE_DIR
-        csv_filename = APICache.filename_for_sql(sql_plus_project, &#34;csv&#34;)
-        output_filename = APICache.filename_for_sql(
-            sql_plus_project, extension=extension
-        )
-        csv_cache_path = os.path.join(cache_folder, csv_filename)
-        output_cache_path = os.path.join(cache_folder, output_filename)
-
-        has_cache_file = APICache.does_cache_for_sql_exist(
-            sql_plus_project, extension=extension
-        )
-
-        if not ignore_cache and extension == &#34;csv&#34; and has_cache_file:
-            print(f&#39;[CACHE] Loading from &#34;{output_cache_path}&#34;&#39;)
-            return APICache.read_csv(output_cache_path)
-        elif not ignore_cache and extension == &#34;parquet&#34; and has_cache_file:
-            print(f&#39;[CACHE] Loading from &#34;{output_cache_path}&#34;&#39;)
-            return pd.read_parquet(output_cache_path)
-
-        service_query = DataLakeServiceQuery(auth.project_id, sql, csv_filename)
-
-        frame = client.execute_data_lake_query_to_dataframe(
-            service_query, dest_dir=cache_folder
-        )
-
-        csv_cache_path = cls.find_cache_file(csv_filename)
-
-        # Remove loaded raw file from data lake
-        if csv_cache_path:
-            os.remove(csv_cache_path)
-        else:
-            warnings.warn(
-                &#34;Couldn&#39;t find downloaded data lake cache file for removal. Skipping...&#34;
-            )
-
-        frame = transform(frame)
-
-        if ignore_cache:
-            return frame
-
-        print(f&#39;Loading from &#34;{output_cache_path}&#34;&#39;)
-
-        if extension == &#34;csv&#34;:
-            frame.to_csv(output_cache_path, index=False)
-        elif extension == &#34;parquet&#34;:
-            frame.to_parquet(output_cache_path, index=False)
-        else:
-            warnings.warn(
-                f&#39;Invalid cache extension &#34;{extension}&#34;. Not writing to cache.&#39;
-            )
-
-        return frame
-
-    @staticmethod
-    def find_cache_file(filename: str) -&gt; Optional[str]:
-        &#34;&#34;&#34;Find files even if data lake writes a file with an appended number
-        Example: my_file.csv(2)
-        &#34;&#34;&#34;
-
-        NON_OVERRIDE_REGEX = r&#34;(\((\d+)\))?$&#34;
-
-        paths = glob(os.path.join(API_CACHE_DIR, filename + &#34;*&#34;))
-
-        if len(paths) == 0:
-            return None
-
-        def sort_value(path: str) -&gt; int:
-            return int(
-                next(re.finditer(NON_OVERRIDE_REGEX, path)).group(2) or &#34;0&#34;
-            )
-
-        return sorted(paths, key=sort_value)[-1]</code></pre>
-</details>
-<h3>Static methods</h3>
-<dl>
-<dt id="phc.easy.DataLake.execute_sql"><code class="name flex">
-<span>def <span class="ident">execute_sql</span></span>(<span>sql: str, transform: Callable[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame] = &lt;function identity&gt;, ignore_cache: bool = False, auth_args: <a title="phc.easy.auth.Auth" href="auth.html#phc.easy.auth.Auth">Auth</a> = &lt;phc.easy.auth.Auth object&gt;, extension: str = 'parquet')</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@classmethod
-def execute_sql(
-    cls,
-    sql: str,
-    transform: Callable[[pd.DataFrame], pd.DataFrame] = identity,
-    ignore_cache: bool = False,
-    auth_args: Auth = Auth.shared(),
-    extension: str = &#34;parquet&#34;,
-):
-    auth = Auth(auth_args)
-    client = Analytics(auth.session())
-
-    sql_plus_project = auth.project_id + &#34;:&#34; + sql
-
-    cache_folder = &#34;/tmp&#34; if ignore_cache else API_CACHE_DIR
-    csv_filename = APICache.filename_for_sql(sql_plus_project, &#34;csv&#34;)
-    output_filename = APICache.filename_for_sql(
-        sql_plus_project, extension=extension
-    )
-    csv_cache_path = os.path.join(cache_folder, csv_filename)
-    output_cache_path = os.path.join(cache_folder, output_filename)
-
-    has_cache_file = APICache.does_cache_for_sql_exist(
-        sql_plus_project, extension=extension
-    )
-
-    if not ignore_cache and extension == &#34;csv&#34; and has_cache_file:
-        print(f&#39;[CACHE] Loading from &#34;{output_cache_path}&#34;&#39;)
-        return APICache.read_csv(output_cache_path)
-    elif not ignore_cache and extension == &#34;parquet&#34; and has_cache_file:
-        print(f&#39;[CACHE] Loading from &#34;{output_cache_path}&#34;&#39;)
-        return pd.read_parquet(output_cache_path)
-
-    service_query = DataLakeServiceQuery(auth.project_id, sql, csv_filename)
-
-    frame = client.execute_data_lake_query_to_dataframe(
-        service_query, dest_dir=cache_folder
-    )
-
-    csv_cache_path = cls.find_cache_file(csv_filename)
-
-    # Remove loaded raw file from data lake
-    if csv_cache_path:
-        os.remove(csv_cache_path)
-    else:
-        warnings.warn(
-            &#34;Couldn&#39;t find downloaded data lake cache file for removal. Skipping...&#34;
-        )
-
-    frame = transform(frame)
-
-    if ignore_cache:
-        return frame
-
-    print(f&#39;Loading from &#34;{output_cache_path}&#34;&#39;)
-
-    if extension == &#34;csv&#34;:
-        frame.to_csv(output_cache_path, index=False)
-    elif extension == &#34;parquet&#34;:
-        frame.to_parquet(output_cache_path, index=False)
-    else:
-        warnings.warn(
-            f&#39;Invalid cache extension &#34;{extension}&#34;. Not writing to cache.&#39;
-        )
-
-    return frame</code></pre>
-</details>
-</dd>
-<dt id="phc.easy.DataLake.find_cache_file"><code class="name flex">
-<span>def <span class="ident">find_cache_file</span></span>(<span>filename: str) ‑> Optional[str]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Find files even if data lake writes a file with an appended number
-Example: my_file.csv(2)</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@staticmethod
-def find_cache_file(filename: str) -&gt; Optional[str]:
-    &#34;&#34;&#34;Find files even if data lake writes a file with an appended number
-    Example: my_file.csv(2)
-    &#34;&#34;&#34;
-
-    NON_OVERRIDE_REGEX = r&#34;(\((\d+)\))?$&#34;
-
-    paths = glob(os.path.join(API_CACHE_DIR, filename + &#34;*&#34;))
-
-    if len(paths) == 0:
-        return None
-
-    def sort_value(path: str) -&gt; int:
-        return int(
-            next(re.finditer(NON_OVERRIDE_REGEX, path)).group(2) or &#34;0&#34;
-        )
-
-    return sorted(paths, key=sort_value)[-1]</code></pre>
 </details>
 </dd>
 </dl>
@@ -12300,7 +12085,6 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 <li><code><a title="phc.easy.composition" href="composition.html">phc.easy.composition</a></code></li>
 <li><code><a title="phc.easy.condition" href="condition.html">phc.easy.condition</a></code></li>
 <li><code><a title="phc.easy.consent" href="consent.html">phc.easy.consent</a></code></li>
-<li><code><a title="phc.easy.data_lake" href="data_lake/index.html">phc.easy.data_lake</a></code></li>
 <li><code><a title="phc.easy.diagnostic_report" href="diagnostic_report.html">phc.easy.diagnostic_report</a></code></li>
 <li><code><a title="phc.easy.document_reference" href="document_reference.html">phc.easy.document_reference</a></code></li>
 <li><code><a title="phc.easy.dstu3" href="dstu3.html">phc.easy.dstu3</a></code></li>
@@ -12420,13 +12204,6 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 <li><code><a title="phc.easy.Consent.patient_key" href="#phc.easy.Consent.patient_key">patient_key</a></code></li>
 <li><code><a title="phc.easy.Consent.table_name" href="#phc.easy.Consent.table_name">table_name</a></code></li>
 <li><code><a title="phc.easy.Consent.transform_results" href="#phc.easy.Consent.transform_results">transform_results</a></code></li>
-</ul>
-</li>
-<li>
-<h4><code><a title="phc.easy.DataLake" href="#phc.easy.DataLake">DataLake</a></code></h4>
-<ul class="">
-<li><code><a title="phc.easy.DataLake.execute_sql" href="#phc.easy.DataLake.execute_sql">execute_sql</a></code></li>
-<li><code><a title="phc.easy.DataLake.find_cache_file" href="#phc.easy.DataLake.find_cache_file">find_cache_file</a></code></li>
 </ul>
 </li>
 <li>

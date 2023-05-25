@@ -45,27 +45,10 @@ DATE_FORMAT_REGEX = (
     r&#34;\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([-+]\d{4}|Z)&#34;
 )
 
-DATA_LAKE = &#34;data_lake&#34;
 FHIR_DSL = &#34;fhir_dsl&#34;
 
 
 class APICache:
-    @staticmethod
-    def filename_for_sql(sql: str, extension: str = &#34;parquet&#34;):
-        results = re.findall(TABLE_REGEX, sql)
-        table_name = results[0] if len(results) &gt; 0 else &#34;table&#34;
-        hexdigest = hashlib.sha256(sql.encode(&#34;utf-8&#34;)).hexdigest()[0:8]
-        return &#34;_&#34;.join([DATA_LAKE, table_name, hexdigest]) + &#34;.&#34; + extension
-
-    @staticmethod
-    def does_cache_for_sql_exist(sql: str, extension: str = &#34;parquet&#34;) -&gt; bool:
-        return (
-            Path(DIR)
-            .expanduser()
-            .joinpath(APICache.filename_for_sql(sql, extension))
-            .exists()
-        )
-
     @staticmethod
     def filename_for_query(query: dict, namespace: Optional[str] = None):
         &#34;Descriptive filename with hash of query for easy retrieval&#34;
@@ -230,22 +213,6 @@ class APICache:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class APICache:
-    @staticmethod
-    def filename_for_sql(sql: str, extension: str = &#34;parquet&#34;):
-        results = re.findall(TABLE_REGEX, sql)
-        table_name = results[0] if len(results) &gt; 0 else &#34;table&#34;
-        hexdigest = hashlib.sha256(sql.encode(&#34;utf-8&#34;)).hexdigest()[0:8]
-        return &#34;_&#34;.join([DATA_LAKE, table_name, hexdigest]) + &#34;.&#34; + extension
-
-    @staticmethod
-    def does_cache_for_sql_exist(sql: str, extension: str = &#34;parquet&#34;) -&gt; bool:
-        return (
-            Path(DIR)
-            .expanduser()
-            .joinpath(APICache.filename_for_sql(sql, extension))
-            .exists()
-        )
-
     @staticmethod
     def filename_for_query(query: dict, namespace: Optional[str] = None):
         &#34;Descriptive filename with hash of query for easy retrieval&#34;
@@ -460,25 +427,6 @@ def does_cache_for_query_exist(
     )</code></pre>
 </details>
 </dd>
-<dt id="phc.easy.util.api_cache.APICache.does_cache_for_sql_exist"><code class="name flex">
-<span>def <span class="ident">does_cache_for_sql_exist</span></span>(<span>sql: str, extension: str = 'parquet') ‑> bool</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@staticmethod
-def does_cache_for_sql_exist(sql: str, extension: str = &#34;parquet&#34;) -&gt; bool:
-    return (
-        Path(DIR)
-        .expanduser()
-        .joinpath(APICache.filename_for_sql(sql, extension))
-        .exists()
-    )</code></pre>
-</details>
-</dd>
 <dt id="phc.easy.util.api_cache.APICache.filename_for_query"><code class="name flex">
 <span>def <span class="ident">filename_for_query</span></span>(<span>query: dict, namespace: Optional[str] = None)</span>
 </code></dt>
@@ -526,23 +474,6 @@ def filename_for_query(query: dict, namespace: Optional[str] = None):
     extension = &#34;json&#34; if is_aggregation else &#34;csv&#34;
 
     return &#34;_&#34;.join([c for c in components if len(c) &gt; 0]) + &#34;.&#34; + extension</code></pre>
-</details>
-</dd>
-<dt id="phc.easy.util.api_cache.APICache.filename_for_sql"><code class="name flex">
-<span>def <span class="ident">filename_for_sql</span></span>(<span>sql: str, extension: str = 'parquet')</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@staticmethod
-def filename_for_sql(sql: str, extension: str = &#34;parquet&#34;):
-    results = re.findall(TABLE_REGEX, sql)
-    table_name = results[0] if len(results) &gt; 0 else &#34;table&#34;
-    hexdigest = hashlib.sha256(sql.encode(&#34;utf-8&#34;)).hexdigest()[0:8]
-    return &#34;_&#34;.join([DATA_LAKE, table_name, hexdigest]) + &#34;.&#34; + extension</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.util.api_cache.APICache.load_cache_for_query"><code class="name flex">
@@ -660,9 +591,7 @@ def write_agg(
 <ul class="">
 <li><code><a title="phc.easy.util.api_cache.APICache.build_cache_callback" href="#phc.easy.util.api_cache.APICache.build_cache_callback">build_cache_callback</a></code></li>
 <li><code><a title="phc.easy.util.api_cache.APICache.does_cache_for_query_exist" href="#phc.easy.util.api_cache.APICache.does_cache_for_query_exist">does_cache_for_query_exist</a></code></li>
-<li><code><a title="phc.easy.util.api_cache.APICache.does_cache_for_sql_exist" href="#phc.easy.util.api_cache.APICache.does_cache_for_sql_exist">does_cache_for_sql_exist</a></code></li>
 <li><code><a title="phc.easy.util.api_cache.APICache.filename_for_query" href="#phc.easy.util.api_cache.APICache.filename_for_query">filename_for_query</a></code></li>
-<li><code><a title="phc.easy.util.api_cache.APICache.filename_for_sql" href="#phc.easy.util.api_cache.APICache.filename_for_sql">filename_for_sql</a></code></li>
 <li><code><a title="phc.easy.util.api_cache.APICache.load_cache_for_query" href="#phc.easy.util.api_cache.APICache.load_cache_for_query">load_cache_for_query</a></code></li>
 <li><code><a title="phc.easy.util.api_cache.APICache.read_csv" href="#phc.easy.util.api_cache.APICache.read_csv">read_csv</a></code></li>
 <li><code><a title="phc.easy.util.api_cache.APICache.write_agg" href="#phc.easy.util.api_cache.APICache.write_agg">write_agg</a></code></li>
