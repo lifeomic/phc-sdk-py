@@ -16,27 +16,10 @@ DATE_FORMAT_REGEX = (
     r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([-+]\d{4}|Z)"
 )
 
-DATA_LAKE = "data_lake"
 FHIR_DSL = "fhir_dsl"
 
 
 class APICache:
-    @staticmethod
-    def filename_for_sql(sql: str, extension: str = "parquet"):
-        results = re.findall(TABLE_REGEX, sql)
-        table_name = results[0] if len(results) > 0 else "table"
-        hexdigest = hashlib.sha256(sql.encode("utf-8")).hexdigest()[0:8]
-        return "_".join([DATA_LAKE, table_name, hexdigest]) + "." + extension
-
-    @staticmethod
-    def does_cache_for_sql_exist(sql: str, extension: str = "parquet") -> bool:
-        return (
-            Path(DIR)
-            .expanduser()
-            .joinpath(APICache.filename_for_sql(sql, extension))
-            .exists()
-        )
-
     @staticmethod
     def filename_for_query(query: dict, namespace: Optional[str] = None):
         "Descriptive filename with hash of query for easy retrieval"
