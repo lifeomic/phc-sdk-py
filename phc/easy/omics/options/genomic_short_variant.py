@@ -60,10 +60,7 @@ MAPPINGS = {
 
 
 class GenomicShortVariantOptions(PagingApiOptions):
-    """Options to pass to `/v1/genomics/variants`
-
-    See https://docs.us.lifeomic.com/api/#query-short-variant-data
-    """
+    """Options to pass to `/v1/genomics/variants`"""
 
     # TODO: Add remaining options from Omics Explorer in PHC
     # - Variant Quality

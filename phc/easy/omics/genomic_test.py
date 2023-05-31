@@ -13,10 +13,7 @@ from phc.easy.abstract.paging_api_item import PagingApiItem, PagingApiOptions
 
 
 class GenomicTestOptions(PagingApiOptions):
-    """Options to pass to `/v1/genomics/projects/{project_id}/tests`
-
-    See https://docs.us.lifeomic.com/api/#get-tests
-    """
+    """Options to pass to `/v1/genomics/projects/{project_id}/tests`"""
 
     patient_id: Optional[str]
     status: Optional[GenomicTestStatus]
