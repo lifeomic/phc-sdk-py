@@ -14,10 +14,7 @@ MAPPINGS = {
 
 
 class GenomicCopyNumberVariantOptions(PagingApiOptions):
-    """Options to pass to `/v1/genomics/copy-numbers`
-
-    See https://docs.us.lifeomic.com/api/#query-copy-number-data
-    """
+    """Options to pass to `/v1/genomics/copy-numbers`"""
 
     variant_set_ids: List[str] = Field(..., min_items=1)
     include: List[GenomicVariantInclude] = []

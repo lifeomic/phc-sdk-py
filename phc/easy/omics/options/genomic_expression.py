@@ -20,10 +20,7 @@ MAPPINGS = {
 
 
 class GenomicExpressionOptions(PagingApiOptions):
-    """Options to pass to `/v1/genomics/expressions`
-
-    See https://docs.us.lifeomic.com/api/#query-expression-data
-    """
+    """Options to pass to `/v1/genomics/expressions`"""
 
     variant_set_ids: List[str] = Field(..., min_items=1)
     include: List[GenomicVariantInclude] = []

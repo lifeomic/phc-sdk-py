@@ -25,7 +25,7 @@ class Query:
     def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
         """Find count of a given dsl query
 
-        See https://docs.us.lifeomic.com/development/fhir-service/dsl/
+        See https://devcenter.docs.lifeomic.com/development/fhir-service/dsl
 
         Attributes
         ----------
@@ -70,7 +70,7 @@ class Query:
     ):
         """Execute a FHIR query with the DSL
 
-        See https://docs.us.lifeomic.com/development/fhir-service/dsl/
+        See https://devcenter.docs.lifeomic.com/development/fhir-service/dsl
 
         Attributes
         ----------
@@ -202,9 +202,6 @@ class Query:
         response_to_items: Optional[Callable[[Union[list, dict]], list]] = None,
     ):
         """Execute a API query that pages through results
-
-        See https://docs.us.lifeomic.com/api/?shell#lifeomic-core-api-genomics
-        for example
 
         Attributes
         ----------
