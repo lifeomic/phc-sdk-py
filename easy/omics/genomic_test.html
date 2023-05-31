@@ -42,10 +42,7 @@ from phc.easy.abstract.paging_api_item import PagingApiItem, PagingApiOptions
 
 
 class GenomicTestOptions(PagingApiOptions):
-    &#34;&#34;&#34;Options to pass to `/v1/genomics/projects/{project_id}/tests`
-
-    See https://docs.us.lifeomic.com/api/#get-tests
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Options to pass to `/v1/genomics/projects/{project_id}/tests`&#34;&#34;&#34;
 
     patient_id: Optional[str]
     status: Optional[GenomicTestStatus]
@@ -415,7 +412,6 @@ def transform_results(
 </code></dt>
 <dd>
 <div class="desc"><p>Options to pass to <code>/v1/genomics/projects/{project_id}/tests</code></p>
-<p>See <a href="https://docs.us.lifeomic.com/api/#get-tests">https://docs.us.lifeomic.com/api/#get-tests</a></p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
 <p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
 <details class="source">
@@ -423,10 +419,7 @@ def transform_results(
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class GenomicTestOptions(PagingApiOptions):
-    &#34;&#34;&#34;Options to pass to `/v1/genomics/projects/{project_id}/tests`
-
-    See https://docs.us.lifeomic.com/api/#get-tests
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Options to pass to `/v1/genomics/projects/{project_id}/tests`&#34;&#34;&#34;
 
     patient_id: Optional[str]
     status: Optional[GenomicTestStatus]

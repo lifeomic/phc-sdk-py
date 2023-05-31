@@ -49,10 +49,7 @@ MAPPINGS = {
 
 
 class GenomicExpressionOptions(PagingApiOptions):
-    &#34;&#34;&#34;Options to pass to `/v1/genomics/expressions`
-
-    See https://docs.us.lifeomic.com/api/#query-expression-data
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Options to pass to `/v1/genomics/expressions`&#34;&#34;&#34;
 
     variant_set_ids: List[str] = Field(..., min_items=1)
     include: List[GenomicVariantInclude] = []
@@ -215,7 +212,6 @@ errors defaults to 'strict'.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Options to pass to <code>/v1/genomics/expressions</code></p>
-<p>See <a href="https://docs.us.lifeomic.com/api/#query-expression-data">https://docs.us.lifeomic.com/api/#query-expression-data</a></p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
 <p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
 <details class="source">
@@ -223,10 +219,7 @@ errors defaults to 'strict'.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class GenomicExpressionOptions(PagingApiOptions):
-    &#34;&#34;&#34;Options to pass to `/v1/genomics/expressions`
-
-    See https://docs.us.lifeomic.com/api/#query-expression-data
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Options to pass to `/v1/genomics/expressions`&#34;&#34;&#34;
 
     variant_set_ids: List[str] = Field(..., min_items=1)
     include: List[GenomicVariantInclude] = []

@@ -7049,13 +7049,11 @@ def upload_and_run(
 </dd>
 <dt id="phc.easy.Option.GenomicCopyNumberVariantOptions"><code class="name">var <span class="ident">GenomicCopyNumberVariantOptions</span></code></dt>
 <dd>
-<div class="desc"><p>Options to pass to <code>/v1/genomics/copy-numbers</code></p>
-<p>See <a href="https://docs.us.lifeomic.com/api/#query-copy-number-data">https://docs.us.lifeomic.com/api/#query-copy-number-data</a></p></div>
+<div class="desc"><p>Options to pass to <code>/v1/genomics/copy-numbers</code></p></div>
 </dd>
 <dt id="phc.easy.Option.GenomicShortVariantOptions"><code class="name">var <span class="ident">GenomicShortVariantOptions</span></code></dt>
 <dd>
-<div class="desc"><p>Options to pass to <code>/v1/genomics/variants</code></p>
-<p>See <a href="https://docs.us.lifeomic.com/api/#query-short-variant-data">https://docs.us.lifeomic.com/api/#query-short-variant-data</a></p></div>
+<div class="desc"><p>Options to pass to <code>/v1/genomics/variants</code></p></div>
 </dd>
 <dt id="phc.easy.Option.GenomicTestStatus"><code class="name">var <span class="ident">GenomicTestStatus</span></code></dt>
 <dd>
@@ -8615,7 +8613,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
     def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
         &#34;&#34;&#34;Find count of a given dsl query
 
-        See https://docs.us.lifeomic.com/development/fhir-service/dsl/
+        See https://devcenter.docs.lifeomic.com/development/fhir-service/dsl
 
         Attributes
         ----------
@@ -8660,7 +8658,7 @@ def transform_results(df: pd.DataFrame, **expand_args):
     ):
         &#34;&#34;&#34;Execute a FHIR query with the DSL
 
-        See https://docs.us.lifeomic.com/development/fhir-service/dsl/
+        See https://devcenter.docs.lifeomic.com/development/fhir-service/dsl
 
         Attributes
         ----------
@@ -8792,9 +8790,6 @@ def transform_results(df: pd.DataFrame, **expand_args):
         response_to_items: Optional[Callable[[Union[list, dict]], list]] = None,
     ):
         &#34;&#34;&#34;Execute a API query that pages through results
-
-        See https://docs.us.lifeomic.com/api/?shell#lifeomic-core-api-genomics
-        for example
 
         Attributes
         ----------
@@ -9681,7 +9676,7 @@ def execute_composite_aggregations(
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a FHIR query with the DSL</p>
-<p>See <a href="https://docs.us.lifeomic.com/development/fhir-service/dsl/">https://docs.us.lifeomic.com/development/fhir-service/dsl/</a></p>
+<p>See <a href="https://devcenter.docs.lifeomic.com/development/fhir-service/dsl">https://devcenter.docs.lifeomic.com/development/fhir-service/dsl</a></p>
 <h2 id="attributes">Attributes</h2>
 <dl>
 <dt><strong><code>query</code></strong> :&ensp;<code>dict</code></dt>
@@ -9740,7 +9735,7 @@ def execute_fhir_dsl(
 ):
     &#34;&#34;&#34;Execute a FHIR query with the DSL
 
-    See https://docs.us.lifeomic.com/development/fhir-service/dsl/
+    See https://devcenter.docs.lifeomic.com/development/fhir-service/dsl
 
     Attributes
     ----------
@@ -9986,8 +9981,6 @@ def execute_ga4gh(
 </code></dt>
 <dd>
 <div class="desc"><p>Execute a API query that pages through results</p>
-<p>See <a href="https://docs.us.lifeomic.com/api/?shell#lifeomic-core-api-genomics">https://docs.us.lifeomic.com/api/?shell#lifeomic-core-api-genomics</a>
-for example</p>
 <h2 id="attributes">Attributes</h2>
 <dl>
 <dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
@@ -10052,9 +10045,6 @@ def execute_paging_api(
     response_to_items: Optional[Callable[[Union[list, dict]], list]] = None,
 ):
     &#34;&#34;&#34;Execute a API query that pages through results
-
-    See https://docs.us.lifeomic.com/api/?shell#lifeomic-core-api-genomics
-    for example
 
     Attributes
     ----------
@@ -10179,7 +10169,7 @@ def execute_paging_api(
 </code></dt>
 <dd>
 <div class="desc"><p>Find count of a given dsl query</p>
-<p>See <a href="https://docs.us.lifeomic.com/development/fhir-service/dsl/">https://docs.us.lifeomic.com/development/fhir-service/dsl/</a></p>
+<p>See <a href="https://devcenter.docs.lifeomic.com/development/fhir-service/dsl">https://devcenter.docs.lifeomic.com/development/fhir-service/dsl</a></p>
 <h2 id="attributes">Attributes</h2>
 <dl>
 <dt><strong><code>query</code></strong> :&ensp;<code>dict</code></dt>
@@ -10205,7 +10195,7 @@ def execute_paging_api(
 def find_count_of_dsl_query(query: dict, auth_args: Auth = Auth.shared()):
     &#34;&#34;&#34;Find count of a given dsl query
 
-    See https://docs.us.lifeomic.com/development/fhir-service/dsl/
+    See https://devcenter.docs.lifeomic.com/development/fhir-service/dsl
 
     Attributes
     ----------
