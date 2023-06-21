@@ -1,7 +1,6 @@
 """A Python Module for Tools"""
 
 import os
-import math
 import backoff
 from enum import Enum
 
@@ -10,7 +9,6 @@ from phc.base_client import BaseClient
 from phc import ApiResponse
 from urllib.parse import urlencode
 from urllib.request import urlretrieve
-from phc.errors import ApiError
 
 
 class ToolClass(str, Enum):

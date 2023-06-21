@@ -1,7 +1,7 @@
 """A Python module for a base PHC web response."""
 
 import json
-from typing import Callable, Any
+from typing import Callable, Any, Optional, Union
 from urllib.parse import urlparse, parse_qs
 import phc.errors as e
 
@@ -35,7 +35,7 @@ class ApiResponse:
         http_verb: str,
         api_url: str,
         req_args: dict,
-        data: [dict, str],
+        data: Union[dict, str],
         headers: dict,
         status_code: int,
     ):
@@ -66,7 +66,7 @@ class ApiResponse:
 
         return self.data.get(key, None)
 
-    def get(self, key: str, default=None):
+    def get(self, key: str, default: Any = None):
         """Retreives any key from the response data.
 
         Parameters
@@ -91,7 +91,9 @@ class ApiResponse:
 
         return self.data.get(key, default)
 
-    def get_as_dataframe(self, key: str, mapFunc: Callable[[Any], Any] = None):
+    def get_as_dataframe(
+        self, key: str, mapFunc: Optional[Callable[[Any], Any]] = None
+    ):
         """Retrieves any key as a Panda DataFrame
 
         Parameters
@@ -126,7 +128,7 @@ class ApiResponse:
         Returns
         -------
         ApiResponse
-            This method returns it's own object. e.g. 'self'
+            This method returns its own object. e.g. 'self'
 
         Raises
         ------

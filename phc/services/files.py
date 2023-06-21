@@ -2,6 +2,7 @@
 
 import os
 import math
+from typing import Optional
 import backoff
 from phc.base_client import BaseClient
 from phc import ApiResponse
@@ -36,8 +37,8 @@ class Files(BaseClient):
         self,
         project_id: str,
         source: str,
-        file_name: str = None,
-        overwrite: bool = False,
+        file_name: Optional[str] = None,
+        overwrite: Optional[bool] = False,
     ) -> ApiResponse:
         """Upload a file.
 
@@ -185,7 +186,10 @@ class Files(BaseClient):
         return self._api_call(f"files/{file_id}", http_verb="GET")
 
     def update(
-        self, file_id: str, project_id: str = None, name: str = None
+        self,
+        file_id: str,
+        project_id: Optional[str] = None,
+        name: Optional[str] = None,
     ) -> ApiResponse:
         """Update a files by moving it to a new project or by renaming it.
 
@@ -193,9 +197,9 @@ class Files(BaseClient):
         ----------
         file_id : str
             The file ID to update.
-        project_id : str
+        project_id : str, optional
             The new project ID for the file.
-        name : str
+        name : str, optional
             The new file name
 
         Returns
@@ -245,9 +249,9 @@ class Files(BaseClient):
     def get_list(
         self,
         project_id: str,
-        folder: str = None,
-        page_size: int = None,
-        next_page_token: str = None,
+        folder: Optional[str] = None,
+        page_size: Optional[int] = None,
+        next_page_token: Optional[str] = None,
     ) -> ApiResponse:
         """Fetch a list of files in a project
 

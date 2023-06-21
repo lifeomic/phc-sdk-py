@@ -1,5 +1,6 @@
 """A Python Module for Projects"""
 
+from typing import Optional
 from phc.base_client import BaseClient
 from phc import ApiResponse
 from urllib.parse import urlencode
@@ -40,7 +41,7 @@ class Projects(BaseClient):
             json_body["description"] = description
         return self._api_call("projects", json=json_body, http_verb="POST")
 
-    def get(self, project_id) -> ApiResponse:
+    def get(self, project_id: str) -> ApiResponse:
         """Fetch a project by id
 
         Parameters
@@ -56,7 +57,7 @@ class Projects(BaseClient):
         return self._api_call(f"projects/{project_id}", http_verb="GET")
 
     def update(
-        self, project_id: str, name: str, description: str = None
+        self, project_id: str, name: str, description: Optional[str] = None
     ) -> ApiResponse:
         """Update a project
 
@@ -103,9 +104,9 @@ class Projects(BaseClient):
 
     def get_list(
         self,
-        page_size: int = None,
-        next_page_token: str = None,
-        name: str = None,
+        page_size: Optional[int] = None,
+        next_page_token: Optional[str] = None,
+        name: Optional[str] = None,
     ) -> ApiResponse:
         """Fetch a list of projects in an account
 

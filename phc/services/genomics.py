@@ -1,9 +1,9 @@
 """A Python Module for Genomics"""
 
 from enum import Enum
+from typing import Optional
 from phc.base_client import BaseClient
 from phc import ApiResponse
-from urllib.parse import urlencode
 from datetime import datetime
 import uuid
 
@@ -56,13 +56,13 @@ class Genomics(BaseClient):
         reference: Reference,
         sequence_type: SequenceType,
         test_type: str,
-        sequence_id: str = str(uuid.uuid4()),
-        indexed_date: datetime = None,
-        performer_id: str = None,
-        test_id: str = None,
-        update_sample: bool = False,
-        pass_filter: bool = False,
-        output_vcf_name: str = None,
+        sequence_id: Optional[str] = str(uuid.uuid4()),
+        indexed_date: Optional[datetime] = None,
+        performer_id: Optional[str] = None,
+        test_id: Optional[str] = None,
+        update_sample: Optional[bool] = False,
+        pass_filter: Optional[bool] = False,
+        output_vcf_name: Optional[str] = None,
     ) -> ApiResponse:
         """Creates a genomic set
 
@@ -199,11 +199,11 @@ class Genomics(BaseClient):
         self,
         set_type: SetType,
         project_id: str,
-        sequence_id: str = None,
-        patient_id: str = None,
-        status: Status = None,
-        next_page_token: str = None,
-        page_size: int = 50,
+        sequence_id: Optional[str] = None,
+        patient_id: Optional[str] = None,
+        status: Optional[Status] = None,
+        next_page_token: Optional[str] = None,
+        page_size: Optional[int] = 50,
     ) -> ApiResponse:
         """List genomic sets
 
