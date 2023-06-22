@@ -90,7 +90,11 @@ class Project(PagingApiItem):
         ).reset_index(drop=True)
 
     @staticmethod
-    def find(search: str, account: Optional[str] = None, auth_args: Auth = Auth.shared()):
+    def find(
+        search: str,
+        account: Optional[str] = None,
+        auth_args: Auth = Auth.shared(),
+    ):
         """Search for a project using given criteria and return results as a data frame
 
         Attributes
@@ -106,7 +110,9 @@ class Project(PagingApiItem):
         return projects[text.str.contains(search.lower())]
 
     @staticmethod
-    def set_current(search: str, account: Optional[str] = None, auth: Auth = Auth.shared()):
+    def set_current(
+        search: str, account: Optional[str] = None, auth: Auth = Auth.shared()
+    ):
         """Search for a project using given criteria, set it to the authentication
         object, and return the matching projects as a data frame
 
