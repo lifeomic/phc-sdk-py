@@ -146,7 +146,7 @@ __pdoc__ = {
 <dl>
 <dt id="phc.ApiResponse"><code class="flex name class">
 <span>class <span class="ident">ApiResponse</span></span>
-<span>(</span><span>*, client, http_verb: str, api_url: str, req_args: dict, data: [<class 'dict'>, <class 'str'>], headers: dict, status_code: int)</span>
+<span>(</span><span>*, client, http_verb: str, api_url: str, req_args: dict, data: Union[dict, str], headers: dict, status_code: int)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents an API response.</p>
@@ -186,7 +186,7 @@ __pdoc__ = {
         http_verb: str,
         api_url: str,
         req_args: dict,
-        data: [dict, str],
+        data: Union[dict, str],
         headers: dict,
         status_code: int,
     ):
@@ -217,7 +217,7 @@ __pdoc__ = {
 
         return self.data.get(key, None)
 
-    def get(self, key: str, default=None):
+    def get(self, key: str, default: Any = None):
         &#34;&#34;&#34;Retreives any key from the response data.
 
         Parameters
@@ -242,7 +242,9 @@ __pdoc__ = {
 
         return self.data.get(key, default)
 
-    def get_as_dataframe(self, key: str, mapFunc: Callable[[Any], Any] = None):
+    def get_as_dataframe(
+        self, key: str, mapFunc: Optional[Callable[[Any], Any]] = None
+    ):
         &#34;&#34;&#34;Retrieves any key as a Panda DataFrame
 
         Parameters
@@ -277,7 +279,7 @@ __pdoc__ = {
         Returns
         -------
         ApiResponse
-            This method returns it&#39;s own object. e.g. &#39;self&#39;
+            This method returns its own object. e.g. &#39;self&#39;
 
         Raises
         ------
@@ -292,7 +294,7 @@ __pdoc__ = {
 <h3>Methods</h3>
 <dl>
 <dt id="phc.ApiResponse.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, key: str, default=None)</span>
+<span>def <span class="ident">get</span></span>(<span>self, key: str, default: Any = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retreives any key from the response data.</p>
@@ -317,7 +319,7 @@ __pdoc__ = {
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get(self, key: str, default=None):
+<pre><code class="python">def get(self, key: str, default: Any = None):
     &#34;&#34;&#34;Retreives any key from the response data.
 
     Parameters
@@ -344,7 +346,7 @@ __pdoc__ = {
 </details>
 </dd>
 <dt id="phc.ApiResponse.get_as_dataframe"><code class="name flex">
-<span>def <span class="ident">get_as_dataframe</span></span>(<span>self, key: str, mapFunc: Callable[[Any], Any] = None)</span>
+<span>def <span class="ident">get_as_dataframe</span></span>(<span>self, key: str, mapFunc: Optional[Callable[[Any], Any]] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retrieves any key as a Panda DataFrame</p>
@@ -369,7 +371,9 @@ __pdoc__ = {
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_as_dataframe(self, key: str, mapFunc: Callable[[Any], Any] = None):
+<pre><code class="python">def get_as_dataframe(
+    self, key: str, mapFunc: Optional[Callable[[Any], Any]] = None
+):
     &#34;&#34;&#34;Retrieves any key as a Panda DataFrame
 
     Parameters
@@ -407,7 +411,7 @@ __pdoc__ = {
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code><a title="phc.ApiResponse" href="#phc.ApiResponse">ApiResponse</a></code></dt>
-<dd>This method returns it's own object. e.g. 'self'</dd>
+<dd>This method returns its own object. e.g. 'self'</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
@@ -424,7 +428,7 @@ __pdoc__ = {
     Returns
     -------
     ApiResponse
-        This method returns it&#39;s own object. e.g. &#39;self&#39;
+        This method returns its own object. e.g. &#39;self&#39;
 
     Raises
     ------

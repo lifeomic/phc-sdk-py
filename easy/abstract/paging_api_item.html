@@ -27,7 +27,7 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from typing import Union, List
+<pre><code class="python">from typing import Any, Union, List
 import inspect
 from enum import Enum
 
@@ -113,7 +113,7 @@ class PagingApiItem:
         return {}
 
     @staticmethod
-    def _get_current_args(frame: any, local_vars: dict):
+    def _get_current_args(frame: Any, local_vars: dict):
         &#34;&#34;&#34;Helper function for getting all arguments to the current function as a dictionary&#34;&#34;&#34;
         EXCEPTIONS = [&#34;cls&#34;, &#34;frame&#34;]
         all_arg_names = inspect.getargvalues(frame).args
@@ -235,7 +235,7 @@ class PagingApiItem:
         return {}
 
     @staticmethod
-    def _get_current_args(frame: any, local_vars: dict):
+    def _get_current_args(frame: Any, local_vars: dict):
         &#34;&#34;&#34;Helper function for getting all arguments to the current function as a dictionary&#34;&#34;&#34;
         EXCEPTIONS = [&#34;cls&#34;, &#34;frame&#34;]
         all_arg_names = inspect.getargvalues(frame).args

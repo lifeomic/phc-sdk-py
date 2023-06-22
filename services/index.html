@@ -198,7 +198,10 @@ __pdoc__ = {
     &#34;&#34;&#34;
 
     def execute_sql(
-        self, statement: str, project_id: str = None, cohort_id: str = None
+        self,
+        statement: str,
+        project_id: Optional[str] = None,
+        cohort_id: Optional[str] = None,
     ) -&gt; ApiResponse:
         &#34;&#34;&#34;Executes a SQL query against Analytics
 
@@ -288,7 +291,7 @@ __pdoc__ = {
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Analytics.execute_sql"><code class="name flex">
-<span>def <span class="ident">execute_sql</span></span>(<span>self, statement: str, project_id: str = None, cohort_id: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">execute_sql</span></span>(<span>self, statement: str, project_id: Optional[str] = None, cohort_id: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Executes a SQL query against Analytics</p>
@@ -322,7 +325,10 @@ __pdoc__ = {
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def execute_sql(
-    self, statement: str, project_id: str = None, cohort_id: str = None
+    self,
+    statement: str,
+    project_id: Optional[str] = None,
+    cohort_id: Optional[str] = None,
 ) -&gt; ApiResponse:
     &#34;&#34;&#34;Executes a SQL query against Analytics
 
@@ -476,7 +482,11 @@ __pdoc__ = {
     &#34;&#34;&#34;
 
     def create(
-        self, project_id: str, name: str, queries: list, description: str = None
+        self,
+        project_id: str,
+        name: str,
+        queries: list,
+        description: Optional[str] = None,
     ) -&gt; ApiResponse:
         &#34;&#34;&#34;Creates a cohort
 
@@ -505,7 +515,7 @@ __pdoc__ = {
             json_body[&#34;description&#34;] = description
         return self._api_call(&#34;cohorts&#34;, json=json_body, http_verb=&#34;POST&#34;)
 
-    def get(self, cohort_id) -&gt; ApiResponse:
+    def get(self, cohort_id: str) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetch a cohort by id
 
         Parameters
@@ -543,9 +553,9 @@ __pdoc__ = {
     def get_list(
         self,
         project_id: str,
-        page_size: int = None,
-        next_page_token: str = None,
-        name: str = None,
+        page_size: Optional[int] = None,
+        next_page_token: Optional[str] = None,
+        name: Optional[str] = None,
     ) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetch a list of cohorts in a project
 
@@ -583,7 +593,7 @@ __pdoc__ = {
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Cohorts.create"><code class="name flex">
-<span>def <span class="ident">create</span></span>(<span>self, project_id: str, name: str, queries: list, description: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create</span></span>(<span>self, project_id: str, name: str, queries: list, description: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a cohort</p>
@@ -608,7 +618,11 @@ __pdoc__ = {
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def create(
-    self, project_id: str, name: str, queries: list, description: str = None
+    self,
+    project_id: str,
+    name: str,
+    queries: list,
+    description: Optional[str] = None,
 ) -&gt; ApiResponse:
     &#34;&#34;&#34;Creates a cohort
 
@@ -679,7 +693,7 @@ __pdoc__ = {
 </details>
 </dd>
 <dt id="phc.services.Cohorts.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, cohort_id) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get</span></span>(<span>self, cohort_id: str) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetch a cohort by id</p>
@@ -697,7 +711,7 @@ __pdoc__ = {
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get(self, cohort_id) -&gt; ApiResponse:
+<pre><code class="python">def get(self, cohort_id: str) -&gt; ApiResponse:
     &#34;&#34;&#34;Fetch a cohort by id
 
     Parameters
@@ -714,7 +728,7 @@ __pdoc__ = {
 </details>
 </dd>
 <dt id="phc.services.Cohorts.get_list"><code class="name flex">
-<span>def <span class="ident">get_list</span></span>(<span>self, project_id: str, page_size: int = None, next_page_token: str = None, name: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get_list</span></span>(<span>self, project_id: str, page_size: Optional[int] = None, next_page_token: Optional[str] = None, name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetch a list of cohorts in a project</p>
@@ -741,9 +755,9 @@ __pdoc__ = {
 <pre><code class="python">def get_list(
     self,
     project_id: str,
-    page_size: int = None,
-    next_page_token: str = None,
-    name: str = None,
+    page_size: Optional[int] = None,
+    next_page_token: Optional[str] = None,
+    name: Optional[str] = None,
 ) -&gt; ApiResponse:
     &#34;&#34;&#34;Fetch a list of cohorts in a project
 
@@ -1181,8 +1195,8 @@ __pdoc__ = {
         self,
         project_id: str,
         source: str,
-        file_name: str = None,
-        overwrite: bool = False,
+        file_name: Optional[str] = None,
+        overwrite: Optional[bool] = False,
     ) -&gt; ApiResponse:
         &#34;&#34;&#34;Upload a file.
 
@@ -1330,7 +1344,10 @@ __pdoc__ = {
         return self._api_call(f&#34;files/{file_id}&#34;, http_verb=&#34;GET&#34;)
 
     def update(
-        self, file_id: str, project_id: str = None, name: str = None
+        self,
+        file_id: str,
+        project_id: Optional[str] = None,
+        name: Optional[str] = None,
     ) -&gt; ApiResponse:
         &#34;&#34;&#34;Update a files by moving it to a new project or by renaming it.
 
@@ -1338,9 +1355,9 @@ __pdoc__ = {
         ----------
         file_id : str
             The file ID to update.
-        project_id : str
+        project_id : str, optional
             The new project ID for the file.
-        name : str
+        name : str, optional
             The new file name
 
         Returns
@@ -1390,9 +1407,9 @@ __pdoc__ = {
     def get_list(
         self,
         project_id: str,
-        folder: str = None,
-        page_size: int = None,
-        next_page_token: str = None,
+        folder: Optional[str] = None,
+        page_size: Optional[int] = None,
+        next_page_token: Optional[str] = None,
     ) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetch a list of files in a project
 
@@ -1627,7 +1644,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Files.get_list"><code class="name flex">
-<span>def <span class="ident">get_list</span></span>(<span>self, project_id: str, folder: str = None, page_size: int = None, next_page_token: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get_list</span></span>(<span>self, project_id: str, folder: Optional[str] = None, page_size: Optional[int] = None, next_page_token: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetch a list of files in a project</p>
@@ -1654,9 +1671,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <pre><code class="python">def get_list(
     self,
     project_id: str,
-    folder: str = None,
-    page_size: int = None,
-    next_page_token: str = None,
+    folder: Optional[str] = None,
+    page_size: Optional[int] = None,
+    next_page_token: Optional[str] = None,
 ) -&gt; ApiResponse:
     &#34;&#34;&#34;Fetch a list of files in a project
 
@@ -1691,7 +1708,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Files.update"><code class="name flex">
-<span>def <span class="ident">update</span></span>(<span>self, file_id: str, project_id: str = None, name: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">update</span></span>(<span>self, file_id: str, project_id: Optional[str] = None, name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Update a files by moving it to a new project or by renaming it.</p>
@@ -1699,9 +1716,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <dl>
 <dt><strong><code>file_id</code></strong> :&ensp;<code>str</code></dt>
 <dd>The file ID to update.</dd>
-<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code>, optional</dt>
 <dd>The new project ID for the file.</dd>
-<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code>, optional</dt>
 <dd>The new file name</dd>
 </dl>
 <h2 id="returns">Returns</h2>
@@ -1714,7 +1731,10 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def update(
-    self, file_id: str, project_id: str = None, name: str = None
+    self,
+    file_id: str,
+    project_id: Optional[str] = None,
+    name: Optional[str] = None,
 ) -&gt; ApiResponse:
     &#34;&#34;&#34;Update a files by moving it to a new project or by renaming it.
 
@@ -1722,9 +1742,9 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
     ----------
     file_id : str
         The file ID to update.
-    project_id : str
+    project_id : str, optional
         The new project ID for the file.
-    name : str
+    name : str, optional
         The new file name
 
     Returns
@@ -1755,7 +1775,7 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
 </details>
 </dd>
 <dt id="phc.services.Files.upload"><code class="name flex">
-<span>def <span class="ident">upload</span></span>(<span>self, project_id: str, source: str, file_name: str = None, overwrite: bool = False) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">upload</span></span>(<span>self, project_id: str, source: str, file_name: Optional[str] = None, overwrite: Optional[bool] = False) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Upload a file.</p>
@@ -1788,8 +1808,8 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
     self,
     project_id: str,
     source: str,
-    file_name: str = None,
-    overwrite: bool = False,
+    file_name: Optional[str] = None,
+    overwrite: Optional[bool] = False,
 ) -&gt; ApiResponse:
     &#34;&#34;&#34;Upload a file.
 
@@ -2707,13 +2727,13 @@ The ingestion that was created.</p></div>
         reference: Reference,
         sequence_type: SequenceType,
         test_type: str,
-        sequence_id: str = str(uuid.uuid4()),
-        indexed_date: datetime = None,
-        performer_id: str = None,
-        test_id: str = None,
-        update_sample: bool = False,
-        pass_filter: bool = False,
-        output_vcf_name: str = None,
+        sequence_id: Optional[str] = str(uuid.uuid4()),
+        indexed_date: Optional[datetime] = None,
+        performer_id: Optional[str] = None,
+        test_id: Optional[str] = None,
+        update_sample: Optional[bool] = False,
+        pass_filter: Optional[bool] = False,
+        output_vcf_name: Optional[str] = None,
     ) -&gt; ApiResponse:
         &#34;&#34;&#34;Creates a genomic set
 
@@ -2850,11 +2870,11 @@ The ingestion that was created.</p></div>
         self,
         set_type: SetType,
         project_id: str,
-        sequence_id: str = None,
-        patient_id: str = None,
-        status: Status = None,
-        next_page_token: str = None,
-        page_size: int = 50,
+        sequence_id: Optional[str] = None,
+        patient_id: Optional[str] = None,
+        status: Optional[Status] = None,
+        next_page_token: Optional[str] = None,
+        page_size: Optional[int] = 50,
     ) -&gt; ApiResponse:
         &#34;&#34;&#34;List genomic sets
 
@@ -2982,7 +3002,7 @@ The ingestion that was created.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: str = 'e0452ca9-7594-4c0c-bed1-057485c2b50c', indexed_date: datetime.datetime = None, performer_id: str = None, test_id: str = None, update_sample: bool = False, pass_filter: bool = False, output_vcf_name: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = '117d8e59-e6de-4e19-a599-3eb86a00d831', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
@@ -3038,13 +3058,13 @@ The ingestion that was created.</p></div>
     reference: Reference,
     sequence_type: SequenceType,
     test_type: str,
-    sequence_id: str = str(uuid.uuid4()),
-    indexed_date: datetime = None,
-    performer_id: str = None,
-    test_id: str = None,
-    update_sample: bool = False,
-    pass_filter: bool = False,
-    output_vcf_name: str = None,
+    sequence_id: Optional[str] = str(uuid.uuid4()),
+    indexed_date: Optional[datetime] = None,
+    performer_id: Optional[str] = None,
+    test_id: Optional[str] = None,
+    update_sample: Optional[bool] = False,
+    pass_filter: Optional[bool] = False,
+    output_vcf_name: Optional[str] = None,
 ) -&gt; ApiResponse:
     &#34;&#34;&#34;Creates a genomic set
 
@@ -3286,7 +3306,7 @@ The ingestion that was created.</p></div>
 </details>
 </dd>
 <dt id="phc.services.Genomics.list_sets"><code class="name flex">
-<span>def <span class="ident">list_sets</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, sequence_id: str = None, patient_id: str = None, status: phc.services.genomics.Genomics.Status = None, next_page_token: str = None, page_size: int = 50) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">list_sets</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, sequence_id: Optional[str] = None, patient_id: Optional[str] = None, status: Optional[phc.services.genomics.Genomics.Status] = None, next_page_token: Optional[str] = None, page_size: Optional[int] = 50) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>List genomic sets</p>
@@ -3320,11 +3340,11 @@ The ingestion that was created.</p></div>
     self,
     set_type: SetType,
     project_id: str,
-    sequence_id: str = None,
-    patient_id: str = None,
-    status: Status = None,
-    next_page_token: str = None,
-    page_size: int = 50,
+    sequence_id: Optional[str] = None,
+    patient_id: Optional[str] = None,
+    status: Optional[Status] = None,
+    next_page_token: Optional[str] = None,
+    page_size: Optional[int] = 50,
 ) -&gt; ApiResponse:
     &#34;&#34;&#34;List genomic sets
 
@@ -3512,7 +3532,7 @@ The ingestion that was created.</p></div>
             json_body[&#34;description&#34;] = description
         return self._api_call(&#34;projects&#34;, json=json_body, http_verb=&#34;POST&#34;)
 
-    def get(self, project_id) -&gt; ApiResponse:
+    def get(self, project_id: str) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetch a project by id
 
         Parameters
@@ -3528,7 +3548,7 @@ The ingestion that was created.</p></div>
         return self._api_call(f&#34;projects/{project_id}&#34;, http_verb=&#34;GET&#34;)
 
     def update(
-        self, project_id: str, name: str, description: str = None
+        self, project_id: str, name: str, description: Optional[str] = None
     ) -&gt; ApiResponse:
         &#34;&#34;&#34;Update a project
 
@@ -3575,9 +3595,9 @@ The ingestion that was created.</p></div>
 
     def get_list(
         self,
-        page_size: int = None,
-        next_page_token: str = None,
-        name: str = None,
+        page_size: Optional[int] = None,
+        next_page_token: Optional[str] = None,
+        name: Optional[str] = None,
     ) -&gt; ApiResponse:
         &#34;&#34;&#34;Fetch a list of projects in an account
 
@@ -3695,7 +3715,7 @@ The ingestion that was created.</p></div>
 </details>
 </dd>
 <dt id="phc.services.Projects.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, project_id) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get</span></span>(<span>self, project_id: str) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetch a project by id</p>
@@ -3713,7 +3733,7 @@ The ingestion that was created.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get(self, project_id) -&gt; ApiResponse:
+<pre><code class="python">def get(self, project_id: str) -&gt; ApiResponse:
     &#34;&#34;&#34;Fetch a project by id
 
     Parameters
@@ -3730,7 +3750,7 @@ The ingestion that was created.</p></div>
 </details>
 </dd>
 <dt id="phc.services.Projects.get_list"><code class="name flex">
-<span>def <span class="ident">get_list</span></span>(<span>self, page_size: int = None, next_page_token: str = None, name: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">get_list</span></span>(<span>self, page_size: Optional[int] = None, next_page_token: Optional[str] = None, name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetch a list of projects in an account</p>
@@ -3754,9 +3774,9 @@ The ingestion that was created.</p></div>
 </summary>
 <pre><code class="python">def get_list(
     self,
-    page_size: int = None,
-    next_page_token: str = None,
-    name: str = None,
+    page_size: Optional[int] = None,
+    next_page_token: Optional[str] = None,
+    name: Optional[str] = None,
 ) -&gt; ApiResponse:
     &#34;&#34;&#34;Fetch a list of projects in an account
 
@@ -3787,7 +3807,7 @@ The ingestion that was created.</p></div>
 </details>
 </dd>
 <dt id="phc.services.Projects.update"><code class="name flex">
-<span>def <span class="ident">update</span></span>(<span>self, project_id: str, name: str, description: str = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">update</span></span>(<span>self, project_id: str, name: str, description: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Update a project</p>
@@ -3810,7 +3830,7 @@ The ingestion that was created.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def update(
-    self, project_id: str, name: str, description: str = None
+    self, project_id: str, name: str, description: Optional[str] = None
 ) -&gt; ApiResponse:
     &#34;&#34;&#34;Update a project
 
