@@ -1,3 +1,5 @@
+"""A CLI for fetching one-schema schemas and generating Python API clients for them."""
+
 import json
 import re
 from typing import Dict, Optional
