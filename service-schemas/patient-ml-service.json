@@ -1,0 +1,1598 @@
+{
+  "schema": {
+    "Resources": {
+      "MlProblemDefinitionBase": {
+        "required": [],
+        "additionalProperties": true,
+        "type": "object",
+        "properties": {
+          "retrainEvery": {
+            "description": "If provided, the model will automatically be retrained if this many milliseconds have passed since the last run. Models will not be retrained more frequently than once per day, and this policy is only checked once per day, so more than this many milliseconds may actually pass before the model is retrained.",
+            "type": "number"
+          }
+        }
+      },
+      "LabelDefinitionBase": {
+        "required": [
+          "name",
+          "description"
+        ],
+        "additionalProperties": true,
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "UUID uniquely identifying this label.",
+            "type": "string"
+          },
+          "name": {
+            "description": "The unique name of the label.",
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "LabelDefinition": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/LabelDefinitionBase"
+          },
+          {
+            "required": [
+              "id",
+              "index"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "index": {
+                "description": "The unique integer identifying this label, in the range [0,255]. It must never change during the life of the model because it is stored in training data as the label's identifier.",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              }
+            }
+          }
+        ]
+      },
+      "LabelsDefinitionInput": {
+        "required": [
+          "labels"
+        ],
+        "additionalProperties": true,
+        "type": "object",
+        "properties": {
+          "labels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/LabelDefinitionBase"
+            }
+          }
+        }
+      },
+      "LabelsDefinition": {
+        "required": [
+          "labels",
+          "maxLabelIndex"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "labels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/LabelDefinition"
+            }
+          },
+          "maxLabelIndex": {
+            "description": "The maximum index used by any label defined for this model over the life of the model. This field cannot be set by a user but is used to track what label indices have already been exhausted.",
+            "type": "integer",
+            "minimum": -1,
+            "maximum": 255
+          }
+        }
+      },
+      "ClassificationProblemInput": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/MlProblemDefinitionBase"
+          },
+          {
+            "required": [
+              "labelDefinition"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "labelDefinition": {
+                "$ref": "#/definitions/LabelsDefinitionInput"
+              }
+            }
+          }
+        ]
+      },
+      "ClassificationProblem": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/MlProblemDefinitionBase"
+          },
+          {
+            "required": [
+              "labelDefinition"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "labelDefinition": {
+                "$ref": "#/definitions/LabelsDefinition"
+              }
+            }
+          }
+        ]
+      },
+      "ImageSegmentationProblemBase": {
+        "required": [
+          "problemType",
+          "trainingDataFilter"
+        ],
+        "additionalProperties": true,
+        "type": "object",
+        "properties": {
+          "problemType": {
+            "type": "string",
+            "enum": [
+              "imgSeg"
+            ]
+          },
+          "trainingDataFilter": {
+            "description": "Used to filter through patient data to identify image/mask pairs for model training.",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/FhirCodesFilter"
+              }
+            ]
+          }
+        }
+      },
+      "ImageSegmentationProblemInput": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/ClassificationProblemInput"
+          },
+          {
+            "$ref": "#/definitions/ImageSegmentationProblemBase"
+          }
+        ]
+      },
+      "ImageSegmentationProblem": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/ClassificationProblem"
+          },
+          {
+            "$ref": "#/definitions/ImageSegmentationProblemBase"
+          }
+        ]
+      },
+      "ImageClassificationProblemBase": {
+        "required": [
+          "problemType",
+          "trainingDataFilter"
+        ],
+        "additionalProperties": true,
+        "type": "object",
+        "properties": {
+          "problemType": {
+            "type": "string",
+            "enum": [
+              "imgClf"
+            ]
+          },
+          "trainingDataFilter": {
+            "description": "Used to filter through patient data to identify the input images for the model.",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/FhirCodesFilter"
+              }
+            ]
+          }
+        }
+      },
+      "ImageClassificationProblemInput": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/ClassificationProblemInput"
+          },
+          {
+            "$ref": "#/definitions/ImageClassificationProblemBase"
+          }
+        ]
+      },
+      "ImageClassificationProblem": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/ClassificationProblem"
+          },
+          {
+            "$ref": "#/definitions/ImageClassificationProblemBase"
+          }
+        ]
+      },
+      "MlProblemDefinitionInput": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/ImageSegmentationProblemInput"
+          },
+          {
+            "$ref": "#/definitions/ImageClassificationProblemInput"
+          }
+        ]
+      },
+      "MlProblemDefinition": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/ImageSegmentationProblem"
+          },
+          {
+            "$ref": "#/definitions/ImageClassificationProblem"
+          }
+        ]
+      },
+      "ImageSegmentationArea": {
+        "required": [
+          "id",
+          "rle"
+        ],
+        "additionalProperties": false,
+        "description": "A run-length encoded (RLE) 4 channel color image, representing the mask for a single label.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The ID of the label this mask is for.",
+            "type": "string"
+          },
+          "rle": {
+            "description": "The run-length encoded mask; an array of 8-bit unsigned integers.",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "ImageSegmentationLabelData": {
+        "required": [
+          "labelType",
+          "projectId",
+          "height",
+          "width",
+          "areas"
+        ],
+        "additionalProperties": false,
+        "description": "A raw image segmentation, in the format LabelStudio provides.",
+        "type": "object",
+        "properties": {
+          "labelType": {
+            "type": "string",
+            "enum": [
+              "imgSeg"
+            ]
+          },
+          "projectId": {
+            "description": "The ID of the LifeOmic project the label file is saved under.",
+            "type": "string"
+          },
+          "height": {
+            "description": "The height of the segmentation mask in pixels.",
+            "type": "integer"
+          },
+          "width": {
+            "description": "The width of the segmentation mask in pixels.",
+            "type": "integer"
+          },
+          "areas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ImageSegmentationArea"
+            }
+          }
+        }
+      },
+      "LabelFileData": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/ImageSegmentationLabelData"
+          }
+        ]
+      },
+      "Tag": {
+        "required": [
+          "name",
+          "value"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "Tags": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Tag"
+        }
+      },
+      "LabelBase": {
+        "required": [],
+        "additionalProperties": true,
+        "type": "object",
+        "properties": {
+          "isConfirmed": {
+            "type": "boolean",
+            "description": "A confirmed label is believed to be correct and may be used during training and evaluation."
+          },
+          "lastConfirmedBy": {
+            "type": "string",
+            "description": "The email address or other identifier of the user who last confirmed this label."
+          },
+          "updatedAt": {
+            "description": "Timestamp for when the label was last updated or created expressed as milliseconds since the UTC epoch.",
+            "type": "number"
+          },
+          "tags": {
+            "$ref": "#/definitions/Tags"
+          }
+        }
+      },
+      "ImageSegmentationLabel": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/LabelBase"
+          },
+          {
+            "required": [
+              "labelType",
+              "mask"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "labelType": {
+                "type": "string",
+                "enum": [
+                  "imgSeg"
+                ]
+              },
+              "mask": {
+                "required": [
+                  "fileId"
+                ],
+                "additionalProperties": false,
+                "type": "object",
+                "description": "The fileId of an image containing per-pixel labels",
+                "properties": {
+                  "fileId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ImageClassificationLabel": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/LabelBase"
+          },
+          {
+            "required": [
+              "labelType",
+              "classes"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "labelType": {
+                "type": "string",
+                "enum": [
+                  "imgClf"
+                ]
+              },
+              "classes": {
+                "type": "array",
+                "description": "An array of integers representing the class(es) of the image",
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Label": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/ImageSegmentationLabel"
+          },
+          {
+            "$ref": "#/definitions/ImageClassificationLabel"
+          }
+        ]
+      },
+      "ExampleBase": {
+        "required": [
+          "id",
+          "updatedAt"
+        ],
+        "additionalProperties": true,
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "description": "Timestamp expressed as milliseconds since the UTC epoch.",
+            "type": "number"
+          }
+        }
+      },
+      "ImageSegmentationExample": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/ExampleBase"
+          },
+          {
+            "required": [
+              "exampleType",
+              "image"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "exampleType": {
+                "type": "string",
+                "enum": [
+                  "imgSeg"
+                ]
+              },
+              "image": {
+                "required": [
+                  "fileId"
+                ],
+                "additionalProperties": false,
+                "type": "object",
+                "properties": {
+                  "fileId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "label": {
+                "$ref": "#/definitions/ImageSegmentationLabel"
+              }
+            }
+          }
+        ]
+      },
+      "ImageClassificationExample": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/ExampleBase"
+          },
+          {
+            "required": [
+              "exampleType",
+              "image"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "exampleType": {
+                "type": "string",
+                "enum": [
+                  "imgClf"
+                ]
+              },
+              "image": {
+                "required": [
+                  "fileId"
+                ],
+                "additionalProperties": false,
+                "type": "object",
+                "properties": {
+                  "fileId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "label": {
+                "$ref": "#/definitions/ImageClassificationLabel"
+              }
+            }
+          }
+        ]
+      },
+      "Example": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/ImageSegmentationExample"
+          },
+          {
+            "$ref": "#/definitions/ImageClassificationExample"
+          }
+        ]
+      },
+      "FhirCodesFilter": {
+        "required": [
+          "filterType",
+          "codes"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "description": "Used to find FHIR resources containing a type code that equals any value in the codes array",
+        "properties": {
+          "filterType": {
+            "type": "string",
+            "enum": [
+              "FhirCodesFilter"
+            ]
+          },
+          "codes": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CategoricalParameterSpace": {
+        "required": [
+          "type",
+          "name",
+          "values"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "categorical"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "NumericScale": {
+        "type": "string",
+        "enum": [
+          "auto",
+          "linear",
+          "log",
+          "reverseLog"
+        ]
+      },
+      "NumericParameterSpace": {
+        "required": [
+          "name",
+          "min",
+          "max",
+          "scale"
+        ],
+        "additionalProperties": true,
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "min": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          },
+          "scale": {
+            "$ref": "#/definitions/NumericScale"
+          }
+        }
+      },
+      "ContinuousParameterSpace": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/NumericParameterSpace"
+          },
+          {
+            "required": [
+              "type"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "continuous"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "IntegerParameterSpace": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/NumericParameterSpace"
+          },
+          {
+            "required": [
+              "type"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "integer"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "ParameterSpace": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/CategoricalParameterSpace"
+          },
+          {
+            "$ref": "#/definitions/ContinuousParameterSpace"
+          },
+          {
+            "$ref": "#/definitions/IntegerParameterSpace"
+          }
+        ]
+      },
+      "OptimizationObjective": {
+        "required": [
+          "direction",
+          "metric"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "direction": {
+            "type": "string",
+            "enum": [
+              "minimize",
+              "maximize"
+            ]
+          },
+          "metric": {
+            "type": "string"
+          }
+        }
+      },
+      "MetricDefinition": {
+        "required": [
+          "name",
+          "regex"
+        ],
+        "additionalProperties": false,
+        "description": "Camel-cased mirror of https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_MetricDefinition.html.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "regex": {
+            "type": "string"
+          }
+        }
+      },
+      "TuningJobTrainingApproach": {
+        "required": [
+          "type",
+          "trainingImage",
+          "metricDefinitions",
+          "objective",
+          "searchSpace"
+        ],
+        "additionalProperties": true,
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "tuningJob"
+            ]
+          },
+          "trainingImage": {
+            "type": "string",
+            "description": "An aws ecr image uri of the form <account-id>.dkr.ecr.<region>.amazonaws.com/<repo-name>:<tag>",
+            "pattern": "^[0-9]+\\.dkr.ecr.[-a-z0-9]+\\.amazonaws\\.com\\/[-_a-zA-Z0-9]+:[-_a-zA-Z0-9]+$"
+          },
+          "metricDefinitions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/MetricDefinition"
+            }
+          },
+          "objective": {
+            "description": "The metric to optimize during the hyperparameter tuning process.",
+            "$ref": "#/definitions/OptimizationObjective"
+          },
+          "searchSpace": {
+            "description": "The hyperparameter search space to explore during hyperparameter tuning.",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ParameterSpace"
+            }
+          },
+          "maxTrials": {
+            "description": "The maximum number of candidate models to consider in a given model run.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          }
+        }
+      },
+      "TrainingApproach": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/TuningJobTrainingApproach"
+          }
+        ]
+      },
+      "DeployApproachBase": {
+        "required": [
+          "inferenceImage"
+        ],
+        "additionalProperties": true,
+        "type": "object",
+        "properties": {
+          "inferenceImage": {
+            "type": "string",
+            "description": "An aws ecr image uri of the form <account-id>.dkr.ecr.<region>.amazonaws.com/<repo-name>:<tag>",
+            "pattern": "^[0-9]+\\.dkr.ecr.[-a-z0-9]+\\.amazonaws\\.com\\/[-_a-zA-Z0-9]+:[-_a-zA-Z0-9]+$"
+          }
+        }
+      },
+      "EdgeDeployApproach": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/DeployApproachBase"
+          },
+          {
+            "required": [
+              "type"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "edge"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "CloudDeployApproach": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/DeployApproachBase"
+          },
+          {
+            "required": [
+              "type"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "cloud"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "DeployApproach": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/EdgeDeployApproach"
+          },
+          {
+            "$ref": "#/definitions/CloudDeployApproach"
+          }
+        ]
+      },
+      "EvaluationApproach": {
+        "required": [
+          "type",
+          "imageUri"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "customImage"
+            ]
+          },
+          "imageUri": {
+            "type": "string",
+            "description": "An aws ecr image uri of the form <account-id>.dkr.ecr.<region>.amazonaws.com/<repo-name>:<tag>",
+            "pattern": "^[0-9]+\\.dkr.ecr.[-a-z0-9]+\\.amazonaws\\.com\\/[-_a-zA-Z0-9]+:[-_a-zA-Z0-9]+$"
+          }
+        }
+      },
+      "ModelConfigBase": {
+        "required": [
+          "name",
+          "description",
+          "trainingApproach",
+          "deployApproach"
+        ],
+        "additionalProperties": true,
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "trainingApproach": {
+            "$ref": "#/definitions/TrainingApproach"
+          },
+          "deployApproach": {
+            "$ref": "#/definitions/DeployApproach"
+          },
+          "evaluationApproach": {
+            "$ref": "#/definitions/EvaluationApproach"
+          }
+        }
+      },
+      "ModelConfigInput": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/ModelConfigBase"
+          },
+          {
+            "required": [
+              "problemDefinition"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "problemDefinition": {
+                "$ref": "#/definitions/MlProblemDefinitionInput"
+              }
+            }
+          }
+        ]
+      },
+      "ModelConfig": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/ModelConfigBase"
+          },
+          {
+            "required": [
+              "id",
+              "accountId",
+              "problemDefinition"
+            ],
+            "additionalProperties": false,
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "UUID uniquely identifying this model config.",
+                "type": "string"
+              },
+              "accountId": {
+                "type": "string"
+              },
+              "problemDefinition": {
+                "$ref": "#/definitions/MlProblemDefinition"
+              },
+              "deployedId": {
+                "description": "The ID of the model version currently deployed for this model config.\n@deprecated use championId instead",
+                "type": "string"
+              },
+              "championId": {
+                "description": "The ID of the champion model run for this model config.",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "Split": {
+        "required": [
+          "n",
+          "start",
+          "end",
+          "uri"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "n": {
+            "description": "The number of examples in this split.",
+            "type": "number"
+          },
+          "start": {
+            "description": "Timestamp marking the beginning of the data for this split (inclusive). Expressed as milliseconds since the UTC epoch.",
+            "type": "number"
+          },
+          "end": {
+            "description": "Timestamp marking the end of the data for this split (exclusive). Expressed as milliseconds since the UTC epoch.",
+            "type": "number"
+          },
+          "uri": {
+            "description": "S3 URI of where a copy of this exact split is saved.",
+            "type": "string",
+            "pattern": "^s3:\\/\\/.+$"
+          }
+        }
+      },
+      "Metric": {
+        "required": [
+          "name",
+          "value",
+          "stage"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the metric e.g. \"Cross Entopy Loss\", \"Accuracy\", \"F1 Macro\", etc.",
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          },
+          "stage": {
+            "description": "The stage of the model run this metric was computed in. If `training`, the metric could have been computed over the train or val set. If `evaluation`, the metric was computed over the test set.",
+            "type": "string",
+            "enum": [
+              "training",
+              "evaluation"
+            ]
+          }
+        }
+      },
+      "ApprovalChoice": {
+        "type": "string",
+        "enum": [
+          "approved",
+          "rejected"
+        ]
+      },
+      "ApprovalDecisionBase": {
+        "required": [
+          "timestamp",
+          "decision"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "description": "Timestamp of when the decision was made. Expressed as milliseconds since the UTC epoch.",
+            "type": "number"
+          },
+          "decision": {
+            "$ref": "#/definitions/ApprovalChoice"
+          }
+        }
+      },
+      "SystemApprovalDecision": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/ApprovalDecisionBase"
+          },
+          {
+            "required": [
+              "actor"
+            ],
+            "additionalProperties": false,
+            "type": "object",
+            "properties": {
+              "actor": {
+                "type": "string",
+                "enum": [
+                  "system"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "UserApprovalDecision": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/ApprovalDecisionBase"
+          },
+          {
+            "required": [
+              "actor",
+              "user"
+            ],
+            "additionalProperties": false,
+            "type": "object",
+            "properties": {
+              "actor": {
+                "type": "string",
+                "enum": [
+                  "user"
+                ]
+              },
+              "user": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ApprovalDecision": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/SystemApprovalDecision"
+          },
+          {
+            "$ref": "#/definitions/UserApprovalDecision"
+          }
+        ]
+      },
+      "RunSplits": {
+        "required": [
+          "train",
+          "val",
+          "test"
+        ],
+        "additionalProperties": false,
+        "description": "Information about the different splits of the dataset used to train this model version.",
+        "type": "object",
+        "properties": {
+          "train": {
+            "$ref": "#/definitions/Split"
+          },
+          "val": {
+            "$ref": "#/definitions/Split"
+          },
+          "test": {
+            "$ref": "#/definitions/Split"
+          }
+        }
+      },
+      "RunMetrics": {
+        "required": [
+          "challenger",
+          "champion"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "challenger": {
+            "description": "Metrics about how the model version trained in this run (the challenger) performed on this run's test set.",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Metric"
+            }
+          },
+          "champion": {
+            "description": "Metrics about how the current best model (the champion) performed on this run's test set.",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Metric"
+            }
+          }
+        }
+      },
+      "Parameter": {
+        "required": [
+          "name",
+          "value"
+        ],
+        "additionalProperties": false,
+        "description": "A hyperparameter value. The values themselves are represented as strings.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "ModelRun": {
+        "required": [
+          "id",
+          "slug",
+          "modelId",
+          "accountId",
+          "status",
+          "start",
+          "hyperparameters",
+          "metrics",
+          "approvals",
+          "problemDefinition",
+          "trainingApproach",
+          "deployApproach"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "UUID uniquely identifying this model run.",
+            "type": "string"
+          },
+          "slug": {
+            "description": "Human-readable slug that acts as an auto-generated name for the run. This field is not guaranteed to be unique, so cannot be used reliably as a unique identifier.",
+            "type": "string"
+          },
+          "modelId": {
+            "description": "ID of the model config this run was produced for.",
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "modelArtifactUri": {
+            "description": "S3 URI location where the final trained model artifact produced by this run is saved to.",
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "running",
+              "succeeded",
+              "failed"
+            ]
+          },
+          "error": {
+            "description": "If `status` is 'failed', gives the reason why the run failed.",
+            "type": "string"
+          },
+          "deployStatus": {
+            "type": "string",
+            "enum": [
+              "deploying",
+              "succeeded",
+              "failed"
+            ]
+          },
+          "deployError": {
+            "description": "If `deployStatus` is 'failed', gives the reason why deploying the model endpoint failed",
+            "type": "string"
+          },
+          "start": {
+            "description": "Timestamp of when the run started. Expressed as milliseconds since the UTC epoch.",
+            "type": "number"
+          },
+          "end": {
+            "description": "Timestamp of when the run ended. Expressed as milliseconds since the UTC epoch.",
+            "type": "number"
+          },
+          "isArchived": {
+            "type": "boolean",
+            "description": "True if this run has been archived. Archived runs' related artifacts are deleted, and they can no longer be deployed."
+          },
+          "splits": {
+            "$ref": "#/definitions/RunSplits"
+          },
+          "hyperparameters": {
+            "description": "The hyperparameters used to train the model version created by this run.",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Parameter"
+            }
+          },
+          "championId": {
+            "description": "The ID of the model run that was the current champion while this model run was running. All champion metrics on this model run represent that champion's performance on this run's dataset.",
+            "type": "string"
+          },
+          "metrics": {
+            "$ref": "#/definitions/RunMetrics"
+          },
+          "approvals": {
+            "description": "Decisions made by various actors representing whether they think this model version should be used in production and become the new champion.",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ApprovalDecision"
+            }
+          },
+          "problemDefinition": {
+            "$ref": "#/definitions/MlProblemDefinition"
+          },
+          "trainingApproach": {
+            "$ref": "#/definitions/TrainingApproach"
+          },
+          "deployApproach": {
+            "$ref": "#/definitions/DeployApproach"
+          },
+          "evaluationApproach": {
+            "$ref": "#/definitions/EvaluationApproach"
+          }
+        }
+      }
+    },
+    "Endpoints": {
+      "POST /models": {
+        "Name": "createModel",
+        "Description": "Creates a new model via a model config object.",
+        "Request": {
+          "$ref": "#/definitions/ModelConfigInput"
+        },
+        "Response": {
+          "required": [
+            "model"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "model": {
+              "$ref": "#/definitions/ModelConfig"
+            }
+          }
+        }
+      },
+      "PUT /models/:id": {
+        "Name": "updateModel",
+        "Description": "Updates a model config.",
+        "Request": {
+          "$ref": "#/definitions/ModelConfigInput"
+        },
+        "Response": {
+          "required": [
+            "model"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "model": {
+              "$ref": "#/definitions/ModelConfig"
+            }
+          }
+        }
+      },
+      "DELETE /models/:id": {
+        "Name": "deleteModel",
+        "Description": "Deletes a model.",
+        "Response": {
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "The id of the model that was deleted.",
+              "type": "string"
+            }
+          }
+        },
+        "Request": {}
+      },
+      "GET /models": {
+        "Name": "getModels",
+        "Description": "Gets all model configs for an account.",
+        "Response": {
+          "required": [
+            "models"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "models": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ModelConfig"
+              }
+            }
+          }
+        },
+        "Request": {}
+      },
+      "GET /models/:id": {
+        "Name": "getModel",
+        "Description": "Gets a model config.",
+        "Response": {
+          "required": [],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "model": {
+              "$ref": "#/definitions/ModelConfig"
+            }
+          }
+        },
+        "Request": {}
+      },
+      "GET /models/:id/predict": {
+        "Name": "predict",
+        "Description": "Produces a model prediction for a given patient.",
+        "Request": {
+          "required": [
+            "patientId"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "patientId": {
+              "type": "string"
+            }
+          }
+        },
+        "Response": {
+          "additionalProperties": false,
+          "type": "object",
+          "description": "TODO - stub out the response type for predictions."
+        }
+      },
+      "POST /models/:modelId/runs": {
+        "Name": "createRun",
+        "Description": "Begins a new ML run for a given model.",
+        "Response": {
+          "required": [
+            "runId"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "runId": {
+              "description": "The id of the newly created run. Can be used to fetch data about the run.",
+              "type": "string"
+            }
+          }
+        },
+        "Request": {}
+      },
+      "GET /models/:modelId/runs": {
+        "Name": "getRuns",
+        "Description": "Gets data for all ML runs for a model.",
+        "Response": {
+          "required": [
+            "runs"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "runs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ModelRun"
+              }
+            }
+          }
+        },
+        "Request": {}
+      },
+      "GET /models/:modelId/runs/:runId": {
+        "Name": "getRun",
+        "Description": "Gets data for a particular run.",
+        "Response": {
+          "required": [],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "run": {
+              "$ref": "#/definitions/ModelRun"
+            }
+          }
+        },
+        "Request": {}
+      },
+      "GET /models/:modelId/runs/:runId/model-artifact": {
+        "Name": "getModelArtifact",
+        "Description": "Gets a url that can be used to download the model artifact for a particular run.",
+        "Response": {
+          "required": [
+            "url"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            }
+          }
+        },
+        "Request": {}
+      },
+      "POST /models/:modelId/runs/:runId/approvals": {
+        "Name": "createApprovalDecision",
+        "Description": "Adds a new approval decision to a model run",
+        "Request": {
+          "required": [
+            "choice"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "choice": {
+              "$ref": "#/definitions/ApprovalChoice"
+            }
+          }
+        },
+        "Response": {
+          "required": [
+            "approvalDecision"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "approvalDecision": {
+              "$ref": "#/definitions/UserApprovalDecision"
+            }
+          }
+        }
+      },
+      "GET /models/:modelId/examples": {
+        "Name": "getExamples",
+        "Description": "Fetches a page of training data examples for data labeling.",
+        "Request": {
+          "required": [
+            "projectId"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "projectId": {
+              "type": "string"
+            },
+            "hasLabel": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "hasUnconfirmedLabel": {
+              "type": "string",
+              "description": "Allows for fetching examples that have unconfirmed labels.",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "marker": {
+              "type": "string"
+            },
+            "patientId": {
+              "type": "string"
+            }
+          }
+        },
+        "Response": {
+          "required": [
+            "examples"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "examples": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Example"
+              }
+            },
+            "marker": {
+              "Description": "A marker used for pagination. Will be undefined if the output is not truncated.",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "GET /models/:modelId/examples/:exampleId": {
+        "Name": "getExample",
+        "Description": "Fetches a single training data example for data labeling.",
+        "Request": {
+          "required": [
+            "projectId"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "projectId": {
+              "type": "string"
+            }
+          }
+        },
+        "Response": {
+          "required": [],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "example": {
+              "$ref": "#/definitions/Example"
+            }
+          }
+        }
+      },
+      "PUT /models/:modelId/examples/:exampleId/label": {
+        "Name": "putLabel",
+        "Description": "Updates the label for a training data example",
+        "Request": {
+          "$ref": "#/definitions/Label"
+        },
+        "Response": {
+          "$ref": "#/definitions/Example"
+        }
+      },
+      "GET /models/:modelId/examples/:exampleId/label-file": {
+        "Name": "getLabelFile",
+        "Description": "Retrieves the label file for the given example, if it exists, and converts it to the format LabelStudio expects.",
+        "Response": {
+          "required": [],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "labelData": {
+              "$ref": "#/definitions/LabelFileData"
+            }
+          }
+        },
+        "Request": {}
+      },
+      "PUT /models/:modelId/examples/:exampleId/label-file": {
+        "Name": "putLabelFile",
+        "Description": "Preprocesses the label data and updates the label file for a training data example. This is done for ML problem types that store their labels as independent files, such as image segmentation. For those problem types, The label data is not stored on a label FHIR record, but in a separate file-service file, and pointed to by a label FHIR record.",
+        "Request": {
+          "$ref": "#/definitions/LabelFileData"
+        },
+        "Response": {
+          "required": [
+            "fileId"
+          ],
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "fileId": {
+              "description": "The id of the file-service file the label file was saved to.",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DELETE /models/:modelId/examples/:exampleId/label": {
+        "Name": "deleteLabel",
+        "Description": "Deletes the label for a training data example",
+        "Response": {
+          "$ref": "#/definitions/Example"
+        },
+        "Request": {}
+      }
+    }
+  },
+  "serviceVersion": "145"
+}
