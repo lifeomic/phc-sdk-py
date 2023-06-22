@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *(NOTE: All examples use fictious data or freely available data sets.)*
 
+## [0.29.0] - 2023-06-22
+
+- Added new `PatientML` API client which can be used to call the LifeOmic Patient ML Service API. 
+
 ## [0.23.2] - 2021-09-27
 
 ### Fixed

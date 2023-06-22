@@ -1,4 +1,4 @@
-PYTHON_MODULES := phc
+PYTHON_MODULES := phc bin
 PYTHONPATH := .
 VENV := .venv
 PYTEST := env PYTHONPATH=$(PYTHONPATH) $(VENV)/bin/pytest
@@ -32,6 +32,18 @@ lint: venv
 
 format: venv
 	$(BLACK) $(PYTHON_MODULES)
+
+_gen: venv
+	$(PYTHON) bin/one-schema.py fetch-remote-schema \
+		--source lambda://patient-ml-service:deployed/private/introspection \
+		--output ./service-schemas/patient-ml-service.json
+	$(PYTHON) bin/one-schema.py generate-client \
+		--schema ./service-schemas/patient-ml-service.json \
+		--output ./phc/services/patient_ml.py \
+		--name PatientML \
+		--path-prefix /v1/patient-ml
+
+gen: venv _gen format
 
 doc: venv
 	$(PDOC) --html --output-dir doc/build ./phc --force --config show_inherited_members=True --config list_class_variables_in_index=False --template-dir doc/template

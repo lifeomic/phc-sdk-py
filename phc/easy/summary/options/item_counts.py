@@ -1,8 +1,9 @@
 from enum import Enum
 from typing import Union
 
-from phc.easy.summary.options.clinical_counts import \
-    SummaryClinicalCountsOptions
+from phc.easy.summary.options.clinical_counts import (
+    SummaryClinicalCountsOptions,
+)
 
 
 class SummaryClinicalType(str, Enum):
