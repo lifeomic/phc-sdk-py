@@ -10,3 +10,6 @@ twine
 pytest
 pytest-watch
 click==8.0.2
+boto3==1.26.158
+fire==0.5.0
+typing-extensions==4.6.3

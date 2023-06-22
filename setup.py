@@ -30,7 +30,7 @@ setup(
     license="MIT",
     author="LifeOmic Development",
     author_email="development@lifeomic.com",
-    packages=find_packages(exclude=("tests")),
+    packages=find_packages(exclude=("tests", "bin")),
     install_requires=requirements,
     include_package_data=True,
     extras_require={"pandas": ["pandas"], "tqdm": ["tqdm"]},
