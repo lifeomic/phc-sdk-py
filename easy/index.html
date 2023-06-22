@@ -8164,7 +8164,11 @@ def transform_results(df: pd.DataFrame, **expand_args):
         ).reset_index(drop=True)
 
     @staticmethod
-    def find(search: str, account: Optional[str] = None, auth_args: Auth = Auth.shared()):
+    def find(
+        search: str,
+        account: Optional[str] = None,
+        auth_args: Auth = Auth.shared(),
+    ):
         &#34;&#34;&#34;Search for a project using given criteria and return results as a data frame
 
         Attributes
@@ -8180,7 +8184,9 @@ def transform_results(df: pd.DataFrame, **expand_args):
         return projects[text.str.contains(search.lower())]
 
     @staticmethod
-    def set_current(search: str, account: Optional[str] = None, auth: Auth = Auth.shared()):
+    def set_current(
+        search: str, account: Optional[str] = None, auth: Auth = Auth.shared()
+    ):
         &#34;&#34;&#34;Search for a project using given criteria, set it to the authentication
         object, and return the matching projects as a data frame
 
@@ -8228,7 +8234,11 @@ def transform_results(df: pd.DataFrame, **expand_args):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def find(search: str, account: Optional[str] = None, auth_args: Auth = Auth.shared()):
+def find(
+    search: str,
+    account: Optional[str] = None,
+    auth_args: Auth = Auth.shared(),
+):
     &#34;&#34;&#34;Search for a project using given criteria and return results as a data frame
 
     Attributes
@@ -8381,7 +8391,9 @@ object, and return the matching projects as a data frame</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def set_current(search: str, account: Optional[str] = None, auth: Auth = Auth.shared()):
+def set_current(
+    search: str, account: Optional[str] = None, auth: Auth = Auth.shared()
+):
     &#34;&#34;&#34;Search for a project using given criteria, set it to the authentication
     object, and return the matching projects as a data frame
 

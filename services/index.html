@@ -43,6 +43,7 @@ from phc.services.tools import Tools
 from phc.services.workflows import Workflows
 from phc.services.genomic_ingestions import GenomicIngestions, IngestionStep
 from phc.services.tasks import Tasks
+from phc.services.patient_ml import PatientML
 
 __all__ = [
     &#34;Accounts&#34;,
@@ -56,6 +57,7 @@ __all__ = [
     &#34;Workflows&#34;,
     &#34;GenomicIngestions&#34;,
     &#34;Tasks&#34;,
+    &#34;PatientML&#34;,
 ]
 
 __pdoc__ = {
@@ -70,6 +72,7 @@ __pdoc__ = {
     &#34;workflows&#34;: False,
     &#34;genomic_ingestions&#34;: False,
     &#34;tasks&#34;: False,
+    &#34;patient_ml&#34;: False,
 }</code></pre>
 </details>
 </section>
@@ -3002,7 +3005,7 @@ The ingestion that was created.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = '117d8e59-e6de-4e19-a599-3eb86a00d831', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = '24704f72-abd6-45cf-aad6-3d9f2e2eebba', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
@@ -3471,6 +3474,609 @@ The ingestion that was created.</p></div>
     &#34;&#34;&#34;
     return self._ga4gh_call(
         f&#34;{set_type.value}/{set_id}&#34;, json=updates, http_verb=&#34;PATCH&#34;
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.services.PatientML"><code class="flex name class">
+<span>class <span class="ident">PatientML</span></span>
+<span>(</span><span>session: phc.session.Session, run_async: bool = False, timeout: int = 30, trust_env: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Base client for making API requests.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PatientML(BaseClient):
+    def create_model(self, body: dict = {}, **kwarg_body: dict) -&gt; ApiResponse:
+        &#34;&#34;&#34;Creates a new model via a model config object.&#34;&#34;&#34;
+        body = {**body, **kwarg_body}
+        return self._api_call(
+            api_path=&#34;/v1/patient-ml/models&#34;, http_verb=&#34;POST&#34;, json=body
+        )
+
+    def update_model(
+        self, id: str, body: dict = {}, **kwarg_body: dict
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Updates a model config.&#34;&#34;&#34;
+        body = {**body, **kwarg_body}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{id}&#34;, http_verb=&#34;PUT&#34;, json=body
+        )
+
+    def delete_model(
+        self, id: str, params: dict = {}, **kwarg_params: dict
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Deletes a model.&#34;&#34;&#34;
+        params = {**params, **kwarg_params}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{id}&#34;,
+            http_verb=&#34;DELETE&#34;,
+            params=params,
+        )
+
+    def get_models(
+        self, params: dict = {}, **kwarg_params: dict
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Gets all model configs for an account.&#34;&#34;&#34;
+        params = {**params, **kwarg_params}
+        return self._api_call(
+            api_path=&#34;/v1/patient-ml/models&#34;, http_verb=&#34;GET&#34;, params=params
+        )
+
+    def get_model(
+        self, id: str, params: dict = {}, **kwarg_params: dict
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Gets a model config.&#34;&#34;&#34;
+        params = {**params, **kwarg_params}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{id}&#34;,
+            http_verb=&#34;GET&#34;,
+            params=params,
+        )
+
+    def predict(
+        self, id: str, params: dict = {}, **kwarg_params: dict
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Produces a model prediction for a given patient.&#34;&#34;&#34;
+        params = {**params, **kwarg_params}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{id}/predict&#34;,
+            http_verb=&#34;GET&#34;,
+            params=params,
+        )
+
+    def create_run(
+        self, model_id: str, body: dict = {}, **kwarg_body: dict
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Begins a new ML run for a given model.&#34;&#34;&#34;
+        body = {**body, **kwarg_body}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{model_id}/runs&#34;,
+            http_verb=&#34;POST&#34;,
+            json=body,
+        )
+
+    def get_runs(
+        self, model_id: str, params: dict = {}, **kwarg_params: dict
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Gets data for all ML runs for a model.&#34;&#34;&#34;
+        params = {**params, **kwarg_params}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{model_id}/runs&#34;,
+            http_verb=&#34;GET&#34;,
+            params=params,
+        )
+
+    def get_run(
+        self,
+        model_id: str,
+        run_id: str,
+        params: dict = {},
+        **kwarg_params: dict,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Gets data for a particular run.&#34;&#34;&#34;
+        params = {**params, **kwarg_params}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{model_id}/runs/{run_id}&#34;,
+            http_verb=&#34;GET&#34;,
+            params=params,
+        )
+
+    def get_model_artifact(
+        self,
+        model_id: str,
+        run_id: str,
+        params: dict = {},
+        **kwarg_params: dict,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Gets a url that can be used to download the model artifact for a particular run.&#34;&#34;&#34;
+        params = {**params, **kwarg_params}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{model_id}/runs/{run_id}/model-artifact&#34;,
+            http_verb=&#34;GET&#34;,
+            params=params,
+        )
+
+    def create_approval_decision(
+        self, model_id: str, run_id: str, body: dict = {}, **kwarg_body: dict
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Adds a new approval decision to a model run&#34;&#34;&#34;
+        body = {**body, **kwarg_body}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{model_id}/runs/{run_id}/approvals&#34;,
+            http_verb=&#34;POST&#34;,
+            json=body,
+        )
+
+    def get_examples(
+        self, model_id: str, params: dict = {}, **kwarg_params: dict
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetches a page of training data examples for data labeling.&#34;&#34;&#34;
+        params = {**params, **kwarg_params}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{model_id}/examples&#34;,
+            http_verb=&#34;GET&#34;,
+            params=params,
+        )
+
+    def get_example(
+        self,
+        model_id: str,
+        example_id: str,
+        params: dict = {},
+        **kwarg_params: dict,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Fetches a single training data example for data labeling.&#34;&#34;&#34;
+        params = {**params, **kwarg_params}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}&#34;,
+            http_verb=&#34;GET&#34;,
+            params=params,
+        )
+
+    def put_label(
+        self,
+        model_id: str,
+        example_id: str,
+        body: dict = {},
+        **kwarg_body: dict,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Updates the label for a training data example&#34;&#34;&#34;
+        body = {**body, **kwarg_body}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label&#34;,
+            http_verb=&#34;PUT&#34;,
+            json=body,
+        )
+
+    def get_label_file(
+        self,
+        model_id: str,
+        example_id: str,
+        params: dict = {},
+        **kwarg_params: dict,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Retrieves the label file for the given example, if it exists, and converts it to the format LabelStudio expects.&#34;&#34;&#34;
+        params = {**params, **kwarg_params}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label-file&#34;,
+            http_verb=&#34;GET&#34;,
+            params=params,
+        )
+
+    def put_label_file(
+        self,
+        model_id: str,
+        example_id: str,
+        body: dict = {},
+        **kwarg_body: dict,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Preprocesses the label data and updates the label file for a training data example. This is done for ML problem types that store their labels as independent files, such as image segmentation. For those problem types, The label data is not stored on a label FHIR record, but in a separate file-service file, and pointed to by a label FHIR record.&#34;&#34;&#34;
+        body = {**body, **kwarg_body}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label-file&#34;,
+            http_verb=&#34;PUT&#34;,
+            json=body,
+        )
+
+    def delete_label(
+        self,
+        model_id: str,
+        example_id: str,
+        params: dict = {},
+        **kwarg_params: dict,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Deletes the label for a training data example&#34;&#34;&#34;
+        params = {**params, **kwarg_params}
+        return self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label&#34;,
+            http_verb=&#34;DELETE&#34;,
+            params=params,
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.services.PatientML.create_approval_decision"><code class="name flex">
+<span>def <span class="ident">create_approval_decision</span></span>(<span>self, model_id: str, run_id: str, body: dict = {}, **kwarg_body: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds a new approval decision to a model run</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_approval_decision(
+    self, model_id: str, run_id: str, body: dict = {}, **kwarg_body: dict
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Adds a new approval decision to a model run&#34;&#34;&#34;
+    body = {**body, **kwarg_body}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{model_id}/runs/{run_id}/approvals&#34;,
+        http_verb=&#34;POST&#34;,
+        json=body,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.create_model"><code class="name flex">
+<span>def <span class="ident">create_model</span></span>(<span>self, body: dict = {}, **kwarg_body: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a new model via a model config object.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_model(self, body: dict = {}, **kwarg_body: dict) -&gt; ApiResponse:
+    &#34;&#34;&#34;Creates a new model via a model config object.&#34;&#34;&#34;
+    body = {**body, **kwarg_body}
+    return self._api_call(
+        api_path=&#34;/v1/patient-ml/models&#34;, http_verb=&#34;POST&#34;, json=body
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.create_run"><code class="name flex">
+<span>def <span class="ident">create_run</span></span>(<span>self, model_id: str, body: dict = {}, **kwarg_body: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Begins a new ML run for a given model.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_run(
+    self, model_id: str, body: dict = {}, **kwarg_body: dict
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Begins a new ML run for a given model.&#34;&#34;&#34;
+    body = {**body, **kwarg_body}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{model_id}/runs&#34;,
+        http_verb=&#34;POST&#34;,
+        json=body,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.delete_label"><code class="name flex">
+<span>def <span class="ident">delete_label</span></span>(<span>self, model_id: str, example_id: str, params: dict = {}, **kwarg_params: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Deletes the label for a training data example</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete_label(
+    self,
+    model_id: str,
+    example_id: str,
+    params: dict = {},
+    **kwarg_params: dict,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Deletes the label for a training data example&#34;&#34;&#34;
+    params = {**params, **kwarg_params}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label&#34;,
+        http_verb=&#34;DELETE&#34;,
+        params=params,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.delete_model"><code class="name flex">
+<span>def <span class="ident">delete_model</span></span>(<span>self, id: str, params: dict = {}, **kwarg_params: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Deletes a model.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete_model(
+    self, id: str, params: dict = {}, **kwarg_params: dict
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Deletes a model.&#34;&#34;&#34;
+    params = {**params, **kwarg_params}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{id}&#34;,
+        http_verb=&#34;DELETE&#34;,
+        params=params,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.get_example"><code class="name flex">
+<span>def <span class="ident">get_example</span></span>(<span>self, model_id: str, example_id: str, params: dict = {}, **kwarg_params: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetches a single training data example for data labeling.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_example(
+    self,
+    model_id: str,
+    example_id: str,
+    params: dict = {},
+    **kwarg_params: dict,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetches a single training data example for data labeling.&#34;&#34;&#34;
+    params = {**params, **kwarg_params}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}&#34;,
+        http_verb=&#34;GET&#34;,
+        params=params,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.get_examples"><code class="name flex">
+<span>def <span class="ident">get_examples</span></span>(<span>self, model_id: str, params: dict = {}, **kwarg_params: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetches a page of training data examples for data labeling.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_examples(
+    self, model_id: str, params: dict = {}, **kwarg_params: dict
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Fetches a page of training data examples for data labeling.&#34;&#34;&#34;
+    params = {**params, **kwarg_params}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{model_id}/examples&#34;,
+        http_verb=&#34;GET&#34;,
+        params=params,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.get_label_file"><code class="name flex">
+<span>def <span class="ident">get_label_file</span></span>(<span>self, model_id: str, example_id: str, params: dict = {}, **kwarg_params: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieves the label file for the given example, if it exists, and converts it to the format LabelStudio expects.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_label_file(
+    self,
+    model_id: str,
+    example_id: str,
+    params: dict = {},
+    **kwarg_params: dict,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Retrieves the label file for the given example, if it exists, and converts it to the format LabelStudio expects.&#34;&#34;&#34;
+    params = {**params, **kwarg_params}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label-file&#34;,
+        http_verb=&#34;GET&#34;,
+        params=params,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.get_model"><code class="name flex">
+<span>def <span class="ident">get_model</span></span>(<span>self, id: str, params: dict = {}, **kwarg_params: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets a model config.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_model(
+    self, id: str, params: dict = {}, **kwarg_params: dict
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Gets a model config.&#34;&#34;&#34;
+    params = {**params, **kwarg_params}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{id}&#34;,
+        http_verb=&#34;GET&#34;,
+        params=params,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.get_model_artifact"><code class="name flex">
+<span>def <span class="ident">get_model_artifact</span></span>(<span>self, model_id: str, run_id: str, params: dict = {}, **kwarg_params: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets a url that can be used to download the model artifact for a particular run.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_model_artifact(
+    self,
+    model_id: str,
+    run_id: str,
+    params: dict = {},
+    **kwarg_params: dict,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Gets a url that can be used to download the model artifact for a particular run.&#34;&#34;&#34;
+    params = {**params, **kwarg_params}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{model_id}/runs/{run_id}/model-artifact&#34;,
+        http_verb=&#34;GET&#34;,
+        params=params,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.get_models"><code class="name flex">
+<span>def <span class="ident">get_models</span></span>(<span>self, params: dict = {}, **kwarg_params: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets all model configs for an account.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_models(
+    self, params: dict = {}, **kwarg_params: dict
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Gets all model configs for an account.&#34;&#34;&#34;
+    params = {**params, **kwarg_params}
+    return self._api_call(
+        api_path=&#34;/v1/patient-ml/models&#34;, http_verb=&#34;GET&#34;, params=params
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.get_run"><code class="name flex">
+<span>def <span class="ident">get_run</span></span>(<span>self, model_id: str, run_id: str, params: dict = {}, **kwarg_params: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets data for a particular run.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_run(
+    self,
+    model_id: str,
+    run_id: str,
+    params: dict = {},
+    **kwarg_params: dict,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Gets data for a particular run.&#34;&#34;&#34;
+    params = {**params, **kwarg_params}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{model_id}/runs/{run_id}&#34;,
+        http_verb=&#34;GET&#34;,
+        params=params,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.get_runs"><code class="name flex">
+<span>def <span class="ident">get_runs</span></span>(<span>self, model_id: str, params: dict = {}, **kwarg_params: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets data for all ML runs for a model.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_runs(
+    self, model_id: str, params: dict = {}, **kwarg_params: dict
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Gets data for all ML runs for a model.&#34;&#34;&#34;
+    params = {**params, **kwarg_params}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{model_id}/runs&#34;,
+        http_verb=&#34;GET&#34;,
+        params=params,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.predict"><code class="name flex">
+<span>def <span class="ident">predict</span></span>(<span>self, id: str, params: dict = {}, **kwarg_params: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Produces a model prediction for a given patient.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def predict(
+    self, id: str, params: dict = {}, **kwarg_params: dict
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Produces a model prediction for a given patient.&#34;&#34;&#34;
+    params = {**params, **kwarg_params}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{id}/predict&#34;,
+        http_verb=&#34;GET&#34;,
+        params=params,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.put_label"><code class="name flex">
+<span>def <span class="ident">put_label</span></span>(<span>self, model_id: str, example_id: str, body: dict = {}, **kwarg_body: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates the label for a training data example</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def put_label(
+    self,
+    model_id: str,
+    example_id: str,
+    body: dict = {},
+    **kwarg_body: dict,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Updates the label for a training data example&#34;&#34;&#34;
+    body = {**body, **kwarg_body}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label&#34;,
+        http_verb=&#34;PUT&#34;,
+        json=body,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.put_label_file"><code class="name flex">
+<span>def <span class="ident">put_label_file</span></span>(<span>self, model_id: str, example_id: str, body: dict = {}, **kwarg_body: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Preprocesses the label data and updates the label file for a training data example. This is done for ML problem types that store their labels as independent files, such as image segmentation. For those problem types, The label data is not stored on a label FHIR record, but in a separate file-service file, and pointed to by a label FHIR record.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def put_label_file(
+    self,
+    model_id: str,
+    example_id: str,
+    body: dict = {},
+    **kwarg_body: dict,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Preprocesses the label data and updates the label file for a training data example. This is done for ML problem types that store their labels as independent files, such as image segmentation. For those problem types, The label data is not stored on a label FHIR record, but in a separate file-service file, and pointed to by a label FHIR record.&#34;&#34;&#34;
+    body = {**body, **kwarg_body}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label-file&#34;,
+        http_verb=&#34;PUT&#34;,
+        json=body,
+    )</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.update_model"><code class="name flex">
+<span>def <span class="ident">update_model</span></span>(<span>self, id: str, body: dict = {}, **kwarg_body: dict) ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates a model config.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update_model(
+    self, id: str, body: dict = {}, **kwarg_body: dict
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Updates a model config.&#34;&#34;&#34;
+    body = {**body, **kwarg_body}
+    return self._api_call(
+        api_path=f&#34;/v1/patient-ml/models/{id}&#34;, http_verb=&#34;PUT&#34;, json=body
     )</code></pre>
 </details>
 </dd>
@@ -5514,6 +6120,28 @@ def download(
 <li><code><a title="phc.services.Genomics.list_sets" href="#phc.services.Genomics.list_sets">list_sets</a></code></li>
 <li><code><a title="phc.services.Genomics.list_tests" href="#phc.services.Genomics.list_tests">list_tests</a></code></li>
 <li><code><a title="phc.services.Genomics.update_set" href="#phc.services.Genomics.update_set">update_set</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.services.PatientML" href="#phc.services.PatientML">PatientML</a></code></h4>
+<ul class="">
+<li><code><a title="phc.services.PatientML.create_approval_decision" href="#phc.services.PatientML.create_approval_decision">create_approval_decision</a></code></li>
+<li><code><a title="phc.services.PatientML.create_model" href="#phc.services.PatientML.create_model">create_model</a></code></li>
+<li><code><a title="phc.services.PatientML.create_run" href="#phc.services.PatientML.create_run">create_run</a></code></li>
+<li><code><a title="phc.services.PatientML.delete_label" href="#phc.services.PatientML.delete_label">delete_label</a></code></li>
+<li><code><a title="phc.services.PatientML.delete_model" href="#phc.services.PatientML.delete_model">delete_model</a></code></li>
+<li><code><a title="phc.services.PatientML.get_example" href="#phc.services.PatientML.get_example">get_example</a></code></li>
+<li><code><a title="phc.services.PatientML.get_examples" href="#phc.services.PatientML.get_examples">get_examples</a></code></li>
+<li><code><a title="phc.services.PatientML.get_label_file" href="#phc.services.PatientML.get_label_file">get_label_file</a></code></li>
+<li><code><a title="phc.services.PatientML.get_model" href="#phc.services.PatientML.get_model">get_model</a></code></li>
+<li><code><a title="phc.services.PatientML.get_model_artifact" href="#phc.services.PatientML.get_model_artifact">get_model_artifact</a></code></li>
+<li><code><a title="phc.services.PatientML.get_models" href="#phc.services.PatientML.get_models">get_models</a></code></li>
+<li><code><a title="phc.services.PatientML.get_run" href="#phc.services.PatientML.get_run">get_run</a></code></li>
+<li><code><a title="phc.services.PatientML.get_runs" href="#phc.services.PatientML.get_runs">get_runs</a></code></li>
+<li><code><a title="phc.services.PatientML.predict" href="#phc.services.PatientML.predict">predict</a></code></li>
+<li><code><a title="phc.services.PatientML.put_label" href="#phc.services.PatientML.put_label">put_label</a></code></li>
+<li><code><a title="phc.services.PatientML.put_label_file" href="#phc.services.PatientML.put_label_file">put_label_file</a></code></li>
+<li><code><a title="phc.services.PatientML.update_model" href="#phc.services.PatientML.update_model">update_model</a></code></li>
 </ul>
 </li>
 <li>
