@@ -2,10 +2,9 @@
 import asyncio
 import platform
 import sys
-from typing import Union
+from typing import Union, Dict
 from urllib.parse import urlencode, urljoin
 
-import aiohttp
 import backoff
 
 import phc.version as ver
@@ -44,7 +43,9 @@ class BaseClient:
                 self._event_loop_ptr = loop
         return self._event_loop_ptr
 
-    def _get_headers(self, has_json, request_specific_headers):
+    def _get_headers(
+        self, has_json: bool, request_specific_headers: Dict[str, str]
+    ):
         """Contructs the headers need for a request.
 
         Args:
@@ -86,7 +87,7 @@ class BaseClient:
         self,
         api_path: str,
         http_verb: str = "POST",
-        upload_file: [str, bytes] = None,
+        upload_file: Union[str, bytes, None] = None,
         json: dict = None,
         data: str = None,
         headers: dict = {},
@@ -110,7 +111,7 @@ class BaseClient:
         self,
         api_path: str,
         http_verb: str = "POST",
-        upload_file: [str, bytes] = None,
+        upload_file: Union[str, bytes, None] = None,
         json: dict = None,
         data: str = None,
         headers: dict = {},
@@ -132,7 +133,7 @@ class BaseClient:
         self,
         api_path: str,
         http_verb: str = "POST",
-        upload_file: [str, bytes] = None,
+        upload_file: Union[str, bytes, None] = None,
         json: dict = None,
         data: str = None,
         headers: dict = {},
@@ -172,7 +173,7 @@ class BaseClient:
         url: str,
         api_path: str,
         http_verb: str = "POST",
-        upload_file: [str, bytes] = None,
+        upload_file: Union[str, bytes, None] = None,
         json: dict = None,
         data: str = None,
         headers: dict = {},
@@ -254,7 +255,7 @@ class BaseClient:
         max_tries=3,
         jitter=backoff.full_jitter,
     )
-    async def _send(self, http_verb, api_url, req_args):
+    async def _send(self, http_verb: str, api_url: str, req_args: dict):
         open_files = []
         upload_file = req_args.pop("file", None)
         if upload_file is not None:

@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import Any, Union, List
 import inspect
 from enum import Enum
 
@@ -84,7 +84,7 @@ class PagingApiItem:
         return {}
 
     @staticmethod
-    def _get_current_args(frame: any, local_vars: dict):
+    def _get_current_args(frame: Any, local_vars: dict):
         """Helper function for getting all arguments to the current function as a dictionary"""
         EXCEPTIONS = ["cls", "frame"]
         all_arg_names = inspect.getargvalues(frame).args

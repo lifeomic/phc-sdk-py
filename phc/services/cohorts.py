@@ -1,5 +1,6 @@
 """A Python Module for Cohorts"""
 
+from typing import Optional
 from phc.base_client import BaseClient
 from phc import ApiResponse
 from urllib.parse import urlencode
@@ -21,7 +22,11 @@ class Cohorts(BaseClient):
     """
 
     def create(
-        self, project_id: str, name: str, queries: list, description: str = None
+        self,
+        project_id: str,
+        name: str,
+        queries: list,
+        description: Optional[str] = None,
     ) -> ApiResponse:
         """Creates a cohort
 
@@ -50,7 +55,7 @@ class Cohorts(BaseClient):
             json_body["description"] = description
         return self._api_call("cohorts", json=json_body, http_verb="POST")
 
-    def get(self, cohort_id) -> ApiResponse:
+    def get(self, cohort_id: str) -> ApiResponse:
         """Fetch a cohort by id
 
         Parameters
@@ -88,9 +93,9 @@ class Cohorts(BaseClient):
     def get_list(
         self,
         project_id: str,
-        page_size: int = None,
-        next_page_token: str = None,
-        name: str = None,
+        page_size: Optional[int] = None,
+        next_page_token: Optional[str] = None,
+        name: Optional[str] = None,
     ) -> ApiResponse:
         """Fetch a list of cohorts in a project
 

@@ -1,17 +1,7 @@
-import os
-import time
-import asyncio
-from phc.services import files
+from typing import Optional
 from phc.base_client import BaseClient
 from phc.util import PatientFilterQueryBuilder
 from phc import ApiResponse
-
-try:
-    import pandas as _pd
-except ImportError:
-    _has_pandas = False
-else:
-    _has_pandas = True
 
 
 class Analytics(BaseClient):
@@ -30,7 +20,10 @@ class Analytics(BaseClient):
     """
 
     def execute_sql(
-        self, statement: str, project_id: str = None, cohort_id: str = None
+        self,
+        statement: str,
+        project_id: Optional[str] = None,
+        cohort_id: Optional[str] = None,
     ) -> ApiResponse:
         """Executes a SQL query against Analytics
 
