@@ -1,6 +1,6 @@
 # PHC SDK for Python
 
-The phc-sdk-py is a developer kit for interfacing with the [PHC API](https://api.docs.lifeomic.com/) on Python 3.7 and above.
+The phc-sdk-py is a developer kit for interfacing with the [PHC API](https://api.docs.lifeomic.com/) on Python 3.10 and above.
 
 ## Project Status
 
@@ -15,7 +15,7 @@ The phc-sdk-py is a developer kit for interfacing with the [PHC API](https://api
 
 ### Dependencies
 
-* [Python 3](https://www.python.org/download/releases/3.0/) version >= 3.7
+* [Python 3](https://www.python.org/download/releases/3.0/) version >= 3.10
 
 ### Getting the Source
 
