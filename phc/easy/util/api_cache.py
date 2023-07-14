@@ -152,11 +152,12 @@ class APICache:
 
         try:
             df.loc[:, mask] = df.loc[:, mask].apply(pd.to_datetime)
-        except Exception as ex:
+        except pd.errors.OutOfBoundsDatetime as ex:
             print(
                 "[WARNING]: OutOfBoundsDatetime encountered. Casting to NaT.",
                 ex,
             )
+
             df.loc[:, mask] = df.loc[:, mask].apply(
                 lambda c: pd.to_datetime(c, errors="coerce")
             )
