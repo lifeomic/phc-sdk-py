@@ -134,8 +134,7 @@ class Frame:
                 # produce local datetime. The column name will have ".local" as
                 # suffix so it'll be clear what's happening.
                 localized = pd.to_datetime(
-                    combined[column_key].str.replace(TZ_REGEX, "", regex=True),
-                    utc=True,
+                    combined[column_key].str.replace(TZ_REGEX, ""), utc=True
                 )
             except pd.errors.OutOfBoundsDatetime as ex:
                 print(
@@ -146,7 +145,7 @@ class Frame:
                     combined[column_key], utc=True, errors="coerce"
                 )
                 localized = pd.to_datetime(
-                    combined[column_key].str.replace(TZ_REGEX, "", regex=True),
+                    combined[column_key].str.replace(TZ_REGEX, ""),
                     utc=True,
                     errors="coerce",
                 )
