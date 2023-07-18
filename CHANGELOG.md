@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _(NOTE: All examples use fictious data or freely available data sets.)_
 
-## [0.30.0] - 2023-07-17
+## [0.31.0] - 2023-07-18
 
 - Pinned the major versions of the package's dependencies, so untested breaking changes are excluded from the package's installation
 - Removed dev dependencies that were already specified as package dependencies
