@@ -5,11 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-*(NOTE: All examples use fictious data or freely available data sets.)*
+_(NOTE: All examples use fictious data or freely available data sets.)_
+
+## [0.30.0] - 2023-07-17
+
+- Pinned the major versions of the package's dependencies, so untested breaking changes are excluded from the package's installation
+- Removed dev dependencies that were already specified as package dependencies
+- Pinned the exact version of the dev dependencies, to improve CI/CD determinism
 
 ## [0.29.0] - 2023-06-22
 
-- Added new `PatientML` API client which can be used to call the LifeOmic Patient ML Service API. 
+- Added new `PatientML` API client which can be used to call the LifeOmic Patient ML Service API.
 
 ## [0.23.2] - 2021-09-27
 
@@ -25,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `phc.DataLake` for sending SQL queries to the data lake
 
 Example
+
 ```python
 phc.DataLake.get_data_frame(
   "SELECT * FROM my_table",
@@ -56,6 +63,7 @@ phc.DataLake.get_data_frame(
   - `phc.SummaryItemCounts` - Retrieve counts for a specific table (e.g. `condition`, `procedure`)
 
 Example
+
 ```python
 phc.SummaryClinicalCounts.get_data_frame(match="fuzzy", system=["snomed.info", "loinc.org"])
 #        summary       code                           display  patient_count                  system   count media_type  media_type_count
@@ -68,13 +76,11 @@ phc.SummaryClinicalCounts.get_data_frame(match="fuzzy", system=["snomed.info", "
 # 6    condition   82711006  Infiltrating duct carcinoma, NOS          778.0  http://snomed.info/sct   778.0        NaN               NaN
 ```
 
-
 ## [0.22.2] - 2021-04-30
 
 ### Fixed
 
 - Make token optional when using a custom adapter that doesn't support refreshing the token
-
 
 ## [0.22.1] - 2021-04-27
 
@@ -120,6 +126,7 @@ phc.Patient.DSTU3.delete(...)
 ### Added
 
 - `Tools` - A service to manager resources in the tool registry service
+
   - `tools.create` - Adds a tool to the registry
   - `tools.download` - Downloads a tool
   - `tools.get` - Gets the default verson or a specific version of a tool
@@ -128,6 +135,7 @@ phc.Patient.DSTU3.delete(...)
   - `tools.get_list` - Returns tools from the registry and allows for optional filters
 
 - `Workflows` - A service to manager workflows
+
   - `workflows.run` - Runs a workflow using a provided tool from the registry
   - `workflows.get` - Gets a workflow run
   - `workflows.get_list` - Returns all workflows for a project
@@ -165,6 +173,7 @@ phc.GenomicShortVariant.get_data_frame(variant_set_ids)
 # no arguments)
 phc.GenomicShortVariant.get_data_frame()
 ```
+
 - Added `GenomicExpression`
 
 ```python
@@ -205,7 +214,6 @@ phc.GenomicStructuralVariant.get_data_frame(
 phc.Gene.get_data_frame()
 phc.GeneSet.get_data_frame()
 ```
-
 
 - Added abstract class `GenomicVariant` from which these specific classes
   inherit
@@ -277,6 +285,7 @@ phc.Condition.get_data_frame(code=["25910003", "30156004"], system="http://snome
 ```
 
 ### Fixed
+
 - Sped up finding projects - `phc.Project.set_current()`
 
 ### Changed
@@ -340,7 +349,6 @@ phc.Observation.get_codes("status", sample_size=10)
 - Properly parse date columns with positive time zones into the local time and time zone
 - Resolved a `KeyError` issue with `coding` where the `valueCodeableConcept` didn't have a system or url
 - Passing `patient_id` / `patient_ids` with a `must` FHIR Search Service query now works as expected
-
 
 ### Changed
 
@@ -430,7 +438,6 @@ All date columns now return two columns--one for the local time (with time zone 
 6               0.0 2017-06-27 04:00:00+00:00
 ```
 
-
 ## [0.15.0] - 2020-08-05
 
 Includes more work on the easy modules (imported via `import phc.easy as phc`).
@@ -509,19 +516,17 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 })
 ```
 
-
 ### Fixed
 
 - Fix `phc.easy.Procedure` not inheriting new `phc.easy.PatientItem` behavior
 
-
-## [0.14.1]  - 2020-07-15
+## [0.14.1] - 2020-07-15
 
 ### Fixed
 
 - Fixed missing trust_env args in created client objects
 
-## [0.14.0]  - 2020-07-14
+## [0.14.0] - 2020-07-14
 
 ### Added
 
@@ -534,13 +539,13 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 - Includes `Project`, `Patient`, `Observation`, `Procedure`, `Condition`,
   `Goal`, and `Specimen`
 
-## [0.13.0]  - 2020-04-17
+## [0.13.0] - 2020-04-17
 
 ### Added
 
 - Switched build over to github actions
 
-## [0.12.3]  - 2020-04-13
+## [0.12.3] - 2020-04-13
 
 ### Added
 
@@ -550,61 +555,61 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 
 - Deprecates `execute_sql` and `execute_es` methods in `phc.services.Fhir`
 
-## [0.12.2]  - 2020-03-25
+## [0.12.2] - 2020-03-25
 
 ### Fixed
 
 - Added retries to file download requests
 
-## [0.12.1]  - 2020-03-25
+## [0.12.1] - 2020-03-25
 
 ### Fixed
 
 - Fixed retry logic to include OS level errors.
 
-## [0.12.0]  - 2020-03-23
+## [0.12.0] - 2020-03-23
 
 ### Added
 
 - Added retry support for failed API requests.
 
-## [0.11.0]  - 2020-03-17
+## [0.11.0] - 2020-03-17
 
 ### Added
 
 - Added the `trust_env` parameter to all service classes to enable http proxy support.
 
-## [0.10.0]  - 2020-03-10
+## [0.10.0] - 2020-03-10
 
 ### Added
 
 - Added `execute_sql` to `phc.services.Analytics`.
 
-## [0.9.2]  - 2020-02-19
+## [0.9.2] - 2020-02-19
 
 ### Added
 
 - Added scroll support to `phc.services.Fhir` via the `scroll` param.
 
-## [0.9.1]  - 2019-12-17
+## [0.9.1] - 2019-12-17
 
 ### Changed
 
 - Fixed `phc.services.Genomics.Status` enum.
 
-## [0.9.0]  - 2019-12-16
+## [0.9.0] - 2019-12-16
 
 ### Changed
 
 - Added `phc.services.Genomics` for performing genomic related operations.
 
-## [0.8.1]  - 2019-11-27
+## [0.8.1] - 2019-11-27
 
 ### Changed
 
 - In `Analytics.load_data_lake_result_to_dataframe` increased the amount of time it takes to wait for a results file.
 
-## [0.8.0]  - 2019-11-25
+## [0.8.0] - 2019-11-25
 
 ### Added
 
@@ -614,20 +619,20 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 - Added `Analytics.load_data_lake_result_to_dataframe` to load the results of a previously executed data lake query to a Pandas dataframe.
 - Added `Files.exists` to check if a file exists.
 
-## [0.7.1]  - 2019-11-21
+## [0.7.1] - 2019-11-21
 
 ### Fixed
 
 - Fixed issue with `Files.download` to create target directories if they do not exist.
 
-## [0.7.0]  - 2019-11-20
+## [0.7.0] - 2019-11-20
 
 ### Added
 
 - Added optional `pandas` setup install
 - Added `ApiResponse.get_as_dataframe` to return a response item as a Pandas DataFrame.
 
-## [0.6.0]  - 2019-11-01
+## [0.6.0] - 2019-11-01
 
 ### Added
 

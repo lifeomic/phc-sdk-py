@@ -15,7 +15,7 @@ The phc-sdk-py is a developer kit for interfacing with the [PHC API](https://api
 
 ### Dependencies
 
-* [Python 3](https://www.python.org/download/releases/3.0/) version >= 3.7
+- [Python 3](https://www.python.org/download/releases/3.0/) version >= 3.7
 
 ### Getting the Source
 
@@ -27,7 +27,9 @@ git clone git@github.com:lifeomic/phc-sdk-py.git
 
 ### Development
 
-Python environments are managed using [virtualenv](https://virtualenv.pypa.io/en/latest/).  Be sure to have this installed first `pip install virtualenv`.  The makefile will setup the environment for the targets listed below.
+Python environments are managed using [virtualenv](https://virtualenv.pypa.io/en/latest/). Be sure to have this installed first `pip install virtualenv`. The makefile will setup the environment for the targets listed below.
+
+Some clients in this SDK are auto-generated. They can be re-generated at any time to pull in the latest changes by running `make gen`.
 
 #### Setup
 
@@ -57,7 +59,7 @@ pip install phc
 
 ### Usage
 
-A `Session` needs to be created first that stores the token and account information needed to access the PHC API.  One can currently using API Key tokens generated from the PHC Account, or OAuth tokens generated using the [CLI](https://github.com/lifeomic/cli).
+A `Session` needs to be created first that stores the token and account information needed to access the PHC API. One can currently using API Key tokens generated from the PHC Account, or OAuth tokens generated using the [CLI](https://github.com/lifeomic/cli).
 
 ```python
 from phc import Session
@@ -98,4 +100,4 @@ See the list of [contributors](https://github.com/lifeomic/phc-sdk-py/contributo
 
 This project is built with the following:
 
-* [aiohttp](https://aiohttp.readthedocs.io/en/stable/) - Asynchronous HTTP Client/Server for asyncio and Python.
+- [aiohttp](https://aiohttp.readthedocs.io/en/stable/) - Asynchronous HTTP Client/Server for asyncio and Python.
