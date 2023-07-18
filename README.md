@@ -78,7 +78,9 @@ myaccounts = accounts.get_list()
 
 ## Release Process
 
-[Releases](https://github.com/lifeomic/phc-sdk-py/releases) are generally created with each merged PR. Packages for each release are published to [PyPi](https://pypi.org/project/phc/). See [CHANGELOG.md](CHANGELOG.md) for release notes.
+[Releases](https://github.com/lifeomic/phc-sdk-py/releases) are generally created with each merged PR. To release a new version, update the package version in `phc.version`, and open a PR.
+
+Packages for each release are published to [PyPi](https://pypi.org/project/phc/). See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
 ### Versioning
 
