@@ -2,32 +2,23 @@
 
 import json
 import re
-from typing import Dict, Optional
-from typing_extensions import TypedDict
+from pathlib import Path
+from tempfile import NamedTemporaryFile
 
 import boto3
 from fire import Fire
-
-
-class EndpointDefinition(TypedDict):
-    Name: str
-    Description: str
-    Request: Optional[dict]
-    Response: dict
-
-
-class OneSchemaDefinition(TypedDict):
-    Resources: Dict[str, dict]
-    Endpoints: Dict[str, EndpointDefinition]
-
-
-class IntrospectionResponse(TypedDict):
-    schema: OneSchemaDefinition
-    serviceVersion: str
+from datamodel_code_generator import (
+    InputFileType,
+    LiteralType,
+    OpenAPIScope,
+    PythonVersion,
+    generate,
+)
+from datamodel_code_generator import DataModelType
 
 
 def fetch_remote_schema(*, source: str, output: str):
-    """Fetches a one-schema schema file from a given source."""
+    """Fetches an OpenAPI schema file from a given Lambda's API Gateway formatted endpoint."""
     client = boto3.client("lambda")
     match = re.fullmatch(r"^lambda:\/\/(.+?)(\/.+)$", source)
     if not match:
@@ -48,55 +39,177 @@ def fetch_remote_schema(*, source: str, output: str):
         json.dump(schema, f, ensure_ascii=False, indent=2)
 
 
+def _generate_data_models(schema_path: str) -> str:
+    """
+    Generates a Python source code string for all JSON schemas found in the OpenAPI schema file located at
+    `schema_path`.
+    """
+    with NamedTemporaryFile() as tmp:
+        output = Path(tmp.name)
+        generate(
+            # Read the OpenAPI schema from this file.
+            Path(schema_path),
+            # Save the generated code to this file.
+            output=output,
+            # The input file is an OpenAPI schema, not a raw JSON schema.
+            input_file_type=InputFileType.OpenAPI,
+            # Generate types for all the JSON schemas found in the OpenAPI document's schemas, paths, and parameters
+            # sections.
+            openapi_scopes=[
+                OpenAPIScope.Schemas,
+                OpenAPIScope.Paths,
+                OpenAPIScope.Parameters,
+            ],
+            # Format of the types generated.
+            output_model_type=DataModelType.PydanticBaseModel,
+            target_python_version=PythonVersion.PY_37,
+            # Copy doc strings into the source code.
+            use_schema_description=True,
+            use_field_description=True,
+            field_constraints=True,
+            enum_field_as_literal=LiteralType.All,
+            # Name the schemas found in the paths and parameters sections in a nice way.
+            use_operation_id_as_name=True,
+            # Don't include a generation timestamp comment at the top of the generated code.
+            disable_timestamp=True,
+        )
+        code: str = tmp.read().decode()
+        return code
+
+
 def _camel_to_snake(s: str):
     return "".join(["_" + c.lower() if c.isupper() else c for c in s]).lstrip()
+
+
+def _camel_to_pascal(s: str):
+    "Capitalizes the first character of `s`."
+    return s[0].upper() + s[1:]
+
+
+def _remove_ref_prefix(ref: str):
+    """Strips the OpenAPI $ref path prefix from `ref`, returning the global name of the referenced JSON schema."""
+    return ref[len("#/components/schemas/") :]
 
 
 def _parse_path_params(path: str):
     """Builds source code strings for the API path parameters and the final constructed route string."""
     path_params = {
-        _camel_to_snake(param.lstrip(":")): param
-        for param in re.findall(r"(:.+?)(?:\/|$)", path)
+        _camel_to_snake(param.strip("{}")): param
+        for param in re.findall(r"({.+?})(?:\/|$)", path)
     }
-    path_arg_str = "".join([", " + f"{name}: str" for name in path_params])
+    path_args = [f"{name}: str" for name in path_params]
     path_str = path
     for name, ref in path_params.items():
         path_str = path_str.replace(ref, f"{{{name}}}")
-    return path_arg_str, path_str
+    return path_args, path_str
+
+
+def _has_request_body(operation: dict):
+    return (
+        len(
+            operation.get("requestBody", {})
+            .get("content", {})
+            .get("application/json", {})
+            .get("schema", {})
+        )
+        > 0
+    )
+
+
+def _has_query_params(operation: dict):
+    return any(
+        param.get("in") == "query" for param in operation.get("parameters", [])
+    )
+
+
+def _get_request_type(operation: dict):
+    """Gets the type name of the operation's request body. Resolves schema $refs."""
+    ref = operation["requestBody"]["content"]["application/json"]["schema"].get(
+        "$ref"
+    )
+    if ref is not None:
+        # Return the name of the referenced schema.
+        return _remove_ref_prefix(ref)
+    else:
+        # The response type is an inline schema. `datamodel-codegen` created a special type for this and named it
+        # `OperationIdRequest`.
+        return f"{_camel_to_pascal(operation['operationId'])}Request"
+
+
+def _get_params_type(operation: dict):
+    # `datamodel-codegen` created a special type for this and named it `OperationIdParametersQuery`.
+    return f"{_camel_to_pascal(operation['operationId'])}ParametersQuery"
+
+
+def _get_response_type(operation: dict):
+    """Gets the type name of the operation's response body. Resolves schema $refs."""
+    ref = operation["responses"]["200"]["content"]["application/json"][
+        "schema"
+    ].get("$ref")
+    if ref is not None:
+        # Return the name of the referenced schema.
+        return _remove_ref_prefix(ref)
+    else:
+        # The response type is an inline schema. `datamodel-codegen` created a special type for this and named it
+        # `OperationIdResponse`.
+        return f"{_camel_to_pascal(operation['operationId'])}Response"
 
 
 def _generate_method(
-    route: str, definition: EndpointDefinition, path_prefix: str
+    path: str, method: str, operation: dict, path_prefix: str
 ) -> str:
     """Generates the source code string for calling a single API client endpoint."""
-    verb, path = route.split(" ")
-    path_arg_str, path_str = _parse_path_params(path)
-    req_name = "body" if verb.upper() in {"PUT", "POST", "PATCH"} else "params"
-    call_req_name = "json" if req_name == "body" else "params"
-    path_str_prefix = "f" if len(path_arg_str) > 0 else ""
-    return f"""    def {_camel_to_snake(definition['Name'])}(
-        self{path_arg_str}, {req_name}: dict = {{}}, **kwarg_{req_name}: dict
-    ) -> ApiResponse:
-        \"\"\"{definition["Description"]}\"\"\"
-        {req_name} = {{**{req_name}, **kwarg_{req_name}}}
-        return self._api_call(api_path={path_str_prefix}"{path_prefix}{path_str}", http_verb="{verb}", {call_req_name}={req_name})
+    path_args, path_str = _parse_path_params(path)
+    path_str_prefix = "f" if len(path_args) > 0 else ""
+    method_params = ["self", *path_args]
+    req_args = [
+        f'api_path={path_str_prefix}"{path_prefix}{path_str}"',
+        f'http_verb="{method.upper()}"',
+    ]
+
+    if _has_request_body(operation):
+        req_type = _get_request_type(operation)
+        method_params.append(f"body: {req_type}")
+        req_args.append("json=json.loads(body.json(exclude_none=True))")
+
+    if _has_query_params(operation):
+        params_type = _get_params_type(operation)
+        method_params.append(f"params: {params_type}")
+        req_args.append("params=json.loads(params.json(exclude_none=True))")
+
+    method_param_str = ", ".join(method_params)
+    req_arg_str = ",\n".join(req_args)
+    return f"""    def {_camel_to_snake(operation["operationId"])}({method_param_str}):
+        \"\"\"{operation["description"]}\"\"\"
+        res = self._api_call({req_arg_str})
+        return {_get_response_type(operation)}.parse_obj(res.data)
 """
 
 
 def generate_client(
     *, schema: str, output: str, name: str, path_prefix: str = ""
 ):
-    """Generates the source code for an API client, given a one-schema schema file."""
+    """Generates the source code for an API client, given an OpenAPI schema file."""
     with open(schema) as f:
-        res: IntrospectionResponse = json.load(f)
+        schema_data = json.load(f)
+
+    generated_types = _generate_data_models(schema).replace(
+        "from __future__ import annotations\n", ""
+    )
+
     header = f"""# This file was generated automatically. Do not edit it directly.
+import json
+
 from phc.base_client import BaseClient
-from phc import ApiResponse
+
+{generated_types}
 
 class {name}(BaseClient):"""
     methods = [
-        _generate_method(route, definition, path_prefix)
-        for route, definition in res["schema"]["Endpoints"].items()
+        _generate_method(path, method, operation, path_prefix)
+        for path, path_obj in schema_data.get("paths", {}).items()
+        for method, operation in path_obj.items()
+        if method in {"get", "put", "post", "delete", "patch"}
     ]
     with open(output, "w") as f:
         f.write(header)
