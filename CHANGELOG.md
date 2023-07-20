@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _(NOTE: All examples use fictious data or freely available data sets.)_
 
+## [0.32.0] - 2023-07-20
+
+### Added
+
+- The `phc.services.PatientML` API client is now fully typed. Request bodies, response bodies, and query parameters now allow for static type checking, and are runtime type-checked as well.
+
 ## [0.31.0] - 2023-07-18
+
+### Fixed
 
 - Pinned the major versions of the package's dependencies, so untested breaking changes are excluded from the package's installation
 - Removed dev dependencies that were already specified as package dependencies
@@ -15,7 +23,9 @@ _(NOTE: All examples use fictious data or freely available data sets.)_
 
 ## [0.29.0] - 2023-06-22
 
-- Added new `PatientML` API client which can be used to call the LifeOmic Patient ML Service API.
+### Added
+
+- Added new `phc.services.PatientML` API client which can be used to call the LifeOmic Patient ML Service API.
 
 ## [0.23.2] - 2021-09-27
 
