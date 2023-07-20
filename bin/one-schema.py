@@ -39,6 +39,10 @@ def fetch_remote_schema(*, source: str, output: str):
         json.dump(schema, f, ensure_ascii=False, indent=2)
 
 
+def _generate_type_name(name: str):
+    return name.replace("ParametersQuery", "Params")
+
+
 def _generate_data_models(schema_path: str) -> str:
     """
     Generates a Python source code string for all JSON schemas found in the OpenAPI schema file located at
@@ -72,6 +76,7 @@ def _generate_data_models(schema_path: str) -> str:
             use_operation_id_as_name=True,
             # Don't include a generation timestamp comment at the top of the generated code.
             disable_timestamp=True,
+            custom_class_name_generator=_generate_type_name,
         )
         code: str = tmp.read().decode()
         return code
@@ -137,8 +142,8 @@ def _get_request_type(operation: dict):
 
 
 def _get_params_type(operation: dict):
-    # `datamodel-codegen` created a special type for this and named it `OperationIdParametersQuery`.
-    return f"{_camel_to_pascal(operation['operationId'])}ParametersQuery"
+    # `datamodel-codegen` created a special type for this and named it `OperationIdParams`.
+    return f"{_camel_to_pascal(operation['operationId'])}Params"
 
 
 def _get_response_type(operation: dict):

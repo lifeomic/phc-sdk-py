@@ -520,7 +520,7 @@ class GetModelArtifactResponse(BaseModel):
     url: str
 
 
-class GetModelLogsParametersQuery(BaseModel):
+class GetModelLogsParams(BaseModel):
     filter: Optional[str] = None
     """
     An optional field used to filter the log events. This parameter supports AWS CloudWatch Logs' filter and pattern syntax. See https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html for instructions on how to write filters.
@@ -560,7 +560,7 @@ class CreateApprovalDecisionResponse(BaseModel):
     approvalDecision: UserApprovalDecision
 
 
-class GetExamplesParametersQuery(BaseModel):
+class GetExamplesParams(BaseModel):
     projectId: str
     hasLabel: Optional[Literal["true", "false"]] = None
     hasUnconfirmedLabel: Optional[Literal["true", "false"]] = None
@@ -582,7 +582,7 @@ class GetExamplesResponse(BaseModel):
     """
 
 
-class GetExampleParametersQuery(BaseModel):
+class GetExampleParams(BaseModel):
     projectId: str
 
 
@@ -862,7 +862,7 @@ class PatientML(BaseClient):
         return GetModelArtifactResponse.parse_obj(res.data)
 
     def get_model_logs(
-        self, model_id: str, run_id: str, params: GetModelLogsParametersQuery
+        self, model_id: str, run_id: str, params: GetModelLogsParams
     ):
         """Gets the log events for a particular run."""
         res = self._api_call(
@@ -883,7 +883,7 @@ class PatientML(BaseClient):
         )
         return CreateApprovalDecisionResponse.parse_obj(res.data)
 
-    def get_examples(self, model_id: str, params: GetExamplesParametersQuery):
+    def get_examples(self, model_id: str, params: GetExamplesParams):
         """Fetches a page of training data examples for data labeling."""
         res = self._api_call(
             api_path=f"/v1/patient-ml/models/{model_id}/examples",
@@ -893,7 +893,7 @@ class PatientML(BaseClient):
         return GetExamplesResponse.parse_obj(res.data)
 
     def get_example(
-        self, model_id: str, example_id: str, params: GetExampleParametersQuery
+        self, model_id: str, example_id: str, params: GetExampleParams
     ):
         """Fetches a single training data example for data labeling."""
         res = self._api_call(
