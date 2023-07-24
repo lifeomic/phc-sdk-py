@@ -35,7 +35,7 @@ format: venv
 
 _gen: venv
 	$(PYTHON) bin/one-schema.py fetch-remote-schema \
-		--source lambda://patient-ml-service:deployed/private/introspection \
+		--source lambda://patient-ml-service:deployed/private/introspection/openapi \
 		--output ./service-schemas/patient-ml-service.json
 	$(PYTHON) bin/one-schema.py generate-client \
 		--schema ./service-schemas/patient-ml-service.json \

@@ -1,6 +1,12 @@
 {
-  "schema": {
-    "Resources": {
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Patient ML",
+    "description": "Enables training, evaluating, and deploying Machine Learning models on your data stored in the LifeOmic Platform.",
+    "version": "171"
+  },
+  "components": {
+    "schemas": {
       "MlProblemDefinitionBase": {
         "required": [],
         "additionalProperties": true,
@@ -36,7 +42,7 @@
       "LabelDefinition": {
         "allOf": [
           {
-            "$ref": "#/definitions/LabelDefinitionBase"
+            "$ref": "#/components/schemas/LabelDefinitionBase"
           },
           {
             "required": [
@@ -69,7 +75,7 @@
           "labels": {
             "type": "array",
             "items": {
-              "$ref": "#/definitions/LabelDefinitionBase"
+              "$ref": "#/components/schemas/LabelDefinitionBase"
             }
           }
         }
@@ -85,7 +91,7 @@
           "labels": {
             "type": "array",
             "items": {
-              "$ref": "#/definitions/LabelDefinition"
+              "$ref": "#/components/schemas/LabelDefinition"
             }
           },
           "maxLabelIndex": {
@@ -99,7 +105,7 @@
       "ClassificationProblemInput": {
         "allOf": [
           {
-            "$ref": "#/definitions/MlProblemDefinitionBase"
+            "$ref": "#/components/schemas/MlProblemDefinitionBase"
           },
           {
             "required": [
@@ -109,7 +115,7 @@
             "type": "object",
             "properties": {
               "labelDefinition": {
-                "$ref": "#/definitions/LabelsDefinitionInput"
+                "$ref": "#/components/schemas/LabelsDefinitionInput"
               }
             }
           }
@@ -118,7 +124,7 @@
       "ClassificationProblem": {
         "allOf": [
           {
-            "$ref": "#/definitions/MlProblemDefinitionBase"
+            "$ref": "#/components/schemas/MlProblemDefinitionBase"
           },
           {
             "required": [
@@ -128,7 +134,7 @@
             "type": "object",
             "properties": {
               "labelDefinition": {
-                "$ref": "#/definitions/LabelsDefinition"
+                "$ref": "#/components/schemas/LabelsDefinition"
               }
             }
           }
@@ -152,7 +158,7 @@
             "description": "Used to filter through patient data to identify image/mask pairs for model training.",
             "anyOf": [
               {
-                "$ref": "#/definitions/FhirCodesFilter"
+                "$ref": "#/components/schemas/FhirCodesFilter"
               }
             ]
           }
@@ -161,20 +167,20 @@
       "ImageSegmentationProblemInput": {
         "allOf": [
           {
-            "$ref": "#/definitions/ClassificationProblemInput"
+            "$ref": "#/components/schemas/ClassificationProblemInput"
           },
           {
-            "$ref": "#/definitions/ImageSegmentationProblemBase"
+            "$ref": "#/components/schemas/ImageSegmentationProblemBase"
           }
         ]
       },
       "ImageSegmentationProblem": {
         "allOf": [
           {
-            "$ref": "#/definitions/ClassificationProblem"
+            "$ref": "#/components/schemas/ClassificationProblem"
           },
           {
-            "$ref": "#/definitions/ImageSegmentationProblemBase"
+            "$ref": "#/components/schemas/ImageSegmentationProblemBase"
           }
         ]
       },
@@ -196,7 +202,7 @@
             "description": "Used to filter through patient data to identify the input images for the model.",
             "anyOf": [
               {
-                "$ref": "#/definitions/FhirCodesFilter"
+                "$ref": "#/components/schemas/FhirCodesFilter"
               }
             ]
           }
@@ -205,40 +211,40 @@
       "ImageClassificationProblemInput": {
         "allOf": [
           {
-            "$ref": "#/definitions/ClassificationProblemInput"
+            "$ref": "#/components/schemas/ClassificationProblemInput"
           },
           {
-            "$ref": "#/definitions/ImageClassificationProblemBase"
+            "$ref": "#/components/schemas/ImageClassificationProblemBase"
           }
         ]
       },
       "ImageClassificationProblem": {
         "allOf": [
           {
-            "$ref": "#/definitions/ClassificationProblem"
+            "$ref": "#/components/schemas/ClassificationProblem"
           },
           {
-            "$ref": "#/definitions/ImageClassificationProblemBase"
+            "$ref": "#/components/schemas/ImageClassificationProblemBase"
           }
         ]
       },
       "MlProblemDefinitionInput": {
         "anyOf": [
           {
-            "$ref": "#/definitions/ImageSegmentationProblemInput"
+            "$ref": "#/components/schemas/ImageSegmentationProblemInput"
           },
           {
-            "$ref": "#/definitions/ImageClassificationProblemInput"
+            "$ref": "#/components/schemas/ImageClassificationProblemInput"
           }
         ]
       },
       "MlProblemDefinition": {
         "anyOf": [
           {
-            "$ref": "#/definitions/ImageSegmentationProblem"
+            "$ref": "#/components/schemas/ImageSegmentationProblem"
           },
           {
-            "$ref": "#/definitions/ImageClassificationProblem"
+            "$ref": "#/components/schemas/ImageClassificationProblem"
           }
         ]
       },
@@ -297,7 +303,7 @@
           "areas": {
             "type": "array",
             "items": {
-              "$ref": "#/definitions/ImageSegmentationArea"
+              "$ref": "#/components/schemas/ImageSegmentationArea"
             }
           }
         }
@@ -305,7 +311,7 @@
       "LabelFileData": {
         "anyOf": [
           {
-            "$ref": "#/definitions/ImageSegmentationLabelData"
+            "$ref": "#/components/schemas/ImageSegmentationLabelData"
           }
         ]
       },
@@ -328,7 +334,7 @@
       "Tags": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/Tag"
+          "$ref": "#/components/schemas/Tag"
         }
       },
       "LabelBase": {
@@ -349,14 +355,14 @@
             "type": "number"
           },
           "tags": {
-            "$ref": "#/definitions/Tags"
+            "$ref": "#/components/schemas/Tags"
           }
         }
       },
       "ImageSegmentationLabel": {
         "allOf": [
           {
-            "$ref": "#/definitions/LabelBase"
+            "$ref": "#/components/schemas/LabelBase"
           },
           {
             "required": [
@@ -392,7 +398,7 @@
       "ImageClassificationLabel": {
         "allOf": [
           {
-            "$ref": "#/definitions/LabelBase"
+            "$ref": "#/components/schemas/LabelBase"
           },
           {
             "required": [
@@ -422,10 +428,10 @@
       "Label": {
         "anyOf": [
           {
-            "$ref": "#/definitions/ImageSegmentationLabel"
+            "$ref": "#/components/schemas/ImageSegmentationLabel"
           },
           {
-            "$ref": "#/definitions/ImageClassificationLabel"
+            "$ref": "#/components/schemas/ImageClassificationLabel"
           }
         ]
       },
@@ -449,7 +455,7 @@
       "ImageSegmentationExample": {
         "allOf": [
           {
-            "$ref": "#/definitions/ExampleBase"
+            "$ref": "#/components/schemas/ExampleBase"
           },
           {
             "required": [
@@ -478,7 +484,7 @@
                 }
               },
               "label": {
-                "$ref": "#/definitions/ImageSegmentationLabel"
+                "$ref": "#/components/schemas/ImageSegmentationLabel"
               }
             }
           }
@@ -487,7 +493,7 @@
       "ImageClassificationExample": {
         "allOf": [
           {
-            "$ref": "#/definitions/ExampleBase"
+            "$ref": "#/components/schemas/ExampleBase"
           },
           {
             "required": [
@@ -516,7 +522,7 @@
                 }
               },
               "label": {
-                "$ref": "#/definitions/ImageClassificationLabel"
+                "$ref": "#/components/schemas/ImageClassificationLabel"
               }
             }
           }
@@ -525,10 +531,10 @@
       "Example": {
         "anyOf": [
           {
-            "$ref": "#/definitions/ImageSegmentationExample"
+            "$ref": "#/components/schemas/ImageSegmentationExample"
           },
           {
-            "$ref": "#/definitions/ImageClassificationExample"
+            "$ref": "#/components/schemas/ImageClassificationExample"
           }
         ]
       },
@@ -612,14 +618,14 @@
             "type": "number"
           },
           "scale": {
-            "$ref": "#/definitions/NumericScale"
+            "$ref": "#/components/schemas/NumericScale"
           }
         }
       },
       "ContinuousParameterSpace": {
         "allOf": [
           {
-            "$ref": "#/definitions/NumericParameterSpace"
+            "$ref": "#/components/schemas/NumericParameterSpace"
           },
           {
             "required": [
@@ -641,7 +647,7 @@
       "IntegerParameterSpace": {
         "allOf": [
           {
-            "$ref": "#/definitions/NumericParameterSpace"
+            "$ref": "#/components/schemas/NumericParameterSpace"
           },
           {
             "required": [
@@ -663,13 +669,13 @@
       "ParameterSpace": {
         "anyOf": [
           {
-            "$ref": "#/definitions/CategoricalParameterSpace"
+            "$ref": "#/components/schemas/CategoricalParameterSpace"
           },
           {
-            "$ref": "#/definitions/ContinuousParameterSpace"
+            "$ref": "#/components/schemas/ContinuousParameterSpace"
           },
           {
-            "$ref": "#/definitions/IntegerParameterSpace"
+            "$ref": "#/components/schemas/IntegerParameterSpace"
           }
         ]
       },
@@ -735,18 +741,18 @@
           "metricDefinitions": {
             "type": "array",
             "items": {
-              "$ref": "#/definitions/MetricDefinition"
+              "$ref": "#/components/schemas/MetricDefinition"
             }
           },
           "objective": {
             "description": "The metric to optimize during the hyperparameter tuning process.",
-            "$ref": "#/definitions/OptimizationObjective"
+            "$ref": "#/components/schemas/OptimizationObjective"
           },
           "searchSpace": {
             "description": "The hyperparameter search space to explore during hyperparameter tuning.",
             "type": "array",
             "items": {
-              "$ref": "#/definitions/ParameterSpace"
+              "$ref": "#/components/schemas/ParameterSpace"
             }
           },
           "maxTrials": {
@@ -760,7 +766,7 @@
       "TrainingApproach": {
         "anyOf": [
           {
-            "$ref": "#/definitions/TuningJobTrainingApproach"
+            "$ref": "#/components/schemas/TuningJobTrainingApproach"
           }
         ]
       },
@@ -781,7 +787,7 @@
       "EdgeDeployApproach": {
         "allOf": [
           {
-            "$ref": "#/definitions/DeployApproachBase"
+            "$ref": "#/components/schemas/DeployApproachBase"
           },
           {
             "required": [
@@ -803,7 +809,7 @@
       "CloudDeployApproach": {
         "allOf": [
           {
-            "$ref": "#/definitions/DeployApproachBase"
+            "$ref": "#/components/schemas/DeployApproachBase"
           },
           {
             "required": [
@@ -825,10 +831,10 @@
       "DeployApproach": {
         "anyOf": [
           {
-            "$ref": "#/definitions/EdgeDeployApproach"
+            "$ref": "#/components/schemas/EdgeDeployApproach"
           },
           {
-            "$ref": "#/definitions/CloudDeployApproach"
+            "$ref": "#/components/schemas/CloudDeployApproach"
           }
         ]
       },
@@ -870,20 +876,20 @@
             "type": "string"
           },
           "trainingApproach": {
-            "$ref": "#/definitions/TrainingApproach"
+            "$ref": "#/components/schemas/TrainingApproach"
           },
           "deployApproach": {
-            "$ref": "#/definitions/DeployApproach"
+            "$ref": "#/components/schemas/DeployApproach"
           },
           "evaluationApproach": {
-            "$ref": "#/definitions/EvaluationApproach"
+            "$ref": "#/components/schemas/EvaluationApproach"
           }
         }
       },
       "ModelConfigInput": {
         "allOf": [
           {
-            "$ref": "#/definitions/ModelConfigBase"
+            "$ref": "#/components/schemas/ModelConfigBase"
           },
           {
             "required": [
@@ -893,7 +899,7 @@
             "type": "object",
             "properties": {
               "problemDefinition": {
-                "$ref": "#/definitions/MlProblemDefinitionInput"
+                "$ref": "#/components/schemas/MlProblemDefinitionInput"
               }
             }
           }
@@ -902,7 +908,7 @@
       "ModelConfig": {
         "allOf": [
           {
-            "$ref": "#/definitions/ModelConfigBase"
+            "$ref": "#/components/schemas/ModelConfigBase"
           },
           {
             "required": [
@@ -921,7 +927,7 @@
                 "type": "string"
               },
               "problemDefinition": {
-                "$ref": "#/definitions/MlProblemDefinition"
+                "$ref": "#/components/schemas/MlProblemDefinition"
               },
               "deployedId": {
                 "description": "The ID of the model version currently deployed for this model config.\n@deprecated use championId instead",
@@ -1010,14 +1016,14 @@
             "type": "number"
           },
           "decision": {
-            "$ref": "#/definitions/ApprovalChoice"
+            "$ref": "#/components/schemas/ApprovalChoice"
           }
         }
       },
       "SystemApprovalDecision": {
         "allOf": [
           {
-            "$ref": "#/definitions/ApprovalDecisionBase"
+            "$ref": "#/components/schemas/ApprovalDecisionBase"
           },
           {
             "required": [
@@ -1039,7 +1045,7 @@
       "UserApprovalDecision": {
         "allOf": [
           {
-            "$ref": "#/definitions/ApprovalDecisionBase"
+            "$ref": "#/components/schemas/ApprovalDecisionBase"
           },
           {
             "required": [
@@ -1065,10 +1071,10 @@
       "ApprovalDecision": {
         "anyOf": [
           {
-            "$ref": "#/definitions/SystemApprovalDecision"
+            "$ref": "#/components/schemas/SystemApprovalDecision"
           },
           {
-            "$ref": "#/definitions/UserApprovalDecision"
+            "$ref": "#/components/schemas/UserApprovalDecision"
           }
         ]
       },
@@ -1083,13 +1089,13 @@
         "type": "object",
         "properties": {
           "train": {
-            "$ref": "#/definitions/Split"
+            "$ref": "#/components/schemas/Split"
           },
           "val": {
-            "$ref": "#/definitions/Split"
+            "$ref": "#/components/schemas/Split"
           },
           "test": {
-            "$ref": "#/definitions/Split"
+            "$ref": "#/components/schemas/Split"
           }
         }
       },
@@ -1105,14 +1111,14 @@
             "description": "Metrics about how the model version trained in this run (the challenger) performed on this run's test set.",
             "type": "array",
             "items": {
-              "$ref": "#/definitions/Metric"
+              "$ref": "#/components/schemas/Metric"
             }
           },
           "champion": {
             "description": "Metrics about how the current best model (the champion) performed on this run's test set.",
             "type": "array",
             "items": {
-              "$ref": "#/definitions/Metric"
+              "$ref": "#/components/schemas/Metric"
             }
           }
         }
@@ -1208,13 +1214,13 @@
             "description": "True if this run has been archived. Archived runs' related artifacts are deleted, and they can no longer be deployed."
           },
           "splits": {
-            "$ref": "#/definitions/RunSplits"
+            "$ref": "#/components/schemas/RunSplits"
           },
           "hyperparameters": {
             "description": "The hyperparameters used to train the model version created by this run.",
             "type": "array",
             "items": {
-              "$ref": "#/definitions/Parameter"
+              "$ref": "#/components/schemas/Parameter"
             }
           },
           "championId": {
@@ -1222,262 +1228,626 @@
             "type": "string"
           },
           "metrics": {
-            "$ref": "#/definitions/RunMetrics"
+            "$ref": "#/components/schemas/RunMetrics"
           },
           "approvals": {
             "description": "Decisions made by various actors representing whether they think this model version should be used in production and become the new champion.",
             "type": "array",
             "items": {
-              "$ref": "#/definitions/ApprovalDecision"
+              "$ref": "#/components/schemas/ApprovalDecision"
             }
           },
           "problemDefinition": {
-            "$ref": "#/definitions/MlProblemDefinition"
+            "$ref": "#/components/schemas/MlProblemDefinition"
           },
           "trainingApproach": {
-            "$ref": "#/definitions/TrainingApproach"
+            "$ref": "#/components/schemas/TrainingApproach"
           },
           "deployApproach": {
-            "$ref": "#/definitions/DeployApproach"
+            "$ref": "#/components/schemas/DeployApproach"
           },
           "evaluationApproach": {
-            "$ref": "#/definitions/EvaluationApproach"
+            "$ref": "#/components/schemas/EvaluationApproach"
+          }
+        }
+      },
+      "LogEvent": {
+        "required": [
+          "type",
+          "timestamp",
+          "payload",
+          "stage"
+        ],
+        "additionalProperties": false,
+        "description": "An event logged by some component of a model run, as well as metadata about the log event.",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "logEntry"
+            ]
+          },
+          "timestamp": {
+            "description": "The time when the log event occurred, expressed as milliseconds since the unix epoch.",
+            "type": "number"
+          },
+          "payload": {
+            "description": "The actual body of the logged event.",
+            "type": "string"
+          },
+          "stage": {
+            "description": "The model run's stage or component that produced this log event.",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/models": {
+      "post": {
+        "operationId": "createModel",
+        "description": "Creates a new model via a model config object.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "model"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "model": {
+                      "$ref": "#/components/schemas/ModelConfig"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelConfigInput"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getModels",
+        "description": "Gets all model configs for an account.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "models"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "models": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ModelConfig"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "Endpoints": {
-      "POST /models": {
-        "Name": "createModel",
-        "Description": "Creates a new model via a model config object.",
-        "Request": {
-          "$ref": "#/definitions/ModelConfigInput"
-        },
-        "Response": {
-          "required": [
-            "model"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "model": {
-              "$ref": "#/definitions/ModelConfig"
-            }
-          }
-        }
-      },
-      "PUT /models/:id": {
-        "Name": "updateModel",
-        "Description": "Updates a model config.",
-        "Request": {
-          "$ref": "#/definitions/ModelConfigInput"
-        },
-        "Response": {
-          "required": [
-            "model"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "model": {
-              "$ref": "#/definitions/ModelConfig"
-            }
-          }
-        }
-      },
-      "DELETE /models/:id": {
-        "Name": "deleteModel",
-        "Description": "Deletes a model.",
-        "Response": {
-          "required": [
-            "id"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "id": {
-              "description": "The id of the model that was deleted.",
-              "type": "string"
-            }
-          }
-        },
-        "Request": {}
-      },
-      "GET /models": {
-        "Name": "getModels",
-        "Description": "Gets all model configs for an account.",
-        "Response": {
-          "required": [
-            "models"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "models": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ModelConfig"
+    "/models/{id}": {
+      "put": {
+        "operationId": "updateModel",
+        "description": "Updates a model config.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "model"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "model": {
+                      "$ref": "#/components/schemas/ModelConfig"
+                    }
+                  }
+                }
               }
             }
           }
         },
-        "Request": {}
-      },
-      "GET /models/:id": {
-        "Name": "getModel",
-        "Description": "Gets a model config.",
-        "Response": {
-          "required": [],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "model": {
-              "$ref": "#/definitions/ModelConfig"
-            }
-          }
-        },
-        "Request": {}
-      },
-      "GET /models/:id/predict": {
-        "Name": "predict",
-        "Description": "Produces a model prediction for a given patient.",
-        "Request": {
-          "required": [
-            "patientId"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "patientId": {
-              "type": "string"
-            }
-          }
-        },
-        "Response": {
-          "additionalProperties": false,
-          "type": "object",
-          "description": "TODO - stub out the response type for predictions."
-        }
-      },
-      "POST /models/:modelId/runs": {
-        "Name": "createRun",
-        "Description": "Begins a new ML run for a given model.",
-        "Response": {
-          "required": [
-            "runId"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "runId": {
-              "description": "The id of the newly created run. Can be used to fetch data about the run.",
-              "type": "string"
-            }
-          }
-        },
-        "Request": {}
-      },
-      "GET /models/:modelId/runs": {
-        "Name": "getRuns",
-        "Description": "Gets data for all ML runs for a model.",
-        "Response": {
-          "required": [
-            "runs"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "runs": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ModelRun"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelConfigInput"
               }
             }
           }
         },
-        "Request": {}
-      },
-      "GET /models/:modelId/runs/:runId": {
-        "Name": "getRun",
-        "Description": "Gets data for a particular run.",
-        "Response": {
-          "required": [],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "run": {
-              "$ref": "#/definitions/ModelRun"
-            }
-          }
-        },
-        "Request": {}
-      },
-      "GET /models/:modelId/runs/:runId/model-artifact": {
-        "Name": "getModelArtifact",
-        "Description": "Gets a url that can be used to download the model artifact for a particular run.",
-        "Response": {
-          "required": [
-            "url"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "url": {
-              "type": "string"
-            }
-          }
-        },
-        "Request": {}
-      },
-      "POST /models/:modelId/runs/:runId/approvals": {
-        "Name": "createApprovalDecision",
-        "Description": "Adds a new approval decision to a model run",
-        "Request": {
-          "required": [
-            "choice"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "choice": {
-              "$ref": "#/definitions/ApprovalChoice"
-            }
-          }
-        },
-        "Response": {
-          "required": [
-            "approvalDecision"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "approvalDecision": {
-              "$ref": "#/definitions/UserApprovalDecision"
-            }
-          }
-        }
-      },
-      "GET /models/:modelId/examples": {
-        "Name": "getExamples",
-        "Description": "Fetches a page of training data examples for data labeling.",
-        "Request": {
-          "required": [
-            "projectId"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "projectId": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
               "type": "string"
             },
-            "hasLabel": {
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteModel",
+        "description": "Deletes a model.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "id"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "description": "The id of the model that was deleted.",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      },
+      "get": {
+        "operationId": "getModel",
+        "description": "Gets a model config.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "model": {
+                      "$ref": "#/components/schemas/ModelConfig"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/models/{modelId}/runs": {
+      "post": {
+        "operationId": "createRun",
+        "description": "Begins a new ML run for a given model.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "runId"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "runId": {
+                      "description": "The id of the newly created run. Can be used to fetch data about the run.",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      },
+      "get": {
+        "operationId": "getRuns",
+        "description": "Gets data for all ML runs for a model.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "runs"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "runs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ModelRun"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/models/{modelId}/runs/{runId}": {
+      "get": {
+        "operationId": "getRun",
+        "description": "Gets data for a particular run.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "run": {
+                      "$ref": "#/components/schemas/ModelRun"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "runId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/models/{modelId}/runs/{runId}/model-artifact": {
+      "get": {
+        "operationId": "getModelArtifact",
+        "description": "Gets a url that can be used to download the model artifact for a particular run.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "url"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "runId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/models/{modelId}/runs/{runId}/logs": {
+      "get": {
+        "operationId": "getModelLogs",
+        "description": "Gets the log events for a particular run.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "events"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LogEvent"
+                      }
+                    },
+                    "marker": {
+                      "description": "A marker used for pagination. Pass it in the request body to retrieve the next page of results. This field will be undefined if the output is not truncated.",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "runId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "description": "An optional field used to filter the log events. This parameter supports AWS CloudWatch Logs' filter and pattern syntax. See https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html for instructions on how to write filters.",
+            "schema": {
+              "description": "An optional field used to filter the log events. This parameter supports AWS CloudWatch Logs' filter and pattern syntax. See https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html for instructions on how to write filters.",
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "marker",
+            "description": "Passed in to control which page of results is retrieved.",
+            "schema": {
+              "description": "Passed in to control which page of results is retrieved.",
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "The maximum number of events to return. The default is to return 10,000 -- the largest allowed.",
+            "schema": {
+              "description": "The maximum number of events to return. The default is to return 10,000 -- the largest allowed.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            },
+            "required": false
+          }
+        ]
+      }
+    },
+    "/models/{modelId}/runs/{runId}/approvals": {
+      "post": {
+        "operationId": "createApprovalDecision",
+        "description": "Adds a new approval decision to a model run.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "approvalDecision"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "approvalDecision": {
+                      "$ref": "#/components/schemas/UserApprovalDecision"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "choice"
+                ],
+                "additionalProperties": false,
+                "type": "object",
+                "properties": {
+                  "choice": {
+                    "$ref": "#/components/schemas/ApprovalChoice"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "runId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/models/{modelId}/examples": {
+      "get": {
+        "operationId": "getExamples",
+        "description": "Fetches a page of training data examples for data labeling.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "examples"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "examples": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Example"
+                      }
+                    },
+                    "marker": {
+                      "description": "A marker used for pagination. Pass it in the request body to retrieve the next page of results. This field will be undefined if the output is not truncated.",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "projectId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "hasLabel",
+            "schema": {
               "type": "string",
               "enum": [
                 "true",
                 "false"
               ]
             },
-            "hasUnconfirmedLabel": {
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "hasUnconfirmedLabel",
+            "description": "Allows for fetching examples that have unconfirmed labels.",
+            "schema": {
               "type": "string",
               "description": "Allows for fetching examples that have unconfirmed labels.",
               "enum": [
@@ -1485,114 +1855,218 @@
                 "false"
               ]
             },
-            "marker": {
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "marker",
+            "schema": {
               "type": "string"
             },
-            "patientId": {
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "patientId",
+            "schema": {
               "type": "string"
-            }
+            },
+            "required": false
           }
-        },
-        "Response": {
-          "required": [
-            "examples"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "examples": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Example"
+        ]
+      }
+    },
+    "/models/{modelId}/examples/{exampleId}": {
+      "get": {
+        "operationId": "getExample",
+        "description": "Fetches a single training data example for data labeling.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "example": {
+                      "$ref": "#/components/schemas/Example"
+                    }
+                  }
+                }
               }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "schema": {
+              "type": "string"
             },
-            "marker": {
-              "Description": "A marker used for pagination. Will be undefined if the output is not truncated.",
+            "required": true
+          },
+          {
+            "name": "exampleId",
+            "in": "path",
+            "schema": {
               "type": "string"
-            }
-          }
-        }
-      },
-      "GET /models/:modelId/examples/:exampleId": {
-        "Name": "getExample",
-        "Description": "Fetches a single training data example for data labeling.",
-        "Request": {
-          "required": [
-            "projectId"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "projectId": {
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "projectId",
+            "schema": {
               "type": "string"
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/models/{modelId}/examples/{exampleId}/label": {
+      "put": {
+        "operationId": "putLabel",
+        "description": "Updates the label for a training data example",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Example"
+                }
+              }
             }
           }
         },
-        "Response": {
-          "required": [],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "example": {
-              "$ref": "#/definitions/Example"
-            }
-          }
-        }
-      },
-      "PUT /models/:modelId/examples/:exampleId/label": {
-        "Name": "putLabel",
-        "Description": "Updates the label for a training data example",
-        "Request": {
-          "$ref": "#/definitions/Label"
-        },
-        "Response": {
-          "$ref": "#/definitions/Example"
-        }
-      },
-      "GET /models/:modelId/examples/:exampleId/label-file": {
-        "Name": "getLabelFile",
-        "Description": "Retrieves the label file for the given example, if it exists, and converts it to the format LabelStudio expects.",
-        "Response": {
-          "required": [],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "labelData": {
-              "$ref": "#/definitions/LabelFileData"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Label"
+              }
             }
           }
         },
-        "Request": {}
-      },
-      "PUT /models/:modelId/examples/:exampleId/label-file": {
-        "Name": "putLabelFile",
-        "Description": "Preprocesses the label data and updates the label file for a training data example. This is done for ML problem types that store their labels as independent files, such as image segmentation. For those problem types, The label data is not stored on a label FHIR record, but in a separate file-service file, and pointed to by a label FHIR record.",
-        "Request": {
-          "$ref": "#/definitions/LabelFileData"
-        },
-        "Response": {
-          "required": [
-            "fileId"
-          ],
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "fileId": {
-              "description": "The id of the file-service file the label file was saved to.",
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "schema": {
               "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "exampleId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/models/{modelId}/examples/{exampleId}/label-file": {
+      "get": {
+        "operationId": "getLabelFile",
+        "description": "Retrieves the label file for the given example, if it exists, and converts it to the format LabelStudio expects.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "labelData": {
+                      "$ref": "#/components/schemas/LabelFileData"
+                    }
+                  }
+                }
+              }
             }
           }
-        }
-      },
-      "DELETE /models/:modelId/examples/:exampleId/label": {
-        "Name": "deleteLabel",
-        "Description": "Deletes the label for a training data example",
-        "Response": {
-          "$ref": "#/definitions/Example"
         },
-        "Request": {}
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "exampleId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      },
+      "put": {
+        "operationId": "putLabelFile",
+        "description": "Preprocesses the label data and updates the label file for a training data example. This is done for ML problem types that store their labels as independent files, such as image segmentation. For those problem types, The label data is not stored on a label FHIR record, but in a separate file-service file, and pointed to by a label FHIR record.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "fileId"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "fileId": {
+                      "description": "The id of the file-service file the label file was saved to.",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelFileData"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "exampleId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
       }
     }
-  },
-  "serviceVersion": "145"
+  }
 }
