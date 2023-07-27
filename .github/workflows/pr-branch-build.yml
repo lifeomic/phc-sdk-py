@@ -16,16 +16,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install poetry
+        run: pipx install poetry==1.5.1
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python_version }}
+          cache: "poetry"
 
-      - name: Build and Test
-        run: |
-          pip install virtualenv
-          make test package
-
-      - name: doc
-        if: ${{ matrix.python_version == '3.8' }}
-        run: make doc
+      - run: poetry install
+      - run: |
+          poetry run poe lint
+          poetry run pytest

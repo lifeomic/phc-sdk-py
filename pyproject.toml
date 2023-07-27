@@ -1,6 +1,91 @@
+[tool.poetry]
+name = "phc-sdk-py"
+version = "0.32.0"
+description = "Python SDK for the LifeOmic platform"
+authors = ["LifeOmic <development@lifeomic.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/lifeomic/phc-sdk-py"
+documentation = "https://lifeomic.github.io/phc-sdk-py/"
+packages = [{ include = "phc" }]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: MIT License",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Healthcare Industry",
+  "Natural Language :: English",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Topic :: Utilities",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+aiohttp = ">3.5.3,<4.0.0"
+backoff = ">=1.10.0,<2.0.0"
+nest-asyncio = ">=1.5.6,<2.0.0"
+pyjwt = ">=2.4.0,<3.0.0"
+pandas = ">=1.3.5,<2.0.0"
+funcy = ">=2.0,<3.0.0"
+lenses = ">=1.1.0,<2.0.0"
+toolz = ">=0.12.0,<1.0.0"
+pydantic = ">=1.10.2,<2.0.0"
+python-pmap = ">=2.0.0,<3.0.0"
+fastparquet = ">=0.8.1,<1.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "2.21.0"
+black = "23.3.0"
+flake8 = "5.0.4"
+pdoc3 = "0.10.0"
+twine = "4.0.2"
+pytest = "7.4.0"
+pytest-watch = "4.2.0"
+click = "8.0.2"
+boto3 = "1.26.158"
+fire = "0.5.0"
+typing-extensions = "4.6.3"
+datamodel-code-generator = "0.21.1"
+poethepoet = "^0.21.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poe.tasks]
+clean = "rm -rf build dist phc.egg-info doc/build"
+_doc_generate = """
+pdoc --html --output-dir doc/build --force --template-dir doc/template
+  --config show_inherited_members=True
+  --config list_class_variables_in_index=False
+  ./phc
+"""
+_doc_copy = "cp doc/phc.png doc/build/phc/phc.png"
+_doc_favicon = "cp doc/favicon.ico doc/build/phc/favicon.ico"
+doc = ["_doc_generate", "_doc_copy", "_doc_favicon"]
+lint = "flake8 phc bin"
+format = "black phc bin"
+_fetch_remote_schema = """
+python3 bin/one-schema.py fetch-remote-schema
+		--source lambda://patient-ml-service:deployed/private/introspection/openapi
+		--output ./service-schemas/patient-ml-service.json
+"""
+_generate_client = """
+python3 bin/one-schema.py generate-client
+		--schema ./service-schemas/patient-ml-service.json
+		--output ./phc/services/patient_ml.py
+		--name PatientML
+		--path-prefix /v1/patient-ml
+"""
+gen = ["_fetch_remote_schema", "_generate_client", "format"]
+
+
 [tool.black]
 line-length = 80
-target_version = ['py37']
+target_version = ['py38']
 exclude = '''
 /(
     \.git
