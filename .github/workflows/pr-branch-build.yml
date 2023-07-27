@@ -1,20 +1,27 @@
 name: PR Branch Build and Test
 
 on:
-  push:
-    branches-ignore:
-      - master
+  # Triggers the workflow on pull request events but only for the master branch
+  pull_request:
+    branches: [master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python_version: ["3.7", "3.8", "3.9", "3.10"]
+
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
-    - name: Build and Test
-      run: |
-        pip install virtualenv
-        make test package
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python_version }}
+
+      - name: Build and Test
+        run: |
+          pip install virtualenv
+          make test package
