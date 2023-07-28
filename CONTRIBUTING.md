@@ -43,7 +43,7 @@ poetry run pre-commit
 poetry run pytest
 ```
 
-####Linting
+### Linting
 
 ```bash
 poetry run poe lint

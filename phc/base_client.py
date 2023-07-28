@@ -4,10 +4,10 @@ import platform
 import sys
 from typing import Union, Dict
 from urllib.parse import urlencode, urljoin
+from importlib import metadata
 
 import backoff
 
-import phc.version as ver
 from phc import Session
 from phc.api_response import ApiResponse
 from phc.errors import ApiError, RequestError
@@ -243,7 +243,7 @@ class BaseClient:
             e.g. 'Python/3.6.7 phc-sdk-py/2.0.0 Darwin/17.7.0'
         """
         # __name__ returns all classes, we only want the client
-        client = f"phc-sdk-py/{ver.__version__}"
+        client = f"phc-sdk-py/{metadata.version(__package__)}"
         python_version = f"Python/{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
         system_info = f"{platform.system()}/{platform.release()}"
         user_agent_string = " ".join([python_version, client, system_info])
