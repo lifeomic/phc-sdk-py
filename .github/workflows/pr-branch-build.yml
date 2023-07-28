@@ -29,3 +29,8 @@ jobs:
       - run: |
           poetry run poe lint
           poetry run pytest
+          poetry build -f sdist
+          poetry build -f wheel
+
+      - if: ${{ matrix.python_version == '3.8' }}
+        run: poetry run poe doc
