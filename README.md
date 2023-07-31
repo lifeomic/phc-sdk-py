@@ -15,7 +15,7 @@ The phc-sdk-py is a developer kit for interfacing with the [PHC API](https://api
 
 ### Dependencies
 
-- [Python 3](https://www.python.org/download/releases/3.0/) version >= 3.7
+- [Python 3](https://www.python.org/download/releases/3.0/) version >= 3.8
 
 ### Getting the Source
 

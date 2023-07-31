@@ -5,7 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-_(NOTE: All examples use fictious data or freely available data sets.)_
+_(NOTE: All examples use fictitious data or freely available data sets.)_
+
+## [0.33.0] - 2023-07-28
+
+### Added
+
+- Runs on Python 3.8+
+
+### Removed
+
+- Python 3.7 is no longer supported.
 
 ## [0.32.0] - 2023-07-20
 
