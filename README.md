@@ -19,43 +19,7 @@ The phc-sdk-py is a developer kit for interfacing with the [PHC API](https://api
 
 ### Getting the Source
 
-This project is [hosted on GitHub](https://github.com/lifeomic/phc-sdk-py). You can clone this project directly using this command:
-
-```bash
-git clone git@github.com:lifeomic/phc-sdk-py.git
-```
-
-### Development
-
-Python environments are managed using [virtualenv](https://virtualenv.pypa.io/en/latest/). Be sure to have this installed first `pip install virtualenv`. The makefile will setup the environment for the targets listed below.
-
-Some clients in this SDK are auto-generated. They can be re-generated at any time to pull in the latest changes by running `make gen`.
-
-#### Setup
-
-This installs some pre-commit hooks that will format and lint new changes.
-
-```bash
-make setup
-```
-
-#### Running tests
-
-```bash
-make test
-```
-
-#### Linting
-
-```bash
-make lint
-```
-
-### Installation
-
-```bash
-pip install phc
-```
+This project is [hosted on GitHub](https://github.com/lifeomic/phc-sdk-py).
 
 ### Usage
 
@@ -75,16 +39,6 @@ from phc.services import Accounts
 accounts = Accounts(session)
 myaccounts = accounts.get_list()
 ```
-
-## Release Process
-
-[Releases](https://github.com/lifeomic/phc-sdk-py/releases) are generally created with each merged PR. To release a new version, update the package version in `phc.version`, and open a PR.
-
-Packages for each release are published to [PyPi](https://pypi.org/project/phc/). See [CHANGELOG.md](CHANGELOG.md) for release notes.
-
-### Versioning
-
-This project uses [Semantic Versioning](http://semver.org/).
 
 ## Contributing
 

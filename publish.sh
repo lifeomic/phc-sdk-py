@@ -12,7 +12,8 @@ if does_pypi_version_exist phc "$pkg_version"; then
 fi
 
 echo "Building the package"
-make package
+poetry build -f sdist
+poetry build -f wheel
 
 echo "Publishing package version $pkg_version to PyPi"
-make deploy
+poetry run python -m twine upload dist/*
