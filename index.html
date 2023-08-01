@@ -38,25 +38,7 @@
 <li><a href="https://www.python.org/download/releases/3.0/">Python 3</a> version &gt;= 3.8</li>
 </ul>
 <h3 id="getting-the-source">Getting the Source</h3>
-<p>This project is <a href="https://github.com/lifeomic/phc-sdk-py">hosted on GitHub</a>. You can clone this project directly using this command:</p>
-<pre><code class="language-bash">git clone git@github.com:lifeomic/phc-sdk-py.git
-</code></pre>
-<h3 id="development">Development</h3>
-<p>Python environments are managed using <a href="https://virtualenv.pypa.io/en/latest/">virtualenv</a>. Be sure to have this installed first <code>pip install virtualenv</code>. The makefile will setup the environment for the targets listed below.</p>
-<p>Some clients in this SDK are auto-generated. They can be re-generated at any time to pull in the latest changes by running <code>make gen</code>.</p>
-<h4 id="setup">Setup</h4>
-<p>This installs some pre-commit hooks that will format and lint new changes.</p>
-<pre><code class="language-bash">make setup
-</code></pre>
-<h4 id="running-tests">Running tests</h4>
-<pre><code class="language-bash">make test
-</code></pre>
-<h4 id="linting">Linting</h4>
-<pre><code class="language-bash">make lint
-</code></pre>
-<h3 id="installation">Installation</h3>
-<pre><code class="language-bash">pip install phc
-</code></pre>
+<p>This project is <a href="https://github.com/lifeomic/phc-sdk-py">hosted on GitHub</a>.</p>
 <h3 id="usage">Usage</h3>
 <p>A <code><a title="phc.Session" href="#phc.Session">Session</a></code> needs to be created first that stores the token and account information needed to access the PHC API. One can currently using API Key tokens generated from the PHC Account, or OAuth tokens generated using the <a href="https://github.com/lifeomic/cli">CLI</a>.</p>
 <pre><code class="language-python">from phc import Session
@@ -69,11 +51,6 @@ session = Session(token=&lt;TOKEN VALUE&gt;, account=&quot;myaccount&quot;)
 accounts = Accounts(session)
 myaccounts = accounts.get_list()
 </code></pre>
-<h2 id="release-process">Release Process</h2>
-<p><a href="https://github.com/lifeomic/phc-sdk-py/releases">Releases</a> are generally created with each merged PR. To release a new version, update the package version in <code>phc.version</code>, and open a PR.</p>
-<p>Packages for each release are published to <a href="https://pypi.org/project/phc/">PyPi</a>. See <a href="CHANGELOG.md">CHANGELOG.md</a> for release notes.</p>
-<h3 id="versioning">Versioning</h3>
-<p>This project uses <a href="http://semver.org/">Semantic Versioning</a>.</p>
 <h2 id="contributing">Contributing</h2>
 <p>We encourage public contributions! Please review <a href="CONTRIBUTING.md">CONTRIBUTING.md</a> and <a href="CODE_OF_CONDUCT.md">CODE_OF_CONDUCT.md</a> for details on our code of conduct and development process.</p>
 <h2 id="license">License</h2>
@@ -602,18 +579,7 @@ __pdoc__ = {
 <li><a href="#getting-started">Getting Started</a><ul>
 <li><a href="#dependencies">Dependencies</a></li>
 <li><a href="#getting-the-source">Getting the Source</a></li>
-<li><a href="#development">Development</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#running-tests">Running tests</a></li>
-<li><a href="#linting">Linting</a></li>
-</ul>
-</li>
-<li><a href="#installation">Installation</a></li>
 <li><a href="#usage">Usage</a></li>
-</ul>
-</li>
-<li><a href="#release-process">Release Process</a><ul>
-<li><a href="#versioning">Versioning</a></li>
 </ul>
 </li>
 <li><a href="#contributing">Contributing</a></li>
