@@ -119,7 +119,7 @@ class Genomics(BaseClient):
 
         if set_type == Genomics.SetType.VARIANT:
             json_body["variantsFileIds"] = [file_id]
-            json_body["updateSample"] = (update_sample,)
+            json_body["updateSample"] = update_sample
             json_body["passFile"] = pass_filter
             json_body["outputVcfName"] = output_vcf_name
 
