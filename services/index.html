@@ -2793,7 +2793,7 @@ The ingestion that was created.</p></div>
 
         if set_type == Genomics.SetType.VARIANT:
             json_body[&#34;variantsFileIds&#34;] = [file_id]
-            json_body[&#34;updateSample&#34;] = (update_sample,)
+            json_body[&#34;updateSample&#34;] = update_sample
             json_body[&#34;passFile&#34;] = pass_filter
             json_body[&#34;outputVcfName&#34;] = output_vcf_name
 
@@ -3005,7 +3005,7 @@ The ingestion that was created.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = 'ab10e660-1c2b-4ae0-896f-d3af20d88568', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = '238f5c8c-8aae-401e-8a8c-e53353991875', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
@@ -3124,7 +3124,7 @@ The ingestion that was created.</p></div>
 
     if set_type == Genomics.SetType.VARIANT:
         json_body[&#34;variantsFileIds&#34;] = [file_id]
-        json_body[&#34;updateSample&#34;] = (update_sample,)
+        json_body[&#34;updateSample&#34;] = update_sample
         json_body[&#34;passFile&#34;] = pass_filter
         json_body[&#34;outputVcfName&#34;] = output_vcf_name
 
