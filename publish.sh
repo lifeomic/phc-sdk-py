@@ -5,7 +5,7 @@ does_pypi_version_exist () {
     pip3 index versions "$pkg_name" | [[ $(cat) == *$version* ]]
 }
 
-pkg_version=$(cat phc/version.py | sed 's/[^0-9.]*\([0-9.]*\).*/\1/')
+pkg_version=$(poetry version | sed 's/[^0-9.]*\([0-9.]*\).*/\1/')
 if does_pypi_version_exist phc "$pkg_version"; then
     echo "Package version $pkg_version has already been published to PyPi; exiting early"
     exit 0
