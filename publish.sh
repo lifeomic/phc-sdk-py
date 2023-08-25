@@ -16,4 +16,4 @@ poetry build -f sdist
 poetry build -f wheel
 
 echo "Publishing package version $pkg_version to PyPi"
-# poetry run python -m twine upload dist/*
+poetry run python -m twine upload dist/*
