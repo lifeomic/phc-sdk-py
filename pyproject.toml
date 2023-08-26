@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "phc"
-version = "0.33.1"
+version = "0.33.2"
 description = "Python SDK for the LifeOmic platform"
 authors = ["LifeOmic <development@lifeomic.com>"]
 license = "MIT"

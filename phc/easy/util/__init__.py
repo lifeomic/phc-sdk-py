@@ -7,7 +7,7 @@ from funcy import lmapcat
 from toolz import groupby
 
 try:
-    from tqdm.autonotebook import tqdm
+    from tqdm.auto import tqdm
 except ImportError:
     _has_tqdm = False
     tqdm = None
