@@ -4,7 +4,6 @@ from enum import Enum
 from phc import ApiResponse
 from phc.base_client import BaseClient
 from typing import Optional, Dict, Union
-from urllib.parse import urlencode
 
 
 class IngestionStep(str, Enum):
@@ -95,8 +94,9 @@ class GenomicIngestions(BaseClient):
             query_dict["steps"] = step.value
 
         return self._api_call(
-            f"genomic-ingestion/projects/{project_id}/ingestions?{urlencode(query_dict)}",
+            f"genomic-ingestion/projects/{project_id}/ingestions",
             http_verb="GET",
+            params=query_dict,
         )
 
     def create_foundation(
@@ -287,6 +287,50 @@ class GenomicIngestions(BaseClient):
             json={
                 "ingestionType": "NextGen",
                 "inputFiles": {"tar": tar_file_id},
+                "notificationConfig": {
+                    "succeededEmail": succeeded_email,
+                    "failedEmail": failed_email,
+                },
+            },
+        )
+
+    def create_vcf(
+        self,
+        project_id: str,
+        vcf_file_id: str,
+        manifest_file_id: str,
+        succeeded_email: Optional[str] = None,
+        failed_email: Optional[str] = None,
+    ) -> ApiResponse:
+        """Creates a VCF ingestion in a project
+
+        Parameters
+        ----------
+        project_id: str
+            The project ID to create the ingestion in.
+        vcf_file_id: str
+            The ID of the VCF file to ingest.
+        manifest_file_id: str
+            The ID of the manifest file to ingest.
+        succeeded_email: str, optional
+            The email address to notify if the ingestion succeeds, by default None.
+        failed_email: str, optional
+            The email address to notify if the ingestion fails, by default None.
+
+        Returns
+        -------
+        phc.ApiResponse
+            The ingestion that was created.
+        """
+
+        return self._api_call(
+            f"genomic-ingestion/projects/{project_id}/ingestions",
+            json={
+                "ingestionType": "Vcf",
+                "inputFiles": {
+                    "vcf": vcf_file_id,
+                    "manifest": manifest_file_id,
+                },
                 "notificationConfig": {
                     "succeededEmail": succeeded_email,
                     "failedEmail": failed_email,
