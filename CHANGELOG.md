@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _(NOTE: All examples use fictitious data or freely available data sets.)_
 
+## [0.33.4] - 2023-11-02
+
+### Fixed
+
+- The `phc.services.PatientML` API client will now ignore extra values, instead of throwing an error if one is found when parsing an entity.
+
 ## [0.33.0] - 2023-07-28
 
 ### Added
