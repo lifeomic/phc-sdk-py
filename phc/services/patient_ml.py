@@ -7,16 +7,12 @@ from phc.base_client import BaseClient
 #   filename:  patient-ml-service.json
 
 
-from typing import List, Optional, Union
+from typing import List, Literal, Optional, Union
 
 from pydantic import BaseModel, Extra, Field
-from typing_extensions import Literal
 
 
 class MlProblemDefinitionBase(BaseModel):
-    class Config:
-        extra = Extra.allow
-
     retrainEvery: Optional[float] = None
     """
     If provided, the model will automatically be retrained if this many milliseconds have passed since the last run. Models will not be retrained more frequently than once per day, and this policy is only checked once per day, so more than this many milliseconds may actually pass before the model is retrained.
@@ -24,9 +20,6 @@ class MlProblemDefinitionBase(BaseModel):
 
 
 class LabelDefinitionBase(BaseModel):
-    class Config:
-        extra = Extra.allow
-
     id: Optional[str] = None
     """
     UUID uniquely identifying this label.
@@ -47,16 +40,10 @@ class LabelDefinition(LabelDefinitionBase):
 
 
 class LabelsDefinitionInput(BaseModel):
-    class Config:
-        extra = Extra.allow
-
     labels: List[LabelDefinitionBase]
 
 
 class LabelsDefinition(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     labels: List[LabelDefinition]
     maxLabelIndex: int = Field(..., ge=-1, le=255)
     """
@@ -77,9 +64,6 @@ class ImageSegmentationArea(BaseModel):
     A run-length encoded (RLE) 4 channel color image, representing the mask for a single label.
     """
 
-    class Config:
-        extra = Extra.forbid
-
     id: str
     """
     The ID of the label this mask is for.
@@ -94,9 +78,6 @@ class ImageSegmentationLabelData(BaseModel):
     """
     A raw image segmentation, in the format LabelStudio provides.
     """
-
-    class Config:
-        extra = Extra.forbid
 
     labelType: Literal["imgSeg"]
     projectId: str
@@ -119,9 +100,6 @@ class LabelFileData(BaseModel):
 
 
 class Tag(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     name: str
     value: str
 
@@ -131,9 +109,6 @@ class Tags(BaseModel):
 
 
 class LabelBase(BaseModel):
-    class Config:
-        extra = Extra.allow
-
     isConfirmed: Optional[bool] = None
     """
     A confirmed label is believed to be correct and may be used during training and evaluation.
@@ -153,9 +128,6 @@ class Mask(BaseModel):
     """
     The fileId of an image containing per-pixel labels
     """
-
-    class Config:
-        extra = Extra.forbid
 
     fileId: str
 
@@ -181,9 +153,6 @@ class Label(BaseModel):
 
 
 class ExampleBase(BaseModel):
-    class Config:
-        extra = Extra.allow
-
     id: str
     updatedAt: float
     """
@@ -192,9 +161,6 @@ class ExampleBase(BaseModel):
 
 
 class Image(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     fileId: str
 
 
@@ -219,17 +185,11 @@ class FhirCodesFilter(BaseModel):
     Used to find FHIR resources containing a type code that equals any value in the codes array
     """
 
-    class Config:
-        extra = Extra.forbid
-
     filterType: Literal["FhirCodesFilter"]
     codes: List[str] = Field(..., max_items=10, min_items=1)
 
 
 class CategoricalParameterSpace(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     type: Literal["categorical"]
     name: str
     values: List[str]
@@ -240,9 +200,6 @@ class NumericScale(BaseModel):
 
 
 class NumericParameterSpace(BaseModel):
-    class Config:
-        extra = Extra.allow
-
     name: str
     min: float
     max: float
@@ -266,9 +223,6 @@ class ParameterSpace(BaseModel):
 
 
 class OptimizationObjective(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     direction: Literal["minimize", "maximize"]
     metric: str
 
@@ -278,17 +232,11 @@ class MetricDefinition(BaseModel):
     Camel-cased mirror of https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_MetricDefinition.html.
     """
 
-    class Config:
-        extra = Extra.forbid
-
     name: str
     regex: str
 
 
 class TuningJobTrainingApproach(BaseModel):
-    class Config:
-        extra = Extra.allow
-
     type: Literal["tuningJob"]
     trainingImage: str = Field(
         ...,
@@ -317,9 +265,6 @@ class TrainingApproach(BaseModel):
 
 
 class DeployApproachBase(BaseModel):
-    class Config:
-        extra = Extra.allow
-
     inferenceImage: str = Field(
         ...,
         regex="^[0-9]+\\.dkr.ecr.[-a-z0-9]+\\.amazonaws\\.com\\/[-_a-zA-Z0-9]+:[-_a-zA-Z0-9]+$",
@@ -342,9 +287,6 @@ class DeployApproach(BaseModel):
 
 
 class EvaluationApproach(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     type: Literal["customImage"]
     imageUri: str = Field(
         ...,
@@ -356,9 +298,6 @@ class EvaluationApproach(BaseModel):
 
 
 class ModelConfigBase(BaseModel):
-    class Config:
-        extra = Extra.allow
-
     name: str
     description: str
     trainingApproach: TrainingApproach
@@ -367,9 +306,6 @@ class ModelConfigBase(BaseModel):
 
 
 class Split(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     n: float
     """
     The number of examples in this split.
@@ -389,9 +325,6 @@ class Split(BaseModel):
 
 
 class Metric(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     name: str
     """
     The name of the metric e.g. "Cross Entopy Loss", "Accuracy", "F1 Macro", etc.
@@ -408,9 +341,6 @@ class ApprovalChoice(BaseModel):
 
 
 class ApprovalDecisionBase(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     timestamp: float
     """
     Timestamp of when the decision was made. Expressed as milliseconds since the UTC epoch.
@@ -436,18 +366,12 @@ class RunSplits(BaseModel):
     Information about the different splits of the dataset used to train this model version.
     """
 
-    class Config:
-        extra = Extra.forbid
-
     train: Split
     val: Split
     test: Split
 
 
 class RunMetrics(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     challenger: List[Metric]
     """
     Metrics about how the model version trained in this run (the challenger) performed on this run's test set.
@@ -463,9 +387,6 @@ class Parameter(BaseModel):
     A hyperparameter value. The values themselves are represented as strings.
     """
 
-    class Config:
-        extra = Extra.forbid
-
     name: str
     value: str
 
@@ -474,9 +395,6 @@ class LogEvent(BaseModel):
     """
     An event logged by some component of a model run, as well as metadata about the log event.
     """
-
-    class Config:
-        extra = Extra.forbid
 
     type: Literal["logEntry"]
     timestamp: float
@@ -494,9 +412,6 @@ class LogEvent(BaseModel):
 
 
 class DeleteModelResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     id: str
     """
     The id of the model that was deleted.
@@ -504,9 +419,6 @@ class DeleteModelResponse(BaseModel):
 
 
 class CreateRunResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     runId: str
     """
     The id of the newly created run. Can be used to fetch data about the run.
@@ -514,9 +426,6 @@ class CreateRunResponse(BaseModel):
 
 
 class GetModelArtifactResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     url: str
 
 
@@ -536,9 +445,6 @@ class GetModelLogsParams(BaseModel):
 
 
 class GetModelLogsResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     events: List[LogEvent]
     marker: Optional[str] = None
     """
@@ -547,16 +453,10 @@ class GetModelLogsResponse(BaseModel):
 
 
 class CreateApprovalDecisionRequest(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     choice: ApprovalChoice
 
 
 class CreateApprovalDecisionResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     approvalDecision: UserApprovalDecision
 
 
@@ -572,9 +472,6 @@ class GetExamplesParams(BaseModel):
 
 
 class GetExamplesResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     examples: List[Example]
     marker: Optional[str] = None
     """
@@ -587,23 +484,14 @@ class GetExampleParams(BaseModel):
 
 
 class GetExampleResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     example: Optional[Example] = None
 
 
 class GetLabelFileResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     labelData: Optional[LabelFileData] = None
 
 
 class PutLabelFileResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     fileId: str
     """
     The id of the file-service file the label file was saved to.
@@ -611,9 +499,6 @@ class PutLabelFileResponse(BaseModel):
 
 
 class ImageSegmentationProblemBase(BaseModel):
-    class Config:
-        extra = Extra.allow
-
     problemType: Literal["imgSeg"]
     trainingDataFilter: FhirCodesFilter
     """
@@ -634,9 +519,6 @@ class ImageSegmentationProblem(
 
 
 class ImageClassificationProblemBase(BaseModel):
-    class Config:
-        extra = Extra.allow
-
     problemType: Literal["imgClf"]
     trainingDataFilter: FhirCodesFilter
     """
@@ -689,9 +571,6 @@ class ModelConfig(ModelConfigBase):
 
 
 class ModelRun(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     id: str
     """
     UUID uniquely identifying this model run.
@@ -752,44 +631,26 @@ class ModelRun(BaseModel):
 
 
 class CreateModelResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     model: ModelConfig
 
 
 class GetModelsResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     models: List[ModelConfig]
 
 
 class UpdateModelResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     model: ModelConfig
 
 
 class GetModelResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     model: Optional[ModelConfig] = None
 
 
 class GetRunsResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     runs: List[ModelRun]
 
 
 class GetRunResponse(BaseModel):
-    class Config:
-        extra = Extra.forbid
-
     run: Optional[ModelRun] = None
 
 

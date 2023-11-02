@@ -66,7 +66,7 @@ def _generate_data_models(schema_path: str) -> str:
             ],
             # Format of the types generated.
             output_model_type=DataModelType.PydanticBaseModel,
-            target_python_version=PythonVersion.PY_37,
+            target_python_version=PythonVersion.PY_38,
             # Copy doc strings into the source code.
             use_schema_description=True,
             use_field_description=True,
@@ -200,6 +200,16 @@ def generate_client(
 
     generated_types = _generate_data_models(schema).replace(
         "from __future__ import annotations\n", ""
+    )
+    # `datamodel_code_generator` uses the `additionalProperties` OpenAPI field
+    # to decide if extra fields should be allowed or forbidden on a given type.
+    # `pydantic`'s default is better, which just ignores extra fields i.e. it
+    # doesn't throw an error when it sees an extra field, but it also doesn't
+    # include the extra field on the parsed model instance. We thus remove all
+    # generated `Extra.allow|forbid` settings to go back to pydantic's default
+    # behavior.
+    generated_types = re.sub(
+        r"\s+class Config:\s+extra = Extra.(allow|forbid)", "", generated_types
     )
 
     header = f"""# This file was generated automatically. Do not edit it directly.
