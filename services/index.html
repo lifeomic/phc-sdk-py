@@ -888,7 +888,7 @@ __pdoc__ = {
         &gt;&gt;&gt; df = pd.DataFrame(resources)
         &#34;&#34;&#34;
 
-        &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
+        &#34;&#34;&#34;Executes an SQL query against fhir-search-service
         Returns:
             [List] -- Dictionary with query response
         &#34;&#34;&#34;
@@ -930,7 +930,7 @@ __pdoc__ = {
         self,
         project_id: str,
         statement: str,
-        params: List[Dict],
+        params: List[Dict] = [],
         subject_id=&#34;&#34;,
     ) -&gt; ApiResponse:
         &#34;&#34;&#34;Executes an OpenSearch SQL against fhir-search-service
@@ -942,6 +942,9 @@ __pdoc__ = {
         statement : str
             The prepared OpenSearch SQL statement
         params: List[Dict]
+            The parameters for the SQL statement
+        subject_id : str, optional
+            The subject ID
 
         Returns
         -------
@@ -1013,7 +1016,7 @@ __pdoc__ = {
 </details>
 </dd>
 <dt id="phc.services.Fhir.es_sql"><code class="name flex">
-<span>def <span class="ident">es_sql</span></span>(<span>self, project_id: str, statement: str, params: List[Dict[~KT, ~VT]], subject_id='') ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">es_sql</span></span>(<span>self, project_id: str, statement: str, params: List[Dict[~KT, ~VT]] = [], subject_id='') ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Executes an OpenSearch SQL against fhir-search-service</p>
@@ -1024,7 +1027,9 @@ __pdoc__ = {
 <dt><strong><code>statement</code></strong> :&ensp;<code>str</code></dt>
 <dd>The prepared OpenSearch SQL statement</dd>
 <dt><strong><code>params</code></strong> :&ensp;<code>List[Dict]</code></dt>
-<dd>&nbsp;</dd>
+<dd>The parameters for the SQL statement</dd>
+<dt><strong><code>subject_id</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The subject ID</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -1039,7 +1044,7 @@ __pdoc__ = {
     self,
     project_id: str,
     statement: str,
-    params: List[Dict],
+    params: List[Dict] = [],
     subject_id=&#34;&#34;,
 ) -&gt; ApiResponse:
     &#34;&#34;&#34;Executes an OpenSearch SQL against fhir-search-service
@@ -1051,6 +1056,9 @@ __pdoc__ = {
     statement : str
         The prepared OpenSearch SQL statement
     params: List[Dict]
+        The parameters for the SQL statement
+    subject_id : str, optional
+        The subject ID
 
     Returns
     -------
@@ -1175,7 +1183,7 @@ __pdoc__ = {
     &gt;&gt;&gt; df = pd.DataFrame(resources)
     &#34;&#34;&#34;
 
-    &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
+    &#34;&#34;&#34;Executes an SQL query against fhir-search-service
     Returns:
         [List] -- Dictionary with query response
     &#34;&#34;&#34;
@@ -3211,7 +3219,7 @@ The ingestion that was created.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = '7ab51337-8d04-4ff7-accf-3a1f08947352', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = '6e43f24c-52b9-4a40-b719-23fdc86ff156', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
