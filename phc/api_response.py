@@ -120,6 +120,11 @@ class ApiResponse:
             mapped = list(map(mapFunc, self.data.get(key)))
             return _pd.DataFrame(mapped)
 
+        # support OpenSearch sql response
+        if key == "datarows" and self.data.get("schema") is not None:
+            column_names = [col["name"] for col in self.data.get("schema")]
+            return _pd.DataFrame(self.data.get(key), columns=column_names)
+
         return _pd.DataFrame(self.data.get(key))
 
     def validate(self):
