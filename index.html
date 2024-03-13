@@ -247,6 +247,11 @@ __pdoc__ = {
             mapped = list(map(mapFunc, self.data.get(key)))
             return _pd.DataFrame(mapped)
 
+        # support OpenSearch sql response
+        if key == &#34;datarows&#34; and self.data.get(&#34;schema&#34;) is not None:
+            column_names = [col[&#34;name&#34;] for col in self.data.get(&#34;schema&#34;)]
+            return _pd.DataFrame(self.data.get(key), columns=column_names)
+
         return _pd.DataFrame(self.data.get(key))
 
     def validate(self):
@@ -375,6 +380,11 @@ __pdoc__ = {
     if mapFunc is not None:
         mapped = list(map(mapFunc, self.data.get(key)))
         return _pd.DataFrame(mapped)
+
+    # support OpenSearch sql response
+    if key == &#34;datarows&#34; and self.data.get(&#34;schema&#34;) is not None:
+        column_names = [col[&#34;name&#34;] for col in self.data.get(&#34;schema&#34;)]
+        return _pd.DataFrame(self.data.get(key), columns=column_names)
 
     return _pd.DataFrame(self.data.get(key))</code></pre>
 </details>

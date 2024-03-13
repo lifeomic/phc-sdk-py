@@ -862,7 +862,7 @@ __pdoc__ = {
     def execute_sql(
         self, project_id: str, statement: str, scroll=&#34;&#34;
     ) -&gt; ApiResponse:
-        &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
+        &#34;&#34;&#34;Executes an SQL query against fhir-search-service
 
         Parameters
         ----------
@@ -904,7 +904,7 @@ __pdoc__ = {
     def execute_es(
         self, project_id: str, query: dict, scroll=&#34;&#34;
     ) -&gt; ApiResponse:
-        &#34;&#34;&#34;Executes an elasticsearch query against fhir-searh-service
+        &#34;&#34;&#34;Executes an elasticsearch query against fhir-search-service
 
         Parameters
         ----------
@@ -924,6 +924,38 @@ __pdoc__ = {
             http_verb=&#34;POST&#34;,
             json=query,
             params={&#34;scroll&#34;: scroll},
+        )
+
+    def es_sql(
+        self,
+        project_id: str,
+        statement: str,
+        params: List[Dict],
+        subject_id=&#34;&#34;,
+    ) -&gt; ApiResponse:
+        &#34;&#34;&#34;Executes an OpenSearch SQL against fhir-search-service
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID
+        statement : str
+            The prepared OpenSearch SQL statement
+        params: List[Dict]
+
+        Returns
+        -------
+        phc.ApiResponse
+            The query response
+        &#34;&#34;&#34;
+        api_path = f&#34;fhir-search/sql/projects/{project_id}&#34;
+        if subject_id is not None and subject_id != &#34;&#34;:
+            api_path = f&#34;{api_path}/patients/{subject_id}&#34;
+
+        return self._api_call(
+            api_path=api_path,
+            http_verb=&#34;POST&#34;,
+            json={&#34;query&#34;: statement, &#34;parameters&#34;: params},
         )</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -980,11 +1012,67 @@ __pdoc__ = {
     )</code></pre>
 </details>
 </dd>
+<dt id="phc.services.Fhir.es_sql"><code class="name flex">
+<span>def <span class="ident">es_sql</span></span>(<span>self, project_id: str, statement: str, params: List[Dict[~KT, ~VT]], subject_id='') ‑> phc.api_response.ApiResponse</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Executes an OpenSearch SQL against fhir-search-service</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The project ID</dd>
+<dt><strong><code>statement</code></strong> :&ensp;<code>str</code></dt>
+<dd>The prepared OpenSearch SQL statement</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>List[Dict]</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
+<dd>The query response</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def es_sql(
+    self,
+    project_id: str,
+    statement: str,
+    params: List[Dict],
+    subject_id=&#34;&#34;,
+) -&gt; ApiResponse:
+    &#34;&#34;&#34;Executes an OpenSearch SQL against fhir-search-service
+
+    Parameters
+    ----------
+    project_id : str
+        The project ID
+    statement : str
+        The prepared OpenSearch SQL statement
+    params: List[Dict]
+
+    Returns
+    -------
+    phc.ApiResponse
+        The query response
+    &#34;&#34;&#34;
+    api_path = f&#34;fhir-search/sql/projects/{project_id}&#34;
+    if subject_id is not None and subject_id != &#34;&#34;:
+        api_path = f&#34;{api_path}/patients/{subject_id}&#34;
+
+    return self._api_call(
+        api_path=api_path,
+        http_verb=&#34;POST&#34;,
+        json={&#34;query&#34;: statement, &#34;parameters&#34;: params},
+    )</code></pre>
+</details>
+</dd>
 <dt id="phc.services.Fhir.execute_es"><code class="name flex">
 <span>def <span class="ident">execute_es</span></span>(<span>self, project_id: str, query: dict, scroll='') ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Executes an elasticsearch query against fhir-searh-service</p>
+<div class="desc"><p>Executes an elasticsearch query against fhir-search-service</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -1004,7 +1092,7 @@ __pdoc__ = {
 <pre><code class="python">def execute_es(
     self, project_id: str, query: dict, scroll=&#34;&#34;
 ) -&gt; ApiResponse:
-    &#34;&#34;&#34;Executes an elasticsearch query against fhir-searh-service
+    &#34;&#34;&#34;Executes an elasticsearch query against fhir-search-service
 
     Parameters
     ----------
@@ -1031,7 +1119,7 @@ __pdoc__ = {
 <span>def <span class="ident">execute_sql</span></span>(<span>self, project_id: str, statement: str, scroll='') ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Executes an SQL query against fhir-searh-service</p>
+<div class="desc"><p>Executes an SQL query against fhir-search-service</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
@@ -1061,7 +1149,7 @@ __pdoc__ = {
 <pre><code class="python">def execute_sql(
     self, project_id: str, statement: str, scroll=&#34;&#34;
 ) -&gt; ApiResponse:
-    &#34;&#34;&#34;Executes an SQL query against fhir-searh-service
+    &#34;&#34;&#34;Executes an SQL query against fhir-search-service
 
     Parameters
     ----------
@@ -3123,7 +3211,7 @@ The ingestion that was created.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = '72ded3cc-d36f-45fb-9972-663704f3a827', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = '7ab51337-8d04-4ff7-accf-3a1f08947352', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
@@ -6048,6 +6136,7 @@ def download(
 <h4><code><a title="phc.services.Fhir" href="#phc.services.Fhir">Fhir</a></code></h4>
 <ul class="">
 <li><code><a title="phc.services.Fhir.dsl" href="#phc.services.Fhir.dsl">dsl</a></code></li>
+<li><code><a title="phc.services.Fhir.es_sql" href="#phc.services.Fhir.es_sql">es_sql</a></code></li>
 <li><code><a title="phc.services.Fhir.execute_es" href="#phc.services.Fhir.execute_es">execute_es</a></code></li>
 <li><code><a title="phc.services.Fhir.execute_sql" href="#phc.services.Fhir.execute_sql">execute_sql</a></code></li>
 <li><code><a title="phc.services.Fhir.sql" href="#phc.services.Fhir.sql">sql</a></code></li>
