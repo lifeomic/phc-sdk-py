@@ -91,7 +91,7 @@ class Fhir(BaseClient):
         >>> df = pd.DataFrame(resources)
         """
 
-        """Executes an SQL query against fhir-searh-service
+        """Executes an SQL query against fhir-search-service
         Returns:
             [List] -- Dictionary with query response
         """
@@ -133,7 +133,7 @@ class Fhir(BaseClient):
         self,
         project_id: str,
         statement: str,
-        params: List[Dict],
+        params: List[Dict] = [],
         subject_id="",
     ) -> ApiResponse:
         """Executes an OpenSearch SQL against fhir-search-service
@@ -145,6 +145,9 @@ class Fhir(BaseClient):
         statement : str
             The prepared OpenSearch SQL statement
         params: List[Dict]
+            The parameters for the SQL statement
+        subject_id : str, optional
+            The subject ID
 
         Returns
         -------
