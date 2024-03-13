@@ -4,6 +4,7 @@ import warnings
 
 from phc.base_client import BaseClient
 from phc import ApiResponse
+from typing import List, Dict
 
 
 class Fhir(BaseClient):
@@ -64,7 +65,7 @@ class Fhir(BaseClient):
     def execute_sql(
         self, project_id: str, statement: str, scroll=""
     ) -> ApiResponse:
-        """Executes an SQL query against fhir-searh-service
+        """Executes an SQL query against fhir-search-service
 
         Parameters
         ----------
@@ -90,7 +91,7 @@ class Fhir(BaseClient):
         >>> df = pd.DataFrame(resources)
         """
 
-        """Executes an SQL query against fhir-searh-service
+        """Executes an SQL query against fhir-search-service
         Returns:
             [List] -- Dictionary with query response
         """
@@ -106,7 +107,7 @@ class Fhir(BaseClient):
     def execute_es(
         self, project_id: str, query: dict, scroll=""
     ) -> ApiResponse:
-        """Executes an elasticsearch query against fhir-searh-service
+        """Executes an elasticsearch query against fhir-search-service
 
         Parameters
         ----------
@@ -126,4 +127,36 @@ class Fhir(BaseClient):
             http_verb="POST",
             json=query,
             params={"scroll": scroll},
+        )
+
+    def es_sql(
+        self,
+        project_id: str,
+        statement: str,
+        params: List[Dict],
+        subject_id="",
+    ) -> ApiResponse:
+        """Executes an OpenSearch SQL against fhir-search-service
+
+        Parameters
+        ----------
+        project_id : str
+            The project ID
+        statement : str
+            The prepared OpenSearch SQL statement
+        params: List[Dict]
+
+        Returns
+        -------
+        phc.ApiResponse
+            The query response
+        """
+        api_path = f"fhir-search/sql/projects/{project_id}"
+        if subject_id is not None and subject_id != "":
+            api_path = f"{api_path}/patients/{subject_id}"
+
+        return self._api_call(
+            api_path=api_path,
+            http_verb="POST",
+            json={"query": statement, "parameters": params},
         )

@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _(NOTE: All examples use fictitious data or freely available data sets.)_
 
+## [0.34.0] - 2024-03-13
+
+### Added
+
+- A New function `es_sql()` to `phc.services.Fhir` class to execute OpenSearch SQL.
+
+Example:
+
+```python
+df = Fhir(session).es_sql(
+    project_id='xxx',
+    statement='SELECT id, subject.reference FROM diagnostic_report WHERE identifier.system = ? LIMIT 10',
+    params=[{
+      "type": "string",
+      "value": "example-identifier-system"
+    }]
+).get_as_dataframe('datarows')
+```
+
 ## [0.33.4] - 2023-11-02
 
 ### Fixed
