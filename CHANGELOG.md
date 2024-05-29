@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _(NOTE: All examples use fictitious data or freely available data sets.)_
 
+## [0.35.0] - 2024-05-29
+
+### Added
+
+- Updated `phc.services.patient_ml.PatientML` API client to the latest version.
+
 ## [0.34.1] - 2024-03-13
 
 ### Fixed
