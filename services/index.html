@@ -3219,7 +3219,7 @@ The ingestion that was created.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = '6a1b8abe-da42-4c25-a4cf-66a54dfac6f5', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = 'ebc18e62-c32f-422f-b565-634e3bbebb05', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
@@ -3783,7 +3783,7 @@ The ingestion that was created.</p></div>
         return GetModelLogsResponse.parse_obj(res.data)
 
     def create_approval_decision(
-        self, model_id: str, run_id: str, body: CreateApprovalDecisionRequest
+        self, model_id: str, run_id: str, body: ApprovalDecisionInput
     ):
         &#34;&#34;&#34;Adds a new approval decision to a model run.&#34;&#34;&#34;
         res = self._api_call(
@@ -3793,53 +3793,102 @@ The ingestion that was created.</p></div>
         )
         return CreateApprovalDecisionResponse.parse_obj(res.data)
 
-    def get_examples(self, model_id: str, params: GetExamplesParams):
+    def predict(self, model_id: str):
+        &#34;&#34;&#34;Constructs an example and submits it to the referenced model for inference. The model&#39;s output predictions are then returned. The example is retrieved based on the model&#39;s problem type and the provided query parameters. Note that this route is only supported for models using the `cloud` deploy type, and which have a currently deployed model version (champion).&#34;&#34;&#34;
+        res = self._api_call(
+            api_path=f&#34;/v1/patient-ml/models/{model_id}/predictions&#34;,
+            http_verb=&#34;GET&#34;,
+        )
+        return PredictionResponse.parse_obj(res.data)
+
+    def create_dataset(self, body: DatasetConfigInput):
+        &#34;&#34;&#34;Creates a new dataset via a dataset config object.&#34;&#34;&#34;
+        res = self._api_call(
+            api_path=&#34;/v1/patient-ml/datasets&#34;,
+            http_verb=&#34;POST&#34;,
+            json=json.loads(body.json(exclude_none=True)),
+        )
+        return CreateDatasetResponse.parse_obj(res.data)
+
+    def get_datasets(self):
+        &#34;&#34;&#34;Gets all dataset configs in the account.&#34;&#34;&#34;
+        res = self._api_call(
+            api_path=&#34;/v1/patient-ml/datasets&#34;, http_verb=&#34;GET&#34;
+        )
+        return GetDatasetsResponse.parse_obj(res.data)
+
+    def update_dataset(self, id: str, body: DatasetConfigInput):
+        &#34;&#34;&#34;Updates a dataset config.&#34;&#34;&#34;
+        res = self._api_call(
+            api_path=f&#34;/v1/patient-ml/datasets/{id}&#34;,
+            http_verb=&#34;PUT&#34;,
+            json=json.loads(body.json(exclude_none=True)),
+        )
+        return UpdateDatasetResponse.parse_obj(res.data)
+
+    def delete_dataset(self, id: str):
+        &#34;&#34;&#34;Deletes a dataset.&#34;&#34;&#34;
+        res = self._api_call(
+            api_path=f&#34;/v1/patient-ml/datasets/{id}&#34;, http_verb=&#34;DELETE&#34;
+        )
+        return DeleteDatasetResponse.parse_obj(res.data)
+
+    def get_dataset(self, id: str):
+        &#34;&#34;&#34;Gets a dataset config.&#34;&#34;&#34;
+        res = self._api_call(
+            api_path=f&#34;/v1/patient-ml/datasets/{id}&#34;, http_verb=&#34;GET&#34;
+        )
+        return GetDatasetResponse.parse_obj(res.data)
+
+    def get_dataset_examples(
+        self, dataset_id: str, params: GetDatasetExamplesParams
+    ):
         &#34;&#34;&#34;Fetches a page of training data examples for data labeling.&#34;&#34;&#34;
         res = self._api_call(
-            api_path=f&#34;/v1/patient-ml/models/{model_id}/examples&#34;,
+            api_path=f&#34;/v1/patient-ml/datasets/{dataset_id}/examples&#34;,
             http_verb=&#34;GET&#34;,
             params=json.loads(params.json(exclude_none=True)),
         )
-        return GetExamplesResponse.parse_obj(res.data)
+        return GetDatasetExamplesResponse.parse_obj(res.data)
 
-    def get_example(
-        self, model_id: str, example_id: str, params: GetExampleParams
+    def get_dataset_example(
+        self, dataset_id: str, example_id: str, params: GetDatasetExampleParams
     ):
         &#34;&#34;&#34;Fetches a single training data example for data labeling.&#34;&#34;&#34;
         res = self._api_call(
-            api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}&#34;,
+            api_path=f&#34;/v1/patient-ml/datasets/{dataset_id}/examples/{example_id}&#34;,
             http_verb=&#34;GET&#34;,
             params=json.loads(params.json(exclude_none=True)),
         )
-        return GetExampleResponse.parse_obj(res.data)
+        return GetDatasetExampleResponse.parse_obj(res.data)
 
-    def put_label(self, model_id: str, example_id: str, body: Label):
-        &#34;&#34;&#34;Updates the label for a training data example&#34;&#34;&#34;
+    def put_dataset_label(self, dataset_id: str, example_id: str, body: Label):
+        &#34;&#34;&#34;Updates the label for a training data example.&#34;&#34;&#34;
         res = self._api_call(
-            api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label&#34;,
+            api_path=f&#34;/v1/patient-ml/datasets/{dataset_id}/examples/{example_id}/label&#34;,
             http_verb=&#34;PUT&#34;,
             json=json.loads(body.json(exclude_none=True)),
         )
         return Example.parse_obj(res.data)
 
-    def get_label_file(self, model_id: str, example_id: str):
+    def get_dataset_label_file(self, dataset_id: str, example_id: str):
         &#34;&#34;&#34;Retrieves the label file for the given example, if it exists, and converts it to the format LabelStudio expects.&#34;&#34;&#34;
         res = self._api_call(
-            api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label-file&#34;,
+            api_path=f&#34;/v1/patient-ml/datasets/{dataset_id}/examples/{example_id}/label-file&#34;,
             http_verb=&#34;GET&#34;,
         )
-        return GetLabelFileResponse.parse_obj(res.data)
+        return GetDatasetLabelFileResponse.parse_obj(res.data)
 
-    def put_label_file(
-        self, model_id: str, example_id: str, body: LabelFileData
+    def put_dataset_label_file(
+        self, dataset_id: str, example_id: str, body: LabelFileData
     ):
         &#34;&#34;&#34;Preprocesses the label data and updates the label file for a training data example. This is done for ML problem types that store their labels as independent files, such as image segmentation. For those problem types, The label data is not stored on a label FHIR record, but in a separate file-service file, and pointed to by a label FHIR record.&#34;&#34;&#34;
         res = self._api_call(
-            api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label-file&#34;,
+            api_path=f&#34;/v1/patient-ml/datasets/{dataset_id}/examples/{example_id}/label-file&#34;,
             http_verb=&#34;PUT&#34;,
             json=json.loads(body.json(exclude_none=True)),
         )
-        return PutLabelFileResponse.parse_obj(res.data)</code></pre>
+        return PutDatasetLabelFileResponse.parse_obj(res.data)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -3848,7 +3897,7 @@ The ingestion that was created.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.PatientML.create_approval_decision"><code class="name flex">
-<span>def <span class="ident">create_approval_decision</span></span>(<span>self, model_id: str, run_id: str, body: phc.services.patient_ml.CreateApprovalDecisionRequest)</span>
+<span>def <span class="ident">create_approval_decision</span></span>(<span>self, model_id: str, run_id: str, body: phc.services.patient_ml.ApprovalDecisionInput)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a new approval decision to a model run.</p></div>
@@ -3857,7 +3906,7 @@ The ingestion that was created.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def create_approval_decision(
-    self, model_id: str, run_id: str, body: CreateApprovalDecisionRequest
+    self, model_id: str, run_id: str, body: ApprovalDecisionInput
 ):
     &#34;&#34;&#34;Adds a new approval decision to a model run.&#34;&#34;&#34;
     res = self._api_call(
@@ -3866,6 +3915,25 @@ The ingestion that was created.</p></div>
         json=json.loads(body.json(exclude_none=True)),
     )
     return CreateApprovalDecisionResponse.parse_obj(res.data)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.create_dataset"><code class="name flex">
+<span>def <span class="ident">create_dataset</span></span>(<span>self, body: phc.services.patient_ml.DatasetConfigInput)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a new dataset via a dataset config object.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_dataset(self, body: DatasetConfigInput):
+    &#34;&#34;&#34;Creates a new dataset via a dataset config object.&#34;&#34;&#34;
+    res = self._api_call(
+        api_path=&#34;/v1/patient-ml/datasets&#34;,
+        http_verb=&#34;POST&#34;,
+        json=json.loads(body.json(exclude_none=True)),
+    )
+    return CreateDatasetResponse.parse_obj(res.data)</code></pre>
 </details>
 </dd>
 <dt id="phc.services.PatientML.create_model"><code class="name flex">
@@ -3904,6 +3972,23 @@ The ingestion that was created.</p></div>
     return CreateRunResponse.parse_obj(res.data)</code></pre>
 </details>
 </dd>
+<dt id="phc.services.PatientML.delete_dataset"><code class="name flex">
+<span>def <span class="ident">delete_dataset</span></span>(<span>self, id: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Deletes a dataset.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete_dataset(self, id: str):
+    &#34;&#34;&#34;Deletes a dataset.&#34;&#34;&#34;
+    res = self._api_call(
+        api_path=f&#34;/v1/patient-ml/datasets/{id}&#34;, http_verb=&#34;DELETE&#34;
+    )
+    return DeleteDatasetResponse.parse_obj(res.data)</code></pre>
+</details>
+</dd>
 <dt id="phc.services.PatientML.delete_model"><code class="name flex">
 <span>def <span class="ident">delete_model</span></span>(<span>self, id: str)</span>
 </code></dt>
@@ -3921,8 +4006,25 @@ The ingestion that was created.</p></div>
     return DeleteModelResponse.parse_obj(res.data)</code></pre>
 </details>
 </dd>
-<dt id="phc.services.PatientML.get_example"><code class="name flex">
-<span>def <span class="ident">get_example</span></span>(<span>self, model_id: str, example_id: str, params: phc.services.patient_ml.GetExampleParams)</span>
+<dt id="phc.services.PatientML.get_dataset"><code class="name flex">
+<span>def <span class="ident">get_dataset</span></span>(<span>self, id: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets a dataset config.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_dataset(self, id: str):
+    &#34;&#34;&#34;Gets a dataset config.&#34;&#34;&#34;
+    res = self._api_call(
+        api_path=f&#34;/v1/patient-ml/datasets/{id}&#34;, http_verb=&#34;GET&#34;
+    )
+    return GetDatasetResponse.parse_obj(res.data)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.get_dataset_example"><code class="name flex">
+<span>def <span class="ident">get_dataset_example</span></span>(<span>self, dataset_id: str, example_id: str, params: phc.services.patient_ml.GetDatasetExampleParams)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetches a single training data example for data labeling.</p></div>
@@ -3930,20 +4032,20 @@ The ingestion that was created.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_example(
-    self, model_id: str, example_id: str, params: GetExampleParams
+<pre><code class="python">def get_dataset_example(
+    self, dataset_id: str, example_id: str, params: GetDatasetExampleParams
 ):
     &#34;&#34;&#34;Fetches a single training data example for data labeling.&#34;&#34;&#34;
     res = self._api_call(
-        api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}&#34;,
+        api_path=f&#34;/v1/patient-ml/datasets/{dataset_id}/examples/{example_id}&#34;,
         http_verb=&#34;GET&#34;,
         params=json.loads(params.json(exclude_none=True)),
     )
-    return GetExampleResponse.parse_obj(res.data)</code></pre>
+    return GetDatasetExampleResponse.parse_obj(res.data)</code></pre>
 </details>
 </dd>
-<dt id="phc.services.PatientML.get_examples"><code class="name flex">
-<span>def <span class="ident">get_examples</span></span>(<span>self, model_id: str, params: phc.services.patient_ml.GetExamplesParams)</span>
+<dt id="phc.services.PatientML.get_dataset_examples"><code class="name flex">
+<span>def <span class="ident">get_dataset_examples</span></span>(<span>self, dataset_id: str, params: phc.services.patient_ml.GetDatasetExamplesParams)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetches a page of training data examples for data labeling.</p></div>
@@ -3951,18 +4053,20 @@ The ingestion that was created.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_examples(self, model_id: str, params: GetExamplesParams):
+<pre><code class="python">def get_dataset_examples(
+    self, dataset_id: str, params: GetDatasetExamplesParams
+):
     &#34;&#34;&#34;Fetches a page of training data examples for data labeling.&#34;&#34;&#34;
     res = self._api_call(
-        api_path=f&#34;/v1/patient-ml/models/{model_id}/examples&#34;,
+        api_path=f&#34;/v1/patient-ml/datasets/{dataset_id}/examples&#34;,
         http_verb=&#34;GET&#34;,
         params=json.loads(params.json(exclude_none=True)),
     )
-    return GetExamplesResponse.parse_obj(res.data)</code></pre>
+    return GetDatasetExamplesResponse.parse_obj(res.data)</code></pre>
 </details>
 </dd>
-<dt id="phc.services.PatientML.get_label_file"><code class="name flex">
-<span>def <span class="ident">get_label_file</span></span>(<span>self, model_id: str, example_id: str)</span>
+<dt id="phc.services.PatientML.get_dataset_label_file"><code class="name flex">
+<span>def <span class="ident">get_dataset_label_file</span></span>(<span>self, dataset_id: str, example_id: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retrieves the label file for the given example, if it exists, and converts it to the format LabelStudio expects.</p></div>
@@ -3970,13 +4074,30 @@ The ingestion that was created.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_label_file(self, model_id: str, example_id: str):
+<pre><code class="python">def get_dataset_label_file(self, dataset_id: str, example_id: str):
     &#34;&#34;&#34;Retrieves the label file for the given example, if it exists, and converts it to the format LabelStudio expects.&#34;&#34;&#34;
     res = self._api_call(
-        api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label-file&#34;,
+        api_path=f&#34;/v1/patient-ml/datasets/{dataset_id}/examples/{example_id}/label-file&#34;,
         http_verb=&#34;GET&#34;,
     )
-    return GetLabelFileResponse.parse_obj(res.data)</code></pre>
+    return GetDatasetLabelFileResponse.parse_obj(res.data)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.get_datasets"><code class="name flex">
+<span>def <span class="ident">get_datasets</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets all dataset configs in the account.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_datasets(self):
+    &#34;&#34;&#34;Gets all dataset configs in the account.&#34;&#34;&#34;
+    res = self._api_call(
+        api_path=&#34;/v1/patient-ml/datasets&#34;, http_verb=&#34;GET&#34;
+    )
+    return GetDatasetsResponse.parse_obj(res.data)</code></pre>
 </details>
 </dd>
 <dt id="phc.services.PatientML.get_model"><code class="name flex">
@@ -4085,27 +4206,45 @@ The ingestion that was created.</p></div>
     return GetRunsResponse.parse_obj(res.data)</code></pre>
 </details>
 </dd>
-<dt id="phc.services.PatientML.put_label"><code class="name flex">
-<span>def <span class="ident">put_label</span></span>(<span>self, model_id: str, example_id: str, body: phc.services.patient_ml.Label)</span>
+<dt id="phc.services.PatientML.predict"><code class="name flex">
+<span>def <span class="ident">predict</span></span>(<span>self, model_id: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Updates the label for a training data example</p></div>
+<div class="desc"><p>Constructs an example and submits it to the referenced model for inference. The model's output predictions are then returned. The example is retrieved based on the model's problem type and the provided query parameters. Note that this route is only supported for models using the <code>cloud</code> deploy type, and which have a currently deployed model version (champion).</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def put_label(self, model_id: str, example_id: str, body: Label):
-    &#34;&#34;&#34;Updates the label for a training data example&#34;&#34;&#34;
+<pre><code class="python">def predict(self, model_id: str):
+    &#34;&#34;&#34;Constructs an example and submits it to the referenced model for inference. The model&#39;s output predictions are then returned. The example is retrieved based on the model&#39;s problem type and the provided query parameters. Note that this route is only supported for models using the `cloud` deploy type, and which have a currently deployed model version (champion).&#34;&#34;&#34;
     res = self._api_call(
-        api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label&#34;,
+        api_path=f&#34;/v1/patient-ml/models/{model_id}/predictions&#34;,
+        http_verb=&#34;GET&#34;,
+    )
+    return PredictionResponse.parse_obj(res.data)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.put_dataset_label"><code class="name flex">
+<span>def <span class="ident">put_dataset_label</span></span>(<span>self, dataset_id: str, example_id: str, body: phc.services.patient_ml.Label)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates the label for a training data example.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def put_dataset_label(self, dataset_id: str, example_id: str, body: Label):
+    &#34;&#34;&#34;Updates the label for a training data example.&#34;&#34;&#34;
+    res = self._api_call(
+        api_path=f&#34;/v1/patient-ml/datasets/{dataset_id}/examples/{example_id}/label&#34;,
         http_verb=&#34;PUT&#34;,
         json=json.loads(body.json(exclude_none=True)),
     )
     return Example.parse_obj(res.data)</code></pre>
 </details>
 </dd>
-<dt id="phc.services.PatientML.put_label_file"><code class="name flex">
-<span>def <span class="ident">put_label_file</span></span>(<span>self, model_id: str, example_id: str, body: phc.services.patient_ml.LabelFileData)</span>
+<dt id="phc.services.PatientML.put_dataset_label_file"><code class="name flex">
+<span>def <span class="ident">put_dataset_label_file</span></span>(<span>self, dataset_id: str, example_id: str, body: phc.services.patient_ml.LabelFileData)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Preprocesses the label data and updates the label file for a training data example. This is done for ML problem types that store their labels as independent files, such as image segmentation. For those problem types, The label data is not stored on a label FHIR record, but in a separate file-service file, and pointed to by a label FHIR record.</p></div>
@@ -4113,16 +4252,35 @@ The ingestion that was created.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def put_label_file(
-    self, model_id: str, example_id: str, body: LabelFileData
+<pre><code class="python">def put_dataset_label_file(
+    self, dataset_id: str, example_id: str, body: LabelFileData
 ):
     &#34;&#34;&#34;Preprocesses the label data and updates the label file for a training data example. This is done for ML problem types that store their labels as independent files, such as image segmentation. For those problem types, The label data is not stored on a label FHIR record, but in a separate file-service file, and pointed to by a label FHIR record.&#34;&#34;&#34;
     res = self._api_call(
-        api_path=f&#34;/v1/patient-ml/models/{model_id}/examples/{example_id}/label-file&#34;,
+        api_path=f&#34;/v1/patient-ml/datasets/{dataset_id}/examples/{example_id}/label-file&#34;,
         http_verb=&#34;PUT&#34;,
         json=json.loads(body.json(exclude_none=True)),
     )
-    return PutLabelFileResponse.parse_obj(res.data)</code></pre>
+    return PutDatasetLabelFileResponse.parse_obj(res.data)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.PatientML.update_dataset"><code class="name flex">
+<span>def <span class="ident">update_dataset</span></span>(<span>self, id: str, body: phc.services.patient_ml.DatasetConfigInput)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates a dataset config.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update_dataset(self, id: str, body: DatasetConfigInput):
+    &#34;&#34;&#34;Updates a dataset config.&#34;&#34;&#34;
+    res = self._api_call(
+        api_path=f&#34;/v1/patient-ml/datasets/{id}&#34;,
+        http_verb=&#34;PUT&#34;,
+        json=json.loads(body.json(exclude_none=True)),
+    )
+    return UpdateDatasetResponse.parse_obj(res.data)</code></pre>
 </details>
 </dd>
 <dt id="phc.services.PatientML.update_model"><code class="name flex">
@@ -6192,20 +6350,26 @@ def download(
 <h4><code><a title="phc.services.PatientML" href="#phc.services.PatientML">PatientML</a></code></h4>
 <ul class="">
 <li><code><a title="phc.services.PatientML.create_approval_decision" href="#phc.services.PatientML.create_approval_decision">create_approval_decision</a></code></li>
+<li><code><a title="phc.services.PatientML.create_dataset" href="#phc.services.PatientML.create_dataset">create_dataset</a></code></li>
 <li><code><a title="phc.services.PatientML.create_model" href="#phc.services.PatientML.create_model">create_model</a></code></li>
 <li><code><a title="phc.services.PatientML.create_run" href="#phc.services.PatientML.create_run">create_run</a></code></li>
+<li><code><a title="phc.services.PatientML.delete_dataset" href="#phc.services.PatientML.delete_dataset">delete_dataset</a></code></li>
 <li><code><a title="phc.services.PatientML.delete_model" href="#phc.services.PatientML.delete_model">delete_model</a></code></li>
-<li><code><a title="phc.services.PatientML.get_example" href="#phc.services.PatientML.get_example">get_example</a></code></li>
-<li><code><a title="phc.services.PatientML.get_examples" href="#phc.services.PatientML.get_examples">get_examples</a></code></li>
-<li><code><a title="phc.services.PatientML.get_label_file" href="#phc.services.PatientML.get_label_file">get_label_file</a></code></li>
+<li><code><a title="phc.services.PatientML.get_dataset" href="#phc.services.PatientML.get_dataset">get_dataset</a></code></li>
+<li><code><a title="phc.services.PatientML.get_dataset_example" href="#phc.services.PatientML.get_dataset_example">get_dataset_example</a></code></li>
+<li><code><a title="phc.services.PatientML.get_dataset_examples" href="#phc.services.PatientML.get_dataset_examples">get_dataset_examples</a></code></li>
+<li><code><a title="phc.services.PatientML.get_dataset_label_file" href="#phc.services.PatientML.get_dataset_label_file">get_dataset_label_file</a></code></li>
+<li><code><a title="phc.services.PatientML.get_datasets" href="#phc.services.PatientML.get_datasets">get_datasets</a></code></li>
 <li><code><a title="phc.services.PatientML.get_model" href="#phc.services.PatientML.get_model">get_model</a></code></li>
 <li><code><a title="phc.services.PatientML.get_model_artifact" href="#phc.services.PatientML.get_model_artifact">get_model_artifact</a></code></li>
 <li><code><a title="phc.services.PatientML.get_model_logs" href="#phc.services.PatientML.get_model_logs">get_model_logs</a></code></li>
 <li><code><a title="phc.services.PatientML.get_models" href="#phc.services.PatientML.get_models">get_models</a></code></li>
 <li><code><a title="phc.services.PatientML.get_run" href="#phc.services.PatientML.get_run">get_run</a></code></li>
 <li><code><a title="phc.services.PatientML.get_runs" href="#phc.services.PatientML.get_runs">get_runs</a></code></li>
-<li><code><a title="phc.services.PatientML.put_label" href="#phc.services.PatientML.put_label">put_label</a></code></li>
-<li><code><a title="phc.services.PatientML.put_label_file" href="#phc.services.PatientML.put_label_file">put_label_file</a></code></li>
+<li><code><a title="phc.services.PatientML.predict" href="#phc.services.PatientML.predict">predict</a></code></li>
+<li><code><a title="phc.services.PatientML.put_dataset_label" href="#phc.services.PatientML.put_dataset_label">put_dataset_label</a></code></li>
+<li><code><a title="phc.services.PatientML.put_dataset_label_file" href="#phc.services.PatientML.put_dataset_label_file">put_dataset_label_file</a></code></li>
+<li><code><a title="phc.services.PatientML.update_dataset" href="#phc.services.PatientML.update_dataset">update_dataset</a></code></li>
 <li><code><a title="phc.services.PatientML.update_model" href="#phc.services.PatientML.update_model">update_model</a></code></li>
 </ul>
 </li>
