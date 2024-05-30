@@ -3,21 +3,10 @@
   "info": {
     "title": "Patient ML",
     "description": "Enables training, evaluating, and deploying Machine Learning models on your data stored in the LifeOmic Platform.",
-    "version": "171"
+    "version": "234"
   },
   "components": {
     "schemas": {
-      "MlProblemDefinitionBase": {
-        "required": [],
-        "additionalProperties": true,
-        "type": "object",
-        "properties": {
-          "retrainEvery": {
-            "description": "If provided, the model will automatically be retrained if this many milliseconds have passed since the last run. Models will not be retrained more frequently than once per day, and this policy is only checked once per day, so more than this many milliseconds may actually pass before the model is retrained.",
-            "type": "number"
-          }
-        }
-      },
       "LabelDefinitionBase": {
         "required": [
           "name",
@@ -103,42 +92,28 @@
         }
       },
       "ClassificationProblemInput": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/MlProblemDefinitionBase"
-          },
-          {
-            "required": [
-              "labelDefinition"
-            ],
-            "additionalProperties": true,
-            "type": "object",
-            "properties": {
-              "labelDefinition": {
-                "$ref": "#/components/schemas/LabelsDefinitionInput"
-              }
-            }
+        "required": [
+          "labelDefinition"
+        ],
+        "additionalProperties": true,
+        "type": "object",
+        "properties": {
+          "labelDefinition": {
+            "$ref": "#/components/schemas/LabelsDefinitionInput"
           }
-        ]
+        }
       },
       "ClassificationProblem": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/MlProblemDefinitionBase"
-          },
-          {
-            "required": [
-              "labelDefinition"
-            ],
-            "additionalProperties": true,
-            "type": "object",
-            "properties": {
-              "labelDefinition": {
-                "$ref": "#/components/schemas/LabelsDefinition"
-              }
-            }
+        "required": [
+          "labelDefinition"
+        ],
+        "additionalProperties": true,
+        "type": "object",
+        "properties": {
+          "labelDefinition": {
+            "$ref": "#/components/schemas/LabelsDefinition"
           }
-        ]
+        }
       },
       "ImageSegmentationProblemBase": {
         "required": [
@@ -679,6 +654,13 @@
           }
         ]
       },
+      "OptimizationDirection": {
+        "type": "string",
+        "enum": [
+          "minimize",
+          "maximize"
+        ]
+      },
       "OptimizationObjective": {
         "required": [
           "direction",
@@ -688,11 +670,7 @@
         "type": "object",
         "properties": {
           "direction": {
-            "type": "string",
-            "enum": [
-              "minimize",
-              "maximize"
-            ]
+            "$ref": "#/components/schemas/OptimizationDirection"
           },
           "metric": {
             "type": "string"
@@ -760,6 +738,10 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 30
+          },
+          "retrainEvery": {
+            "description": "If provided, the model will automatically be retrained if this many milliseconds have passed since the last run. Models will not be retrained more frequently than once per day, and this policy is only checked once per day, so more than this many milliseconds may actually pass before the model is retrained.",
+            "type": "number"
           }
         }
       },
@@ -838,33 +820,76 @@
           }
         ]
       },
-      "EvaluationApproach": {
+      "DatasetConfigBase": {
         "required": [
-          "type",
-          "imageUri"
+          "name",
+          "description"
         ],
-        "additionalProperties": false,
+        "additionalProperties": true,
         "type": "object",
         "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "customImage"
-            ]
+          "name": {
+            "type": "string"
           },
-          "imageUri": {
-            "type": "string",
-            "description": "An aws ecr image uri of the form <account-id>.dkr.ecr.<region>.amazonaws.com/<repo-name>:<tag>",
-            "pattern": "^[0-9]+\\.dkr.ecr.[-a-z0-9]+\\.amazonaws\\.com\\/[-_a-zA-Z0-9]+:[-_a-zA-Z0-9]+$"
+          "description": {
+            "type": "string"
           }
         }
+      },
+      "DatasetConfigInput": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DatasetConfigBase"
+          },
+          {
+            "required": [
+              "problemDefinition"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "problemDefinition": {
+                "$ref": "#/components/schemas/MlProblemDefinitionInput"
+              }
+            }
+          }
+        ]
+      },
+      "DatasetConfig": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DatasetConfigBase"
+          },
+          {
+            "required": [
+              "id",
+              "accountId",
+              "problemDefinition"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "UUID uniquely identifying this dataset config.",
+                "type": "string"
+              },
+              "accountId": {
+                "type": "string"
+              },
+              "problemDefinition": {
+                "$ref": "#/components/schemas/MlProblemDefinition"
+              }
+            }
+          }
+        ]
       },
       "ModelConfigBase": {
         "required": [
           "name",
           "description",
           "trainingApproach",
-          "deployApproach"
+          "deployApproach",
+          "datasetId"
         ],
         "additionalProperties": true,
         "type": "object",
@@ -881,8 +906,9 @@
           "deployApproach": {
             "$ref": "#/components/schemas/DeployApproach"
           },
-          "evaluationApproach": {
-            "$ref": "#/components/schemas/EvaluationApproach"
+          "datasetId": {
+            "description": "The ID of the configuration that defines the dataset this model will be trained on.",
+            "type": "string"
           }
         }
       },
@@ -890,18 +916,6 @@
         "allOf": [
           {
             "$ref": "#/components/schemas/ModelConfigBase"
-          },
-          {
-            "required": [
-              "problemDefinition"
-            ],
-            "additionalProperties": true,
-            "type": "object",
-            "properties": {
-              "problemDefinition": {
-                "$ref": "#/components/schemas/MlProblemDefinitionInput"
-              }
-            }
           }
         ]
       },
@@ -913,8 +927,7 @@
           {
             "required": [
               "id",
-              "accountId",
-              "problemDefinition"
+              "accountId"
             ],
             "additionalProperties": false,
             "type": "object",
@@ -926,13 +939,6 @@
               "accountId": {
                 "type": "string"
               },
-              "problemDefinition": {
-                "$ref": "#/components/schemas/MlProblemDefinition"
-              },
-              "deployedId": {
-                "description": "The ID of the model version currently deployed for this model config.\n@deprecated use championId instead",
-                "type": "string"
-              },
               "championId": {
                 "description": "The ID of the champion model run for this model config.",
                 "type": "string"
@@ -940,35 +946,6 @@
             }
           }
         ]
-      },
-      "Split": {
-        "required": [
-          "n",
-          "start",
-          "end",
-          "uri"
-        ],
-        "additionalProperties": false,
-        "type": "object",
-        "properties": {
-          "n": {
-            "description": "The number of examples in this split.",
-            "type": "number"
-          },
-          "start": {
-            "description": "Timestamp marking the beginning of the data for this split (inclusive). Expressed as milliseconds since the UTC epoch.",
-            "type": "number"
-          },
-          "end": {
-            "description": "Timestamp marking the end of the data for this split (exclusive). Expressed as milliseconds since the UTC epoch.",
-            "type": "number"
-          },
-          "uri": {
-            "description": "S3 URI of where a copy of this exact split is saved.",
-            "type": "string",
-            "pattern": "^s3:\\/\\/.+$"
-          }
-        }
       },
       "Metric": {
         "required": [
@@ -983,16 +960,24 @@
             "description": "The name of the metric e.g. \"Cross Entopy Loss\", \"Accuracy\", \"F1 Macro\", etc.",
             "type": "string"
           },
+          "description": {
+            "description": "A description of the metric to help people understand what it means and represents.",
+            "type": "string"
+          },
           "value": {
             "type": "number"
           },
           "stage": {
-            "description": "The stage of the model run this metric was computed in. If `training`, the metric could have been computed over the train or val set. If `evaluation`, the metric was computed over the test set.",
+            "description": "@deprecated The stage of the model run this metric was computed in. If `training`, the metric could have been computed over the train or val set. If `evaluation`, the metric was computed over the test set.",
             "type": "string",
             "enum": [
               "training",
               "evaluation"
             ]
+          },
+          "direction": {
+            "description": "The optimization direction for this metric. E.g. `minimize` means a smaller value for this metric is better. This direction is just used as metadata about the metric value, and does not mean this metric will be optimized during hyperparameter tuning.",
+            "$ref": "#/components/schemas/OptimizationDirection"
           }
         }
       },
@@ -1003,22 +988,41 @@
           "rejected"
         ]
       },
-      "ApprovalDecisionBase": {
+      "ApprovalDecisionInput": {
         "required": [
-          "timestamp",
           "decision"
         ],
-        "additionalProperties": false,
+        "additionalProperties": true,
         "type": "object",
         "properties": {
-          "timestamp": {
-            "description": "Timestamp of when the decision was made. Expressed as milliseconds since the UTC epoch.",
-            "type": "number"
+          "description": {
+            "description": "Reasoning, justification, or other notes to associate with the decision.",
+            "type": "string"
           },
           "decision": {
             "$ref": "#/components/schemas/ApprovalChoice"
           }
         }
+      },
+      "ApprovalDecisionBase": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ApprovalDecisionInput"
+          },
+          {
+            "required": [
+              "timestamp"
+            ],
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "timestamp": {
+                "description": "Timestamp of when the decision was made. Expressed as milliseconds since the UTC epoch.",
+                "type": "number"
+              }
+            }
+          }
+        ]
       },
       "SystemApprovalDecision": {
         "allOf": [
@@ -1029,7 +1033,7 @@
             "required": [
               "actor"
             ],
-            "additionalProperties": false,
+            "additionalProperties": true,
             "type": "object",
             "properties": {
               "actor": {
@@ -1052,7 +1056,7 @@
               "actor",
               "user"
             ],
-            "additionalProperties": false,
+            "additionalProperties": true,
             "type": "object",
             "properties": {
               "actor": {
@@ -1077,27 +1081,6 @@
             "$ref": "#/components/schemas/UserApprovalDecision"
           }
         ]
-      },
-      "RunSplits": {
-        "required": [
-          "train",
-          "val",
-          "test"
-        ],
-        "additionalProperties": false,
-        "description": "Information about the different splits of the dataset used to train this model version.",
-        "type": "object",
-        "properties": {
-          "train": {
-            "$ref": "#/components/schemas/Split"
-          },
-          "val": {
-            "$ref": "#/components/schemas/Split"
-          },
-          "test": {
-            "$ref": "#/components/schemas/Split"
-          }
-        }
       },
       "RunMetrics": {
         "required": [
@@ -1213,9 +1196,6 @@
             "type": "boolean",
             "description": "True if this run has been archived. Archived runs' related artifacts are deleted, and they can no longer be deployed."
           },
-          "splits": {
-            "$ref": "#/components/schemas/RunSplits"
-          },
           "hyperparameters": {
             "description": "The hyperparameters used to train the model version created by this run.",
             "type": "array",
@@ -1245,9 +1225,6 @@
           },
           "deployApproach": {
             "$ref": "#/components/schemas/DeployApproach"
-          },
-          "evaluationApproach": {
-            "$ref": "#/components/schemas/EvaluationApproach"
           }
         }
       },
@@ -1281,6 +1258,111 @@
             "type": "string"
           }
         }
+      },
+      "ImageSegmentationPredictionRequest": {
+        "required": [
+          "predictionType",
+          "exampleId"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "predictionType": {
+            "description": "The type of prediction requested. This must be the same as the problem type in your model config.",
+            "type": "string",
+            "enum": [
+              "imgSeg"
+            ]
+          },
+          "exampleId": {
+            "description": "The ID of the example a prediction is being requested for. It is the ID of a DocumentReference FHIR record which references the image file a segmenation mask will be generated for.",
+            "type": "string"
+          }
+        }
+      },
+      "ImageClassificationPredictionRequest": {
+        "required": [
+          "predictionType",
+          "exampleId"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "predictionType": {
+            "description": "The type of prediction requested. This must be the same as the problem type in your model config.",
+            "type": "string",
+            "enum": [
+              "imgClf"
+            ]
+          },
+          "exampleId": {
+            "description": "The ID of the example a prediction is being requested for. It is the ID of a DocumentReference FHIR record which references the image file a classification will be generated for.",
+            "type": "string"
+          }
+        }
+      },
+      "PredictionRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/ImageSegmentationPredictionRequest"
+          },
+          {
+            "$ref": "#/components/schemas/ImageClassificationPredictionRequest"
+          }
+        ]
+      },
+      "ImageClassificationPrediction": {
+        "required": [
+          "index",
+          "value",
+          "confidence"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "index": {
+            "description": "The index of a classification label.",
+            "type": "integer"
+          },
+          "value": {
+            "description": "This value will be `true` if the model predicted this label being present on the example; `false` otherwise.",
+            "type": "boolean"
+          },
+          "confidence": {
+            "description": "The confidence score of the prediction. If this value is greater than the model's decision threshold, `value` will be `true`.",
+            "type": "number"
+          }
+        }
+      },
+      "ImageClassificationPredictionResponse": {
+        "required": [
+          "predictionType",
+          "predictions"
+        ],
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "predictionType": {
+            "type": "string",
+            "enum": [
+              "imgClf"
+            ]
+          },
+          "predictions": {
+            "description": "A prediction for every label defined by the model.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImageClassificationPrediction"
+            }
+          }
+        }
+      },
+      "PredictionResponse": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/ImageClassificationPredictionResponse"
+          }
+        ]
       }
     }
   },
@@ -1697,9 +1779,9 @@
           {
             "in": "query",
             "name": "marker",
-            "description": "Passed in to control which page of results is retrieved.",
+            "description": "Passed in to control which page of results is retrieved. Passing `undefined` for this parameter will retrieve the first page of results. The marker for the next page will be present in the response to this request.",
             "schema": {
-              "description": "Passed in to control which page of results is retrieved.",
+              "description": "Passed in to control which page of results is retrieved. Passing `undefined` for this parameter will retrieve the first page of results. The marker for the next page will be present in the response to this request.",
               "type": "string"
             },
             "required": false
@@ -1748,16 +1830,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "required": [
-                  "choice"
-                ],
-                "additionalProperties": false,
-                "type": "object",
-                "properties": {
-                  "choice": {
-                    "$ref": "#/components/schemas/ApprovalChoice"
-                  }
-                }
+                "$ref": "#/components/schemas/ApprovalDecisionInput"
               }
             }
           }
@@ -1782,9 +1855,216 @@
         ]
       }
     },
-    "/models/{modelId}/examples": {
+    "/models/{modelId}/predictions": {
       "get": {
-        "operationId": "getExamples",
+        "operationId": "predict",
+        "description": "Constructs an example and submits it to the referenced model for inference. The model's output predictions are then returned. The example is retrieved based on the model's problem type and the provided query parameters. Note that this route is only supported for models using the `cloud` deploy type, and which have a currently deployed model version (champion).",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PredictionResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/datasets": {
+      "post": {
+        "operationId": "createDataset",
+        "description": "Creates a new dataset via a dataset config object.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "dataset"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "dataset": {
+                      "$ref": "#/components/schemas/DatasetConfig"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetConfigInput"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getDatasets",
+        "description": "Gets all dataset configs in the account.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "datasets"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "datasets": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DatasetConfig"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/datasets/{id}": {
+      "put": {
+        "operationId": "updateDataset",
+        "description": "Updates a dataset config.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "dataset"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "dataset": {
+                      "$ref": "#/components/schemas/DatasetConfig"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetConfigInput"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteDataset",
+        "description": "Deletes a dataset.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "id"
+                  ],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "description": "The id of the dataset that was deleted.",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      },
+      "get": {
+        "operationId": "getDataset",
+        "description": "Gets a dataset config.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [],
+                  "additionalProperties": false,
+                  "type": "object",
+                  "properties": {
+                    "dataset": {
+                      "$ref": "#/components/schemas/DatasetConfig"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/datasets/{datasetId}/examples": {
+      "get": {
+        "operationId": "getDatasetExamples",
         "description": "Fetches a page of training data examples for data labeling.",
         "responses": {
           "200": {
@@ -1816,7 +2096,7 @@
         },
         "parameters": [
           {
-            "name": "modelId",
+            "name": "datasetId",
             "in": "path",
             "schema": {
               "type": "string"
@@ -1872,13 +2152,21 @@
               "type": "string"
             },
             "required": false
+          },
+          {
+            "in": "query",
+            "name": "cohortId",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
           }
         ]
       }
     },
-    "/models/{modelId}/examples/{exampleId}": {
+    "/datasets/{datasetId}/examples/{exampleId}": {
       "get": {
-        "operationId": "getExample",
+        "operationId": "getDatasetExample",
         "description": "Fetches a single training data example for data labeling.",
         "responses": {
           "200": {
@@ -1901,7 +2189,7 @@
         },
         "parameters": [
           {
-            "name": "modelId",
+            "name": "datasetId",
             "in": "path",
             "schema": {
               "type": "string"
@@ -1923,14 +2211,22 @@
               "type": "string"
             },
             "required": true
+          },
+          {
+            "in": "query",
+            "name": "cohortId",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
           }
         ]
       }
     },
-    "/models/{modelId}/examples/{exampleId}/label": {
+    "/datasets/{datasetId}/examples/{exampleId}/label": {
       "put": {
-        "operationId": "putLabel",
-        "description": "Updates the label for a training data example",
+        "operationId": "putDatasetLabel",
+        "description": "Updates the label for a training data example.",
         "responses": {
           "200": {
             "description": "A successful response",
@@ -1954,7 +2250,7 @@
         },
         "parameters": [
           {
-            "name": "modelId",
+            "name": "datasetId",
             "in": "path",
             "schema": {
               "type": "string"
@@ -1972,9 +2268,9 @@
         ]
       }
     },
-    "/models/{modelId}/examples/{exampleId}/label-file": {
+    "/datasets/{datasetId}/examples/{exampleId}/label-file": {
       "get": {
-        "operationId": "getLabelFile",
+        "operationId": "getDatasetLabelFile",
         "description": "Retrieves the label file for the given example, if it exists, and converts it to the format LabelStudio expects.",
         "responses": {
           "200": {
@@ -1997,7 +2293,7 @@
         },
         "parameters": [
           {
-            "name": "modelId",
+            "name": "datasetId",
             "in": "path",
             "schema": {
               "type": "string"
@@ -2015,7 +2311,7 @@
         ]
       },
       "put": {
-        "operationId": "putLabelFile",
+        "operationId": "putDatasetLabelFile",
         "description": "Preprocesses the label data and updates the label file for a training data example. This is done for ML problem types that store their labels as independent files, such as image segmentation. For those problem types, The label data is not stored on a label FHIR record, but in a separate file-service file, and pointed to by a label FHIR record.",
         "responses": {
           "200": {
@@ -2050,7 +2346,7 @@
         },
         "parameters": [
           {
-            "name": "modelId",
+            "name": "datasetId",
             "in": "path",
             "schema": {
               "type": "string"

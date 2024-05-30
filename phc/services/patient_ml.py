@@ -12,14 +12,8 @@ from typing import List, Literal, Optional, Union
 from pydantic import BaseModel, Extra, Field
 
 
-class MlProblemDefinitionBase(BaseModel):
-    retrainEvery: Optional[float] = None
-    """
-    If provided, the model will automatically be retrained if this many milliseconds have passed since the last run. Models will not be retrained more frequently than once per day, and this policy is only checked once per day, so more than this many milliseconds may actually pass before the model is retrained.
-    """
-
-
 class LabelDefinitionBase(BaseModel):
+
     id: Optional[str] = None
     """
     UUID uniquely identifying this label.
@@ -40,10 +34,12 @@ class LabelDefinition(LabelDefinitionBase):
 
 
 class LabelsDefinitionInput(BaseModel):
+
     labels: List[LabelDefinitionBase]
 
 
 class LabelsDefinition(BaseModel):
+
     labels: List[LabelDefinition]
     maxLabelIndex: int = Field(..., ge=-1, le=255)
     """
@@ -51,11 +47,13 @@ class LabelsDefinition(BaseModel):
     """
 
 
-class ClassificationProblemInput(MlProblemDefinitionBase):
+class ClassificationProblemInput(BaseModel):
+
     labelDefinition: LabelsDefinitionInput
 
 
-class ClassificationProblem(MlProblemDefinitionBase):
+class ClassificationProblem(BaseModel):
+
     labelDefinition: LabelsDefinition
 
 
@@ -100,6 +98,7 @@ class LabelFileData(BaseModel):
 
 
 class Tag(BaseModel):
+
     name: str
     value: str
 
@@ -109,6 +108,7 @@ class Tags(BaseModel):
 
 
 class LabelBase(BaseModel):
+
     isConfirmed: Optional[bool] = None
     """
     A confirmed label is believed to be correct and may be used during training and evaluation.
@@ -153,6 +153,7 @@ class Label(BaseModel):
 
 
 class ExampleBase(BaseModel):
+
     id: str
     updatedAt: float
     """
@@ -161,6 +162,7 @@ class ExampleBase(BaseModel):
 
 
 class Image(BaseModel):
+
     fileId: str
 
 
@@ -190,6 +192,7 @@ class FhirCodesFilter(BaseModel):
 
 
 class CategoricalParameterSpace(BaseModel):
+
     type: Literal["categorical"]
     name: str
     values: List[str]
@@ -200,6 +203,7 @@ class NumericScale(BaseModel):
 
 
 class NumericParameterSpace(BaseModel):
+
     name: str
     min: float
     max: float
@@ -222,8 +226,13 @@ class ParameterSpace(BaseModel):
     ]
 
 
+class OptimizationDirection(BaseModel):
+    __root__: Literal["minimize", "maximize"]
+
+
 class OptimizationObjective(BaseModel):
-    direction: Literal["minimize", "maximize"]
+
+    direction: OptimizationDirection
     metric: str
 
 
@@ -237,6 +246,7 @@ class MetricDefinition(BaseModel):
 
 
 class TuningJobTrainingApproach(BaseModel):
+
     type: Literal["tuningJob"]
     trainingImage: str = Field(
         ...,
@@ -258,6 +268,10 @@ class TuningJobTrainingApproach(BaseModel):
     """
     The maximum number of candidate models to consider in a given model run.
     """
+    retrainEvery: Optional[float] = None
+    """
+    If provided, the model will automatically be retrained if this many milliseconds have passed since the last run. Models will not be retrained more frequently than once per day, and this policy is only checked once per day, so more than this many milliseconds may actually pass before the model is retrained.
+    """
 
 
 class TrainingApproach(BaseModel):
@@ -265,6 +279,7 @@ class TrainingApproach(BaseModel):
 
 
 class DeployApproachBase(BaseModel):
+
     inferenceImage: str = Field(
         ...,
         regex="^[0-9]+\\.dkr.ecr.[-a-z0-9]+\\.amazonaws\\.com\\/[-_a-zA-Z0-9]+:[-_a-zA-Z0-9]+$",
@@ -286,53 +301,58 @@ class DeployApproach(BaseModel):
     __root__: Union[EdgeDeployApproach, CloudDeployApproach]
 
 
-class EvaluationApproach(BaseModel):
-    type: Literal["customImage"]
-    imageUri: str = Field(
-        ...,
-        regex="^[0-9]+\\.dkr.ecr.[-a-z0-9]+\\.amazonaws\\.com\\/[-_a-zA-Z0-9]+:[-_a-zA-Z0-9]+$",
-    )
-    """
-    An aws ecr image uri of the form <account-id>.dkr.ecr.<region>.amazonaws.com/<repo-name>:<tag>
-    """
+class DatasetConfigBase(BaseModel):
+
+    name: str
+    description: str
 
 
 class ModelConfigBase(BaseModel):
+
     name: str
     description: str
     trainingApproach: TrainingApproach
     deployApproach: DeployApproach
-    evaluationApproach: Optional[EvaluationApproach] = None
+    datasetId: str
+    """
+    The ID of the configuration that defines the dataset this model will be trained on.
+    """
 
 
-class Split(BaseModel):
-    n: float
+class ModelConfigInput(ModelConfigBase):
+    pass
+
+
+class ModelConfig(ModelConfigBase):
+    id: str
     """
-    The number of examples in this split.
+    UUID uniquely identifying this model config.
     """
-    start: float
+    accountId: str
+    championId: Optional[str] = None
     """
-    Timestamp marking the beginning of the data for this split (inclusive). Expressed as milliseconds since the UTC epoch.
-    """
-    end: float
-    """
-    Timestamp marking the end of the data for this split (exclusive). Expressed as milliseconds since the UTC epoch.
-    """
-    uri: str = Field(..., regex="^s3:\\/\\/.+$")
-    """
-    S3 URI of where a copy of this exact split is saved.
+    The ID of the champion model run for this model config.
     """
 
 
 class Metric(BaseModel):
+
     name: str
     """
     The name of the metric e.g. "Cross Entopy Loss", "Accuracy", "F1 Macro", etc.
     """
+    description: Optional[str] = None
+    """
+    A description of the metric to help people understand what it means and represents.
+    """
     value: float
     stage: Literal["training", "evaluation"]
     """
-    The stage of the model run this metric was computed in. If `training`, the metric could have been computed over the train or val set. If `evaluation`, the metric was computed over the test set.
+    @deprecated The stage of the model run this metric was computed in. If `training`, the metric could have been computed over the train or val set. If `evaluation`, the metric was computed over the test set.
+    """
+    direction: Optional[OptimizationDirection] = None
+    """
+    The optimization direction for this metric. E.g. `minimize` means a smaller value for this metric is better. This direction is just used as metadata about the metric value, and does not mean this metric will be optimized during hyperparameter tuning.
     """
 
 
@@ -340,12 +360,20 @@ class ApprovalChoice(BaseModel):
     __root__: Literal["approved", "rejected"]
 
 
-class ApprovalDecisionBase(BaseModel):
+class ApprovalDecisionInput(BaseModel):
+
+    description: Optional[str] = None
+    """
+    Reasoning, justification, or other notes to associate with the decision.
+    """
+    decision: ApprovalChoice
+
+
+class ApprovalDecisionBase(ApprovalDecisionInput):
     timestamp: float
     """
     Timestamp of when the decision was made. Expressed as milliseconds since the UTC epoch.
     """
-    decision: ApprovalChoice
 
 
 class SystemApprovalDecision(ApprovalDecisionBase):
@@ -361,17 +389,8 @@ class ApprovalDecision(BaseModel):
     __root__: Union[SystemApprovalDecision, UserApprovalDecision]
 
 
-class RunSplits(BaseModel):
-    """
-    Information about the different splits of the dataset used to train this model version.
-    """
-
-    train: Split
-    val: Split
-    test: Split
-
-
 class RunMetrics(BaseModel):
+
     challenger: List[Metric]
     """
     Metrics about how the model version trained in this run (the challenger) performed on this run's test set.
@@ -411,14 +430,95 @@ class LogEvent(BaseModel):
     """
 
 
+class ImageSegmentationPredictionRequest(BaseModel):
+
+    predictionType: Literal["imgSeg"]
+    """
+    The type of prediction requested. This must be the same as the problem type in your model config.
+    """
+    exampleId: str
+    """
+    The ID of the example a prediction is being requested for. It is the ID of a DocumentReference FHIR record which references the image file a segmenation mask will be generated for.
+    """
+
+
+class ImageClassificationPredictionRequest(BaseModel):
+
+    predictionType: Literal["imgClf"]
+    """
+    The type of prediction requested. This must be the same as the problem type in your model config.
+    """
+    exampleId: str
+    """
+    The ID of the example a prediction is being requested for. It is the ID of a DocumentReference FHIR record which references the image file a classification will be generated for.
+    """
+
+
+class PredictionRequest(BaseModel):
+    __root__: Union[
+        ImageSegmentationPredictionRequest, ImageClassificationPredictionRequest
+    ]
+
+
+class ImageClassificationPrediction(BaseModel):
+
+    index: int
+    """
+    The index of a classification label.
+    """
+    value: bool
+    """
+    This value will be `true` if the model predicted this label being present on the example; `false` otherwise.
+    """
+    confidence: float
+    """
+    The confidence score of the prediction. If this value is greater than the model's decision threshold, `value` will be `true`.
+    """
+
+
+class ImageClassificationPredictionResponse(BaseModel):
+
+    predictionType: Literal["imgClf"]
+    predictions: List[ImageClassificationPrediction]
+    """
+    A prediction for every label defined by the model.
+    """
+
+
+class PredictionResponse(BaseModel):
+    __root__: ImageClassificationPredictionResponse
+
+
+class CreateModelResponse(BaseModel):
+
+    model: ModelConfig
+
+
+class GetModelsResponse(BaseModel):
+
+    models: List[ModelConfig]
+
+
+class UpdateModelResponse(BaseModel):
+
+    model: ModelConfig
+
+
 class DeleteModelResponse(BaseModel):
+
     id: str
     """
     The id of the model that was deleted.
     """
 
 
+class GetModelResponse(BaseModel):
+
+    model: Optional[ModelConfig] = None
+
+
 class CreateRunResponse(BaseModel):
+
     runId: str
     """
     The id of the newly created run. Can be used to fetch data about the run.
@@ -426,6 +526,7 @@ class CreateRunResponse(BaseModel):
 
 
 class GetModelArtifactResponse(BaseModel):
+
     url: str
 
 
@@ -436,7 +537,7 @@ class GetModelLogsParams(BaseModel):
     """
     marker: Optional[str] = None
     """
-    Passed in to control which page of results is retrieved.
+    Passed in to control which page of results is retrieved. Passing `undefined` for this parameter will retrieve the first page of results. The marker for the next page will be present in the response to this request.
     """
     limit: Optional[int] = Field(None, ge=1, le=10000)
     """
@@ -445,6 +546,7 @@ class GetModelLogsParams(BaseModel):
 
 
 class GetModelLogsResponse(BaseModel):
+
     events: List[LogEvent]
     marker: Optional[str] = None
     """
@@ -452,15 +554,20 @@ class GetModelLogsResponse(BaseModel):
     """
 
 
-class CreateApprovalDecisionRequest(BaseModel):
-    choice: ApprovalChoice
-
-
 class CreateApprovalDecisionResponse(BaseModel):
+
     approvalDecision: UserApprovalDecision
 
 
-class GetExamplesParams(BaseModel):
+class DeleteDatasetResponse(BaseModel):
+
+    id: str
+    """
+    The id of the dataset that was deleted.
+    """
+
+
+class GetDatasetExamplesParams(BaseModel):
     projectId: str
     hasLabel: Optional[Literal["true", "false"]] = None
     hasUnconfirmedLabel: Optional[Literal["true", "false"]] = None
@@ -469,9 +576,11 @@ class GetExamplesParams(BaseModel):
     """
     marker: Optional[str] = None
     patientId: Optional[str] = None
+    cohortId: Optional[str] = None
 
 
-class GetExamplesResponse(BaseModel):
+class GetDatasetExamplesResponse(BaseModel):
+
     examples: List[Example]
     marker: Optional[str] = None
     """
@@ -479,19 +588,23 @@ class GetExamplesResponse(BaseModel):
     """
 
 
-class GetExampleParams(BaseModel):
+class GetDatasetExampleParams(BaseModel):
     projectId: str
+    cohortId: Optional[str] = None
 
 
-class GetExampleResponse(BaseModel):
+class GetDatasetExampleResponse(BaseModel):
+
     example: Optional[Example] = None
 
 
-class GetLabelFileResponse(BaseModel):
+class GetDatasetLabelFileResponse(BaseModel):
+
     labelData: Optional[LabelFileData] = None
 
 
-class PutLabelFileResponse(BaseModel):
+class PutDatasetLabelFileResponse(BaseModel):
+
     fileId: str
     """
     The id of the file-service file the label file was saved to.
@@ -499,6 +612,7 @@ class PutLabelFileResponse(BaseModel):
 
 
 class ImageSegmentationProblemBase(BaseModel):
+
     problemType: Literal["imgSeg"]
     trainingDataFilter: FhirCodesFilter
     """
@@ -519,6 +633,7 @@ class ImageSegmentationProblem(
 
 
 class ImageClassificationProblemBase(BaseModel):
+
     problemType: Literal["imgClf"]
     trainingDataFilter: FhirCodesFilter
     """
@@ -548,29 +663,21 @@ class MlProblemDefinition(BaseModel):
     __root__: Union[ImageSegmentationProblem, ImageClassificationProblem]
 
 
-class ModelConfigInput(ModelConfigBase):
+class DatasetConfigInput(DatasetConfigBase):
     problemDefinition: MlProblemDefinitionInput
 
 
-class ModelConfig(ModelConfigBase):
+class DatasetConfig(DatasetConfigBase):
     id: str
     """
-    UUID uniquely identifying this model config.
+    UUID uniquely identifying this dataset config.
     """
     accountId: str
     problemDefinition: MlProblemDefinition
-    deployedId: Optional[str] = None
-    """
-    The ID of the model version currently deployed for this model config.
-    @deprecated use championId instead
-    """
-    championId: Optional[str] = None
-    """
-    The ID of the champion model run for this model config.
-    """
 
 
 class ModelRun(BaseModel):
+
     id: str
     """
     UUID uniquely identifying this model run.
@@ -610,7 +717,6 @@ class ModelRun(BaseModel):
     """
     True if this run has been archived. Archived runs' related artifacts are deleted, and they can no longer be deployed.
     """
-    splits: Optional[RunSplits] = None
     hyperparameters: List[Parameter]
     """
     The hyperparameters used to train the model version created by this run.
@@ -627,31 +733,36 @@ class ModelRun(BaseModel):
     problemDefinition: MlProblemDefinition
     trainingApproach: TrainingApproach
     deployApproach: DeployApproach
-    evaluationApproach: Optional[EvaluationApproach] = None
-
-
-class CreateModelResponse(BaseModel):
-    model: ModelConfig
-
-
-class GetModelsResponse(BaseModel):
-    models: List[ModelConfig]
-
-
-class UpdateModelResponse(BaseModel):
-    model: ModelConfig
-
-
-class GetModelResponse(BaseModel):
-    model: Optional[ModelConfig] = None
 
 
 class GetRunsResponse(BaseModel):
+
     runs: List[ModelRun]
 
 
 class GetRunResponse(BaseModel):
+
     run: Optional[ModelRun] = None
+
+
+class CreateDatasetResponse(BaseModel):
+
+    dataset: DatasetConfig
+
+
+class GetDatasetsResponse(BaseModel):
+
+    datasets: List[DatasetConfig]
+
+
+class UpdateDatasetResponse(BaseModel):
+
+    dataset: DatasetConfig
+
+
+class GetDatasetResponse(BaseModel):
+
+    dataset: Optional[DatasetConfig] = None
 
 
 class PatientML(BaseClient):
@@ -734,7 +845,7 @@ class PatientML(BaseClient):
         return GetModelLogsResponse.parse_obj(res.data)
 
     def create_approval_decision(
-        self, model_id: str, run_id: str, body: CreateApprovalDecisionRequest
+        self, model_id: str, run_id: str, body: ApprovalDecisionInput
     ):
         """Adds a new approval decision to a model run."""
         res = self._api_call(
@@ -744,50 +855,99 @@ class PatientML(BaseClient):
         )
         return CreateApprovalDecisionResponse.parse_obj(res.data)
 
-    def get_examples(self, model_id: str, params: GetExamplesParams):
+    def predict(self, model_id: str):
+        """Constructs an example and submits it to the referenced model for inference. The model's output predictions are then returned. The example is retrieved based on the model's problem type and the provided query parameters. Note that this route is only supported for models using the `cloud` deploy type, and which have a currently deployed model version (champion)."""
+        res = self._api_call(
+            api_path=f"/v1/patient-ml/models/{model_id}/predictions",
+            http_verb="GET",
+        )
+        return PredictionResponse.parse_obj(res.data)
+
+    def create_dataset(self, body: DatasetConfigInput):
+        """Creates a new dataset via a dataset config object."""
+        res = self._api_call(
+            api_path="/v1/patient-ml/datasets",
+            http_verb="POST",
+            json=json.loads(body.json(exclude_none=True)),
+        )
+        return CreateDatasetResponse.parse_obj(res.data)
+
+    def get_datasets(self):
+        """Gets all dataset configs in the account."""
+        res = self._api_call(
+            api_path="/v1/patient-ml/datasets", http_verb="GET"
+        )
+        return GetDatasetsResponse.parse_obj(res.data)
+
+    def update_dataset(self, id: str, body: DatasetConfigInput):
+        """Updates a dataset config."""
+        res = self._api_call(
+            api_path=f"/v1/patient-ml/datasets/{id}",
+            http_verb="PUT",
+            json=json.loads(body.json(exclude_none=True)),
+        )
+        return UpdateDatasetResponse.parse_obj(res.data)
+
+    def delete_dataset(self, id: str):
+        """Deletes a dataset."""
+        res = self._api_call(
+            api_path=f"/v1/patient-ml/datasets/{id}", http_verb="DELETE"
+        )
+        return DeleteDatasetResponse.parse_obj(res.data)
+
+    def get_dataset(self, id: str):
+        """Gets a dataset config."""
+        res = self._api_call(
+            api_path=f"/v1/patient-ml/datasets/{id}", http_verb="GET"
+        )
+        return GetDatasetResponse.parse_obj(res.data)
+
+    def get_dataset_examples(
+        self, dataset_id: str, params: GetDatasetExamplesParams
+    ):
         """Fetches a page of training data examples for data labeling."""
         res = self._api_call(
-            api_path=f"/v1/patient-ml/models/{model_id}/examples",
+            api_path=f"/v1/patient-ml/datasets/{dataset_id}/examples",
             http_verb="GET",
             params=json.loads(params.json(exclude_none=True)),
         )
-        return GetExamplesResponse.parse_obj(res.data)
+        return GetDatasetExamplesResponse.parse_obj(res.data)
 
-    def get_example(
-        self, model_id: str, example_id: str, params: GetExampleParams
+    def get_dataset_example(
+        self, dataset_id: str, example_id: str, params: GetDatasetExampleParams
     ):
         """Fetches a single training data example for data labeling."""
         res = self._api_call(
-            api_path=f"/v1/patient-ml/models/{model_id}/examples/{example_id}",
+            api_path=f"/v1/patient-ml/datasets/{dataset_id}/examples/{example_id}",
             http_verb="GET",
             params=json.loads(params.json(exclude_none=True)),
         )
-        return GetExampleResponse.parse_obj(res.data)
+        return GetDatasetExampleResponse.parse_obj(res.data)
 
-    def put_label(self, model_id: str, example_id: str, body: Label):
-        """Updates the label for a training data example"""
+    def put_dataset_label(self, dataset_id: str, example_id: str, body: Label):
+        """Updates the label for a training data example."""
         res = self._api_call(
-            api_path=f"/v1/patient-ml/models/{model_id}/examples/{example_id}/label",
+            api_path=f"/v1/patient-ml/datasets/{dataset_id}/examples/{example_id}/label",
             http_verb="PUT",
             json=json.loads(body.json(exclude_none=True)),
         )
         return Example.parse_obj(res.data)
 
-    def get_label_file(self, model_id: str, example_id: str):
+    def get_dataset_label_file(self, dataset_id: str, example_id: str):
         """Retrieves the label file for the given example, if it exists, and converts it to the format LabelStudio expects."""
         res = self._api_call(
-            api_path=f"/v1/patient-ml/models/{model_id}/examples/{example_id}/label-file",
+            api_path=f"/v1/patient-ml/datasets/{dataset_id}/examples/{example_id}/label-file",
             http_verb="GET",
         )
-        return GetLabelFileResponse.parse_obj(res.data)
+        return GetDatasetLabelFileResponse.parse_obj(res.data)
 
-    def put_label_file(
-        self, model_id: str, example_id: str, body: LabelFileData
+    def put_dataset_label_file(
+        self, dataset_id: str, example_id: str, body: LabelFileData
     ):
         """Preprocesses the label data and updates the label file for a training data example. This is done for ML problem types that store their labels as independent files, such as image segmentation. For those problem types, The label data is not stored on a label FHIR record, but in a separate file-service file, and pointed to by a label FHIR record."""
         res = self._api_call(
-            api_path=f"/v1/patient-ml/models/{model_id}/examples/{example_id}/label-file",
+            api_path=f"/v1/patient-ml/datasets/{dataset_id}/examples/{example_id}/label-file",
             http_verb="PUT",
             json=json.loads(body.json(exclude_none=True)),
         )
-        return PutLabelFileResponse.parse_obj(res.data)
+        return PutDatasetLabelFileResponse.parse_obj(res.data)
