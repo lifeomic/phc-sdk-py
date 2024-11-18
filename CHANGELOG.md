@@ -3,9 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project adheres to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 _(NOTE: All examples use fictitious data or freely available data sets.)_
+
+## [0.36.0] - 2024-11-15
+
+### Added
+
+- Added a new `phc.services.Agents` API client with an `invoke_basic` method for
+  invoking a basic multi-modal LLM.
 
 ## [0.35.0] - 2024-05-29
 
@@ -23,7 +31,8 @@ _(NOTE: All examples use fictitious data or freely available data sets.)_
 
 ### Added
 
-- A New function `es_sql()` to `phc.services.Fhir` class to execute OpenSearch SQL.
+- A New function `es_sql()` to `phc.services.Fhir` class to execute OpenSearch
+  SQL.
 
 Example:
 
@@ -42,7 +51,8 @@ df = Fhir(session).es_sql(
 
 ### Fixed
 
-- The `phc.services.PatientML` API client will now ignore extra values, instead of throwing an error if one is found when parsing an entity.
+- The `phc.services.PatientML` API client will now ignore extra values, instead
+  of throwing an error if one is found when parsing an entity.
 
 ## [0.33.0] - 2023-07-28
 
@@ -58,13 +68,16 @@ df = Fhir(session).es_sql(
 
 ### Added
 
-- The `phc.services.PatientML` API client is now fully typed. Request bodies, response bodies, and query parameters now allow for static type checking, and are runtime type-checked as well.
+- The `phc.services.PatientML` API client is now fully typed. Request bodies,
+  response bodies, and query parameters now allow for static type checking, and
+  are runtime type-checked as well.
 
 ## [0.31.0] - 2023-07-18
 
 ### Fixed
 
-- Pinned the major versions of the package's dependencies, so untested breaking changes are excluded from the package's installation
+- Pinned the major versions of the package's dependencies, so untested breaking
+  changes are excluded from the package's installation
 - Removed dev dependencies that were already specified as package dependencies
 - Pinned the exact version of the dev dependencies, to improve CI/CD determinism
 
@@ -72,7 +85,8 @@ df = Fhir(session).es_sql(
 
 ### Added
 
-- Added new `phc.services.PatientML` API client which can be used to call the LifeOmic Patient ML Service API.
+- Added new `phc.services.PatientML` API client which can be used to call the
+  LifeOmic Patient ML Service API.
 
 ## [0.23.2] - 2021-09-27
 
@@ -83,7 +97,8 @@ df = Fhir(session).es_sql(
 
 ### Added
 
-- Added support for single/multiple values with the `term` or `terms` (New!) parameters
+- Added support for single/multiple values with the `term` or `terms` (New!)
+  parameters
 - Added configurable term limit for sending multiple queries (param `max_terms`)
 - Added `phc.DataLake` for sending SQL queries to the data lake
 
@@ -108,16 +123,21 @@ phc.DataLake.get_data_frame(
 
 ### Fixed
 
-- `phc.Project` now operates properly when one of the accounts only has limited access
-- `phc.Observation`, `phc.Condition`, and `phc.Procedures`'s `get_codes` method now uses the new summary APIs to return better results.
+- `phc.Project` now operates properly when one of the accounts only has limited
+  access
+- `phc.Observation`, `phc.Condition`, and `phc.Procedures`'s `get_codes` method
+  now uses the new summary APIs to return better results.
 
 ### Added
 
 - Summary APIs ([PR #150](https://github.com/lifeomic/phc-sdk-py/pull/150))
-  - `phc.SummaryClinicalCounts` - Retrieve all clinical counts (across tables like observation, conditions, procedures, and medications)
-  - `phc.SummaryOmicsCounts` - Retrieve summaries across genomic data (counts of clinvar_significance, gene_variant, sequence, test, etc)
+  - `phc.SummaryClinicalCounts` - Retrieve all clinical counts (across tables
+    like observation, conditions, procedures, and medications)
+  - `phc.SummaryOmicsCounts` - Retrieve summaries across genomic data (counts of
+    clinvar_significance, gene_variant, sequence, test, etc)
   - `phc.SummaryCounts` - Retrieve all summaries (across omics and clinical)
-  - `phc.SummaryItemCounts` - Retrieve counts for a specific table (e.g. `condition`, `procedure`)
+  - `phc.SummaryItemCounts` - Retrieve counts for a specific table (e.g.
+    `condition`, `procedure`)
 
 Example
 
@@ -137,13 +157,15 @@ phc.SummaryClinicalCounts.get_data_frame(match="fuzzy", system=["snomed.info", "
 
 ### Fixed
 
-- Make token optional when using a custom adapter that doesn't support refreshing the token
+- Make token optional when using a custom adapter that doesn't support
+  refreshing the token
 
 ## [0.22.1] - 2021-04-27
 
 ### Added
 
-- Added ability to use custom adapter for sending/receiving underlying data (e.g. for tests)
+- Added ability to use custom adapter for sending/receiving underlying data
+  (e.g. for tests)
 
 ## [0.22.0] - 2021-03-24
 
@@ -153,16 +175,22 @@ phc.SummaryClinicalCounts.get_data_frame(match="fuzzy", system=["snomed.info", "
 
 ### Added
 
-Added lots of Ocr functionality and a Composition module in the `easy` namespace.
+Added lots of Ocr functionality and a Composition module in the `easy`
+namespace.
 
 - `phc.Ocr.Config` - Create and update PrecisionOCR config within a project
 - `phc.Ocr.Document` - Retrieve PrecisionOCR documents
-- `phc.Ocr.DocumentComposition` - Retrieve metadata by page for PrecisionOCR documents
-- `phc.Ocr.Block` - Retrieve the text and layout metadata from a PrecisionOCR document
-- `phc.Ocr.Suggestion` - Retrieve all permutations of PrecisionOCR medical suggestions
-- `phc.Composition` - Base FHIR class for retrieving Composition resources from the FHIR Search Service
+- `phc.Ocr.DocumentComposition` - Retrieve metadata by page for PrecisionOCR
+  documents
+- `phc.Ocr.Block` - Retrieve the text and layout metadata from a PrecisionOCR
+  document
+- `phc.Ocr.Suggestion` - Retrieve all permutations of PrecisionOCR medical
+  suggestions
+- `phc.Composition` - Base FHIR class for retrieving Composition resources from
+  the FHIR Search Service
 
-Added the ability to create, read, update, and delete using the FHIR DSTU3 API by appending `.DSTU3` to any easy module that supports it.
+Added the ability to create, read, update, and delete using the FHIR DSTU3 API
+by appending `.DSTU3` to any easy module that supports it.
 
 ```python
 phc.Patient.DSTU3.create(...)
@@ -189,14 +217,16 @@ phc.Patient.DSTU3.delete(...)
   - `tools.get` - Gets the default verson or a specific version of a tool
   - `tools.add_version` - Adds a verson to an existing tool
   - `tools.delete` - Deletes the tool or a specific version of a tool
-  - `tools.get_list` - Returns tools from the registry and allows for optional filters
+  - `tools.get_list` - Returns tools from the registry and allows for optional
+    filters
 
 - `Workflows` - A service to manager workflows
 
   - `workflows.run` - Runs a workflow using a provided tool from the registry
   - `workflows.get` - Gets a workflow run
   - `workflows.get_list` - Returns all workflows for a project
-  - `workflows.describe` - Returns a list of the inputs and types the workflow requires to run a tool
+  - `workflows.describe` - Returns a list of the inputs and types the workflow
+    requires to run a tool
 
 - Added filtering by id for all `phc.easy` modules
 
@@ -212,8 +242,10 @@ phc.Observation.get_data_frame(ids=["<value1>", "<value2>"])
 
 ### Fixed
 
-- Genomics modules (`phc.easy`) now handle an out of range date via a warning (and auto-conversion to `NaT`)
-- Setting and retrieving projects now works properly again (Previously, projects were inaccurate or sometimes missing.)
+- Genomics modules (`phc.easy`) now handle an out of range date via a warning
+  (and auto-conversion to `NaT`)
+- Setting and retrieving projects now works properly again (Previously, projects
+  were inaccurate or sometimes missing.)
 
 ## [0.20.0] - 2020-11-19
 
@@ -347,7 +379,9 @@ phc.Condition.get_data_frame(code=["25910003", "30156004"], system="http://snome
 
 ### Changed
 
-- Overhauled `get_codes` to make results more accurate and allow searching by display (See [#93](https://github.com/lifeomic/phc-sdk-py/pull/93) for full discussion)
+- Overhauled `get_codes` to make results more accurate and allow searching by
+  display (See [#93](https://github.com/lifeomic/phc-sdk-py/pull/93) for full
+  discussion)
 
 ```python
 # 1. Get display values and number of records they occur in
@@ -395,7 +429,9 @@ phc.Observation.get_codes("status", sample_size=10)
 
 ### Added
 
-- Paging requests with `all_results=True` now automatically retries to the server with an exponentially smaller batch size on error (`pow(limit, 0.85)`). We can't tell what the error is, but we can retry with a smaller page size.
+- Paging requests with `all_results=True` now automatically retries to the
+  server with an exponentially smaller batch size on error (`pow(limit, 0.85)`).
+  We can't tell what the error is, but we can retry with a smaller page size.
 - Added `page_size` to the easy modules for a custom batch size
 - Added `max_pages` to the easy modules for capping the number of pages returned
 - Added pretty print to FHIR Search Service queries when passing `log=True`
@@ -403,15 +439,18 @@ phc.Observation.get_codes("status", sample_size=10)
 
 ### Fixed
 
-- Properly parse date columns with positive time zones into the local time and time zone
-- Resolved a `KeyError` issue with `coding` where the `valueCodeableConcept` didn't have a system or url
-- Passing `patient_id` / `patient_ids` with a `must` FHIR Search Service query now works as expected
+- Properly parse date columns with positive time zones into the local time and
+  time zone
+- Resolved a `KeyError` issue with `coding` where the `valueCodeableConcept`
+  didn't have a system or url
+- Passing `patient_id` / `patient_ids` with a `must` FHIR Search Service query
+  now works as expected
 
 ### Changed
 
-[BREAKING] The expanded columns have changed to more reflect the location of
-the value. All systems and URLs are separated by `__` and prefixed with either
-`url` or `system`. Here is an example:
+[BREAKING] The expanded columns have changed to more reflect the location of the
+value. All systems and URLs are separated by `__` and prefixed with either `url`
+or `system`. Here is an example:
 
 ```python
 input_dict = [
@@ -478,11 +517,14 @@ assert generic_codeable_to_dict(input_dict) == {
   - ReferralRequest
   - Sequence
   - Specimen
-- Add abstract `Item` class for entities that don't relate to a patient (e.g. Organization and Practitioner)
+- Add abstract `Item` class for entities that don't relate to a patient (e.g.
+  Organization and Practitioner)
 
 ### Changed
 
-All date columns now return two columns--one for the local time (with time zone removed) and one for the time zone offset in hours. Consider the `onsetDateTime` column from BRCA's `Condition` table:
+All date columns now return two columns--one for the local time (with time zone
+removed) and one for the time zone offset in hours. Consider the `onsetDateTime`
+column from BRCA's `Condition` table:
 
 ```
    onsetDateTime.tz       onsetDateTime.local
@@ -506,8 +548,10 @@ Includes more work on the easy modules (imported via `import phc.easy as phc`).
 - Added generic methods on `phc.easy.Query`
   - `get_count_by_field`
   - `get_codes`
-  - `execute_composite_aggregations` (used by `get_count_by_field` and `get_codes`)
-- Added `phc.easy.PatientItem.get_count_by_patient` (Observation, Procedure, Specimen, etc.)
+  - `execute_composite_aggregations` (used by `get_count_by_field` and
+    `get_codes`)
+- Added `phc.easy.PatientItem.get_count_by_patient` (Observation, Procedure,
+  Specimen, etc.)
 
 ```python
 # Example: Get number of procedures by patient
@@ -520,7 +564,8 @@ phc.Procedure.get_count_by_patient()
 # b41f8107-85e1-42c3-b36e-400085799ab5        176
 ```
 
-- Added `phc.easy.PatientItem.get_count_by_field` (Observation, Procedure, Specimen, etc.)
+- Added `phc.easy.PatientItem.get_count_by_field` (Observation, Procedure,
+  Specimen, etc.)
 
 ```python
 # Example: Get count of unique procedure display codes
@@ -533,7 +578,8 @@ phc.Procedure.get_count_by_field("code.coding.display")
 # 3                      simple mastectomy        200
 ```
 
-- Added `phc.easy.PatientItem.get_codes` (Observation, Procedure, Specimen, etc.)
+- Added `phc.easy.PatientItem.get_codes` (Observation, Procedure, Specimen,
+  etc.)
 
 ```python
 # Example: Get observation codes for specific patients
@@ -554,9 +600,12 @@ phc.Observation.get_codes(patient_ids=[
 ### Changed
 
 - Passing `log` to any PatientItem entities now logs the FSS query being run
-- For aggregations, `phc.Query.execute_fhir_dsl` now returns a `FhirAggregation` if an aggregation is specified in the query
-- `phc.Query.execute_fhir_dsl_with_options` now caches aggregation queries in JSON format
-- Specifying `patient_id` and/or `patient_ids` is now properly supported with a custom FHIR query.
+- For aggregations, `phc.Query.execute_fhir_dsl` now returns a `FhirAggregation`
+  if an aggregation is specified in the query
+- `phc.Query.execute_fhir_dsl_with_options` now caches aggregation queries in
+  JSON format
+- Specifying `patient_id` and/or `patient_ids` is now properly supported with a
+  custom FHIR query.
 
 ```python
 # Example: Get observations tagged with loinc for a specific patient
@@ -592,7 +641,8 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 - Add `Query` for scrolling through FHIR Search Service (FSS) data
 - Add `Frame` for expanding columns that contain FHIR data and parsing dates
 - Add `APICache` for auto-caching results from easy modules
-- Add `CSVWriter` for intelligently writing batches O(1) without having memory grow
+- Add `CSVWriter` for intelligently writing batches O(1) without having memory
+  grow
 - Includes `Project`, `Patient`, `Observation`, `Procedure`, `Condition`,
   `Goal`, and `Specimen`
 
@@ -634,7 +684,8 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 
 ### Added
 
-- Added the `trust_env` parameter to all service classes to enable http proxy support.
+- Added the `trust_env` parameter to all service classes to enable http proxy
+  support.
 
 ## [0.10.0] - 2020-03-10
 
@@ -664,37 +715,46 @@ phc.Observation.get_data_frame(patient_id="<id>", query_overrides={
 
 ### Changed
 
-- In `Analytics.load_data_lake_result_to_dataframe` increased the amount of time it takes to wait for a results file.
+- In `Analytics.load_data_lake_result_to_dataframe` increased the amount of time
+  it takes to wait for a results file.
 
 ## [0.8.0] - 2019-11-25
 
 ### Added
 
-- Added `Analytics.list_data_lake_schemas` to fetch the schemas of each data lake table.
-- Added `Analytics.get_data_lake_schema` to fetch the schema of a single data lake table.
-- Added `Analytics.execute_data_lake_query_to_dataframe` to execute a data lake query and load the results to a Pandas dataframe.
-- Added `Analytics.load_data_lake_result_to_dataframe` to load the results of a previously executed data lake query to a Pandas dataframe.
+- Added `Analytics.list_data_lake_schemas` to fetch the schemas of each data
+  lake table.
+- Added `Analytics.get_data_lake_schema` to fetch the schema of a single data
+  lake table.
+- Added `Analytics.execute_data_lake_query_to_dataframe` to execute a data lake
+  query and load the results to a Pandas dataframe.
+- Added `Analytics.load_data_lake_result_to_dataframe` to load the results of a
+  previously executed data lake query to a Pandas dataframe.
 - Added `Files.exists` to check if a file exists.
 
 ## [0.7.1] - 2019-11-21
 
 ### Fixed
 
-- Fixed issue with `Files.download` to create target directories if they do not exist.
+- Fixed issue with `Files.download` to create target directories if they do not
+  exist.
 
 ## [0.7.0] - 2019-11-20
 
 ### Added
 
 - Added optional `pandas` setup install
-- Added `ApiResponse.get_as_dataframe` to return a response item as a Pandas DataFrame.
+- Added `ApiResponse.get_as_dataframe` to return a response item as a Pandas
+  DataFrame.
 
 ## [0.6.0] - 2019-11-01
 
 ### Added
 
-- Added the `phc.services.Files` submodule that provides actions for files in PHC projects.
-- Added the `phc.services.Cohorts` submodule that provides actions for files in PHC cohorts.
+- Added the `phc.services.Files` submodule that provides actions for files in
+  PHC projects.
+- Added the `phc.services.Cohorts` submodule that provides actions for files in
+  PHC cohorts.
 
 [0.23.2]: https://github.com/lifeomic/phc-sdk-py/compare/v0.23.1...v0.23.2
 [0.23.1]: https://github.com/lifeomic/phc-sdk-py/compare/v0.23.0...v0.23.1
