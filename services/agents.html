@@ -39,7 +39,9 @@ class Agents(BaseClient):
     def invoke_basic(self, body: Union[str, List[Dict]]):
         &#34;&#34;&#34;
         Invokes a basic agent, which supports either a basic prompt string or a list of
-        messages which can include images as data urls.
+        messages which can include images as data urls. Requires the `invokeAgent` ABAC
+        permission with `agent: &#34;api-basic-agent&#34;` in the policy, or the `accessAdmin`
+        permission.
         &#34;&#34;&#34;
         return self._api_call(
             &#34;/v1/agents/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
@@ -73,7 +75,9 @@ class Agents(BaseClient):
     def invoke_basic(self, body: Union[str, List[Dict]]):
         &#34;&#34;&#34;
         Invokes a basic agent, which supports either a basic prompt string or a list of
-        messages which can include images as data urls.
+        messages which can include images as data urls. Requires the `invokeAgent` ABAC
+        permission with `agent: &#34;api-basic-agent&#34;` in the policy, or the `accessAdmin`
+        permission.
         &#34;&#34;&#34;
         return self._api_call(
             &#34;/v1/agents/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
@@ -90,7 +94,9 @@ class Agents(BaseClient):
 </code></dt>
 <dd>
 <div class="desc"><p>Invokes a basic agent, which supports either a basic prompt string or a list of
-messages which can include images as data urls.</p></div>
+messages which can include images as data urls. Requires the <code>invokeAgent</code> ABAC
+permission with <code>agent: "api-basic-agent"</code> in the policy, or the <code>accessAdmin</code>
+permission.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -98,7 +104,9 @@ messages which can include images as data urls.</p></div>
 <pre><code class="python">def invoke_basic(self, body: Union[str, List[Dict]]):
     &#34;&#34;&#34;
     Invokes a basic agent, which supports either a basic prompt string or a list of
-    messages which can include images as data urls.
+    messages which can include images as data urls. Requires the `invokeAgent` ABAC
+    permission with `agent: &#34;api-basic-agent&#34;` in the policy, or the `accessAdmin`
+    permission.
     &#34;&#34;&#34;
     return self._api_call(
         &#34;/v1/agents/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
