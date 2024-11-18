@@ -10,7 +10,9 @@ class Agents(BaseClient):
     def invoke_basic(self, body: Union[str, List[Dict]]):
         """
         Invokes a basic agent, which supports either a basic prompt string or a list of
-        messages which can include images as data urls.
+        messages which can include images as data urls. Requires the `invokeAgent` ABAC
+        permission with `agent: "api-basic-agent"` in the policy, or the `accessAdmin`
+        permission.
         """
         return self._api_call(
             "/v1/agents/basic/invoke", json={"input": body}, http_verb="POST"
