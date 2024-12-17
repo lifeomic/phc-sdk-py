@@ -5,12 +5,6 @@ from pydantic import Field, constr
 from phc.easy.abstract.paging_api_item import PagingApiOptions
 from phc.easy.omics.options.common import GenomicVariantInclude
 
-EXPRESSION = constr(
-    regex=r"^(\d+(\.\d+)?\-\d+(\.\d+)?|[\>\<]\=\s?\d+(\.\d+)?|\d+(\.\d+)?:(lte|gte))$"
-)
-
-ORDER_BY = constr(regex=r"^expression(:desc)?$")
-
 MAPPINGS = {
     "variant_set_ids": "rnaQuantificationSetIds",
     "outlier_std_dev": "outlierStdDev",
@@ -22,11 +16,11 @@ MAPPINGS = {
 class GenomicExpressionOptions(PagingApiOptions):
     """Options to pass to `/v1/genomics/expressions`"""
 
-    variant_set_ids: List[str] = Field(..., min_items=1)
+    variant_set_ids: List[str] = Field(..., min_length=1)
     include: List[GenomicVariantInclude] = []
     gene: List[str] = []
-    expression: Optional[EXPRESSION] = None
-    order_by: Optional[ORDER_BY] = None
+    expression: Optional[str] = Field(None, pattern=r"^(\d+(\.\d+)?-\d+(\.\d+)?|[><]=\s?\d+(\.\d+)?|\d+(\.\d+)?:(lte|gte))$")
+    order_by: Optional[str] = Field(None, pattern=r"^expression(:desc)?$")
     in_ckb: Optional[bool] = None
     # TODO: Fill out allowed options for this parameter
     outlier_std_dev: Optional[str] = None

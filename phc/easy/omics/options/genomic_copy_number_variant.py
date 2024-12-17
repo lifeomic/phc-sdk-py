@@ -16,7 +16,7 @@ MAPPINGS = {
 class GenomicCopyNumberVariantOptions(PagingApiOptions):
     """Options to pass to `/v1/genomics/copy-numbers`"""
 
-    variant_set_ids: List[str] = Field(..., min_items=1)
+    variant_set_ids: List[str] = Field(..., min_length=1)
     include: List[GenomicVariantInclude] = []
     gene: List[str] = []
     interpretation: List[str] = []

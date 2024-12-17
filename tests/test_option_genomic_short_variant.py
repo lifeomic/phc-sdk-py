@@ -29,7 +29,7 @@ def test_transforms_cosmic_min_count():
 def test_min_allele_frequency_range():
     result = GenomicShortVariantOptions(
         variant_set_ids=[str(uuid4())], min_allele_frequency="0.0002-0.1"
-    ).dict()
+    ).model_dump()
 
     assert result.get("minAlleleFrequency") == "0.0002-0.1"
 

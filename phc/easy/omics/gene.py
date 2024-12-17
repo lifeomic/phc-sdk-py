@@ -19,9 +19,9 @@ class Gene:
 
         if "alias" in frame.columns:
             frame["alias"] = frame.alias.apply(
-                lambda aliases: ",".join(aliases)
-                if isinstance(aliases, list)
-                else None
+                lambda aliases: (
+                    ",".join(aliases) if isinstance(aliases, list) else None
+                )
             )
 
         # We choose to not expand topCancerDrivers and cancerDrivers since it

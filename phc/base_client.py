@@ -1,4 +1,5 @@
 """A Python module for a base PHC web client."""
+
 import asyncio
 import platform
 import sys

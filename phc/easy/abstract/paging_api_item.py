@@ -17,8 +17,8 @@ class PagingApiOptions(BaseModel):
     def transform(key, value):
         return (key, value)
 
-    def dict(self):
-        raw = super().dict()
+    def model_dump(self):
+        raw = super().model_dump()
 
         def preprocess_value(v):
             if isinstance(v, Enum):
@@ -68,7 +68,7 @@ class PagingApiItem:
     @classmethod
     def process_params(cls, params: dict) -> dict:
         "Validates and transforms the API query parameters"
-        return cls.params_class()(**params).dict()
+        return cls.params_class()(**params).model_dump()
 
     @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):

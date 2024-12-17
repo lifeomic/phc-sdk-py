@@ -12,8 +12,8 @@ from phc.easy.abstract.paging_api_item import PagingApiOptions
 from pydantic import Field, constr
 
 RS_ID = r"^rs(\d+)$"
-NUM_DECIMAL_RANGE = constr(regex=r"^\d+(\.\d+)?\-\d+(\.\d+)?$")
-NUM_RANGE = constr(regex=r"^(\d+\-\d+|\d+)$")
+NUM_DECIMAL_RANGE = constr(pattern=r"^\d+(\.\d+)?\-\d+(\.\d+)?$")
+NUM_RANGE = constr(pattern=r"^(\d+\-\d+|\d+)$")
 
 MAPPINGS = {
     "variant_set_ids": "variantSetIds",
@@ -68,10 +68,10 @@ class GenomicShortVariantOptions(PagingApiOptions):
     # - Combined In Silico Prediction
     # - Individual In Silico Predictors
 
-    variant_set_ids: List[str] = Field(..., min_items=1)
+    variant_set_ids: List[str] = Field(..., min_length=1)
     include: List[GenomicVariantInclude] = ["vcf"]
     gene: List[str] = []
-    rs_id: List[constr(regex=RS_ID)] = []
+    rs_id: List[constr(pattern=RS_ID)] = []
     chromosome: List[Chromosome] = []
     clinvar_allele_id: List[str] = []
     clinvar_disease: List[str] = []
@@ -114,7 +114,7 @@ class GenomicShortVariantOptions(PagingApiOptions):
     alt_read_depth: List[str] = []
     ref_read_depth: List[str] = []
     variant_filter: List[str] = []
-    in_ckb: Optional[bool]
+    in_ckb: Optional[bool] = None
 
     @staticmethod
     def transform(key, value):

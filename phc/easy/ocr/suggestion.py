@@ -197,16 +197,19 @@ def expand_nested_array_column(df: pd.DataFrame, key: str, lprefix=""):
 
     expanded = pd.concat(
         df.apply(
-            lambda x: pd.concat(
-                [
-                    pd.DataFrame(
-                        [{"index": x.name, "_item": i, **v} for v in array]
-                    )
-                    for i, array in enumerate(x[key])
-                ]
-            )
-            # pd.concat does not like an empty array so we avoid that situation
-            if x[key] != [] else pd.DataFrame(),
+            lambda x: (
+                pd.concat(
+                    [
+                        pd.DataFrame(
+                            [{"index": x.name, "_item": i, **v} for v in array]
+                        )
+                        for i, array in enumerate(x[key])
+                    ]
+                )
+                # pd.concat does not like an empty array so we avoid that situation
+                if x[key] != []
+                else pd.DataFrame()
+            ),
             axis=1,
         ).values
     ).add_prefix(lprefix)
