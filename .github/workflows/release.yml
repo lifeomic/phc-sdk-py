@@ -29,8 +29,8 @@ jobs:
 
       - name: Publish to PyPi
         env:
-          TWINE_USERNAME: ${{ secrets.LIFEOMIC_PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.LIFEOMIC_PYPI_TOKEN }}
+          POETRY_HTTP_BASIC_PYPI_USERNAME: ${{ secrets.LIFEOMIC_PYPI_USERNAME }}
+          POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.LIFEOMIC_PYPI_TOKEN }}
         run: |
           ./publish.sh
       - name: Deploy Docs
