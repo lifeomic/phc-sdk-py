@@ -125,12 +125,10 @@ class Config(BaseModel):
 
 
 class OcrConfigPayload(BaseModel):
-    project: constr(
-        regex=r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+    project: str = Field(
+        pattern=r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
         min_length=36,
         max_length=36,
-    ) = Field(
-        ...,
         examples=["e97e27d3-f553-432a-bde1-7ae3d3ba5078"],
         title="Project Id",
     )

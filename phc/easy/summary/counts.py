@@ -22,9 +22,11 @@ class SummaryCounts(PagingApiItem):
     def response_to_items(data):
         squashed = first(pd.json_normalize(data).to_dict("records")) or {}
         return lmapcat(
-            lambda k: [{"summary": k, **v} for v in squashed[k]]
-            if isinstance(squashed[k], list)
-            else [],
+            lambda k: (
+                [{"summary": k, **v} for v in squashed[k]]
+                if isinstance(squashed[k], list)
+                else []
+            ),
             squashed.keys(),
         )
 

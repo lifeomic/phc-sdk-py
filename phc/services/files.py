@@ -69,9 +69,11 @@ class Files(BaseClient):
             res = self._api_call(
                 "uploads",
                 json={
-                    "name": file_name
-                    if file_name is not None
-                    else os.path.basename(source),
+                    "name": (
+                        file_name
+                        if file_name is not None
+                        else os.path.basename(source)
+                    ),
                     "datasetId": project_id,
                     "overwrite": overwrite,
                 },
@@ -112,9 +114,11 @@ class Files(BaseClient):
             res = self._api_call(
                 "files",
                 json={
-                    "name": file_name
-                    if file_name is not None
-                    else os.path.basename(source),
+                    "name": (
+                        file_name
+                        if file_name is not None
+                        else os.path.basename(source)
+                    ),
                     "datasetId": project_id,
                     "overwrite": overwrite,
                 },

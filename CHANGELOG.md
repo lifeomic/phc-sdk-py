@@ -8,6 +8,19 @@ and this project adheres to
 
 _(NOTE: All examples use fictitious data or freely available data sets.)_
 
+## [1.0.0] - 2024-12-17
+
+### Removed
+
+- Support for Python 3.8 has been dropped, since 3.8 has reached end-of-life:
+  https://devguide.python.org/versions/
+
+### Changed
+
+- This project now uses `pydantic` v2 instead of v1.
+- **BREAKING**: `PagingApiOptions.dict()` has been renamed to
+  `PagingApiOptions.model_dump()`.
+
 ## [0.36.0] - 2024-11-15
 
 ### Added

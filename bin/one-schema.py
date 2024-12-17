@@ -8,13 +8,13 @@ from tempfile import NamedTemporaryFile
 import boto3
 from fire import Fire
 from datamodel_code_generator import (
+    DataModelType,
     InputFileType,
     LiteralType,
     OpenAPIScope,
     PythonVersion,
     generate,
 )
-from datamodel_code_generator import DataModelType
 
 
 def fetch_remote_schema(*, source: str, output: str):
@@ -65,7 +65,7 @@ def _generate_data_models(schema_path: str) -> str:
                 OpenAPIScope.Parameters,
             ],
             # Format of the types generated.
-            output_model_type=DataModelType.PydanticBaseModel,
+            output_model_type=DataModelType.PydanticV2BaseModel,
             target_python_version=PythonVersion.PY_38,
             # Copy doc strings into the source code.
             use_schema_description=True,

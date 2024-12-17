@@ -3,7 +3,7 @@
   "info": {
     "title": "Patient ML",
     "description": "Enables training, evaluating, and deploying Machine Learning models on your data stored in the LifeOmic Platform.",
-    "version": "234"
+    "version": "238"
   },
   "components": {
     "schemas": {

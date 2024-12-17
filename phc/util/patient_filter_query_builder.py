@@ -1,6 +1,7 @@
 """
 Query builder class to make subject search queries.
 """
+
 from abc import abstractmethod
 
 
@@ -39,9 +40,9 @@ class QueryProperty(BaseQueryBuilder):
             for value in values:
                 components.append({"operator": operator, "value": value})
 
-        self.component_body[
-            self.__global_handler.__func__.func_name
-        ] = components
+        self.component_body[self.__global_handler.__func__.func_name] = (
+            components
+        )
         return self
 
     def to_dict(self):
@@ -102,9 +103,9 @@ class QueryObservationProperty(QueryProperty):
                         component_values.append(value.to_dict())
                     component_body_dict["components"] = component_values
                 else:
-                    component_body_dict[
-                        "components"
-                    ] = value_or_values.to_dict()
+                    component_body_dict["components"] = (
+                        value_or_values.to_dict()
+                    )
             else:
                 component_body_dict[key] = value_or_values
         return component_body_dict

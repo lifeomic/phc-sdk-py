@@ -297,9 +297,11 @@ class Query:
         )
 
         results = with_progress(
-            lambda: (progress if progress is not None else tqdm())
-            if show_progress
-            else None,
+            lambda: (
+                (progress if progress is not None else tqdm())
+                if show_progress
+                else None
+            ),
             lambda progress: recursive_paging_api_call(
                 path,
                 params=params,
@@ -499,21 +501,25 @@ class Query:
                 ]
             )
             .pipe(
-                lambda df: df
-                if len(df) == 0 or display_query is None
-                # Poor man's way to filter only matching codes (since Elasticsearch
-                # returns records which will include other codes)
-                else df[
-                    df["display"]
-                    .str.lower()
-                    .str.contains(display_query.lower())
-                ]
+                lambda df: (
+                    df
+                    if len(df) == 0 or display_query is None
+                    # Poor man's way to filter only matching codes (since Elasticsearch
+                    # returns records which will include other codes)
+                    else df[
+                        df["display"]
+                        .str.lower()
+                        .str.contains(display_query.lower())
+                    ]
+                )
             )
             .pipe(
-                lambda df: pd.DataFrame()
-                if len(df) == 0
-                else df.sort_values("doc_count", ascending=False).reset_index(
-                    drop=True
+                lambda df: (
+                    pd.DataFrame()
+                    if len(df) == 0
+                    else df.sort_values(
+                        "doc_count", ascending=False
+                    ).reset_index(drop=True)
                 )
             )
         )

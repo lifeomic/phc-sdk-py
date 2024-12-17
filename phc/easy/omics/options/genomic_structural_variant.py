@@ -14,7 +14,7 @@ MAPPINGS = {
 
 
 class GenomicStructuralVariantOptions(PagingApiOptions):
-    variant_set_ids: List[str] = Field(..., min_items=1)
+    variant_set_ids: List[str] = Field(..., min_length=1)
     gene: List[str] = []
     effect: List[StructuralType] = []
     interpretation: List[str] = []

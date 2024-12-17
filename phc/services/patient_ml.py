@@ -9,11 +9,13 @@ from phc.base_client import BaseClient
 
 from typing import List, Literal, Optional, Union
 
-from pydantic import BaseModel, Extra, Field
+from pydantic import BaseModel, ConfigDict, Field, RootModel
 
 
 class LabelDefinitionBase(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     id: Optional[str] = None
     """
     UUID uniquely identifying this label.
@@ -34,12 +36,16 @@ class LabelDefinition(LabelDefinitionBase):
 
 
 class LabelsDefinitionInput(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     labels: List[LabelDefinitionBase]
 
 
 class LabelsDefinition(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     labels: List[LabelDefinition]
     maxLabelIndex: int = Field(..., ge=-1, le=255)
     """
@@ -48,12 +54,16 @@ class LabelsDefinition(BaseModel):
 
 
 class ClassificationProblemInput(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     labelDefinition: LabelsDefinitionInput
 
 
 class ClassificationProblem(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     labelDefinition: LabelsDefinition
 
 
@@ -62,6 +72,9 @@ class ImageSegmentationArea(BaseModel):
     A run-length encoded (RLE) 4 channel color image, representing the mask for a single label.
     """
 
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     id: str
     """
     The ID of the label this mask is for.
@@ -77,6 +90,9 @@ class ImageSegmentationLabelData(BaseModel):
     A raw image segmentation, in the format LabelStudio provides.
     """
 
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     labelType: Literal["imgSeg"]
     projectId: str
     """
@@ -93,22 +109,26 @@ class ImageSegmentationLabelData(BaseModel):
     areas: List[ImageSegmentationArea]
 
 
-class LabelFileData(BaseModel):
-    __root__: ImageSegmentationLabelData
+class LabelFileData(RootModel[ImageSegmentationLabelData]):
+    root: ImageSegmentationLabelData
 
 
 class Tag(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     name: str
     value: str
 
 
-class Tags(BaseModel):
-    __root__: List[Tag]
+class Tags(RootModel[List[Tag]]):
+    root: List[Tag]
 
 
 class LabelBase(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     isConfirmed: Optional[bool] = None
     """
     A confirmed label is believed to be correct and may be used during training and evaluation.
@@ -129,6 +149,9 @@ class Mask(BaseModel):
     The fileId of an image containing per-pixel labels
     """
 
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     fileId: str
 
 
@@ -148,12 +171,14 @@ class ImageClassificationLabel(LabelBase):
     """
 
 
-class Label(BaseModel):
-    __root__: Union[ImageSegmentationLabel, ImageClassificationLabel]
+class Label(RootModel[Union[ImageSegmentationLabel, ImageClassificationLabel]]):
+    root: Union[ImageSegmentationLabel, ImageClassificationLabel]
 
 
 class ExampleBase(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     id: str
     updatedAt: float
     """
@@ -162,7 +187,9 @@ class ExampleBase(BaseModel):
 
 
 class Image(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     fileId: str
 
 
@@ -178,8 +205,10 @@ class ImageClassificationExample(ExampleBase):
     label: Optional[ImageClassificationLabel] = None
 
 
-class Example(BaseModel):
-    __root__: Union[ImageSegmentationExample, ImageClassificationExample]
+class Example(
+    RootModel[Union[ImageSegmentationExample, ImageClassificationExample]]
+):
+    root: Union[ImageSegmentationExample, ImageClassificationExample]
 
 
 class FhirCodesFilter(BaseModel):
@@ -187,23 +216,30 @@ class FhirCodesFilter(BaseModel):
     Used to find FHIR resources containing a type code that equals any value in the codes array
     """
 
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     filterType: Literal["FhirCodesFilter"]
-    codes: List[str] = Field(..., max_items=10, min_items=1)
+    codes: List[str] = Field(..., max_length=10, min_length=1)
 
 
 class CategoricalParameterSpace(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     type: Literal["categorical"]
     name: str
     values: List[str]
 
 
-class NumericScale(BaseModel):
-    __root__: Literal["auto", "linear", "log", "reverseLog"]
+class NumericScale(RootModel[Literal["auto", "linear", "log", "reverseLog"]]):
+    root: Literal["auto", "linear", "log", "reverseLog"]
 
 
 class NumericParameterSpace(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     name: str
     min: float
     max: float
@@ -218,20 +254,30 @@ class IntegerParameterSpace(NumericParameterSpace):
     type: Literal["integer"]
 
 
-class ParameterSpace(BaseModel):
-    __root__: Union[
+class ParameterSpace(
+    RootModel[
+        Union[
+            CategoricalParameterSpace,
+            ContinuousParameterSpace,
+            IntegerParameterSpace,
+        ]
+    ]
+):
+    root: Union[
         CategoricalParameterSpace,
         ContinuousParameterSpace,
         IntegerParameterSpace,
     ]
 
 
-class OptimizationDirection(BaseModel):
-    __root__: Literal["minimize", "maximize"]
+class OptimizationDirection(RootModel[Literal["minimize", "maximize"]]):
+    root: Literal["minimize", "maximize"]
 
 
 class OptimizationObjective(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     direction: OptimizationDirection
     metric: str
 
@@ -241,16 +287,21 @@ class MetricDefinition(BaseModel):
     Camel-cased mirror of https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_MetricDefinition.html.
     """
 
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     name: str
     regex: str
 
 
 class TuningJobTrainingApproach(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     type: Literal["tuningJob"]
     trainingImage: str = Field(
         ...,
-        regex="^[0-9]+\\.dkr.ecr.[-a-z0-9]+\\.amazonaws\\.com\\/[-_a-zA-Z0-9]+:[-_a-zA-Z0-9]+$",
+        pattern="^[0-9]+\\.dkr.ecr.[-a-z0-9]+\\.amazonaws\\.com\\/[-_a-zA-Z0-9]+:[-_a-zA-Z0-9]+$",
     )
     """
     An aws ecr image uri of the form <account-id>.dkr.ecr.<region>.amazonaws.com/<repo-name>:<tag>
@@ -274,15 +325,17 @@ class TuningJobTrainingApproach(BaseModel):
     """
 
 
-class TrainingApproach(BaseModel):
-    __root__: TuningJobTrainingApproach
+class TrainingApproach(RootModel[TuningJobTrainingApproach]):
+    root: TuningJobTrainingApproach
 
 
 class DeployApproachBase(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     inferenceImage: str = Field(
         ...,
-        regex="^[0-9]+\\.dkr.ecr.[-a-z0-9]+\\.amazonaws\\.com\\/[-_a-zA-Z0-9]+:[-_a-zA-Z0-9]+$",
+        pattern="^[0-9]+\\.dkr.ecr.[-a-z0-9]+\\.amazonaws\\.com\\/[-_a-zA-Z0-9]+:[-_a-zA-Z0-9]+$",
     )
     """
     An aws ecr image uri of the form <account-id>.dkr.ecr.<region>.amazonaws.com/<repo-name>:<tag>
@@ -297,18 +350,22 @@ class CloudDeployApproach(DeployApproachBase):
     type: Literal["cloud"]
 
 
-class DeployApproach(BaseModel):
-    __root__: Union[EdgeDeployApproach, CloudDeployApproach]
+class DeployApproach(RootModel[Union[EdgeDeployApproach, CloudDeployApproach]]):
+    root: Union[EdgeDeployApproach, CloudDeployApproach]
 
 
 class DatasetConfigBase(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     name: str
     description: str
 
 
 class ModelConfigBase(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     name: str
     description: str
     trainingApproach: TrainingApproach
@@ -336,7 +393,9 @@ class ModelConfig(ModelConfigBase):
 
 
 class Metric(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     name: str
     """
     The name of the metric e.g. "Cross Entopy Loss", "Accuracy", "F1 Macro", etc.
@@ -356,12 +415,14 @@ class Metric(BaseModel):
     """
 
 
-class ApprovalChoice(BaseModel):
-    __root__: Literal["approved", "rejected"]
+class ApprovalChoice(RootModel[Literal["approved", "rejected"]]):
+    root: Literal["approved", "rejected"]
 
 
 class ApprovalDecisionInput(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     description: Optional[str] = None
     """
     Reasoning, justification, or other notes to associate with the decision.
@@ -385,12 +446,16 @@ class UserApprovalDecision(ApprovalDecisionBase):
     user: str
 
 
-class ApprovalDecision(BaseModel):
-    __root__: Union[SystemApprovalDecision, UserApprovalDecision]
+class ApprovalDecision(
+    RootModel[Union[SystemApprovalDecision, UserApprovalDecision]]
+):
+    root: Union[SystemApprovalDecision, UserApprovalDecision]
 
 
 class RunMetrics(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     challenger: List[Metric]
     """
     Metrics about how the model version trained in this run (the challenger) performed on this run's test set.
@@ -406,6 +471,9 @@ class Parameter(BaseModel):
     A hyperparameter value. The values themselves are represented as strings.
     """
 
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     name: str
     value: str
 
@@ -415,6 +483,9 @@ class LogEvent(BaseModel):
     An event logged by some component of a model run, as well as metadata about the log event.
     """
 
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     type: Literal["logEntry"]
     timestamp: float
     """
@@ -431,7 +502,9 @@ class LogEvent(BaseModel):
 
 
 class ImageSegmentationPredictionRequest(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     predictionType: Literal["imgSeg"]
     """
     The type of prediction requested. This must be the same as the problem type in your model config.
@@ -443,7 +516,9 @@ class ImageSegmentationPredictionRequest(BaseModel):
 
 
 class ImageClassificationPredictionRequest(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     predictionType: Literal["imgClf"]
     """
     The type of prediction requested. This must be the same as the problem type in your model config.
@@ -454,14 +529,23 @@ class ImageClassificationPredictionRequest(BaseModel):
     """
 
 
-class PredictionRequest(BaseModel):
-    __root__: Union[
+class PredictionRequest(
+    RootModel[
+        Union[
+            ImageSegmentationPredictionRequest,
+            ImageClassificationPredictionRequest,
+        ]
+    ]
+):
+    root: Union[
         ImageSegmentationPredictionRequest, ImageClassificationPredictionRequest
     ]
 
 
 class ImageClassificationPrediction(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     index: int
     """
     The index of a classification label.
@@ -477,7 +561,9 @@ class ImageClassificationPrediction(BaseModel):
 
 
 class ImageClassificationPredictionResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     predictionType: Literal["imgClf"]
     predictions: List[ImageClassificationPrediction]
     """
@@ -485,27 +571,35 @@ class ImageClassificationPredictionResponse(BaseModel):
     """
 
 
-class PredictionResponse(BaseModel):
-    __root__: ImageClassificationPredictionResponse
+class PredictionResponse(RootModel[ImageClassificationPredictionResponse]):
+    root: ImageClassificationPredictionResponse
 
 
 class CreateModelResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     model: ModelConfig
 
 
 class GetModelsResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     models: List[ModelConfig]
 
 
 class UpdateModelResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     model: ModelConfig
 
 
 class DeleteModelResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     id: str
     """
     The id of the model that was deleted.
@@ -513,12 +607,16 @@ class DeleteModelResponse(BaseModel):
 
 
 class GetModelResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     model: Optional[ModelConfig] = None
 
 
 class CreateRunResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     runId: str
     """
     The id of the newly created run. Can be used to fetch data about the run.
@@ -526,7 +624,9 @@ class CreateRunResponse(BaseModel):
 
 
 class GetModelArtifactResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     url: str
 
 
@@ -546,7 +646,9 @@ class GetModelLogsParams(BaseModel):
 
 
 class GetModelLogsResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     events: List[LogEvent]
     marker: Optional[str] = None
     """
@@ -555,12 +657,16 @@ class GetModelLogsResponse(BaseModel):
 
 
 class CreateApprovalDecisionResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     approvalDecision: UserApprovalDecision
 
 
 class DeleteDatasetResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     id: str
     """
     The id of the dataset that was deleted.
@@ -580,7 +686,9 @@ class GetDatasetExamplesParams(BaseModel):
 
 
 class GetDatasetExamplesResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     examples: List[Example]
     marker: Optional[str] = None
     """
@@ -594,17 +702,23 @@ class GetDatasetExampleParams(BaseModel):
 
 
 class GetDatasetExampleResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     example: Optional[Example] = None
 
 
 class GetDatasetLabelFileResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     labelData: Optional[LabelFileData] = None
 
 
 class PutDatasetLabelFileResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     fileId: str
     """
     The id of the file-service file the label file was saved to.
@@ -612,7 +726,9 @@ class PutDatasetLabelFileResponse(BaseModel):
 
 
 class ImageSegmentationProblemBase(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     problemType: Literal["imgSeg"]
     trainingDataFilter: FhirCodesFilter
     """
@@ -633,7 +749,9 @@ class ImageSegmentationProblem(
 
 
 class ImageClassificationProblemBase(BaseModel):
-
+    model_config = ConfigDict(
+        extra="allow",
+    )
     problemType: Literal["imgClf"]
     trainingDataFilter: FhirCodesFilter
     """
@@ -653,14 +771,18 @@ class ImageClassificationProblem(
     pass
 
 
-class MlProblemDefinitionInput(BaseModel):
-    __root__: Union[
-        ImageSegmentationProblemInput, ImageClassificationProblemInput
+class MlProblemDefinitionInput(
+    RootModel[
+        Union[ImageSegmentationProblemInput, ImageClassificationProblemInput]
     ]
+):
+    root: Union[ImageSegmentationProblemInput, ImageClassificationProblemInput]
 
 
-class MlProblemDefinition(BaseModel):
-    __root__: Union[ImageSegmentationProblem, ImageClassificationProblem]
+class MlProblemDefinition(
+    RootModel[Union[ImageSegmentationProblem, ImageClassificationProblem]]
+):
+    root: Union[ImageSegmentationProblem, ImageClassificationProblem]
 
 
 class DatasetConfigInput(DatasetConfigBase):
@@ -677,7 +799,9 @@ class DatasetConfig(DatasetConfigBase):
 
 
 class ModelRun(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     id: str
     """
     UUID uniquely identifying this model run.
@@ -736,32 +860,44 @@ class ModelRun(BaseModel):
 
 
 class GetRunsResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     runs: List[ModelRun]
 
 
 class GetRunResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     run: Optional[ModelRun] = None
 
 
 class CreateDatasetResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     dataset: DatasetConfig
 
 
 class GetDatasetsResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     datasets: List[DatasetConfig]
 
 
 class UpdateDatasetResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     dataset: DatasetConfig
 
 
 class GetDatasetResponse(BaseModel):
-
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     dataset: Optional[DatasetConfig] = None
 
 

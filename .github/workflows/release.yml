@@ -10,15 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     environment: pypi
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install poetry
-        run: pipx install poetry==1.5.1
+        run: pipx install poetry==1.8.5
 
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v4
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.8" # pdoc works under this version
+          python-version: "3.9" # pdoc works under this version
           cache: "poetry"
 
       - run: poetry install
