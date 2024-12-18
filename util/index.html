@@ -251,9 +251,9 @@ on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></div
                         component_values.append(value.to_dict())
                     component_body_dict[&#34;components&#34;] = component_values
                 else:
-                    component_body_dict[
-                        &#34;components&#34;
-                    ] = value_or_values.to_dict()
+                    component_body_dict[&#34;components&#34;] = (
+                        value_or_values.to_dict()
+                    )
             else:
                 component_body_dict[key] = value_or_values
         return component_body_dict</code></pre>
@@ -296,9 +296,9 @@ on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></div
                     component_values.append(value.to_dict())
                 component_body_dict[&#34;components&#34;] = component_values
             else:
-                component_body_dict[
-                    &#34;components&#34;
-                ] = value_or_values.to_dict()
+                component_body_dict[&#34;components&#34;] = (
+                    value_or_values.to_dict()
+                )
         else:
             component_body_dict[key] = value_or_values
     return component_body_dict</code></pre>
@@ -396,9 +396,9 @@ on <code>{"foo": "bar"}</code> to be returned on <code>to_dict()</code></p></div
             for value in values:
                 components.append({&#34;operator&#34;: operator, &#34;value&#34;: value})
 
-        self.component_body[
-            self.__global_handler.__func__.func_name
-        ] = components
+        self.component_body[self.__global_handler.__func__.func_name] = (
+            components
+        )
         return self
 
     def to_dict(self):

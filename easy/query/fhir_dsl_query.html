@@ -369,7 +369,7 @@ def build_queries(
 <div class="desc"></div>
 </dd>
 <dt id="phc.easy.query.fhir_dsl_query.build_queries"><code class="name flex">
-<span>def <span class="ident">build_queries</span></span>(<span>query: dict, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], patient_key: str = 'subject.reference', patient_id_prefixes: List[str] = ['Patient/'], page_size: Optional[int] = None, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code_fields: List[str] = [], code: Union[str, List[str], None] = None, display: Union[str, List[str], None] = None, system: Union[str, List[str], None] = None)</span>
+<span>def <span class="ident">build_queries</span></span>(<span>query: dict, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], patient_key: str = 'subject.reference', patient_id_prefixes: List[str] = ['Patient/'], page_size: Optional[int] = None, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code_fields: List[str] = [], code: Union[str, List[str], ForwardRef(None)] = None, display: Union[str, List[str], ForwardRef(None)] = None, system: Union[str, List[str], ForwardRef(None)] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Build query with various options</p>

@@ -46,8 +46,8 @@ class PagingApiOptions(BaseModel):
     def transform(key, value):
         return (key, value)
 
-    def dict(self):
-        raw = super().dict()
+    def model_dump(self):
+        raw = super().model_dump()
 
         def preprocess_value(v):
             if isinstance(v, Enum):
@@ -97,7 +97,7 @@ class PagingApiItem:
     @classmethod
     def process_params(cls, params: dict) -&gt; dict:
         &#34;Validates and transforms the API query parameters&#34;
-        return cls.params_class()(**params).dict()
+        return cls.params_class()(**params).model_dump()
 
     @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
@@ -219,7 +219,7 @@ class PagingApiItem:
     @classmethod
     def process_params(cls, params: dict) -&gt; dict:
         &#34;Validates and transforms the API query parameters&#34;
-        return cls.params_class()(**params).dict()
+        return cls.params_class()(**params).model_dump()
 
     @staticmethod
     def transform_results(data_frame: pd.DataFrame, **expand_args):
@@ -374,7 +374,7 @@ def params_class() -&gt; type:
 <pre><code class="python">@classmethod
 def process_params(cls, params: dict) -&gt; dict:
     &#34;Validates and transforms the API query parameters&#34;
-    return cls.params_class()(**params).dict()</code></pre>
+    return cls.params_class()(**params).model_dump()</code></pre>
 </details>
 </dd>
 <dt id="phc.easy.abstract.paging_api_item.PagingApiItem.resource_path"><code class="name flex">
@@ -428,8 +428,54 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 <span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Create a new model by parsing and validating input data from keyword arguments.</p>
-<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
+<div class="desc"><p>Usage docs: <a href="https://docs.pydantic.dev/2.10/concepts/models/">https://docs.pydantic.dev/2.10/concepts/models/</a></p>
+<p>A base class for creating Pydantic models.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>__class_vars__</code></strong></dt>
+<dd>The names of the class variables defined on the model.</dd>
+<dt><strong><code>__private_attributes__</code></strong></dt>
+<dd>Metadata about the private attributes of the model.</dd>
+<dt><strong><code>__signature__</code></strong></dt>
+<dd>The synthesized <code>__init__</code> [<code>Signature</code>][inspect.Signature] of the model.</dd>
+<dt><strong><code>__pydantic_complete__</code></strong></dt>
+<dd>Whether model building is completed, or if there are still undefined fields.</dd>
+<dt><strong><code>__pydantic_core_schema__</code></strong></dt>
+<dd>The core schema of the model.</dd>
+<dt><strong><code>__pydantic_custom_init__</code></strong></dt>
+<dd>Whether the model has a custom <code>__init__</code> function.</dd>
+<dt><strong><code>__pydantic_decorators__</code></strong></dt>
+<dd>Metadata containing the decorators defined on the model.
+This replaces <code>Model.__validators__</code> and <code>Model.__root_validators__</code> from Pydantic V1.</dd>
+<dt><strong><code>__pydantic_generic_metadata__</code></strong></dt>
+<dd>Metadata for generic models; contains data used for a similar purpose to
+<strong>args</strong>, <strong>origin</strong>, <strong>parameters</strong> in typing-module generics. May eventually be replaced by these.</dd>
+<dt><strong><code>__pydantic_parent_namespace__</code></strong></dt>
+<dd>Parent namespace of the model, used for automatic rebuilding of models.</dd>
+<dt><strong><code>__pydantic_post_init__</code></strong></dt>
+<dd>The name of the post-init method for the model, if defined.</dd>
+<dt><strong><code>__pydantic_root_model__</code></strong></dt>
+<dd>Whether the model is a [<code>RootModel</code>][pydantic.root_model.RootModel].</dd>
+<dt><strong><code>__pydantic_serializer__</code></strong></dt>
+<dd>The <code>pydantic-core</code> <code>SchemaSerializer</code> used to dump instances of the model.</dd>
+<dt><strong><code>__pydantic_validator__</code></strong></dt>
+<dd>The <code>pydantic-core</code> <code>SchemaValidator</code> used to validate instances of the model.</dd>
+<dt><strong><code>__pydantic_fields__</code></strong></dt>
+<dd>A dictionary of field names and their corresponding [<code>FieldInfo</code>][pydantic.fields.FieldInfo] objects.</dd>
+<dt><strong><code>__pydantic_computed_fields__</code></strong></dt>
+<dd>A dictionary of computed field names and their corresponding [<code>ComputedFieldInfo</code>][pydantic.fields.ComputedFieldInfo] objects.</dd>
+<dt><strong><code>__pydantic_extra__</code></strong></dt>
+<dd>A dictionary containing extra values, if [<code>extra</code>][pydantic.config.ConfigDict.extra]
+is set to <code>'allow'</code>.</dd>
+<dt><strong><code>__pydantic_fields_set__</code></strong></dt>
+<dd>The names of fields explicitly set during instantiation.</dd>
+<dt><strong><code>__pydantic_private__</code></strong></dt>
+<dd>Values of private attributes set on the model instance.</dd>
+</dl>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -439,8 +485,8 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
     def transform(key, value):
         return (key, value)
 
-    def dict(self):
-        raw = super().dict()
+    def model_dump(self):
+        raw = super().model_dump()
 
         def preprocess_value(v):
             if isinstance(v, Enum):
@@ -458,7 +504,6 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
@@ -471,6 +516,13 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 <li><a title="phc.easy.summary.counts.NoOptions" href="../summary/counts.html#phc.easy.summary.counts.NoOptions">NoOptions</a></li>
 <li><a title="phc.easy.summary.options.clinical_counts.SummaryClinicalCountsOptions" href="../summary/options/clinical_counts.html#phc.easy.summary.options.clinical_counts.SummaryClinicalCountsOptions">SummaryClinicalCountsOptions</a></li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="phc.easy.abstract.paging_api_item.PagingApiOptions.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Static methods</h3>
 <dl>
 <dt id="phc.easy.abstract.paging_api_item.PagingApiOptions.transform"><code class="name flex">
@@ -490,17 +542,48 @@ def transform(key, value):
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="phc.easy.abstract.paging_api_item.PagingApiOptions.dict"><code class="name flex">
-<span>def <span class="ident">dict</span></span>(<span>self)</span>
+<dt id="phc.easy.abstract.paging_api_item.PagingApiOptions.model_dump"><code class="name flex">
+<span>def <span class="ident">model_dump</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Generate a dictionary representation of the model, optionally specifying which fields to include or exclude.</p></div>
+<div class="desc"><p>Usage docs: <a href="https://docs.pydantic.dev/2.10/concepts/serialization/#modelmodel_dump">https://docs.pydantic.dev/2.10/concepts/serialization/#modelmodel_dump</a></p>
+<p>Generate a dictionary representation of the model, optionally specifying which fields to include or exclude.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mode</code></strong></dt>
+<dd>The mode in which <code>to_python</code> should run.
+If mode is 'json', the output will only contain JSON serializable types.
+If mode is 'python', the output may contain non-JSON-serializable Python objects.</dd>
+<dt><strong><code>include</code></strong></dt>
+<dd>A set of fields to include in the output.</dd>
+<dt><strong><code>exclude</code></strong></dt>
+<dd>A set of fields to exclude from the output.</dd>
+<dt><strong><code>context</code></strong></dt>
+<dd>Additional context to pass to the serializer.</dd>
+<dt><strong><code>by_alias</code></strong></dt>
+<dd>Whether to use the field's alias in the dictionary key if defined.</dd>
+<dt><strong><code>exclude_unset</code></strong></dt>
+<dd>Whether to exclude fields that have not been explicitly set.</dd>
+<dt><strong><code>exclude_defaults</code></strong></dt>
+<dd>Whether to exclude fields that are set to their default value.</dd>
+<dt><strong><code>exclude_none</code></strong></dt>
+<dd>Whether to exclude fields that have a value of <code>None</code>.</dd>
+<dt><strong><code>round_trip</code></strong></dt>
+<dd>If True, dumped values should be valid as input for non-idempotent types such as Json[T].</dd>
+<dt><strong><code>warnings</code></strong></dt>
+<dd>How to handle serialization errors. False/"none" ignores them, True/"warn" logs errors,
+"error" raises a [<code>PydanticSerializationError</code>][pydantic_core.PydanticSerializationError].</dd>
+<dt><strong><code>serialize_as_any</code></strong></dt>
+<dd>Whether to serialize fields with duck-typing serialization behavior.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A dictionary representation of the model.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def dict(self):
-    raw = super().dict()
+<pre><code class="python">def model_dump(self):
+    raw = super().model_dump()
 
     def preprocess_value(v):
         if isinstance(v, Enum):
@@ -559,7 +642,7 @@ def transform(key, value):
 <li>
 <h4><code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions.dict" href="#phc.easy.abstract.paging_api_item.PagingApiOptions.dict">dict</a></code></li>
+<li><code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions.model_dump" href="#phc.easy.abstract.paging_api_item.PagingApiOptions.model_dump">model_dump</a></code></li>
 <li><code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions.transform" href="#phc.easy.abstract.paging_api_item.PagingApiOptions.transform">transform</a></code></li>
 </ul>
 </li>

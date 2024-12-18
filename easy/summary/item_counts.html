@@ -47,7 +47,7 @@ class SummaryItemCounts(PagingApiItem):
 
     @classmethod
     def process_params(cls, params: dict) -&gt; dict:
-        new_params = cls.params_class()(**params).dict()
+        new_params = cls.params_class()(**params).model_dump()
 
         if SummaryClinicalType.has_value(new_params[&#34;summary&#34;]):
             return {**new_params, &#34;summary_type&#34;: &#34;clinical&#34;}
@@ -143,7 +143,7 @@ class SummaryItemCounts(PagingApiItem):
 
     @classmethod
     def process_params(cls, params: dict) -&gt; dict:
-        new_params = cls.params_class()(**params).dict()
+        new_params = cls.params_class()(**params).model_dump()
 
         if SummaryClinicalType.has_value(new_params[&#34;summary&#34;]):
             return {**new_params, &#34;summary_type&#34;: &#34;clinical&#34;}
@@ -315,7 +315,7 @@ def params_class():
 </summary>
 <pre><code class="python">@classmethod
 def process_params(cls, params: dict) -&gt; dict:
-    new_params = cls.params_class()(**params).dict()
+    new_params = cls.params_class()(**params).model_dump()
 
     if SummaryClinicalType.has_value(new_params[&#34;summary&#34;]):
         return {**new_params, &#34;summary_type&#34;: &#34;clinical&#34;}

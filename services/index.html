@@ -1023,7 +1023,7 @@ __pdoc__ = {
 </details>
 </dd>
 <dt id="phc.services.Fhir.es_sql"><code class="name flex">
-<span>def <span class="ident">es_sql</span></span>(<span>self, project_id: str, statement: str, params: List[Dict[~KT, ~VT]] = [], subject_id='') ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">es_sql</span></span>(<span>self, project_id: str, statement: str, params: List[Dict] = [], subject_id='') ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Executes an OpenSearch SQL against fhir-search-service</p>
@@ -1333,9 +1333,11 @@ __pdoc__ = {
             res = self._api_call(
                 &#34;uploads&#34;,
                 json={
-                    &#34;name&#34;: file_name
-                    if file_name is not None
-                    else os.path.basename(source),
+                    &#34;name&#34;: (
+                        file_name
+                        if file_name is not None
+                        else os.path.basename(source)
+                    ),
                     &#34;datasetId&#34;: project_id,
                     &#34;overwrite&#34;: overwrite,
                 },
@@ -1376,9 +1378,11 @@ __pdoc__ = {
             res = self._api_call(
                 &#34;files&#34;,
                 json={
-                    &#34;name&#34;: file_name
-                    if file_name is not None
-                    else os.path.basename(source),
+                    &#34;name&#34;: (
+                        file_name
+                        if file_name is not None
+                        else os.path.basename(source)
+                    ),
                     &#34;datasetId&#34;: project_id,
                     &#34;overwrite&#34;: overwrite,
                 },
@@ -1946,9 +1950,11 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
         res = self._api_call(
             &#34;uploads&#34;,
             json={
-                &#34;name&#34;: file_name
-                if file_name is not None
-                else os.path.basename(source),
+                &#34;name&#34;: (
+                    file_name
+                    if file_name is not None
+                    else os.path.basename(source)
+                ),
                 &#34;datasetId&#34;: project_id,
                 &#34;overwrite&#34;: overwrite,
             },
@@ -1989,9 +1995,11 @@ def download(self, file_id: str, dest_dir: str = os.getcwd()) -&gt; None:
         res = self._api_call(
             &#34;files&#34;,
             json={
-                &#34;name&#34;: file_name
-                if file_name is not None
-                else os.path.basename(source),
+                &#34;name&#34;: (
+                    file_name
+                    if file_name is not None
+                    else os.path.basename(source)
+                ),
                 &#34;datasetId&#34;: project_id,
                 &#34;overwrite&#34;: overwrite,
             },
@@ -3226,7 +3234,7 @@ The ingestion that was created.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = '057d030d-9da1-4b6f-a0d2-32be5ec78e0d', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = 'dcae3619-22f7-4eba-889e-1cc240cb1529', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>

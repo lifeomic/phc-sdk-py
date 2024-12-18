@@ -45,7 +45,7 @@ MAPPINGS = {
 class GenomicCopyNumberVariantOptions(PagingApiOptions):
     &#34;&#34;&#34;Options to pass to `/v1/genomics/copy-numbers`&#34;&#34;&#34;
 
-    variant_set_ids: List[str] = Field(..., min_items=1)
+    variant_set_ids: List[str] = Field(..., min_length=1)
     include: List[GenomicVariantInclude] = []
     gene: List[str] = []
     interpretation: List[str] = []
@@ -80,7 +80,9 @@ class GenomicCopyNumberVariantOptions(PagingApiOptions):
 <dd>
 <div class="desc"><p>Options to pass to <code>/v1/genomics/copy-numbers</code></p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
-<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -88,7 +90,7 @@ class GenomicCopyNumberVariantOptions(PagingApiOptions):
 <pre><code class="python">class GenomicCopyNumberVariantOptions(PagingApiOptions):
     &#34;&#34;&#34;Options to pass to `/v1/genomics/copy-numbers`&#34;&#34;&#34;
 
-    variant_set_ids: List[str] = Field(..., min_items=1)
+    variant_set_ids: List[str] = Field(..., min_length=1)
     include: List[GenomicVariantInclude] = []
     gene: List[str] = []
     interpretation: List[str] = []
@@ -110,7 +112,6 @@ class GenomicCopyNumberVariantOptions(PagingApiOptions):
 <ul class="hlist">
 <li><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -131,6 +132,10 @@ class GenomicCopyNumberVariantOptions(PagingApiOptions):
 <div class="desc"></div>
 </dd>
 <dt id="phc.easy.omics.options.genomic_copy_number_variant.GenomicCopyNumberVariantOptions.interpretation"><code class="name">var <span class="ident">interpretation</span> : List[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="phc.easy.omics.options.genomic_copy_number_variant.GenomicCopyNumberVariantOptions.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -165,15 +170,15 @@ def transform(key, value):
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="phc.easy.omics.options.genomic_copy_number_variant.GenomicCopyNumberVariantOptions.dict"><code class="name flex">
-<span>def <span class="ident">dict</span></span>(<span>self)</span>
+<dt id="phc.easy.omics.options.genomic_copy_number_variant.GenomicCopyNumberVariantOptions.model_dump"><code class="name flex">
+<span>def <span class="ident">model_dump</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions.dict" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions.dict">dict</a></code>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions.model_dump" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions.model_dump">model_dump</a></code>
 </p>
-<div class="desc inherited"><p>Generate a dictionary representation of the model, optionally specifying which fields to include or exclude.</p></div>
+<div class="desc inherited"><p>Usage docs: <a href="https://docs.pydantic.dev/2.10/concepts/serialization/#modelmodel_dump">https://docs.pydantic.dev/2.10/concepts/serialization/#modelmodel_dump</a> …</p></div>
 </dd>
 </dl>
 </dd>
@@ -201,7 +206,7 @@ def transform(key, value):
 <li>
 <h4><code><a title="phc.easy.omics.options.genomic_copy_number_variant.GenomicCopyNumberVariantOptions" href="#phc.easy.omics.options.genomic_copy_number_variant.GenomicCopyNumberVariantOptions">GenomicCopyNumberVariantOptions</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.omics.options.genomic_copy_number_variant.GenomicCopyNumberVariantOptions.dict" href="../../abstract/paging_api_item.html#phc.easy.omics.options.genomic_copy_number_variant.GenomicCopyNumberVariantOptions.dict">dict</a></code></li>
+<li><code><a title="phc.easy.omics.options.genomic_copy_number_variant.GenomicCopyNumberVariantOptions.model_dump" href="../../abstract/paging_api_item.html#phc.easy.omics.options.genomic_copy_number_variant.GenomicCopyNumberVariantOptions.model_dump">model_dump</a></code></li>
 <li><code><a title="phc.easy.omics.options.genomic_copy_number_variant.GenomicCopyNumberVariantOptions.transform" href="#phc.easy.omics.options.genomic_copy_number_variant.GenomicCopyNumberVariantOptions.transform">transform</a></code></li>
 </ul>
 </li>

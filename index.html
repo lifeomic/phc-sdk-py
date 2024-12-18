@@ -24,7 +24,8 @@
 </header>
 <section id="section-intro">
 <h1 id="phc-sdk-for-python">PHC SDK for Python</h1>
-<p>The phc-sdk-py is a developer kit for interfacing with the <a href="https://api.docs.lifeomic.com/">PHC API</a> on Python 3.7 and above.</p>
+<p>The phc-sdk-py is a developer kit for interfacing with the
+<a href="https://api.docs.lifeomic.com/">PHC API</a> on Python 3.7 and above.</p>
 <h2 id="project-status">Project Status</h2>
 <p><img alt="GitHub" src="https://img.shields.io/github/license/lifeomic/phc-sdk-py.svg?style=for-the-badge">
 <img alt="PyPI status" src="https://img.shields.io/pypi/status/phc.svg?style=for-the-badge">
@@ -35,32 +36,42 @@
 <h2 id="getting-started">Getting Started</h2>
 <h3 id="dependencies">Dependencies</h3>
 <ul>
-<li><a href="https://www.python.org/download/releases/3.0/">Python 3</a> version &gt;= 3.8</li>
+<li><a href="https://www.python.org/download/releases/3.0/">Python 3</a> version &gt;= 3.9</li>
 </ul>
 <h3 id="getting-the-source">Getting the Source</h3>
 <p>This project is <a href="https://github.com/lifeomic/phc-sdk-py">hosted on GitHub</a>.</p>
 <h3 id="usage">Usage</h3>
-<p>A <code><a title="phc.Session" href="#phc.Session">Session</a></code> needs to be created first that stores the token and account information needed to access the PHC API. One can currently using API Key tokens generated from the PHC Account, or OAuth tokens generated using the <a href="https://github.com/lifeomic/cli">CLI</a>.</p>
+<p>A <code><a title="phc.Session" href="#phc.Session">Session</a></code> needs to be created first that stores the token and account
+information needed to access the PHC API. One can currently using API Key tokens
+generated from the PHC Account, or OAuth tokens generated using the
+<a href="https://github.com/lifeomic/cli">CLI</a>.</p>
 <pre><code class="language-python">from phc import Session
 
 session = Session(token=&lt;TOKEN VALUE&gt;, account=&quot;myaccount&quot;)
 </code></pre>
-<p>Once a <code><a title="phc.Session" href="#phc.Session">Session</a></code> is created, you can then access the different parts of the platform.</p>
+<p>Once a <code><a title="phc.Session" href="#phc.Session">Session</a></code> is created, you can then access the different parts of the
+platform.</p>
 <pre><code class="language-python">from phc.services import Accounts
 
 accounts = Accounts(session)
 myaccounts = accounts.get_list()
 </code></pre>
 <h2 id="contributing">Contributing</h2>
-<p>We encourage public contributions! Please review <a href="CONTRIBUTING.md">CONTRIBUTING.md</a> and <a href="CODE_OF_CONDUCT.md">CODE_OF_CONDUCT.md</a> for details on our code of conduct and development process.</p>
+<p>We encourage public contributions! Please review
+<a href="CONTRIBUTING.md">CONTRIBUTING.md</a> and <a href="CODE_OF_CONDUCT.md">CODE_OF_CONDUCT.md</a>
+for details on our code of conduct and development process.</p>
 <h2 id="license">License</h2>
-<p>This project is licensed under the MIT License - see <a href="LICENSE">LICENSE</a> file for details.</p>
+<p>This project is licensed under the MIT License - see <a href="LICENSE">LICENSE</a> file for
+details.</p>
 <h2 id="authors">Authors</h2>
-<p>See the list of <a href="https://github.com/lifeomic/phc-sdk-py/contributors">contributors</a> who participate in this project.</p>
+<p>See the list of
+<a href="https://github.com/lifeomic/phc-sdk-py/contributors">contributors</a> who
+participate in this project.</p>
 <h2 id="acknowledgements">Acknowledgements</h2>
 <p>This project is built with the following:</p>
 <ul>
-<li><a href="https://aiohttp.readthedocs.io/en/stable/">aiohttp</a> - Asynchronous HTTP Client/Server for asyncio and Python.</li>
+<li><a href="https://aiohttp.readthedocs.io/en/stable/">aiohttp</a> - Asynchronous HTTP
+Client/Server for asyncio and Python.</li>
 </ul>
 <details class="source">
 <summary>
@@ -69,6 +80,7 @@ myaccounts = accounts.get_list()
 <pre><code class="python">&#34;&#34;&#34;
 .. include:: ../README.md
 &#34;&#34;&#34;
+
 import nest_asyncio
 from phc.session import Session
 from phc.api_response import ApiResponse

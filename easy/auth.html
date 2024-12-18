@@ -206,7 +206,7 @@ class Auth:
 <dl>
 <dt id="phc.easy.auth.Auth"><code class="flex name class">
 <span>class <span class="ident">Auth</span></span>
-<span>(</span><span>details: Union[Any, None, Dict[str, str]] = None)</span>
+<span>(</span><span>details: Union[Any, ForwardRef(None), Dict[str, str]] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create an authentication object that can be shared as a single argument to
@@ -568,7 +568,7 @@ def token(self):
 </details>
 </dd>
 <dt id="phc.easy.auth.Auth.update"><code class="name flex">
-<span>def <span class="ident">update</span></span>(<span>self, details: Union[Any, None, Dict[str, str]] = None)</span>
+<span>def <span class="ident">update</span></span>(<span>self, details: Union[Any, ForwardRef(None), Dict[str, str]] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Set details of authentication for API calls

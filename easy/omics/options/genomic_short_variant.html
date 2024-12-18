@@ -41,8 +41,8 @@ from phc.easy.abstract.paging_api_item import PagingApiOptions
 from pydantic import Field, constr
 
 RS_ID = r&#34;^rs(\d+)$&#34;
-NUM_DECIMAL_RANGE = constr(regex=r&#34;^\d+(\.\d+)?\-\d+(\.\d+)?$&#34;)
-NUM_RANGE = constr(regex=r&#34;^(\d+\-\d+|\d+)$&#34;)
+NUM_DECIMAL_RANGE = constr(pattern=r&#34;^\d+(\.\d+)?\-\d+(\.\d+)?$&#34;)
+NUM_RANGE = constr(pattern=r&#34;^(\d+\-\d+|\d+)$&#34;)
 
 MAPPINGS = {
     &#34;variant_set_ids&#34;: &#34;variantSetIds&#34;,
@@ -97,10 +97,10 @@ class GenomicShortVariantOptions(PagingApiOptions):
     # - Combined In Silico Prediction
     # - Individual In Silico Predictors
 
-    variant_set_ids: List[str] = Field(..., min_items=1)
+    variant_set_ids: List[str] = Field(..., min_length=1)
     include: List[GenomicVariantInclude] = [&#34;vcf&#34;]
     gene: List[str] = []
-    rs_id: List[constr(regex=RS_ID)] = []
+    rs_id: List[constr(pattern=RS_ID)] = []
     chromosome: List[Chromosome] = []
     clinvar_allele_id: List[str] = []
     clinvar_disease: List[str] = []
@@ -143,7 +143,7 @@ class GenomicShortVariantOptions(PagingApiOptions):
     alt_read_depth: List[str] = []
     ref_read_depth: List[str] = []
     variant_filter: List[str] = []
-    in_ckb: Optional[bool]
+    in_ckb: Optional[bool] = None
 
     @staticmethod
     def transform(key, value):
@@ -169,116 +169,6 @@ class GenomicShortVariantOptions(PagingApiOptions):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue"><code class="flex name class">
-<span>class <span class="ident">NUM_DECIMAL_RANGE</span></span>
-<span>(</span><span>...)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>pydantic.types.ConstrainedStr</li>
-<li>builtins.str</li>
-</ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.curtail_length"><code class="name">var <span class="ident">curtail_length</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.max_length"><code class="name">var <span class="ident">max_length</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.min_length"><code class="name">var <span class="ident">min_length</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.regex"><code class="name">var <span class="ident">regex</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.strict"><code class="name">var <span class="ident">strict</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.strip_whitespace"><code class="name">var <span class="ident">strip_whitespace</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.to_lower"><code class="name">var <span class="ident">to_lower</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.to_upper"><code class="name">var <span class="ident">to_upper</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue"><code class="flex name class">
-<span>class <span class="ident">NUM_RANGE</span></span>
-<span>(</span><span>...)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>pydantic.types.ConstrainedStr</li>
-<li>builtins.str</li>
-</ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.curtail_length"><code class="name">var <span class="ident">curtail_length</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.max_length"><code class="name">var <span class="ident">max_length</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.min_length"><code class="name">var <span class="ident">min_length</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.regex"><code class="name">var <span class="ident">regex</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.strict"><code class="name">var <span class="ident">strict</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.strip_whitespace"><code class="name">var <span class="ident">strip_whitespace</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.to_lower"><code class="name">var <span class="ident">to_lower</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue.to_upper"><code class="name">var <span class="ident">to_upper</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
-</dd>
 <dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions"><code class="flex name class">
 <span>class <span class="ident">GenomicShortVariantOptions</span></span>
 <span>(</span><span>**data: Any)</span>
@@ -286,7 +176,9 @@ errors defaults to 'strict'.</p></div>
 <dd>
 <div class="desc"><p>Options to pass to <code>/v1/genomics/variants</code></p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
-<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -300,10 +192,10 @@ errors defaults to 'strict'.</p></div>
     # - Combined In Silico Prediction
     # - Individual In Silico Predictors
 
-    variant_set_ids: List[str] = Field(..., min_items=1)
+    variant_set_ids: List[str] = Field(..., min_length=1)
     include: List[GenomicVariantInclude] = [&#34;vcf&#34;]
     gene: List[str] = []
-    rs_id: List[constr(regex=RS_ID)] = []
+    rs_id: List[constr(pattern=RS_ID)] = []
     chromosome: List[Chromosome] = []
     clinvar_allele_id: List[str] = []
     clinvar_disease: List[str] = []
@@ -346,7 +238,7 @@ errors defaults to 'strict'.</p></div>
     alt_read_depth: List[str] = []
     ref_read_depth: List[str] = []
     variant_filter: List[str] = []
-    in_ckb: Optional[bool]
+    in_ckb: Optional[bool] = None
 
     @staticmethod
     def transform(key, value):
@@ -366,7 +258,6 @@ errors defaults to 'strict'.</p></div>
 <ul class="hlist">
 <li><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -462,7 +353,7 @@ errors defaults to 'strict'.</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.exac_allele_frequency"><code class="name">var <span class="ident">exac_allele_frequency</span> : Optional[<a title="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue" href="#phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue">ConstrainedStrValue</a>]</code></dt>
+<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.exac_allele_frequency"><code class="name">var <span class="ident">exac_allele_frequency</span> : Optional[str]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -494,19 +385,23 @@ errors defaults to 'strict'.</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.max_allele_frequency"><code class="name">var <span class="ident">max_allele_frequency</span> : Optional[<a title="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue" href="#phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue">ConstrainedStrValue</a>]</code></dt>
+<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.max_allele_frequency"><code class="name">var <span class="ident">max_allele_frequency</span> : Optional[str]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.min_allele_frequency"><code class="name">var <span class="ident">min_allele_frequency</span> : Optional[<a title="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue" href="#phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue">ConstrainedStrValue</a>]</code></dt>
+<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.min_allele_frequency"><code class="name">var <span class="ident">min_allele_frequency</span> : Optional[str]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.pop_allele_frequency"><code class="name">var <span class="ident">pop_allele_frequency</span> : Optional[<a title="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue" href="#phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue">ConstrainedStrValue</a>]</code></dt>
+<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.position"><code class="name">var <span class="ident">position</span> : List[Union[int, <a title="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue" href="#phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue">ConstrainedStrValue</a>]]</code></dt>
+<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.pop_allele_frequency"><code class="name">var <span class="ident">pop_allele_frequency</span> : Optional[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.position"><code class="name">var <span class="ident">position</span> : List[Union[str, int]]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -526,7 +421,7 @@ errors defaults to 'strict'.</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.rs_id"><code class="name">var <span class="ident">rs_id</span> : List[<a title="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue" href="#phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue">ConstrainedStrValue</a>]</code></dt>
+<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.rs_id"><code class="name">var <span class="ident">rs_id</span> : List[str]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -588,15 +483,15 @@ def transform(key, value):
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.dict"><code class="name flex">
-<span>def <span class="ident">dict</span></span>(<span>self)</span>
+<dt id="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.model_dump"><code class="name flex">
+<span>def <span class="ident">model_dump</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions.dict" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions.dict">dict</a></code>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions.model_dump" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions.model_dump">model_dump</a></code>
 </p>
-<div class="desc inherited"><p>Generate a dictionary representation of the model, optionally specifying which fields to include or exclude.</p></div>
+<div class="desc inherited"><p>Usage docs: <a href="https://docs.pydantic.dev/2.10/concepts/serialization/#modelmodel_dump">https://docs.pydantic.dev/2.10/concepts/serialization/#modelmodel_dump</a> …</p></div>
 </dd>
 </dl>
 </dd>
@@ -622,15 +517,9 @@ def transform(key, value):
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue" href="#phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue">ConstrainedStrValue</a></code></h4>
-</li>
-<li>
-<h4><code><a title="phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue" href="#phc.easy.omics.options.genomic_short_variant.ConstrainedStrValue">ConstrainedStrValue</a></code></h4>
-</li>
-<li>
 <h4><code><a title="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions" href="#phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions">GenomicShortVariantOptions</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.dict" href="../../abstract/paging_api_item.html#phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.dict">dict</a></code></li>
+<li><code><a title="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.model_dump" href="../../abstract/paging_api_item.html#phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.model_dump">model_dump</a></code></li>
 <li><code><a title="phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.transform" href="#phc.easy.omics.options.genomic_short_variant.GenomicShortVariantOptions.transform">transform</a></code></li>
 </ul>
 </li>

@@ -34,12 +34,6 @@ from pydantic import Field, constr
 from phc.easy.abstract.paging_api_item import PagingApiOptions
 from phc.easy.omics.options.common import GenomicVariantInclude
 
-EXPRESSION = constr(
-    regex=r&#34;^(\d+(\.\d+)?\-\d+(\.\d+)?|[\&gt;\&lt;]\=\s?\d+(\.\d+)?|\d+(\.\d+)?:(lte|gte))$&#34;
-)
-
-ORDER_BY = constr(regex=r&#34;^expression(:desc)?$&#34;)
-
 MAPPINGS = {
     &#34;variant_set_ids&#34;: &#34;rnaQuantificationSetIds&#34;,
     &#34;outlier_std_dev&#34;: &#34;outlierStdDev&#34;,
@@ -51,11 +45,11 @@ MAPPINGS = {
 class GenomicExpressionOptions(PagingApiOptions):
     &#34;&#34;&#34;Options to pass to `/v1/genomics/expressions`&#34;&#34;&#34;
 
-    variant_set_ids: List[str] = Field(..., min_items=1)
+    variant_set_ids: List[str] = Field(..., min_length=1)
     include: List[GenomicVariantInclude] = []
     gene: List[str] = []
-    expression: Optional[EXPRESSION] = None
-    order_by: Optional[ORDER_BY] = None
+    expression: Optional[str] = Field(None, pattern=r&#34;^(\d+(\.\d+)?-\d+(\.\d+)?|[&gt;&lt;]=\s?\d+(\.\d+)?|\d+(\.\d+)?:(lte|gte))$&#34;)
+    order_by: Optional[str] = Field(None, pattern=r&#34;^expression(:desc)?$&#34;)
     in_ckb: Optional[bool] = None
     # TODO: Fill out allowed options for this parameter
     outlier_std_dev: Optional[str] = None
@@ -96,116 +90,6 @@ class GenomicExpressionOptions(PagingApiOptions):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue"><code class="flex name class">
-<span>class <span class="ident">EXPRESSION</span></span>
-<span>(</span><span>...)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>pydantic.types.ConstrainedStr</li>
-<li>builtins.str</li>
-</ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.curtail_length"><code class="name">var <span class="ident">curtail_length</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.max_length"><code class="name">var <span class="ident">max_length</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.min_length"><code class="name">var <span class="ident">min_length</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.regex"><code class="name">var <span class="ident">regex</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.strict"><code class="name">var <span class="ident">strict</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.strip_whitespace"><code class="name">var <span class="ident">strip_whitespace</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.to_lower"><code class="name">var <span class="ident">to_lower</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.to_upper"><code class="name">var <span class="ident">to_upper</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue"><code class="flex name class">
-<span>class <span class="ident">ORDER_BY</span></span>
-<span>(</span><span>...)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>pydantic.types.ConstrainedStr</li>
-<li>builtins.str</li>
-</ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.curtail_length"><code class="name">var <span class="ident">curtail_length</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.max_length"><code class="name">var <span class="ident">max_length</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.min_length"><code class="name">var <span class="ident">min_length</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.regex"><code class="name">var <span class="ident">regex</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.strict"><code class="name">var <span class="ident">strict</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.strip_whitespace"><code class="name">var <span class="ident">strip_whitespace</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.to_lower"><code class="name">var <span class="ident">to_lower</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="phc.easy.omics.options.genomic_expression.ConstrainedStrValue.to_upper"><code class="name">var <span class="ident">to_upper</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
-</dd>
 <dt id="phc.easy.omics.options.genomic_expression.GenomicExpressionOptions"><code class="flex name class">
 <span>class <span class="ident">GenomicExpressionOptions</span></span>
 <span>(</span><span>**data: Any)</span>
@@ -213,7 +97,9 @@ errors defaults to 'strict'.</p></div>
 <dd>
 <div class="desc"><p>Options to pass to <code>/v1/genomics/expressions</code></p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
-<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -221,11 +107,11 @@ errors defaults to 'strict'.</p></div>
 <pre><code class="python">class GenomicExpressionOptions(PagingApiOptions):
     &#34;&#34;&#34;Options to pass to `/v1/genomics/expressions`&#34;&#34;&#34;
 
-    variant_set_ids: List[str] = Field(..., min_items=1)
+    variant_set_ids: List[str] = Field(..., min_length=1)
     include: List[GenomicVariantInclude] = []
     gene: List[str] = []
-    expression: Optional[EXPRESSION] = None
-    order_by: Optional[ORDER_BY] = None
+    expression: Optional[str] = Field(None, pattern=r&#34;^(\d+(\.\d+)?-\d+(\.\d+)?|[&gt;&lt;]=\s?\d+(\.\d+)?|\d+(\.\d+)?:(lte|gte))$&#34;)
+    order_by: Optional[str] = Field(None, pattern=r&#34;^expression(:desc)?$&#34;)
     in_ckb: Optional[bool] = None
     # TODO: Fill out allowed options for this parameter
     outlier_std_dev: Optional[str] = None
@@ -260,11 +146,10 @@ errors defaults to 'strict'.</p></div>
 <ul class="hlist">
 <li><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.expression"><code class="name">var <span class="ident">expression</span> : Optional[<a title="phc.easy.omics.options.genomic_expression.ConstrainedStrValue" href="#phc.easy.omics.options.genomic_expression.ConstrainedStrValue">ConstrainedStrValue</a>]</code></dt>
+<dt id="phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.expression"><code class="name">var <span class="ident">expression</span> : Optional[str]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -280,7 +165,11 @@ errors defaults to 'strict'.</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.order_by"><code class="name">var <span class="ident">order_by</span> : Optional[<a title="phc.easy.omics.options.genomic_expression.ConstrainedStrValue" href="#phc.easy.omics.options.genomic_expression.ConstrainedStrValue">ConstrainedStrValue</a>]</code></dt>
+<dt id="phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.order_by"><code class="name">var <span class="ident">order_by</span> : Optional[str]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -344,15 +233,15 @@ def transform_expression(value: str):
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.dict"><code class="name flex">
-<span>def <span class="ident">dict</span></span>(<span>self)</span>
+<dt id="phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.model_dump"><code class="name flex">
+<span>def <span class="ident">model_dump</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <p class="inheritance">
 <em>Inherited from:</em>
-<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions.dict" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions.dict">dict</a></code>
+<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions">PagingApiOptions</a></code>.<code><a title="phc.easy.abstract.paging_api_item.PagingApiOptions.model_dump" href="../../abstract/paging_api_item.html#phc.easy.abstract.paging_api_item.PagingApiOptions.model_dump">model_dump</a></code>
 </p>
-<div class="desc inherited"><p>Generate a dictionary representation of the model, optionally specifying which fields to include or exclude.</p></div>
+<div class="desc inherited"><p>Usage docs: <a href="https://docs.pydantic.dev/2.10/concepts/serialization/#modelmodel_dump">https://docs.pydantic.dev/2.10/concepts/serialization/#modelmodel_dump</a> …</p></div>
 </dd>
 </dl>
 </dd>
@@ -378,15 +267,9 @@ def transform_expression(value: str):
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="phc.easy.omics.options.genomic_expression.ConstrainedStrValue" href="#phc.easy.omics.options.genomic_expression.ConstrainedStrValue">ConstrainedStrValue</a></code></h4>
-</li>
-<li>
-<h4><code><a title="phc.easy.omics.options.genomic_expression.ConstrainedStrValue" href="#phc.easy.omics.options.genomic_expression.ConstrainedStrValue">ConstrainedStrValue</a></code></h4>
-</li>
-<li>
 <h4><code><a title="phc.easy.omics.options.genomic_expression.GenomicExpressionOptions" href="#phc.easy.omics.options.genomic_expression.GenomicExpressionOptions">GenomicExpressionOptions</a></code></h4>
 <ul class="">
-<li><code><a title="phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.dict" href="../../abstract/paging_api_item.html#phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.dict">dict</a></code></li>
+<li><code><a title="phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.model_dump" href="../../abstract/paging_api_item.html#phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.model_dump">model_dump</a></code></li>
 <li><code><a title="phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.transform" href="#phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.transform">transform</a></code></li>
 <li><code><a title="phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.transform_expression" href="#phc.easy.omics.options.genomic_expression.GenomicExpressionOptions.transform_expression">transform_expression</a></code></li>
 </ul>

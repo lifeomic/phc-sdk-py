@@ -48,9 +48,9 @@ class Gene:
 
         if &#34;alias&#34; in frame.columns:
             frame[&#34;alias&#34;] = frame.alias.apply(
-                lambda aliases: &#34;,&#34;.join(aliases)
-                if isinstance(aliases, list)
-                else None
+                lambda aliases: (
+                    &#34;,&#34;.join(aliases) if isinstance(aliases, list) else None
+                )
             )
 
         # We choose to not expand topCancerDrivers and cancerDrivers since it
@@ -92,9 +92,9 @@ class Gene:
 
         if &#34;alias&#34; in frame.columns:
             frame[&#34;alias&#34;] = frame.alias.apply(
-                lambda aliases: &#34;,&#34;.join(aliases)
-                if isinstance(aliases, list)
-                else None
+                lambda aliases: (
+                    &#34;,&#34;.join(aliases) if isinstance(aliases, list) else None
+                )
             )
 
         # We choose to not expand topCancerDrivers and cancerDrivers since it
@@ -127,9 +127,9 @@ class Gene:
 
     if &#34;alias&#34; in frame.columns:
         frame[&#34;alias&#34;] = frame.alias.apply(
-            lambda aliases: &#34;,&#34;.join(aliases)
-            if isinstance(aliases, list)
-            else None
+            lambda aliases: (
+                &#34;,&#34;.join(aliases) if isinstance(aliases, list) else None
+            )
         )
 
     # We choose to not expand topCancerDrivers and cancerDrivers since it
