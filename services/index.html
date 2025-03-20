@@ -33,6 +33,7 @@ Contains services for accessing different parts of the PHC platform.
 &#34;&#34;&#34;
 
 from phc.services.accounts import Accounts
+from phc.services.agents import Agents
 from phc.services.analytics import Analytics
 from phc.services.fhir import Fhir
 from phc.services.projects import Projects
@@ -47,6 +48,7 @@ from phc.services.patient_ml import PatientML
 
 __all__ = [
     &#34;Accounts&#34;,
+    &#34;Agents&#34;,
     &#34;Analytics&#34;,
     &#34;Fhir&#34;,
     &#34;Projects&#34;,
@@ -56,6 +58,7 @@ __all__ = [
     &#34;Tools&#34;,
     &#34;Workflows&#34;,
     &#34;GenomicIngestions&#34;,
+    &#34;IngestionStep&#34;,
     &#34;Tasks&#34;,
     &#34;PatientML&#34;,
 ]
@@ -167,6 +170,211 @@ __pdoc__ = {
         The list accounts response
     &#34;&#34;&#34;
     return self._api_call(&#34;accounts&#34;, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.services.Agents"><code class="flex name class">
+<span>class <span class="ident">Agents</span></span>
+<span>(</span><span>session: phc.session.Session, run_async: bool = False, timeout: int = 30, trust_env: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provides access to the PHC agents API, which allows you to call LLM-based agents.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Agents(BaseClient):
+    &#34;&#34;&#34;
+    Provides access to the PHC agents API, which allows you to call LLM-based agents.
+    &#34;&#34;&#34;
+
+    def invoke_basic(self, body: Union[str, List[Dict]]):
+        &#34;&#34;&#34;
+        Invokes a basic agent, which supports either a basic prompt string or a list of
+        messages which can include images as data urls. Requires the `invokeAgent` ABAC
+        permission with `agent: &#34;api-basic-agent&#34;` in the policy, or the `accessAdmin`
+        permission.
+        &#34;&#34;&#34;
+        return self._api_call(
+            &#34;/v1/agents/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
+        )
+
+    def get_token(self):
+        &#34;&#34;&#34;
+        Generates a temporary token for agent-based API authentication.
+
+        This method creates a temporary authentication token for use with AI/ML agents
+        like LangChain or other API integrations. The token includes AWS credentials
+        that can be used to authenticate API calls.
+
+        Permissions
+        -----------
+        Requires the ABAC policy rule `generateToken`.
+
+        Returns
+        -------
+        phc.ApiResponse
+            An API response object containing:
+            - AccessKeyId: AWS access key for authentication
+            - SecretAccessKey: AWS secret key for authentication
+            - SessionToken: AWS session token for authentication
+            - Expiration: Token expiration timestamp
+
+        Example
+        --------
+        &gt;&gt;&gt; from langchain_aws import ChatBedrock
+        &gt;&gt;&gt; from phc.services import Agents
+        &gt;&gt;&gt; agent = Agents(session)
+        &gt;&gt;&gt; token_resp = agent.get_token()
+        &gt;&gt;&gt; chat = ChatBedrock(
+        &gt;&gt;&gt;     aws_access_key_id=token_resp.data[&#34;AccessKeyId&#34;],
+        &gt;&gt;&gt;     aws_secret_access_key=token_resp.data[&#34;SecretAccessKey&#34;],
+        &gt;&gt;&gt;     aws_session_token=token_resp.data[&#34;SessionToken&#34;],
+        &gt;&gt;&gt;     model_id=&#34;anthropic.claude-3-5-sonnet-20240620-v1:0&#34;,
+        &gt;&gt;&gt;     model_kwargs={
+        &gt;&gt;&gt;         &#34;temperature&#34;: 0,
+        &gt;&gt;&gt;         &#34;max_tokens&#34;: 500,
+        &gt;&gt;&gt;     }
+        &gt;&gt;&gt; )
+        &gt;&gt;&gt; ai_message = await llm.ainvoke([
+                (
+                    &#34;system&#34;,
+                    &#34;You are a medical assistant, format below csv data into markdown&#34;.
+                ),
+                (
+                    &#34;human&#34;, &#34;c,s,v,data&#34;
+                )
+            ])
+        &#34;&#34;&#34;
+        return self._api_call(&#34;/v1/agents/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>phc.base_client.BaseClient</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="phc.services.Agents.get_token"><code class="name flex">
+<span>def <span class="ident">get_token</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates a temporary token for agent-based API authentication.</p>
+<p>This method creates a temporary authentication token for use with AI/ML agents
+like LangChain or other API integrations. The token includes AWS credentials
+that can be used to authenticate API calls.</p>
+<h2 id="permissions">Permissions</h2>
+<p>Requires the ABAC policy rule <code>generateToken</code>.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
+<dd>An API response object containing:
+- AccessKeyId: AWS access key for authentication
+- SecretAccessKey: AWS secret key for authentication
+- SessionToken: AWS session token for authentication
+- Expiration: Token expiration timestamp</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from langchain_aws import ChatBedrock
+&gt;&gt;&gt; from phc.services import Agents
+&gt;&gt;&gt; agent = Agents(session)
+&gt;&gt;&gt; token_resp = agent.get_token()
+&gt;&gt;&gt; chat = ChatBedrock(
+&gt;&gt;&gt;     aws_access_key_id=token_resp.data[&quot;AccessKeyId&quot;],
+&gt;&gt;&gt;     aws_secret_access_key=token_resp.data[&quot;SecretAccessKey&quot;],
+&gt;&gt;&gt;     aws_session_token=token_resp.data[&quot;SessionToken&quot;],
+&gt;&gt;&gt;     model_id=&quot;anthropic.claude-3-5-sonnet-20240620-v1:0&quot;,
+&gt;&gt;&gt;     model_kwargs={
+&gt;&gt;&gt;         &quot;temperature&quot;: 0,
+&gt;&gt;&gt;         &quot;max_tokens&quot;: 500,
+&gt;&gt;&gt;     }
+&gt;&gt;&gt; )
+&gt;&gt;&gt; ai_message = await llm.ainvoke([
+        (
+            &quot;system&quot;,
+            &quot;You are a medical assistant, format below csv data into markdown&quot;.
+        ),
+        (
+            &quot;human&quot;, &quot;c,s,v,data&quot;
+        )
+    ])
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_token(self):
+    &#34;&#34;&#34;
+    Generates a temporary token for agent-based API authentication.
+
+    This method creates a temporary authentication token for use with AI/ML agents
+    like LangChain or other API integrations. The token includes AWS credentials
+    that can be used to authenticate API calls.
+
+    Permissions
+    -----------
+    Requires the ABAC policy rule `generateToken`.
+
+    Returns
+    -------
+    phc.ApiResponse
+        An API response object containing:
+        - AccessKeyId: AWS access key for authentication
+        - SecretAccessKey: AWS secret key for authentication
+        - SessionToken: AWS session token for authentication
+        - Expiration: Token expiration timestamp
+
+    Example
+    --------
+    &gt;&gt;&gt; from langchain_aws import ChatBedrock
+    &gt;&gt;&gt; from phc.services import Agents
+    &gt;&gt;&gt; agent = Agents(session)
+    &gt;&gt;&gt; token_resp = agent.get_token()
+    &gt;&gt;&gt; chat = ChatBedrock(
+    &gt;&gt;&gt;     aws_access_key_id=token_resp.data[&#34;AccessKeyId&#34;],
+    &gt;&gt;&gt;     aws_secret_access_key=token_resp.data[&#34;SecretAccessKey&#34;],
+    &gt;&gt;&gt;     aws_session_token=token_resp.data[&#34;SessionToken&#34;],
+    &gt;&gt;&gt;     model_id=&#34;anthropic.claude-3-5-sonnet-20240620-v1:0&#34;,
+    &gt;&gt;&gt;     model_kwargs={
+    &gt;&gt;&gt;         &#34;temperature&#34;: 0,
+    &gt;&gt;&gt;         &#34;max_tokens&#34;: 500,
+    &gt;&gt;&gt;     }
+    &gt;&gt;&gt; )
+    &gt;&gt;&gt; ai_message = await llm.ainvoke([
+            (
+                &#34;system&#34;,
+                &#34;You are a medical assistant, format below csv data into markdown&#34;.
+            ),
+            (
+                &#34;human&#34;, &#34;c,s,v,data&#34;
+            )
+        ])
+    &#34;&#34;&#34;
+    return self._api_call(&#34;/v1/agents/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
+<dt id="phc.services.Agents.invoke_basic"><code class="name flex">
+<span>def <span class="ident">invoke_basic</span></span>(<span>self, body: Union[str, List[Dict]])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Invokes a basic agent, which supports either a basic prompt string or a list of
+messages which can include images as data urls. Requires the <code>invokeAgent</code> ABAC
+permission with <code>agent: "api-basic-agent"</code> in the policy, or the <code>accessAdmin</code>
+permission.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def invoke_basic(self, body: Union[str, List[Dict]]):
+    &#34;&#34;&#34;
+    Invokes a basic agent, which supports either a basic prompt string or a list of
+    messages which can include images as data urls. Requires the `invokeAgent` ABAC
+    permission with `agent: &#34;api-basic-agent&#34;` in the policy, or the `accessAdmin`
+    permission.
+    &#34;&#34;&#34;
+    return self._api_call(
+        &#34;/v1/agents/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
+    )</code></pre>
 </details>
 </dd>
 </dl>
@@ -2822,7 +3030,7 @@ The ingestion that was created.</p></div>
 <dd>The name to filter ingestions by, by default None.</dd>
 <dt><strong><code>failed</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>The status of the ingestions to filter by, by default None.</dd>
-<dt><strong><code>step</code></strong> :&ensp;<code>IngestionStep</code>, optional</dt>
+<dt><strong><code>step</code></strong> :&ensp;<code><a title="phc.services.IngestionStep" href="#phc.services.IngestionStep">IngestionStep</a></code>, optional</dt>
 <dd>The ingestion steps to filter by, by default None.</dd>
 <dt><strong><code>page_size</code></strong> :&ensp;<code>int</code>, optional</dt>
 <dd>The page size, by default None.</dd>
@@ -3234,7 +3442,7 @@ The ingestion that was created.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = 'e95e28c5-6550-4e37-ae7d-c460d3f74e4f', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = 'f832cb66-8653-40b2-9acb-dfe3bda5e432', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
@@ -3705,6 +3913,57 @@ The ingestion that was created.</p></div>
         f&#34;{set_type.value}/{set_id}&#34;, json=updates, http_verb=&#34;PATCH&#34;
     )</code></pre>
 </details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.services.IngestionStep"><code class="flex name class">
+<span>class <span class="ident">IngestionStep</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An enumeration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class IngestionStep(str, Enum):
+    AWAITING_FILES = &#34;AwaitingFiles&#34;
+    SUBMITTED = &#34;Submitted&#34;
+    TRANSFORMED = &#34;Transformed&#34;
+    NORMALIZED = &#34;Normalized&#34;
+    TEST_CREATED = &#34;TestCreated&#34;
+    TEST_NOT_CREATED = &#34;TestNotCreated&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.str</li>
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="phc.services.IngestionStep.AWAITING_FILES"><code class="name">var <span class="ident">AWAITING_FILES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="phc.services.IngestionStep.NORMALIZED"><code class="name">var <span class="ident">NORMALIZED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="phc.services.IngestionStep.SUBMITTED"><code class="name">var <span class="ident">SUBMITTED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="phc.services.IngestionStep.TEST_CREATED"><code class="name">var <span class="ident">TEST_CREATED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="phc.services.IngestionStep.TEST_NOT_CREATED"><code class="name">var <span class="ident">TEST_NOT_CREATED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="phc.services.IngestionStep.TRANSFORMED"><code class="name">var <span class="ident">TRANSFORMED</span></code></dt>
+<dd>
+<div class="desc"></div>
 </dd>
 </dl>
 </dd>
@@ -6303,6 +6562,13 @@ def download(
 </ul>
 </li>
 <li>
+<h4><code><a title="phc.services.Agents" href="#phc.services.Agents">Agents</a></code></h4>
+<ul class="">
+<li><code><a title="phc.services.Agents.get_token" href="#phc.services.Agents.get_token">get_token</a></code></li>
+<li><code><a title="phc.services.Agents.invoke_basic" href="#phc.services.Agents.invoke_basic">invoke_basic</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="phc.services.Analytics" href="#phc.services.Analytics">Analytics</a></code></h4>
 <ul class="">
 <li><code><a title="phc.services.Analytics.execute_sql" href="#phc.services.Analytics.execute_sql">execute_sql</a></code></li>
@@ -6365,6 +6631,9 @@ def download(
 <li><code><a title="phc.services.Genomics.list_tests" href="#phc.services.Genomics.list_tests">list_tests</a></code></li>
 <li><code><a title="phc.services.Genomics.update_set" href="#phc.services.Genomics.update_set">update_set</a></code></li>
 </ul>
+</li>
+<li>
+<h4><code><a title="phc.services.IngestionStep" href="#phc.services.IngestionStep">IngestionStep</a></code></h4>
 </li>
 <li>
 <h4><code><a title="phc.services.PatientML" href="#phc.services.PatientML">PatientML</a></code></h4>
