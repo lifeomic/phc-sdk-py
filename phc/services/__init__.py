@@ -3,6 +3,7 @@ Contains services for accessing different parts of the PHC platform.
 """
 
 from phc.services.accounts import Accounts
+from phc.services.agents import Agents
 from phc.services.analytics import Analytics
 from phc.services.fhir import Fhir
 from phc.services.projects import Projects
@@ -17,6 +18,7 @@ from phc.services.patient_ml import PatientML
 
 __all__ = [
     "Accounts",
+    "Agents",
     "Analytics",
     "Fhir",
     "Projects",
@@ -26,6 +28,7 @@ __all__ = [
     "Tools",
     "Workflows",
     "GenomicIngestions",
+    "IngestionStep",
     "Tasks",
     "PatientML",
 ]

@@ -8,6 +8,13 @@ and this project adheres to
 
 _(NOTE: All examples use fictitious data or freely available data sets.)_
 
+## [1.1.0] - 2025-03-20
+
+### Added
+
+- Added `get_token()` method to `phc.services.Agents` API client to retrieve a
+temporary token for accessing LLM functionality.
+
 ## [1.0.0] - 2024-12-17
 
 ### Removed
