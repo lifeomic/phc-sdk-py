@@ -45,7 +45,56 @@ class Agents(BaseClient):
         &#34;&#34;&#34;
         return self._api_call(
             &#34;/v1/agents/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
-        )</code></pre>
+        )
+
+    def get_token(self):
+        &#34;&#34;&#34;
+        Generates a temporary token for agent-based API authentication.
+
+        This method creates a temporary authentication token for use with AI/ML agents
+        like LangChain or other API integrations. The token includes AWS credentials
+        that can be used to authenticate API calls.
+
+        Permissions
+        -----------
+        Requires the ABAC policy rule `generateToken`.
+
+        Returns
+        -------
+        phc.ApiResponse
+            An API response object containing:
+            - AccessKeyId: AWS access key for authentication
+            - SecretAccessKey: AWS secret key for authentication
+            - SessionToken: AWS session token for authentication
+            - Expiration: Token expiration timestamp
+
+        Example
+        --------
+        &gt;&gt;&gt; from langchain_aws import ChatBedrock
+        &gt;&gt;&gt; from phc.services import Agents
+        &gt;&gt;&gt; agent = Agents(session)
+        &gt;&gt;&gt; token_resp = agent.get_token()
+        &gt;&gt;&gt; chat = ChatBedrock(
+        &gt;&gt;&gt;     aws_access_key_id=token_resp.data[&#34;AccessKeyId&#34;],
+        &gt;&gt;&gt;     aws_secret_access_key=token_resp.data[&#34;SecretAccessKey&#34;],
+        &gt;&gt;&gt;     aws_session_token=token_resp.data[&#34;SessionToken&#34;],
+        &gt;&gt;&gt;     model_id=&#34;anthropic.claude-3-5-sonnet-20240620-v1:0&#34;,
+        &gt;&gt;&gt;     model_kwargs={
+        &gt;&gt;&gt;         &#34;temperature&#34;: 0,
+        &gt;&gt;&gt;         &#34;max_tokens&#34;: 500,
+        &gt;&gt;&gt;     }
+        &gt;&gt;&gt; )
+        &gt;&gt;&gt; ai_message = await llm.ainvoke([
+                (
+                    &#34;system&#34;,
+                    &#34;You are a medical assistant, format below csv data into markdown&#34;.
+                ),
+                (
+                    &#34;human&#34;, &#34;c,s,v,data&#34;
+                )
+            ])
+        &#34;&#34;&#34;
+        return self._api_call(&#34;/v1/agents/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -81,7 +130,56 @@ class Agents(BaseClient):
         &#34;&#34;&#34;
         return self._api_call(
             &#34;/v1/agents/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
-        )</code></pre>
+        )
+
+    def get_token(self):
+        &#34;&#34;&#34;
+        Generates a temporary token for agent-based API authentication.
+
+        This method creates a temporary authentication token for use with AI/ML agents
+        like LangChain or other API integrations. The token includes AWS credentials
+        that can be used to authenticate API calls.
+
+        Permissions
+        -----------
+        Requires the ABAC policy rule `generateToken`.
+
+        Returns
+        -------
+        phc.ApiResponse
+            An API response object containing:
+            - AccessKeyId: AWS access key for authentication
+            - SecretAccessKey: AWS secret key for authentication
+            - SessionToken: AWS session token for authentication
+            - Expiration: Token expiration timestamp
+
+        Example
+        --------
+        &gt;&gt;&gt; from langchain_aws import ChatBedrock
+        &gt;&gt;&gt; from phc.services import Agents
+        &gt;&gt;&gt; agent = Agents(session)
+        &gt;&gt;&gt; token_resp = agent.get_token()
+        &gt;&gt;&gt; chat = ChatBedrock(
+        &gt;&gt;&gt;     aws_access_key_id=token_resp.data[&#34;AccessKeyId&#34;],
+        &gt;&gt;&gt;     aws_secret_access_key=token_resp.data[&#34;SecretAccessKey&#34;],
+        &gt;&gt;&gt;     aws_session_token=token_resp.data[&#34;SessionToken&#34;],
+        &gt;&gt;&gt;     model_id=&#34;anthropic.claude-3-5-sonnet-20240620-v1:0&#34;,
+        &gt;&gt;&gt;     model_kwargs={
+        &gt;&gt;&gt;         &#34;temperature&#34;: 0,
+        &gt;&gt;&gt;         &#34;max_tokens&#34;: 500,
+        &gt;&gt;&gt;     }
+        &gt;&gt;&gt; )
+        &gt;&gt;&gt; ai_message = await llm.ainvoke([
+                (
+                    &#34;system&#34;,
+                    &#34;You are a medical assistant, format below csv data into markdown&#34;.
+                ),
+                (
+                    &#34;human&#34;, &#34;c,s,v,data&#34;
+                )
+            ])
+        &#34;&#34;&#34;
+        return self._api_call(&#34;/v1/agents/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -89,6 +187,104 @@ class Agents(BaseClient):
 </ul>
 <h3>Methods</h3>
 <dl>
+<dt id="phc.services.agents.Agents.get_token"><code class="name flex">
+<span>def <span class="ident">get_token</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates a temporary token for agent-based API authentication.</p>
+<p>This method creates a temporary authentication token for use with AI/ML agents
+like LangChain or other API integrations. The token includes AWS credentials
+that can be used to authenticate API calls.</p>
+<h2 id="permissions">Permissions</h2>
+<p>Requires the ABAC policy rule <code>generateToken</code>.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
+<dd>An API response object containing:
+- AccessKeyId: AWS access key for authentication
+- SecretAccessKey: AWS secret key for authentication
+- SessionToken: AWS session token for authentication
+- Expiration: Token expiration timestamp</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from langchain_aws import ChatBedrock
+&gt;&gt;&gt; from phc.services import Agents
+&gt;&gt;&gt; agent = Agents(session)
+&gt;&gt;&gt; token_resp = agent.get_token()
+&gt;&gt;&gt; chat = ChatBedrock(
+&gt;&gt;&gt;     aws_access_key_id=token_resp.data[&quot;AccessKeyId&quot;],
+&gt;&gt;&gt;     aws_secret_access_key=token_resp.data[&quot;SecretAccessKey&quot;],
+&gt;&gt;&gt;     aws_session_token=token_resp.data[&quot;SessionToken&quot;],
+&gt;&gt;&gt;     model_id=&quot;anthropic.claude-3-5-sonnet-20240620-v1:0&quot;,
+&gt;&gt;&gt;     model_kwargs={
+&gt;&gt;&gt;         &quot;temperature&quot;: 0,
+&gt;&gt;&gt;         &quot;max_tokens&quot;: 500,
+&gt;&gt;&gt;     }
+&gt;&gt;&gt; )
+&gt;&gt;&gt; ai_message = await llm.ainvoke([
+        (
+            &quot;system&quot;,
+            &quot;You are a medical assistant, format below csv data into markdown&quot;.
+        ),
+        (
+            &quot;human&quot;, &quot;c,s,v,data&quot;
+        )
+    ])
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_token(self):
+    &#34;&#34;&#34;
+    Generates a temporary token for agent-based API authentication.
+
+    This method creates a temporary authentication token for use with AI/ML agents
+    like LangChain or other API integrations. The token includes AWS credentials
+    that can be used to authenticate API calls.
+
+    Permissions
+    -----------
+    Requires the ABAC policy rule `generateToken`.
+
+    Returns
+    -------
+    phc.ApiResponse
+        An API response object containing:
+        - AccessKeyId: AWS access key for authentication
+        - SecretAccessKey: AWS secret key for authentication
+        - SessionToken: AWS session token for authentication
+        - Expiration: Token expiration timestamp
+
+    Example
+    --------
+    &gt;&gt;&gt; from langchain_aws import ChatBedrock
+    &gt;&gt;&gt; from phc.services import Agents
+    &gt;&gt;&gt; agent = Agents(session)
+    &gt;&gt;&gt; token_resp = agent.get_token()
+    &gt;&gt;&gt; chat = ChatBedrock(
+    &gt;&gt;&gt;     aws_access_key_id=token_resp.data[&#34;AccessKeyId&#34;],
+    &gt;&gt;&gt;     aws_secret_access_key=token_resp.data[&#34;SecretAccessKey&#34;],
+    &gt;&gt;&gt;     aws_session_token=token_resp.data[&#34;SessionToken&#34;],
+    &gt;&gt;&gt;     model_id=&#34;anthropic.claude-3-5-sonnet-20240620-v1:0&#34;,
+    &gt;&gt;&gt;     model_kwargs={
+    &gt;&gt;&gt;         &#34;temperature&#34;: 0,
+    &gt;&gt;&gt;         &#34;max_tokens&#34;: 500,
+    &gt;&gt;&gt;     }
+    &gt;&gt;&gt; )
+    &gt;&gt;&gt; ai_message = await llm.ainvoke([
+            (
+                &#34;system&#34;,
+                &#34;You are a medical assistant, format below csv data into markdown&#34;.
+            ),
+            (
+                &#34;human&#34;, &#34;c,s,v,data&#34;
+            )
+        ])
+    &#34;&#34;&#34;
+    return self._api_call(&#34;/v1/agents/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
+</details>
+</dd>
 <dt id="phc.services.agents.Agents.invoke_basic"><code class="name flex">
 <span>def <span class="ident">invoke_basic</span></span>(<span>self, body: Union[str, List[Dict]])</span>
 </code></dt>
@@ -139,6 +335,7 @@ permission.</p></div>
 <li>
 <h4><code><a title="phc.services.agents.Agents" href="#phc.services.agents.Agents">Agents</a></code></h4>
 <ul class="">
+<li><code><a title="phc.services.agents.Agents.get_token" href="#phc.services.agents.Agents.get_token">get_token</a></code></li>
 <li><code><a title="phc.services.agents.Agents.invoke_basic" href="#phc.services.agents.Agents.invoke_basic">invoke_basic</a></code></li>
 </ul>
 </li>
