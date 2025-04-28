@@ -15,7 +15,7 @@ class Agents(BaseClient):
         permission.
         """
         return self._api_call(
-            "/v1/agents/basic/invoke", json={"input": body}, http_verb="POST"
+            "/v1/agents-v2/basic/invoke", json={"input": body}, http_verb="POST"
         )
 
     def get_token(self):
@@ -65,4 +65,4 @@ class Agents(BaseClient):
                 )
             ])
         """
-        return self._api_call("/v1/agents/token", http_verb="GET")
+        return self._api_call("/v1/agents-v2/token", http_verb="GET")
