@@ -44,7 +44,7 @@ class Agents(BaseClient):
         permission.
         &#34;&#34;&#34;
         return self._api_call(
-            &#34;/v1/agents/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
+            &#34;/v1/agents-v2/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
         )
 
     def get_token(self):
@@ -94,7 +94,7 @@ class Agents(BaseClient):
                 )
             ])
         &#34;&#34;&#34;
-        return self._api_call(&#34;/v1/agents/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
+        return self._api_call(&#34;/v1/agents-v2/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -129,7 +129,7 @@ class Agents(BaseClient):
         permission.
         &#34;&#34;&#34;
         return self._api_call(
-            &#34;/v1/agents/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
+            &#34;/v1/agents-v2/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
         )
 
     def get_token(self):
@@ -179,7 +179,7 @@ class Agents(BaseClient):
                 )
             ])
         &#34;&#34;&#34;
-        return self._api_call(&#34;/v1/agents/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
+        return self._api_call(&#34;/v1/agents-v2/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -282,7 +282,7 @@ that can be used to authenticate API calls.</p>
             )
         ])
     &#34;&#34;&#34;
-    return self._api_call(&#34;/v1/agents/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
+    return self._api_call(&#34;/v1/agents-v2/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
 </details>
 </dd>
 <dt id="phc.services.agents.Agents.invoke_basic"><code class="name flex">
@@ -305,7 +305,7 @@ permission.</p></div>
     permission.
     &#34;&#34;&#34;
     return self._api_call(
-        &#34;/v1/agents/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
+        &#34;/v1/agents-v2/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
     )</code></pre>
 </details>
 </dd>

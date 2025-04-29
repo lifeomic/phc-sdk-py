@@ -197,7 +197,7 @@ __pdoc__ = {
         permission.
         &#34;&#34;&#34;
         return self._api_call(
-            &#34;/v1/agents/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
+            &#34;/v1/agents-v2/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
         )
 
     def get_token(self):
@@ -247,7 +247,7 @@ __pdoc__ = {
                 )
             ])
         &#34;&#34;&#34;
-        return self._api_call(&#34;/v1/agents/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
+        return self._api_call(&#34;/v1/agents-v2/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -350,7 +350,7 @@ that can be used to authenticate API calls.</p>
             )
         ])
     &#34;&#34;&#34;
-    return self._api_call(&#34;/v1/agents/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
+    return self._api_call(&#34;/v1/agents-v2/token&#34;, http_verb=&#34;GET&#34;)</code></pre>
 </details>
 </dd>
 <dt id="phc.services.Agents.invoke_basic"><code class="name flex">
@@ -373,7 +373,7 @@ permission.</p></div>
     permission.
     &#34;&#34;&#34;
     return self._api_call(
-        &#34;/v1/agents/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
+        &#34;/v1/agents-v2/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
     )</code></pre>
 </details>
 </dd>
@@ -3442,7 +3442,7 @@ The ingestion that was created.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = 'f832cb66-8653-40b2-9acb-dfe3bda5e432', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = '74d8227c-ee73-4d29-a7ae-d066f0dfad1c', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
