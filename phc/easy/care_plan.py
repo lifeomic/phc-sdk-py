@@ -22,5 +22,6 @@ class CarePlan(FhirServicePatientItem):
                 Frame.codeable_like_column_expander("subject"),
                 Frame.codeable_like_column_expander("context"),
                 Frame.codeable_like_column_expander("activity"),
+                Frame.codeable_like_column_expander("supportingInfo"),
             ],
         )

@@ -30,4 +30,3 @@ class ClinicalImpression(FhirServicePatientItem):
                 Frame.codeable_like_column_expander("finding"),
             ],
         )
-
