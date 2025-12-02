@@ -3,6 +3,7 @@ from phc.easy.abstract.fhir_service_patient_item import FhirServicePatientItem
 from phc.easy.audit_event import AuditEvent
 from phc.easy.auth import Auth
 from phc.easy.care_plan import CarePlan
+from phc.easy.clinical_impression import ClinicalImpression
 from phc.easy.codeable import Codeable
 from phc.easy.composition import Composition
 from phc.easy.condition import Condition
@@ -51,6 +52,7 @@ __all__ = [
     "AuditEvent",
     "Auth",
     "CarePlan",
+    "ClinicalImpression",
     "Codeable",
     "Composition",
     "Condition",
