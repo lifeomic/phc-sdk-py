@@ -48,7 +48,10 @@ class GenomicExpressionOptions(PagingApiOptions):
     variant_set_ids: List[str] = Field(..., min_length=1)
     include: List[GenomicVariantInclude] = []
     gene: List[str] = []
-    expression: Optional[str] = Field(None, pattern=r&#34;^(\d+(\.\d+)?-\d+(\.\d+)?|[&gt;&lt;]=\s?\d+(\.\d+)?|\d+(\.\d+)?:(lte|gte))$&#34;)
+    expression: Optional[str] = Field(
+        None,
+        pattern=r&#34;^(\d+(\.\d+)?-\d+(\.\d+)?|[&gt;&lt;]=\s?\d+(\.\d+)?|\d+(\.\d+)?:(lte|gte))$&#34;,
+    )
     order_by: Optional[str] = Field(None, pattern=r&#34;^expression(:desc)?$&#34;)
     in_ckb: Optional[bool] = None
     # TODO: Fill out allowed options for this parameter
@@ -110,7 +113,10 @@ validated to form a valid model.</p>
     variant_set_ids: List[str] = Field(..., min_length=1)
     include: List[GenomicVariantInclude] = []
     gene: List[str] = []
-    expression: Optional[str] = Field(None, pattern=r&#34;^(\d+(\.\d+)?-\d+(\.\d+)?|[&gt;&lt;]=\s?\d+(\.\d+)?|\d+(\.\d+)?:(lte|gte))$&#34;)
+    expression: Optional[str] = Field(
+        None,
+        pattern=r&#34;^(\d+(\.\d+)?-\d+(\.\d+)?|[&gt;&lt;]=\s?\d+(\.\d+)?|\d+(\.\d+)?:(lte|gte))$&#34;,
+    )
     order_by: Optional[str] = Field(None, pattern=r&#34;^expression(:desc)?$&#34;)
     in_ckb: Optional[bool] = None
     # TODO: Fill out allowed options for this parameter

@@ -32,6 +32,7 @@ from phc.easy.abstract.fhir_service_patient_item import FhirServicePatientItem
 from phc.easy.audit_event import AuditEvent
 from phc.easy.auth import Auth
 from phc.easy.care_plan import CarePlan
+from phc.easy.clinical_impression import ClinicalImpression
 from phc.easy.codeable import Codeable
 from phc.easy.composition import Composition
 from phc.easy.condition import Condition
@@ -80,6 +81,7 @@ __all__ = [
     &#34;AuditEvent&#34;,
     &#34;Auth&#34;,
     &#34;CarePlan&#34;,
+    &#34;ClinicalImpression&#34;,
     &#34;Codeable&#34;,
     &#34;Composition&#34;,
     &#34;Condition&#34;,
@@ -143,6 +145,10 @@ __all__ = [
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="phc.easy.care_plan" href="care_plan.html">phc.easy.care_plan</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="phc.easy.clinical_impression" href="clinical_impression.html">phc.easy.clinical_impression</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -966,6 +972,7 @@ from a FSS table that relates to a patient</p></div>
                 Frame.codeable_like_column_expander(&#34;subject&#34;),
                 Frame.codeable_like_column_expander(&#34;context&#34;),
                 Frame.codeable_like_column_expander(&#34;activity&#34;),
+                Frame.codeable_like_column_expander(&#34;supportingInfo&#34;),
             ],
         )</code></pre>
 </details>
@@ -1084,6 +1091,171 @@ def transform_results(df: pd.DataFrame, **expand_args):
             Frame.codeable_like_column_expander(&#34;subject&#34;),
             Frame.codeable_like_column_expander(&#34;context&#34;),
             Frame.codeable_like_column_expander(&#34;activity&#34;),
+            Frame.codeable_like_column_expander(&#34;supportingInfo&#34;),
+        ],
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="phc.easy.ClinicalImpression"><code class="flex name class">
+<span>class <span class="ident">ClinicalImpression</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provides an abstract class and/or static methods for retrieving items
+from a FSS table that relates to a patient</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ClinicalImpression(FhirServicePatientItem):
+    @staticmethod
+    def table_name():
+        return &#34;clinical_impression&#34;
+
+    @staticmethod
+    def code_fields():
+        return [
+            &#34;meta.tag&#34;,
+            &#34;code.coding&#34;,
+        ]
+
+    @staticmethod
+    def transform_results(df: pd.DataFrame, **expand_args):
+        return Frame.expand(
+            df,
+            date_columns=[
+                *expand_args.get(&#34;date_columns&#34;, []),
+                &#34;effectiveDateTime&#34;,
+            ],
+            custom_columns=[
+                *expand_args.get(&#34;custom_columns&#34;, []),
+                Frame.codeable_like_column_expander(&#34;subject&#34;),
+                Frame.codeable_like_column_expander(&#34;finding&#34;),
+            ],
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></li>
+<li><a title="phc.easy.abstract.fhir_service_item.FhirServiceItem" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_item.FhirServiceItem">FhirServiceItem</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="phc.easy.ClinicalImpression.code_fields"><code class="name flex">
+<span>def <span class="ident">code_fields</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.code_fields" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.code_fields">code_fields</a></code>
+</p>
+<div class="desc inherited"><p>Returns the code keys (e.g. when searching for codes)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def code_fields():
+    return [
+        &#34;meta.tag&#34;,
+        &#34;code.coding&#34;,
+    ]</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.ClinicalImpression.get_codes"><code class="name flex">
+<span>def <span class="ident">get_codes</span></span>(<span>display_query: Optional[str] = None, sample_size: Optional[int] = None, exclude_meta_tag=True, **kwargs)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_codes" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_codes">get_codes</a></code>
+</p>
+<div class="desc inherited"><p>Find all codes …</p></div>
+</dd>
+<dt id="phc.easy.ClinicalImpression.get_count"><code class="name flex">
+<span>def <span class="ident">get_count</span></span>(<span>query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count">get_count</a></code>
+</p>
+<div class="desc inherited"><p>Get the count for a given FSS query</p></div>
+</dd>
+<dt id="phc.easy.ClinicalImpression.get_count_by_field"><code class="name flex">
+<span>def <span class="ident">get_count_by_field</span></span>(<span>field: str, **kwargs)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_field" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_field">get_count_by_field</a></code>
+</p>
+<div class="desc inherited"><p>Count records by a given field …</p></div>
+</dd>
+<dt id="phc.easy.ClinicalImpression.get_count_by_patient"><code class="name flex">
+<span>def <span class="ident">get_count_by_patient</span></span>(<span>**kwargs)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_patient" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_count_by_patient">get_count_by_patient</a></code>
+</p>
+<div class="desc inherited"><p>Count records by a given field …</p></div>
+</dd>
+<dt id="phc.easy.ClinicalImpression.get_data_frame"><code class="name flex">
+<span>def <span class="ident">get_data_frame</span></span>(<span>all_results: bool = False, raw: bool = False, id: Optional[str] = None, ids: List[str] = [], patient_id: Optional[str] = None, patient_ids: List[str] = [], device_id: Optional[str] = None, device_ids: List[str] = [], page_size: Optional[int] = None, max_pages: Optional[int] = None, query_overrides: dict = {}, auth_args=&lt;phc.easy.auth.Auth object&gt;, ignore_cache: bool = False, expand_args: dict = {}, log: bool = False, term: Optional[dict] = None, terms: List[dict] = [], max_terms: int = 30000, code: Union[str, List[str], ForwardRef(None)] = None, display: Union[str, List[str], ForwardRef(None)] = None, system: Union[str, List[str], ForwardRef(None)] = None, code_fields: List[str] = [])</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_data_frame" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.get_data_frame">get_data_frame</a></code>
+</p>
+<div class="desc inherited"><p>Retrieve records …</p></div>
+</dd>
+<dt id="phc.easy.ClinicalImpression.table_name"><code class="name flex">
+<span>def <span class="ident">table_name</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.table_name" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.table_name">table_name</a></code>
+</p>
+<div class="desc inherited"><p>Returns the FSS table name for retrieval</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def table_name():
+    return &#34;clinical_impression&#34;</code></pre>
+</details>
+</dd>
+<dt id="phc.easy.ClinicalImpression.transform_results"><code class="name flex">
+<span>def <span class="ident">transform_results</span></span>(<span>df: pandas.core.frame.DataFrame, **expand_args)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem" href="abstract/fhir_service_patient_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem">FhirServicePatientItem</a></code>.<code><a title="phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.transform_results" href="abstract/fhir_service_item.html#phc.easy.abstract.fhir_service_patient_item.FhirServicePatientItem.transform_results">transform_results</a></code>
+</p>
+<div class="desc inherited"><p>Transform data frame batch</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def transform_results(df: pd.DataFrame, **expand_args):
+    return Frame.expand(
+        df,
+        date_columns=[
+            *expand_args.get(&#34;date_columns&#34;, []),
+            &#34;effectiveDateTime&#34;,
+        ],
+        custom_columns=[
+            *expand_args.get(&#34;custom_columns&#34;, []),
+            Frame.codeable_like_column_expander(&#34;subject&#34;),
+            Frame.codeable_like_column_expander(&#34;finding&#34;),
         ],
     )</code></pre>
 </details>
@@ -3119,6 +3291,7 @@ from a FSS table that relates to a patient</p></div>
 <ul class="hlist">
 <li><a title="phc.easy.audit_event.AuditEvent" href="audit_event.html#phc.easy.audit_event.AuditEvent">AuditEvent</a></li>
 <li><a title="phc.easy.care_plan.CarePlan" href="care_plan.html#phc.easy.care_plan.CarePlan">CarePlan</a></li>
+<li><a title="phc.easy.clinical_impression.ClinicalImpression" href="clinical_impression.html#phc.easy.clinical_impression.ClinicalImpression">ClinicalImpression</a></li>
 <li><a title="phc.easy.composition.Composition" href="composition.html#phc.easy.composition.Composition">Composition</a></li>
 <li><a title="phc.easy.condition.Condition" href="condition.html#phc.easy.condition.Condition">Condition</a></li>
 <li><a title="phc.easy.consent.Consent" href="consent.html#phc.easy.consent.Consent">Consent</a></li>
@@ -12228,6 +12401,7 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 <li><code><a title="phc.easy.audit_event" href="audit_event.html">phc.easy.audit_event</a></code></li>
 <li><code><a title="phc.easy.auth" href="auth.html">phc.easy.auth</a></code></li>
 <li><code><a title="phc.easy.care_plan" href="care_plan.html">phc.easy.care_plan</a></code></li>
+<li><code><a title="phc.easy.clinical_impression" href="clinical_impression.html">phc.easy.clinical_impression</a></code></li>
 <li><code><a title="phc.easy.codeable" href="codeable.html">phc.easy.codeable</a></code></li>
 <li><code><a title="phc.easy.composition" href="composition.html">phc.easy.composition</a></code></li>
 <li><code><a title="phc.easy.condition" href="condition.html">phc.easy.condition</a></code></li>
@@ -12305,6 +12479,19 @@ def transform_results(data_frame: pd.DataFrame, **expand_args):
 <li><code><a title="phc.easy.CarePlan.get_data_frame" href="abstract/fhir_service_patient_item.html#phc.easy.CarePlan.get_data_frame">get_data_frame</a></code></li>
 <li><code><a title="phc.easy.CarePlan.table_name" href="#phc.easy.CarePlan.table_name">table_name</a></code></li>
 <li><code><a title="phc.easy.CarePlan.transform_results" href="#phc.easy.CarePlan.transform_results">transform_results</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="phc.easy.ClinicalImpression" href="#phc.easy.ClinicalImpression">ClinicalImpression</a></code></h4>
+<ul class="">
+<li><code><a title="phc.easy.ClinicalImpression.code_fields" href="#phc.easy.ClinicalImpression.code_fields">code_fields</a></code></li>
+<li><code><a title="phc.easy.ClinicalImpression.get_codes" href="abstract/fhir_service_item.html#phc.easy.ClinicalImpression.get_codes">get_codes</a></code></li>
+<li><code><a title="phc.easy.ClinicalImpression.get_count" href="abstract/fhir_service_item.html#phc.easy.ClinicalImpression.get_count">get_count</a></code></li>
+<li><code><a title="phc.easy.ClinicalImpression.get_count_by_field" href="abstract/fhir_service_item.html#phc.easy.ClinicalImpression.get_count_by_field">get_count_by_field</a></code></li>
+<li><code><a title="phc.easy.ClinicalImpression.get_count_by_patient" href="abstract/fhir_service_patient_item.html#phc.easy.ClinicalImpression.get_count_by_patient">get_count_by_patient</a></code></li>
+<li><code><a title="phc.easy.ClinicalImpression.get_data_frame" href="abstract/fhir_service_patient_item.html#phc.easy.ClinicalImpression.get_data_frame">get_data_frame</a></code></li>
+<li><code><a title="phc.easy.ClinicalImpression.table_name" href="#phc.easy.ClinicalImpression.table_name">table_name</a></code></li>
+<li><code><a title="phc.easy.ClinicalImpression.transform_results" href="#phc.easy.ClinicalImpression.transform_results">transform_results</a></code></li>
 </ul>
 </li>
 <li>
