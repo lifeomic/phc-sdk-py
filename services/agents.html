@@ -47,6 +47,75 @@ class Agents(BaseClient):
             &#34;/v1/agents-v2/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
         )
 
+    def invoke_template(
+        self,
+        template_id: str,
+        subject_id: str,
+        project_id: str,
+        instructions: Union[str, None] = None,
+    ):
+        &#34;&#34;&#34;
+        Invokes an agent template by ID with a subject context.
+
+        Parameters
+        ----------
+        template_id : str
+            Identifier of the agent template to invoke.
+        subject_id : str
+            Subject identifier that the template will use for context.
+        project_id : str
+            Project that scopes the template execution.
+        instructions : str, optional
+            Additional execution instructions scoped to this call.
+
+        Returns
+        -------
+        phc.ApiResponse
+            Response containing a `task_id` referencing the queued invocation.
+        &#34;&#34;&#34;
+        if not template_id:
+            raise ValueError(&#34;template_id is required&#34;)
+        if not subject_id:
+            raise ValueError(&#34;subject_id is required&#34;)
+        if not project_id:
+            raise ValueError(&#34;project_id is required&#34;)
+
+        payload = {
+            &#34;template_id&#34;: template_id,
+            &#34;subject_id&#34;: subject_id,
+            &#34;project_id&#34;: project_id,
+        }
+        if instructions is not None:
+            payload[&#34;instructions&#34;] = instructions
+
+        return self._api_call(
+            api_path=&#34;/template-agent/invoke&#34;,
+            json=payload,
+            http_verb=&#34;POST&#34;,
+        )
+
+    def get_template_invocation(self, task_id: str):
+        &#34;&#34;&#34;
+        Fetches the status/result for a template invocation task.
+
+        Parameters
+        ----------
+        task_id : str
+            Identifier returned by `invoke_template`.
+
+        Returns
+        -------
+        phc.ApiResponse
+            Response containing the latest task status/payload.
+        &#34;&#34;&#34;
+        if not task_id:
+            raise ValueError(&#34;task_id is required&#34;)
+
+        return self._api_call(
+            api_path=f&#34;/template-agent/invocations/{task_id}&#34;,
+            http_verb=&#34;GET&#34;,
+        )
+
     def get_token(self):
         &#34;&#34;&#34;
         Generates a temporary token for agent-based API authentication.
@@ -132,6 +201,75 @@ class Agents(BaseClient):
             &#34;/v1/agents-v2/basic/invoke&#34;, json={&#34;input&#34;: body}, http_verb=&#34;POST&#34;
         )
 
+    def invoke_template(
+        self,
+        template_id: str,
+        subject_id: str,
+        project_id: str,
+        instructions: Union[str, None] = None,
+    ):
+        &#34;&#34;&#34;
+        Invokes an agent template by ID with a subject context.
+
+        Parameters
+        ----------
+        template_id : str
+            Identifier of the agent template to invoke.
+        subject_id : str
+            Subject identifier that the template will use for context.
+        project_id : str
+            Project that scopes the template execution.
+        instructions : str, optional
+            Additional execution instructions scoped to this call.
+
+        Returns
+        -------
+        phc.ApiResponse
+            Response containing a `task_id` referencing the queued invocation.
+        &#34;&#34;&#34;
+        if not template_id:
+            raise ValueError(&#34;template_id is required&#34;)
+        if not subject_id:
+            raise ValueError(&#34;subject_id is required&#34;)
+        if not project_id:
+            raise ValueError(&#34;project_id is required&#34;)
+
+        payload = {
+            &#34;template_id&#34;: template_id,
+            &#34;subject_id&#34;: subject_id,
+            &#34;project_id&#34;: project_id,
+        }
+        if instructions is not None:
+            payload[&#34;instructions&#34;] = instructions
+
+        return self._api_call(
+            api_path=&#34;/template-agent/invoke&#34;,
+            json=payload,
+            http_verb=&#34;POST&#34;,
+        )
+
+    def get_template_invocation(self, task_id: str):
+        &#34;&#34;&#34;
+        Fetches the status/result for a template invocation task.
+
+        Parameters
+        ----------
+        task_id : str
+            Identifier returned by `invoke_template`.
+
+        Returns
+        -------
+        phc.ApiResponse
+            Response containing the latest task status/payload.
+        &#34;&#34;&#34;
+        if not task_id:
+            raise ValueError(&#34;task_id is required&#34;)
+
+        return self._api_call(
+            api_path=f&#34;/template-agent/invocations/{task_id}&#34;,
+            http_verb=&#34;GET&#34;,
+        )
+
     def get_token(self):
         &#34;&#34;&#34;
         Generates a temporary token for agent-based API authentication.
@@ -187,6 +325,48 @@ class Agents(BaseClient):
 </ul>
 <h3>Methods</h3>
 <dl>
+<dt id="phc.services.agents.Agents.get_template_invocation"><code class="name flex">
+<span>def <span class="ident">get_template_invocation</span></span>(<span>self, task_id: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetches the status/result for a template invocation task.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>task_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>Identifier returned by <code>invoke_template</code>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
+<dd>Response containing the latest task status/payload.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_template_invocation(self, task_id: str):
+    &#34;&#34;&#34;
+    Fetches the status/result for a template invocation task.
+
+    Parameters
+    ----------
+    task_id : str
+        Identifier returned by `invoke_template`.
+
+    Returns
+    -------
+    phc.ApiResponse
+        Response containing the latest task status/payload.
+    &#34;&#34;&#34;
+    if not task_id:
+        raise ValueError(&#34;task_id is required&#34;)
+
+    return self._api_call(
+        api_path=f&#34;/template-agent/invocations/{task_id}&#34;,
+        http_verb=&#34;GET&#34;,
+    )</code></pre>
+</details>
+</dd>
 <dt id="phc.services.agents.Agents.get_token"><code class="name flex">
 <span>def <span class="ident">get_token</span></span>(<span>self)</span>
 </code></dt>
@@ -309,6 +489,79 @@ permission.</p></div>
     )</code></pre>
 </details>
 </dd>
+<dt id="phc.services.agents.Agents.invoke_template"><code class="name flex">
+<span>def <span class="ident">invoke_template</span></span>(<span>self, template_id: str, subject_id: str, project_id: str, instructions: Optional[str] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Invokes an agent template by ID with a subject context.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>template_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>Identifier of the agent template to invoke.</dd>
+<dt><strong><code>subject_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>Subject identifier that the template will use for context.</dd>
+<dt><strong><code>project_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>Project that scopes the template execution.</dd>
+<dt><strong><code>instructions</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Additional execution instructions scoped to this call.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="phc.ApiResponse" href="../index.html#phc.ApiResponse">ApiResponse</a></code></dt>
+<dd>Response containing a <code>task_id</code> referencing the queued invocation.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def invoke_template(
+    self,
+    template_id: str,
+    subject_id: str,
+    project_id: str,
+    instructions: Union[str, None] = None,
+):
+    &#34;&#34;&#34;
+    Invokes an agent template by ID with a subject context.
+
+    Parameters
+    ----------
+    template_id : str
+        Identifier of the agent template to invoke.
+    subject_id : str
+        Subject identifier that the template will use for context.
+    project_id : str
+        Project that scopes the template execution.
+    instructions : str, optional
+        Additional execution instructions scoped to this call.
+
+    Returns
+    -------
+    phc.ApiResponse
+        Response containing a `task_id` referencing the queued invocation.
+    &#34;&#34;&#34;
+    if not template_id:
+        raise ValueError(&#34;template_id is required&#34;)
+    if not subject_id:
+        raise ValueError(&#34;subject_id is required&#34;)
+    if not project_id:
+        raise ValueError(&#34;project_id is required&#34;)
+
+    payload = {
+        &#34;template_id&#34;: template_id,
+        &#34;subject_id&#34;: subject_id,
+        &#34;project_id&#34;: project_id,
+    }
+    if instructions is not None:
+        payload[&#34;instructions&#34;] = instructions
+
+    return self._api_call(
+        api_path=&#34;/template-agent/invoke&#34;,
+        json=payload,
+        http_verb=&#34;POST&#34;,
+    )</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -335,8 +588,10 @@ permission.</p></div>
 <li>
 <h4><code><a title="phc.services.agents.Agents" href="#phc.services.agents.Agents">Agents</a></code></h4>
 <ul class="">
+<li><code><a title="phc.services.agents.Agents.get_template_invocation" href="#phc.services.agents.Agents.get_template_invocation">get_template_invocation</a></code></li>
 <li><code><a title="phc.services.agents.Agents.get_token" href="#phc.services.agents.Agents.get_token">get_token</a></code></li>
 <li><code><a title="phc.services.agents.Agents.invoke_basic" href="#phc.services.agents.Agents.invoke_basic">invoke_basic</a></code></li>
+<li><code><a title="phc.services.agents.Agents.invoke_template" href="#phc.services.agents.Agents.invoke_template">invoke_template</a></code></li>
 </ul>
 </li>
 </ul>
