@@ -8,6 +8,16 @@ and this project adheres to
 
 _(NOTE: All examples use fictitious data or freely available data sets.)_
 
+## [Unreleased]
+
+### Added
+
+- Added `invoke_template()` to `phc.services.Agents` for calling the
+  `/template-agent/invoke` endpoint with template, subject, project, and optional
+  instruction inputs, returning a task ID.
+- Added `get_template_invocation()` to fetch `/template-agent/invocations/{task_id}`
+  and poll task status/results.
+
 ## [1.1.0] - 2025-03-20
 
 ### Added

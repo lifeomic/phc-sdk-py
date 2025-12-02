@@ -18,6 +18,75 @@ class Agents(BaseClient):
             "/v1/agents-v2/basic/invoke", json={"input": body}, http_verb="POST"
         )
 
+    def invoke_template(
+        self,
+        template_id: str,
+        subject_id: str,
+        project_id: str,
+        instructions: Union[str, None] = None,
+    ):
+        """
+        Invokes an agent template by ID with a subject context.
+
+        Parameters
+        ----------
+        template_id : str
+            Identifier of the agent template to invoke.
+        subject_id : str
+            Subject identifier that the template will use for context.
+        project_id : str
+            Project that scopes the template execution.
+        instructions : str, optional
+            Additional execution instructions scoped to this call.
+
+        Returns
+        -------
+        phc.ApiResponse
+            Response containing a `task_id` referencing the queued invocation.
+        """
+        if not template_id:
+            raise ValueError("template_id is required")
+        if not subject_id:
+            raise ValueError("subject_id is required")
+        if not project_id:
+            raise ValueError("project_id is required")
+
+        payload = {
+            "template_id": template_id,
+            "subject_id": subject_id,
+            "project_id": project_id,
+        }
+        if instructions is not None:
+            payload["instructions"] = instructions
+
+        return self._api_call(
+            api_path="/template-agent/invoke",
+            json=payload,
+            http_verb="POST",
+        )
+
+    def get_template_invocation(self, task_id: str):
+        """
+        Fetches the status/result for a template invocation task.
+
+        Parameters
+        ----------
+        task_id : str
+            Identifier returned by `invoke_template`.
+
+        Returns
+        -------
+        phc.ApiResponse
+            Response containing the latest task status/payload.
+        """
+        if not task_id:
+            raise ValueError("task_id is required")
+
+        return self._api_call(
+            api_path=f"/template-agent/invocations/{task_id}",
+            http_verb="GET",
+        )
+
     def get_token(self):
         """
         Generates a temporary token for agent-based API authentication.
