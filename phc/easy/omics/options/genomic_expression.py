@@ -19,7 +19,10 @@ class GenomicExpressionOptions(PagingApiOptions):
     variant_set_ids: List[str] = Field(..., min_length=1)
     include: List[GenomicVariantInclude] = []
     gene: List[str] = []
-    expression: Optional[str] = Field(None, pattern=r"^(\d+(\.\d+)?-\d+(\.\d+)?|[><]=\s?\d+(\.\d+)?|\d+(\.\d+)?:(lte|gte))$")
+    expression: Optional[str] = Field(
+        None,
+        pattern=r"^(\d+(\.\d+)?-\d+(\.\d+)?|[><]=\s?\d+(\.\d+)?|\d+(\.\d+)?:(lte|gte))$",
+    )
     order_by: Optional[str] = Field(None, pattern=r"^expression(:desc)?$")
     in_ckb: Optional[bool] = None
     # TODO: Fill out allowed options for this parameter
