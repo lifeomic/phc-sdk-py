@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "phc"
-version = "1.2.0"
+version = "1.3.0"
 description = "Python SDK for the LifeOmic platform"
 authors = ["LifeOmic <development@lifeomic.com>"]
 license = "MIT"
@@ -69,6 +69,7 @@ _doc_favicon = "cp doc/favicon.ico doc/build/phc/favicon.ico"
 doc = ["_doc_generate", "_doc_copy", "_doc_favicon"]
 lint = "flake8 phc bin"
 format = "black phc bin"
+test = "pytest"
 _fetch_remote_schema = """
 python3 bin/one-schema.py fetch-remote-schema
 		--source lambda://patient-ml-service:deployed/private/introspection/openapi
