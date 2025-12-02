@@ -1,5 +1,15 @@
-from typing import Dict, List, Union
+import time
+from typing import Callable, Dict, List, Union
 from phc.base_client import BaseClient
+
+
+_IN_PROGRESS_STATUSES = {"scheduled", "pending", "processing"}
+
+
+def _is_task_complete(status: Union[str, None]) -> bool:
+    if not status:
+        return False
+    return status.lower() not in _IN_PROGRESS_STATUSES
 
 
 class Agents(BaseClient):
@@ -86,6 +96,88 @@ class Agents(BaseClient):
             api_path=f"/template-agent/invocations/{task_id}",
             http_verb="GET",
         )
+
+    def invoke_template_for_subjects(
+        self,
+        template_id: str,
+        subject_ids: List[str],
+        project_id: str,
+        instructions: Union[str, None] = None,
+        *,
+        initial_wait_seconds: int = 60,
+        poll_interval_seconds: int = 10,
+        sleep_fn: Callable[[float], None] = time.sleep,
+    ):
+        """
+        Invokes a template for multiple subjects and waits for each task to finish.
+
+        Parameters
+        ----------
+        template_id : str
+            Identifier of the agent template to invoke.
+        subject_ids : List[str]
+            Multiple subject identifiers to run the template against.
+        project_id : str
+            Project that scopes the template execution.
+        instructions : str, optional
+            Additional execution instructions scoped to this call.
+        initial_wait_seconds : int, optional
+            Seconds to wait before polling the task statuses (default 60).
+        poll_interval_seconds : int, optional
+            Seconds to wait between polls once polling begins (default 10).
+        sleep_fn : Callable[[float], None], optional
+            Sleep implementation to use. Primarily exposed for testing (default time.sleep).
+
+        Returns
+        -------
+        List[dict]
+            A list of task payloads ordered by the provided subject ids.
+        """
+        if not subject_ids:
+            raise ValueError("subject_ids is required")
+
+        ordered_subject_ids = list(subject_ids)
+        invocations = []
+
+        for subject_id in ordered_subject_ids:
+            response = self.invoke_template(
+                template_id=template_id,
+                subject_id=subject_id,
+                project_id=project_id,
+                instructions=instructions,
+            )
+            payload = getattr(response, "data", None)
+            if not isinstance(payload, dict):
+                raise ValueError("Template invocation did not return JSON data.")
+            task_id = payload.get("id")
+            if not task_id:
+                raise ValueError("Template invocation response must include 'id'.")
+            invocations.append({"subject_id": subject_id, "task_id": task_id})
+
+        if not invocations:
+            return []
+
+        sleep_fn(initial_wait_seconds)
+        pending_indexes = set(range(len(invocations)))
+        completed: Dict[int, dict] = {}
+
+        while pending_indexes:
+            for index in list(pending_indexes):
+                task_id = invocations[index]["task_id"]
+                invocation = self.get_template_invocation(task_id=task_id)
+                task_payload = getattr(invocation, "data", None)
+                if not isinstance(task_payload, dict):
+                    raise ValueError("Task status response must be JSON data.")
+
+                status = task_payload.get("status")
+                if _is_task_complete(status):
+                    completed[index] = task_payload
+                    pending_indexes.remove(index)
+
+            if pending_indexes:
+                sleep_fn(poll_interval_seconds)
+
+        return [completed[index] for index in range(len(invocations))]
 
     def get_token(self):
         """
