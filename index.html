@@ -453,7 +453,10 @@ __pdoc__ = {
 <dt><strong><code>token</code></strong> :&ensp;<code>str, required</code></dt>
 <dd>The PHC access token or API key, by default os.environ.get("PHC_ACCESS_TOKEN")</dd>
 <dt><strong><code>refresh_token</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>The PHC refresh token, by default os.environ.get("PHC_REFRESH_TOKEN")</dd>
+<dd>The PHC refresh token, by default os.environ.get("PHC_REFRESH_TOKEN").
+When the authorization server rotates this value, BaseClient updates
+the session and PHC_REFRESH_TOKEN in the environment if that
+variable was already set.</dd>
 <dt><strong><code>account</code></strong> :&ensp;<code>str, required</code></dt>
 <dd>The PHC account ID, by default os.environ.get("PHC_ACCOUNT")</dd>
 <dt><strong><code>adapter</code></strong> :&ensp;<code>Adapter</code>, optional</dt>
@@ -483,7 +486,10 @@ __pdoc__ = {
             The PHC access token or API key, by default os.environ.get(&#34;PHC_ACCESS_TOKEN&#34;)
 
         refresh_token : str, optional
-            The PHC refresh token, by default os.environ.get(&#34;PHC_REFRESH_TOKEN&#34;)
+            The PHC refresh token, by default os.environ.get(&#34;PHC_REFRESH_TOKEN&#34;).
+            When the authorization server rotates this value, BaseClient updates
+            the session and PHC_REFRESH_TOKEN in the environment if that
+            variable was already set.
 
         account : str, required
             The PHC account ID, by default os.environ.get(&#34;PHC_ACCOUNT&#34;)
