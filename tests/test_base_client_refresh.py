@@ -128,3 +128,77 @@ def test_refresh_does_not_create_env_without_phc_vars(monkeypatch):
 
     assert "PHC_ACCESS_TOKEN" not in os.environ
     assert session.token == new_access
+
+
+def test_refresh_syncs_only_phc_access_token_when_only_access_in_env(
+    monkeypatch,
+):
+    """If only PHC_ACCESS_TOKEN was injected, refresh must not create PHC_REFRESH_TOKEN."""
+    monkeypatch.setenv(
+        "PHC_ACCESS_TOKEN",
+        _access_jwt(exp_offset=-60),
+    )
+    monkeypatch.setenv("PHC_ACCOUNT", "test-account")
+    monkeypatch.delenv("PHC_REFRESH_TOKEN", raising=False)
+
+    session = Session(refresh_token="old-refresh")
+    new_access = _access_jwt(exp_offset=7200)
+    new_refresh = "rotated-refresh-token"
+
+    mock_res = ApiResponse(
+        client=None,
+        http_verb="POST",
+        api_url="https://api.dev.lifeomic.com/v1/oauth/token",
+        req_args={},
+        data={
+            "access_token": new_access,
+            "refresh_token": new_refresh,
+        },
+        headers={},
+        status_code=200,
+    )
+
+    client = BaseClient(session)
+    with patch.object(client, "_api_call_impl", return_value=mock_res):
+        client._refresh_token()
+
+    assert session.token == new_access
+    assert session.refresh_token == new_refresh
+    assert os.environ["PHC_ACCESS_TOKEN"] == new_access
+    assert "PHC_REFRESH_TOKEN" not in os.environ
+
+
+def test_refresh_syncs_only_phc_refresh_token_when_only_refresh_in_env(
+    monkeypatch,
+):
+    """If only PHC_REFRESH_TOKEN was injected, refresh must not create PHC_ACCESS_TOKEN."""
+    monkeypatch.delenv("PHC_ACCESS_TOKEN", raising=False)
+    monkeypatch.setenv("PHC_REFRESH_TOKEN", "old-refresh")
+    monkeypatch.setenv("PHC_ACCOUNT", "test-account")
+
+    expired = _access_jwt(exp_offset=-60)
+    session = Session(token=expired, refresh_token="old-refresh")
+    new_access = _access_jwt(exp_offset=7200)
+    new_refresh = "rotated-refresh-token"
+
+    mock_res = ApiResponse(
+        client=None,
+        http_verb="POST",
+        api_url="https://api.dev.lifeomic.com/v1/oauth/token",
+        req_args={},
+        data={
+            "access_token": new_access,
+            "refresh_token": new_refresh,
+        },
+        headers={},
+        status_code=200,
+    )
+
+    client = BaseClient(session)
+    with patch.object(client, "_api_call_impl", return_value=mock_res):
+        client._refresh_token()
+
+    assert session.token == new_access
+    assert session.refresh_token == new_refresh
+    assert os.environ["PHC_REFRESH_TOKEN"] == new_refresh
+    assert "PHC_ACCESS_TOKEN" not in os.environ
