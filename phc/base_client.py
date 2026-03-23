@@ -1,9 +1,10 @@
 """A Python module for a base PHC web client."""
 
 import asyncio
+import os
 import platform
 import sys
-from typing import Union, Dict
+from typing import Union, Dict, Any, Mapping
 from urllib.parse import urlencode, urljoin
 from importlib import metadata
 
@@ -12,6 +13,9 @@ import backoff
 from phc import Session
 from phc.api_response import ApiResponse
 from phc.errors import ApiError, RequestError
+
+PHC_ACCESS_TOKEN_ENV = "PHC_ACCESS_TOKEN"
+PHC_REFRESH_TOKEN_ENV = "PHC_REFRESH_TOKEN"
 
 
 class BaseClient:
@@ -167,7 +171,39 @@ class BaseClient:
             ),
             headers={"Authorization": None, "LifeOmic-Account": None},
         )
-        self.session.token = res.data.get("access_token")
+        self._apply_oauth_token_response(res.data)
+
+    def _apply_oauth_token_response(self, data: Mapping[str, Any]) -> None:
+        """Update session (and optionally process env) from OAuth token JSON."""
+        access = data.get("access_token")
+        if access is not None:
+            self.session.token = access
+
+        new_refresh = data.get("refresh_token")
+        if new_refresh is not None:
+            self.session.refresh_token = new_refresh
+
+        self._sync_phc_tokens_to_environ()
+
+    def _sync_phc_tokens_to_environ(self) -> None:
+        """Mirror current tokens to os.environ when PHC_* env vars are in use.
+
+        JupyterHub and other hosts inject PHC_ACCESS_TOKEN / PHC_REFRESH_TOKEN;
+        child processes and code that re-read the environment then see fresh
+        values after refresh. Vars are only updated if already present so ad-hoc
+        Session(token=...) usage without env is unaffected.
+        """
+        if (
+            PHC_ACCESS_TOKEN_ENV in os.environ
+            and self.session.token is not None
+        ):
+            os.environ[PHC_ACCESS_TOKEN_ENV] = self.session.token
+
+        if (
+            PHC_REFRESH_TOKEN_ENV in os.environ
+            and self.session.refresh_token is not None
+        ):
+            os.environ[PHC_REFRESH_TOKEN_ENV] = self.session.refresh_token
 
     def _api_call_impl(
         self,

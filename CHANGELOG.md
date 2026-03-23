@@ -18,6 +18,17 @@ _(NOTE: All examples use fictitious data or freely available data sets.)_
 - Added `get_template_invocation()` to fetch `/template-agent/invocations/{task_id}`
   and poll task status/results.
 
+## [1.6.0] - 2025-03-23
+
+### Fixed
+
+- `BaseClient` OAuth refresh now persists a rotated `refresh_token` from the
+  token response when the authorization server returns one.
+- When `PHC_ACCESS_TOKEN` and/or `PHC_REFRESH_TOKEN` are already set in the
+  process environment (for example in PHC Notebooks), successful refresh updates
+  those variables so subprocesses and code that re-read the environment see
+  current credentials.
+
 ## [1.1.0] - 2025-03-20
 
 ### Added

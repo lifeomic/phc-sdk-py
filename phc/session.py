@@ -30,7 +30,10 @@ class Session:
             The PHC access token or API key, by default os.environ.get("PHC_ACCESS_TOKEN")
 
         refresh_token : str, optional
-            The PHC refresh token, by default os.environ.get("PHC_REFRESH_TOKEN")
+            The PHC refresh token, by default os.environ.get("PHC_REFRESH_TOKEN").
+            When the authorization server rotates this value, BaseClient updates
+            the session and PHC_REFRESH_TOKEN in the environment if that
+            variable was already set.
 
         account : str, required
             The PHC account ID, by default os.environ.get("PHC_ACCOUNT")
