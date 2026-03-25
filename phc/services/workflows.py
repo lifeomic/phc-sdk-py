@@ -57,9 +57,9 @@ class Workflows(BaseClient):
         >>> from phc.services import Workflows
         >>> workflows = Workflows(session)
         >>> workflows.run(project_id="d2876f48-724f-4987-9cf0-92c7ef99a9fa",
-              name="Ashion ingest subj: 2405",
-              tool="lifeomic/ashion-ingest-workflow",
-              workflow_inputs="{'reference': 'GRCh37','tarFile': {'class': 'File','fileId': '28235c74-9731-4496-bb3c-41c361f106f3'}, 'source': 'incoming/ashion_C043_9999_009990_T1_K1ID2_ps20190814000000.tar.gz'}")
+              name="Example workflow run",
+              tool="lifeomic/example-workflow",
+              workflow_inputs="{'reference': 'GRCh37','tarFile': {'class': 'File','fileId': '28235c74-9731-4496-bb3c-41c361f106f3'}, 'source': 'incoming/example.tar.gz'}")
         """
         create_request = {
             "datasetId": project_id,
