@@ -3822,7 +3822,7 @@ The ingestion that was created.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="phc.services.Genomics.create_set"><code class="name flex">
-<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = '27e3ad9e-faca-4cc4-a4d7-617118b3e40b', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
+<span>def <span class="ident">create_set</span></span>(<span>self, set_type: phc.services.genomics.Genomics.SetType, project_id: str, name: str, file_id: str, patient_id: str, reference: phc.services.genomics.Genomics.Reference, sequence_type: phc.services.genomics.Genomics.SequenceType, test_type: str, sequence_id: Optional[str] = '1efad083-6fcf-441c-85c5-0292378e5a3d', indexed_date: Optional[datetime.datetime] = None, performer_id: Optional[str] = None, test_id: Optional[str] = None, update_sample: Optional[bool] = False, pass_filter: Optional[bool] = False, output_vcf_name: Optional[str] = None) ‑> phc.api_response.ApiResponse</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a genomic set</p>
@@ -6543,9 +6543,9 @@ def download(
         &gt;&gt;&gt; from phc.services import Workflows
         &gt;&gt;&gt; workflows = Workflows(session)
         &gt;&gt;&gt; workflows.run(project_id=&#34;d2876f48-724f-4987-9cf0-92c7ef99a9fa&#34;,
-              name=&#34;Ashion ingest subj: 2405&#34;,
-              tool=&#34;lifeomic/ashion-ingest-workflow&#34;,
-              workflow_inputs=&#34;{&#39;reference&#39;: &#39;GRCh37&#39;,&#39;tarFile&#39;: {&#39;class&#39;: &#39;File&#39;,&#39;fileId&#39;: &#39;28235c74-9731-4496-bb3c-41c361f106f3&#39;}, &#39;source&#39;: &#39;incoming/ashion_C043_9999_009990_T1_K1ID2_ps20190814000000.tar.gz&#39;}&#34;)
+              name=&#34;Example workflow run&#34;,
+              tool=&#34;lifeomic/example-workflow&#34;,
+              workflow_inputs=&#34;{&#39;reference&#39;: &#39;GRCh37&#39;,&#39;tarFile&#39;: {&#39;class&#39;: &#39;File&#39;,&#39;fileId&#39;: &#39;28235c74-9731-4496-bb3c-41c361f106f3&#39;}, &#39;source&#39;: &#39;incoming/example.tar.gz&#39;}&#34;)
         &#34;&#34;&#34;
         create_request = {
             &#34;datasetId&#34;: project_id,
@@ -6833,9 +6833,9 @@ def download(
 <pre><code class="language-python-repl">&gt;&gt;&gt; from phc.services import Workflows
 &gt;&gt;&gt; workflows = Workflows(session)
 &gt;&gt;&gt; workflows.run(project_id=&quot;d2876f48-724f-4987-9cf0-92c7ef99a9fa&quot;,
-      name=&quot;Ashion ingest subj: 2405&quot;,
-      tool=&quot;lifeomic/ashion-ingest-workflow&quot;,
-      workflow_inputs=&quot;{'reference': 'GRCh37','tarFile': {'class': 'File','fileId': '28235c74-9731-4496-bb3c-41c361f106f3'}, 'source': 'incoming/ashion_C043_9999_009990_T1_K1ID2_ps20190814000000.tar.gz'}&quot;)
+      name=&quot;Example workflow run&quot;,
+      tool=&quot;lifeomic/example-workflow&quot;,
+      workflow_inputs=&quot;{'reference': 'GRCh37','tarFile': {'class': 'File','fileId': '28235c74-9731-4496-bb3c-41c361f106f3'}, 'source': 'incoming/example.tar.gz'}&quot;)
 </code></pre></div>
 <details class="source">
 <summary>
@@ -6877,9 +6877,9 @@ def download(
     &gt;&gt;&gt; from phc.services import Workflows
     &gt;&gt;&gt; workflows = Workflows(session)
     &gt;&gt;&gt; workflows.run(project_id=&#34;d2876f48-724f-4987-9cf0-92c7ef99a9fa&#34;,
-          name=&#34;Ashion ingest subj: 2405&#34;,
-          tool=&#34;lifeomic/ashion-ingest-workflow&#34;,
-          workflow_inputs=&#34;{&#39;reference&#39;: &#39;GRCh37&#39;,&#39;tarFile&#39;: {&#39;class&#39;: &#39;File&#39;,&#39;fileId&#39;: &#39;28235c74-9731-4496-bb3c-41c361f106f3&#39;}, &#39;source&#39;: &#39;incoming/ashion_C043_9999_009990_T1_K1ID2_ps20190814000000.tar.gz&#39;}&#34;)
+          name=&#34;Example workflow run&#34;,
+          tool=&#34;lifeomic/example-workflow&#34;,
+          workflow_inputs=&#34;{&#39;reference&#39;: &#39;GRCh37&#39;,&#39;tarFile&#39;: {&#39;class&#39;: &#39;File&#39;,&#39;fileId&#39;: &#39;28235c74-9731-4496-bb3c-41c361f106f3&#39;}, &#39;source&#39;: &#39;incoming/example.tar.gz&#39;}&#34;)
     &#34;&#34;&#34;
     create_request = {
         &#34;datasetId&#34;: project_id,
